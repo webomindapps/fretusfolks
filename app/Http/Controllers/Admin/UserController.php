@@ -13,4 +13,8 @@ class UserController extends Controller
         $users=MuserMaster::paginate(10);
         return view('admin.ffimasters.usermasters.index',compact('users'));
     }
+
+    public function create(){
+        return view('admin.ffimasters.usermasters.create');
+    }
 }

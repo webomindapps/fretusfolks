@@ -18,5 +18,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
         
         //ffi UserMasters
         Route::get('/usermasters',[UserController::class,'index'])->name('usermasters');
+        Route::get('usermasters/create',[UserController::class,'create'])->name('usermasters.create');
     });
 });

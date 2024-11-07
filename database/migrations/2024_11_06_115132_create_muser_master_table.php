@@ -11,18 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('muser_master', function (Blueprint $table) {
-            $table->id();
-            $table->string('emp_id');
-            $table->string('name');
-            $table->string('email');
-            $table->string('username');
-            $table->string('password');
-            $table->string('enc_pass');
-            $table->integer('user_type');
-            $table->integer('status');
-            $table->date('date');
-            $table->string('ref_no');
+        Schema::table('muser_master', function (Blueprint $table) {
+            // $table->id();
+            // $table->string('emp_id');
+            // $table->string('name');
+            // $table->string('email');
+            // $table->string('username');
+            // $table->string('password');
+            // $table->string('enc_pass');
+            // $table->integer('user_type');
+            // $table->integer('status');
+            // $table->date('date');
+            // $table->string('ref_no');
             $table->timestamps();
         });
     }

@@ -1,5 +1,5 @@
 <x-applayout>
-    <x-admin.breadcrumb title="User Masters"  />
+    <x-admin.breadcrumb title="User Masters" :create="route('admin.usermasters.create')" />
     @php
 
         $columns = [
@@ -10,9 +10,6 @@
             ['label' => 'Date', 'column' => 'date', 'sort' => false],
             ['label' => 'User Type', 'column' => 'user_type', 'sort' => false],
             ['label' => 'Actions', 'column' => 'actions', 'sort' => false],
-
-
-
         ];
 
         $bulkOptions = [
@@ -62,7 +59,7 @@
                     <input type="checkbox" name="selected_items[]" class="single-item-check"
                         value="{{ $item->id }}">
                 </td>
-                
+
                 <td>
                     <div class="dropdown pop_Up dropdown_bg">
                         <div class="dropdown-toggle" id="dropdownMenuButton-{{ $item->id }}"
