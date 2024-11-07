@@ -21,7 +21,7 @@ return new class extends Migration
             // $table->string('enc_pass');
             // $table->integer('user_type');
             // $table->integer('status');
-            // $table->date('date');
+            // $table->date('date')->nullable()->change();
             // $table->string('ref_no');
             $table->timestamps();
         });
@@ -32,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('muser_master');
+        // Schema::dropIfExists('muser_master');
     }
 };

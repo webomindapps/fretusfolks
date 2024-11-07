@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tde_code', function (Blueprint $table) {
-            $table->id();
-            $table->string('code');
-            $table->float('discount');
-            $table->integer('status');
+        Schema::table('tds_code', function (Blueprint $table) {
+            // $table->id();
+            // $table->string('code');
+            // $table->float('discount');
+            // $table->integer('status');
             $table->timestamps();
         });
     }
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('tde_code');
+        // Schema::dropIfExists('tds_code');
     }
 };
