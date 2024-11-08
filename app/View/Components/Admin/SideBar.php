@@ -29,6 +29,12 @@ class SideBar extends Component
                     'route' => 'admin.usermasters',
                     'name' => 'usermasters',
                 ],
+                [
+                    'title' => 'TDS code',
+                    'icon' => 'bx bx-chevron-right',
+                    'route' => 'admin.tds_code',
+                    'name' => 'tds_code',
+                ],
             ],
 
         ],
