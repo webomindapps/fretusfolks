@@ -1735,3 +1735,31 @@ custom-dropdown {
     font-size: 13px;
   }
 }
+.form-group {
+  margin-bottom: 1.25rem;
+}
+.header-elements-inline .header-elements {
+  display: flex !important;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 0;
+  background-color: transparent;
+  border: 0;
+  margin-left: 0;
+  margin-right: 0;
+}
+.list-icons {
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  align-items: center;
+}
+.list-icons-item {
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%; 
+  color: #333;
+  background-color: #f5f5f5;  
+  transition: background-color 0.3s, color 0.3s;
+}
