@@ -2,23 +2,20 @@
 
 namespace App\Providers;
 
+use App\Http\Controllers\FretusFolks;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     */
-    public function register(): void
+    public function register()
     {
-        //
+        $this->app->singleton('FretusFolks', function ($app) {
+            return new FretusFolks;
+        });
     }
 
-    /**
-     * Bootstrap any application services.
-     */
-    public function boot(): void
+    public function boot()
     {
-        //
+        // Other bootstrapping if needed
     }
 }

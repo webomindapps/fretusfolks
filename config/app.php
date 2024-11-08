@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Facade;
+
 return [
 
     /*
@@ -104,7 +106,9 @@ return [
             explode(',', env('APP_PREVIOUS_KEYS', ''))
         ),
     ],
-
+    'aliases' => Facade::defaultAliases()->merge([
+        'FretusFolks' => App\Facades\FretusFolks::class,
+    ])->toArray(),
     /*
     |--------------------------------------------------------------------------
     | Maintenance Mode Driver
