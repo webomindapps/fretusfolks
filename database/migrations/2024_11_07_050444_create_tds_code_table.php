@@ -11,7 +11,7 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('tds_code', function (Blueprint $table) {
-            // $table->id()->change();
+            $table->bigInteger('id')->unsigned()->autoIncrement()->primary()->change();
             // $table->string('code');
             // $table->float('discount');
             // $table->integer('status');
@@ -25,7 +25,7 @@ return new class extends Migration {
     public function down(): void
     {
         Schema::table('tds_code', function (Blueprint $table) {
-            $table->dropColumn(['created_at', 'updated_at']); 
+            $table->dropColumn(['created_at', 'updated_at']);
         });
     }
 };

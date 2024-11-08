@@ -8,7 +8,6 @@ class TdsCode extends Model
 {
     public $table = 'tds_code';
     protected $fillable = [
-        'id',
         'code',
         'discount',
         'status',
