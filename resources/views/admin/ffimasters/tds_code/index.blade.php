@@ -4,22 +4,12 @@
         <div class="row">
             <div class="col-lg-12 pb-4">
                 <div class="form-card px-3">
-                    <form action="{{ route('admin.tds_code.store') }}" method="POST" >
+                    <form action="{{ route('admin.tds_code.store') }}" method="POST">
                         @csrf
                         <div class="card">
                             <div
                                 class="card-header header-elements-inline d-flex justify-content-between align-items-center">
                                 <h5 class="card-title mb-0">New TDS Code</h5>
-                                <div class="header-elements">
-                                    <div class="list-icons d-flex">
-                                        <a class="list-icons-item" data-action="collapse" style="cursor: pointer;">
-                                            <i class="bx bx-chevron-down"></i>
-                                        </a>
-                                        <a class="list-icons-item ml-2" data-action="reload" style="cursor: pointer;">
-                                            <i class="bx bx-rotate-right"></i>
-                                        </a>
-                                    </div>
-                                </div>
                             </div>
                             <div class="card-body">
                                 <div class="row">
@@ -45,13 +35,6 @@
         <div class="card" id="tds_table" style="display:block">
             <div class="card-header header-elements-inline d-flex justify-content-between align-items-center">
                 <h5 class="card-title mb-0">TDS Details</h5>
-                <div class="header-elements">
-                    <div class="list-icons d-flex">
-                        <a class="list-icons-item ml-2" data-action="reload" style="cursor: pointer;">
-                            <i class="bx bx-rotate-right"></i>
-                        </a>
-                    </div>
-                </div>
             </div>
             <div class="row">
                 @php
@@ -61,26 +44,47 @@
                         ['label' => 'Status', 'column' => 'status', 'sort' => true],
                         ['label' => 'Actions', 'column' => 'action', 'sort' => false],
                     ];
+                    $bulkOptions = [
+                        [
+                            'label' => 'Status',
+                            'value' => '2',
+                            'options' => [
+                                [
+                                    'label' => 'Active',
+                                    'value' => '1',
+                                ],
+                                [
+                                    'label' => 'Inactive',
+                                    'value' => '0',
+                                ],
+                            ],
+                        ],
+                    ];
                 @endphp
-                <x-table :columns="$columns" :data="$tds_code" :checkAll=true :bulk="route('admin.usermasters')" :route="route('admin.tds_code')">
+                <x-table :columns="$columns" :data="$tds_code" :checkAll=true :bulk="route('admin.tds_code.bulk')" :route="route('admin.tds_code')">
                     @foreach ($tds_code as $key => $item)
                         <tr>
                             <td>
-                                <input type="checkbox" name="" class="checkinput" value="{{ $item->id }}">
+                                <input type="checkbox" name="selected_items[]" class="single-item-check"
+                                    value="{{ $item->id }}">
                             </td>
                             <td>{{ $item->id }}</td>
                             <td>{{ $item->code }}</td>
-                            @if ($item->status)
-                                <span class="badge bg-success">Active</span>
-                            @else
-                                <span class="badge bg-danger">In-Active</span>
-                            @endif
+                            <td>
+                                <a href="{{ route('admin.tds_code.status', $item->id) }}">
+                                    @if ($item->status)
+                                        <i class="fa fa-toggle-on text-success" aria-hidden="true"
+                                            style="font-size: 24px;"></i>
+                                    @else
+                                        <i class="fa fa-toggle-off text-danger" aria-hidden="true"
+                                            style="font-size: 24px;"></i>
+                                    @endif
+                                </a>
                             </td>
                             <td>
                                 <a onclick="return confirm('Are you sure you want to delete this?')"
-                                    href="{{ route('product.delete', $item->id) }}">
-                                    <i class="fa fa-trash" aria-hidden="true"></i>
-                                </a>
+                                    href="{{ route('admin.tds_code.delete', $item->id) }}"><i class="fa fa-trash"
+                                        aria-hidden="true"></i></a>
                             </td>
                         </tr>
                     @endforeach
