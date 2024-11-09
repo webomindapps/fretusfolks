@@ -19,20 +19,45 @@ class TdsCodeController extends Controller
     }
     public function store(Request $request)
     {
-        // 
         $request->validate([
-            'code'=>'required',
+            'code' => 'required',
 
         ]);
         TdsCode::create([
-            'code'=> $request->code,
-            'discount'=>0,
-            'status'=>1,
+            'code' => $request->code,
+            'discount' => 0,
+            'status' => 1,
 
         ]);
-        
+        return redirect()->route('admin.tds_code')->with('success', 'Tds Code added successfully');
+    }
+    public function destroy($id)
+    {
+        $tds_code = TdsCode::findorfail($id);
+        $tds_code->delete();
+        return redirect()->route('admin.tds_code')->with('success', 'Tds Code deleted successfully');
+    }
+    public function bulk(Request $request)
+    {
+        $type = $request->type;
+        $selectedItems = $request->selectedIds;
+        $status = $request->status;
 
-
-        return redirect()->route('tds_code')->with('success', 'Product added successfully');
+        foreach ($selectedItems as $item) {
+            $tds_code = $this->model()->find($item);
+            if ($type == 1) {
+                $tds_code->delete();
+            } else if ($type == 2) {
+                $tds_code->update(['status' => $status]);
+            }
+        }
+        return response()->json(['success' => true, 'message' => 'Bulk operation is completed']);
+    }
+    public function toggleStatus($id)
+    {
+        $tdsCode = TdsCode::findOrFail($id);
+        $tdsCode->status = !$tdsCode->status;
+        $tdsCode->save();
+        return redirect()->back()->with('success', 'Status updated successfully.');
     }
 }

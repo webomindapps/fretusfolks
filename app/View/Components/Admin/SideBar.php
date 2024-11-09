@@ -35,6 +35,12 @@ class SideBar extends Component
                     'route' => 'admin.tds_code',
                     'name' => 'tds_code',
                 ],
+                [
+                    'title' => 'Letter Content',
+                    'icon' => 'bx bx-chevron-right',
+                    'route' => 'admin.letter_content',
+                    'name' => 'letter_content',
+                ],
             ],
 
         ],
