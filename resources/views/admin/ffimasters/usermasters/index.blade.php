@@ -6,9 +6,10 @@
             ['label' => 'Sl No', 'column' => 'id', 'sort' => true],
             ['label' => 'Name', 'column' => 'name', 'sort' => true],
             ['label' => 'Email Id', 'column' => 'email', 'sort' => true],
-            ['label' => 'Password', 'column' => 'Password', 'sort' => true],
+            ['label' => 'User Name', 'column' => 'username', 'sort' => true],
             ['label' => 'Date', 'column' => 'date', 'sort' => false],
             ['label' => 'User Type', 'column' => 'user_type', 'sort' => false],
+            ['label' => 'Status', 'column' => 'status', 'sort' => false],
             ['label' => 'Actions', 'column' => 'actions', 'sort' => false],
         ];
 
@@ -29,37 +30,25 @@
             ],
         ];
     @endphp
-    <x-table :columns="$columns" :data="$users" checkAll="{{ true }}" :bulk="route('admin.usermasters')" :route="route('admin.usermasters')">
-        <x-slot:filters>
-            <form action="" method="POST">
-                @csrf
-                <div class="row px-2">
-                    <div class="col-lg-3">
-                        <div class="cdate">
-                            <input type="date" class="form-control" name="from_date" id="from_date">
-                        </div>
-                    </div>
-                    <div class="col-lg-1 text-center my-auto">
-                        <span class="fw-semibold fs-6">To</span>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="cdate">
-                            <input type="date" class="form-control" name="to_date" id="to_date">
-                        </div>
-                    </div>
-                    <div class="col-3">
-                        <button type="submit" class="add-btn bg-success text-white">Export</button>
-                    </div>
-                </div>
-            </form>
-        </x-slot:filters>
+    <x-table :columns="$columns" :data="$users" checkAll="{{ true }}" :bulk="route('admin.usermasters.bulk')" :route="route('admin.usermasters')">
         @foreach ($users as $key => $item)
             <tr>
                 <td>
-                    <input type="checkbox" name="selected_items[]" class="single-item-check"
-                        value="{{ $item->id }}">
+                    <input type="checkbox" name="selected_items[]" class="single-item-check" value="{{ $item->id }}">
                 </td>
-
+                <td>{{ $key + 1 }}</td>
+                <td>{{ $item->name }}</td>
+                <td>{{ $item->email }}</td>
+                <td>{{ $item->username }}</td>
+                <td>{{ $item->date }}</td>
+                <td>{{ $item->role->name ?? 'N/A' }}</td>
+                <td>
+                    @if ($item->status)
+                        <span class="badge bg-success">Active</span>
+                    @else
+                        <span class="badge bg-danger">In-Active</span>
+                    @endif
+                </td>
                 <td>
                     <div class="dropdown pop_Up dropdown_bg">
                         <div class="dropdown-toggle" id="dropdownMenuButton-{{ $item->id }}"
@@ -70,9 +59,15 @@
                             style="position: absolute; inset: auto auto 0px 0px; margin: 0px; transform: translate(-95px, -25.4219px);"
                             data-popper-placement="top-end">
                             <li>
-                                <a class="dropdown-item" href="">
+                                <a class="dropdown-item" href="{{ route('admin.usermasters.edit', $item->id) }}">
                                     <i class='bx bx-edit-alt'></i>
                                     Edit
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{{ route('admin.usermasters.delete', $item->id) }}">
+                                    <i class='bx bx-trash-alt'></i>
+                                    Delete
                                 </a>
                             </li>
                         </ul>

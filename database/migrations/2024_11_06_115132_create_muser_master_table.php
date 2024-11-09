@@ -11,7 +11,7 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('muser_master', function (Blueprint $table) {
-            // $table->id();
+            $table->bigInteger('id')->unsigned()->autoIncrement()->primary()->change();
             // $table->string('emp_id');
             // $table->string('name');
             // $table->string('email');
@@ -32,7 +32,7 @@ return new class extends Migration {
     public function down(): void
     {
         Schema::table('muser_master', function (Blueprint $table) {
-            $table->dropColumn(['created_at', 'updated_at']); 
+            $table->dropColumn(['created_at', 'updated_at']);
         });
     }
 };

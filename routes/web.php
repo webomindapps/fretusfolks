@@ -9,7 +9,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::prefix('admin')->name('admin.')->group(function () {
+Route::prefix('admin')->group(function () {
     Route::get('login', [LoginController::class, 'index'])->name('login');
     Route::post('login', [LoginController::class, 'authenticate']);
 
@@ -21,6 +21,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/usermasters',[UserController::class,'index'])->name('usermasters');
         Route::get('usermasters/create',[UserController::class,'create'])->name('usermasters.create');
         Route::post('usermasters/create',[UserController::class,'store']);
+        Route::post('usermasters/bulkupdate',[UserController::class,'bulk'])->name('usermasters.bulk');
+        Route::get('usermasters/{id}/edit',[UserController::class,'edit'])->name('usermasters.edit');
+        Route::post('usermasters/{id}/edit',[UserController::class,'update']);
+        Route::get('usermasters/{id}/delete',[UserController::class,'delete'])->name('usermasters.delete');
         
         //tds_code
         Route::get('/tds_code',[TdsCodeController::class,'index'])->name('tds_code');
