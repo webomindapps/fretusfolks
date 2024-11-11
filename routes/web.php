@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\CDMSController;
 use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
@@ -34,6 +35,8 @@ Route::prefix('admin')->group(function () {
         Route::post('/tds_code/bulk_operation', [TdsCodeController::class, 'bulk'])->name('tds_code.bulk');
         Route::get('tds_code/{id}/delete', [TdsCodeController::class, 'destroy'])->name('tds_code.delete');
         Route::get('tds_code/status/{id}', [TdsCodeController::class, 'toggleStatus'])->name('tds_code.status');
+        Route::get('tds_code/update_code/{id}', [TdsCodeController::class, 'updateCode'])->name('tds_code.update_code');
+
 
         //letter_content
         Route::get('/letter_content', [LetterContentController::class, 'index'])->name('letter_content');
@@ -43,5 +46,11 @@ Route::prefix('admin')->group(function () {
         Route::post('letter_content/{id}/edit', [LetterContentController::class, 'update']);
         Route::post('letter_content/bulk_operation', [LetterContentController::class, 'bulk'])->name('letter_content.bulk');
 
+        //cdms
+        Route::get('/cdms', [CDMSController::class, 'index'])->name('cdms');
+        Route::get('cdms/create', [CDMSController::class, 'create'])->name('cdms.create');
+        Route::post('cdms/create', [CDMSController::class, 'store']);
+        Route::get('cdms/{id}/edit', [CDMSController::class, 'edit'])->name('cdms.edit');
+        Route::post('cdms/{id}/edit', [CDMSController::class, 'update']);
     });
 });

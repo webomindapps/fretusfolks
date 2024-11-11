@@ -110,7 +110,7 @@ class UserController extends Controller
                 $category->update(['status' => $status]);
             }
         }
-        return response()->json(['success' => true, 'success' => 'Bulk operation is completed']);
+        return response()->json([ 'success' => 'Bulk operation is completed']);
     }
 
     public function edit($id)

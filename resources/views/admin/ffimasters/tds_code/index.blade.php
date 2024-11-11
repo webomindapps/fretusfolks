@@ -69,7 +69,10 @@
                                     value="{{ $item->id }}">
                             </td>
                             <td>{{ $item->id }}</td>
-                            <td>{{ $item->code }}</td>
+                            <td contenteditable="true" onblur="updateCode(this, {{ $item->id }})"
+                                id="{{ $item->id }}">
+                                {{ $item->code }}
+                            </td>
                             <td>
                                 <a href="{{ route('admin.tds_code.status', $item->id) }}">
                                     @if ($item->status)
@@ -93,4 +96,12 @@
         </div>
 
     </div>
+    @push('scripts')
+        <script>
+            function updateCode(element, itemId) {
+                const code = element.innerText.trim();
+                window.location.href = `/admin/tds_code/update_code/${itemId}?code=${encodeURIComponent(code)}`;
+            }
+        </script>
+    @endpush
 </x-applayout>
