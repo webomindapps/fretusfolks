@@ -5,7 +5,7 @@
             <div class="row mb-2">
                 <div class="col-lg-5 my-auto text-end ms-auto">
                     </a>
-                    <a href="{{ route('letter_content.create') }}" class="add-btn bg-success text-white">
+                    <a href="{{ route('admin.letter_content.create') }}" class="add-btn bg-success text-white">
                         Add
                     </a>
                 </div>
@@ -22,7 +22,7 @@
                     ['label' => 'Actions', 'column' => 'action', 'sort' => false],
                 ];
             @endphp
-            <x-table :columns="$columns" :data="$letter_content" :bulk="route('admin.letter_content.bulk')" :checkAll=true :route="route('letter_content')">
+            <x-table :columns="$columns" :data="$letter_content" :bulk="route('admin.letter_content.bulk')" :checkAll=true :route="route('admin.letter_content')">
                 @foreach ($letter_content as $key => $item)
                     <tr>
                         <td>

@@ -44,6 +44,29 @@ class SideBar extends Component
             ],
 
         ],
+        [
+            'title' => 'CDMS',
+            'name' => 'cdms',
+            'icon' => '  bx bxl-slack',
+            'route' => '',
+            'isSubMenu' => true,
+            'subMenus' => [
+                [
+                    'title' => 'CDMS',
+                    'icon' => 'bx bx-chevron-right',
+                    'route' => 'admin.cdms',
+                    'name' => 'cdms',
+                ],
+                // [
+                //     'title' => 'CDMS Report',
+                //     'icon' => 'bx bx-chevron-right',
+                //     'route' => 'admin.cdms_report',
+                //     'name' => 'cdms_report',
+                // ],
+               
+            ],
+
+        ],
     ];
 
 

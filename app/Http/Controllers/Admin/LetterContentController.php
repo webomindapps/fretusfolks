@@ -14,12 +14,34 @@ class LetterContentController extends Controller
     }
     public function index()
     {
-        $letter_content = LetterContent::paginate(10);
-        return view("admin.ffimasters.letter_content.index",compact("letter_content"));
+        $searchColumns = ['id', 'type', 'letter_type'];
+        $search = request()->search;
+        $from_date = request()->from_date;
+        $to_date = request()->to_date;
+        $order = request()->orderedColumn;
+        $orderBy = request()->orderBy;
+        $paginate = request()->paginate;
+
+        $query = $this->model()->query();
+
+        if ($from_date && $to_date) {
+            $query->whereBetween('created_at', [$from_date, $to_date]);
+        }
+        if ($search != '')
+            $query->where(function ($q) use ($search, $searchColumns) {
+                foreach ($searchColumns as $key => $value)
+                    ($key == 0) ? $q->where($value, 'LIKE', '%' . $search . '%') : $q->orWhere($value, 'LIKE', '%' . $search . '%');
+            });
+
+        // sorting
+        ($order == '') ? $query->orderByDesc('id') : $query->orderBy($order, $orderBy);
+
+        $letter_content = $paginate ? $query->paginate($paginate)->appends(request()->query()) : $query->paginate(10)->appends(request()->query());
+        return view("admin.ffimasters.letter_content.index", compact("letter_content"));
     }
     public function create()
     {
-       return view("admin.ffimasters.letter_content.create");
+        return view("admin.ffimasters.letter_content.create");
 
     }
     public function store(Request $request)
@@ -32,7 +54,7 @@ class LetterContentController extends Controller
         ]);
         LetterContent::create([
             'type' => $request->type,
-            'letter_type' =>$request->letter_type ,
+            'letter_type' => $request->letter_type,
             'content' => $request->content,
         ]);
         return redirect()->route('admin.letter_content')->with('success', 'Letter Content added successfully');
@@ -49,7 +71,7 @@ class LetterContentController extends Controller
         $letter_content->update([
             'content' => $request->content,
         ]);
-        return redirect()->route('admin.letter_content')->with('success','Letter Content Updated successfully');
+        return redirect()->route('admin.letter_content')->with('success', 'Letter Content Updated successfully');
     }
     public function bulk(Request $request)
     {
