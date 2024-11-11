@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
@@ -45,7 +46,7 @@ class UserController extends Controller
 
     public function create()
     {
-        $roles = DB::table('roles')->pluck('name', 'id')->toArray();
+        $roles = Role::all();
         return view('admin.ffimasters.usermasters.create', compact('roles'));
     }
 
@@ -74,7 +75,7 @@ class UserController extends Controller
             $newRefNo = 'FFI' . str_pad(($latestUser ? intval(substr($latestUser->ref_no, 2)) + 1 : 1), 3, '0', STR_PAD_LEFT);
 
             $user = new MuserMaster();
-            $user->user_type = $request->user_type;
+            $user->user_type = 1;
             $user->emp_id = $request->emp_id;
             $user->name = $request->name;
             $user->username = $request->username;
@@ -85,7 +86,7 @@ class UserController extends Controller
             $user->ref_no = $newRefNo;
             $user->status = $request->status ?? 0;
             $user->save();
-
+            $user->assignRole($request->user_type);
             DB::commit();
 
             return redirect()->route('admin.usermasters')->with('success', 'User Masters added successfully');
@@ -114,7 +115,7 @@ class UserController extends Controller
 
     public function edit($id)
     {
-        $roles = DB::table('roles')->pluck('name', 'id')->toArray();
+        $roles = Role::all();
         $users = MuserMaster::with('role')->findorfail($id);
         return view('admin.ffimasters.usermasters.edit', compact('roles', 'users'));
     }

@@ -2,16 +2,12 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Spatie\Permission\Models\Role as ModelsRole;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Spatie\Permission\Traits\HasRoles;
 
-class MuserMaster extends Model
+class MuserMaster extends Authenticatable
 {
+    use HasRoles;
     public $table = 'muser_master';
     protected $fillable = ['emp_id', 'name', 'email', 'username', 'password', 'enc_pass', 'user_type', 'status', 'date', 'ref_no'];
-
-    public function role()
-    {
-        return $this->belongsTo(ModelsRole::class, 'user_type');
-    }
 }

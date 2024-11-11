@@ -21,9 +21,9 @@
                     <div class="col-lg-6">
                         <label for="user_type">User Type</label>
                         <select name="user_type" id="user_type" class="form-control col-lg-4 mt-4">
-                            @foreach ($roles as $id => $name)
-                                <option value="{{ $id }}" {{ old('user_type') == $id ? 'selected' : '' }}>
-                                    {{ $name }}
+                            @foreach ($roles as $role)
+                                <option value="{{ $role->name }}" {{ old('user_type') == $role->name ? 'selected' : '' }}>
+                                    {{ $role->name }}
                                 </option>
                             @endforeach
                         </select>
