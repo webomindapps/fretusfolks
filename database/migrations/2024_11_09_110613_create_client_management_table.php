@@ -31,7 +31,7 @@ return new class extends Migration
             // $table->string('website_url');
             // $table->string('mode_agreement');
             // $table->string('agreement_type');
-            // $table->string('other_agreement');
+            $table->string('other_agreement')->nullable();
             // $table->string('agreement_doc');
             // $table->string('region');
             // $table->integer('service_state ');

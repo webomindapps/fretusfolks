@@ -52,7 +52,7 @@ class LetterContentController extends Controller
             'content' => 'required',
 
         ]);
-        LetterContent::create([
+        $this->model()->create([
             'type' => $request->type,
             'letter_type' => $request->letter_type,
             'content' => $request->content,

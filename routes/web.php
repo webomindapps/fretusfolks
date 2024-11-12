@@ -20,15 +20,15 @@ Route::prefix('admin')->group(function () {
         Route::get('/dashboard', [LoginController::class, 'dashboard'])->name('dashboard');
 
         //ffi UserMasters
-        Route::get('/usermasters',[UserController::class,'index'])->name('usermasters');
-        Route::get('usermasters/create',[UserController::class,'create'])->name('usermasters.create');
-        Route::post('usermasters/create',[UserController::class,'store']);
-        Route::post('usermasters/bulkupdate',[UserController::class,'bulk'])->name('usermasters.bulk');
-        Route::get('usermasters/{id}/edit',[UserController::class,'edit'])->name('usermasters.edit');
-        Route::post('usermasters/{id}/edit',[UserController::class,'update']);
-        Route::get('usermasters/{id}/delete',[UserController::class,'delete'])->name('usermasters.delete');
-        
-      
+        Route::get('/usermasters', [UserController::class, 'index'])->name('usermasters');
+        Route::get('usermasters/create', [UserController::class, 'create'])->name('usermasters.create');
+        Route::post('usermasters/create', [UserController::class, 'store']);
+        Route::post('usermasters/bulkupdate', [UserController::class, 'bulk'])->name('usermasters.bulk');
+        Route::get('usermasters/{id}/edit', [UserController::class, 'edit'])->name('usermasters.edit');
+        Route::post('usermasters/{id}/edit', [UserController::class, 'update']);
+        Route::get('usermasters/{id}/delete', [UserController::class, 'delete'])->name('usermasters.delete');
+
+
         //tds_code
         Route::get('/tds_code', [TdsCodeController::class, 'index'])->name('tds_code');
         Route::post('/tds_code/store', [TdsCodeController::class, 'store'])->name('tds_code.store');
@@ -52,5 +52,15 @@ Route::prefix('admin')->group(function () {
         Route::post('cdms/create', [CDMSController::class, 'store']);
         Route::get('cdms/{id}/edit', [CDMSController::class, 'edit'])->name('cdms.edit');
         Route::post('cdms/{id}/edit', [CDMSController::class, 'update']);
+        Route::post('cdms/bulk_operation', [CDMSController::class, 'bulk'])->name('cdms.bulk');
+        Route::get('cdms/{id}/delete', [CDMSController::class, 'destroy'])->name('cdms.delete');
+        Route::get('cdms/show/{id}', [CDMSController::class, 'show'])->name('cdms.show');
+        Route::post('cdms/gststore/{id}', [CDMSController::class, 'gststore'])->name('cdms.gststore');
+        Route::get('cdms/update_gst/{id}', [CDMSController::class, 'updateGst'])->name('cdms.update_gst');
+        Route::get('cdms/update_state/{id}', [CDMSController::class, 'updateState'])->name('cdms.updateState');
+        Route::get('cdms/{id}/gstdelete', [CDMSController::class, 'gstdestroy'])->name('cdms.gstdelete');
+
+
+
     });
 });
