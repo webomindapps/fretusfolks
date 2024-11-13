@@ -41,7 +41,7 @@
                 <td>{{ $item->email }}</td>
                 <td>{{ $item->username }}</td>
                 <td>{{ $item->date }}</td>
-                <td>{{ $item->role->name ?? 'N/A' }}</td>
+                <td>{{ $item->getRoleNames()->first() ?? 'N/A' }}</td>
                 <td>
                     @if ($item->status)
                         <span class="badge bg-success">Active</span>

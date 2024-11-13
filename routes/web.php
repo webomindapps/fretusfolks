@@ -63,6 +63,8 @@ Route::prefix('admin')->group(function () {
 
         // roles
         Route::get('/roles', [RolePermissionController::class, 'index'])->name('roles');
+        Route::get('/role/{id}/permissions', [RolePermissionController::class, 'permission'])->name('permission');
+        Route::post('/role/{id}/permissions', [RolePermissionController::class, 'assignPermission']);
 
 
     });

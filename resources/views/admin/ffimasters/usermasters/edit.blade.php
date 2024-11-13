@@ -14,16 +14,15 @@
     @endif
     <div class="col-lg-12 pb-4">
         <div class="form-card px-3">
-            <form method="POST" class="formSubmit" action="{{ route('admin.usermasters.edit', $users->id) }}"
+            <form method="POST" class="formSubmit" action="{{ route('admin.usermasters.edit', $user->id) }}"
                 enctype="multipart/form-data">
                 @csrf
                 <div class="row">
                     <div class="col-lg-6">
                         <label for="user_type">User Type</label>
-                        <select name="user_type" id="user_type" class="form-control col-lg-4 mt-4">
+                        <select name="role" id="user_type" class="form-control col-lg-4 mt-4">
                             @foreach ($roles as $role)
-                                <option value="{{ $role->name }}"
-                                    {{ old('user_type', $users->user_type) == $role->name ? 'selected' : '' }}>
+                                <option value="{{ $role->name }}" {{ $user->hasRole($role->name) ? 'selected' : '' }}>
                                     {{ $role->name }}
                                 </option>
                             @endforeach
@@ -32,19 +31,19 @@
 
 
                     <x-forms.input label="Employee ID" type="text" name="emp_id" id="emp_id" :required="true"
-                        size="col-lg-6 mt-4" :value="old('emp_id', $users->emp_id)" />
+                        size="col-lg-6 mt-4" :value="old('emp_id', $user->emp_id)" />
 
                     <x-forms.input label="Name" type="text" name="name" id="name" :required="true"
-                        size="col-lg-6 mt-4" :value="old('name', $users->name)" />
+                        size="col-lg-6 mt-4" :value="old('name', $user->name)" />
 
 
                     <x-forms.input label="Username" type="text" name="username" id="username" :required="true"
-                        size="col-lg-6 mt-4" :value="old('username', $users->username)" />
+                        size="col-lg-6 mt-4" :value="old('username', $user->username)" />
 
                     <x-forms.select label="Status" name="status" id="status" :required="true" size="col-lg-6 mt-4"
-                        :options="FretusFolks::getStatus()" :value="old('status', $users->status)" />
+                        :options="FretusFolks::getStatus()" :value="old('status', $user->status)" />
                     <x-forms.input label="Email" type="email" name="email" id="email" :required="true"
-                        size="col-lg-6 mt-4" :value="old('email', $users->email)" />
+                        size="col-lg-6 mt-4" :value="old('email', $user->email)" />
 
 
                 </div>

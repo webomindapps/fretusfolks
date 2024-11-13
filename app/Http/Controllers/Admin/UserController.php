@@ -116,14 +116,14 @@ class UserController extends Controller
     public function edit($id)
     {
         $roles = Role::all();
-        $users = MuserMaster::with('role')->findorfail($id);
-        return view('admin.ffimasters.usermasters.edit', compact('roles', 'users'));
+        $user = MuserMaster::findorfail($id);
+        return view('admin.ffimasters.usermasters.edit', compact('roles', 'user'));
     }
     public function update(Request $request, $id)
     {
         $request->validate(
             [
-                'user_type' => 'required',
+                'role' => 'required',
                 'emp_id' => 'required',
                 'name' => 'required',
                 'username' => 'required',
@@ -132,6 +132,7 @@ class UserController extends Controller
         );
         $user = MuserMaster::findOrFail($id);
         $user->update($request->all());
+        $user->syncRoles($request->role);
         return redirect()->route('admin.usermasters')->with('success', 'User Masters updated successfully');
     }
     public function delete($id)

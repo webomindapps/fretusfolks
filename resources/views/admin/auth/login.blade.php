@@ -11,6 +11,14 @@
 
                         <div class="col-lg-12">
                             <h3 class="text-center my-4">Sign in to continue</h3>
+                            <div class="mb-3">
+                                <select name="role" class="form-select" style="border-radius: 10px !important;">
+                                    <option value="">Select User Type</option>
+                                    @foreach ($roles as $role)
+                                        <option value="{{ $role->name }}">{{ $role->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                             <div class="group">
 
                                 <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"

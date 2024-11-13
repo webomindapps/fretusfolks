@@ -10,4 +10,8 @@ class MuserMaster extends Authenticatable
     use HasRoles;
     public $table = 'muser_master';
     protected $fillable = ['emp_id', 'name', 'email', 'username', 'password', 'enc_pass', 'user_type', 'status', 'date', 'ref_no'];
+    public function getAuthPassword()
+    {
+        return $this->enc_pass;
+    }
 }
