@@ -20,6 +20,6 @@ class ClientGstn extends Model
     }
     public function clientManagement()
     {
-        return $this->hasMany(ClientManagement::class);
+        return $this->hasMany(ClientManagement::class,'client_id');
     }
 }

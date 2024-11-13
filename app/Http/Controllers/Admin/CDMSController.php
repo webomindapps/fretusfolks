@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use App\Models\ClientGstn;
-use App\Models\ClientManagement;
+use Exception;
 use App\Models\States;
+use App\Models\ClientGstn;
+use App\Exports\CDMSExport;
 use Illuminate\Http\Request;
+use App\Models\ClientManagement;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use Maatwebsite\Excel\Facades\Excel;
 
 class CDMSController extends Controller
 {
@@ -50,6 +54,7 @@ class CDMSController extends Controller
     }
     public function store(Request $request)
     {
+        dd($request->all());
         $validatedData = $request->validate([
             'client_code' => 'required|string|max:255',
             'client_name' => 'required|string|max:255',
@@ -67,8 +72,8 @@ class CDMSController extends Controller
             'tan' => 'required|string|max:10',
             'gstn' => 'nullable',
             'website_url' => 'required|url',
-            'mode_agreement' => 'required|in:1,2',
-            'agreement_type' => 'required|in:1,2,3',
+            'mode_agreement' => 'required|string',
+            'agreement_type' => 'required|string',
             'other_agreement' => 'nullable',
             'agreement_doc' => 'max:5000',
             'region' => 'required|string|max:255',
@@ -85,38 +90,46 @@ class CDMSController extends Controller
         $validatedData['modify_date'] = $request->input('modify_date', now());
         $validatedData['modify_by'] = $request->input('modify_by', 1);
 
-        if ($request->hasFile('agreement_doc')) {
-            $folder = 'agreements';
-            $agreement_doc1 = $request->file('agreement_doc')->store($folder, 'public');
-            $validatedData['agreement_doc'] = $agreement_doc1;
-        }
-
-
-        $client = $this->model()->create($validatedData);
-
-        $states = $request->state;
-        $gstnNos = $request->gstn_no;
-        if (count($states) === count($gstnNos)) {
-            foreach ($states as $index => $state) {
-                ClientGstn::create([
-                    'client_id' => $client->id,
-                    'state' => $state,
-                    'gstn_no' => strtoupper($gstnNos[$index]),
-                    'status' => $request->status ?? 1,
-                ]);
+        DB::beginTransaction();
+        try {
+            if ($request->hasFile('agreement_doc')) {
+                $folder = 'agreements';
+                $agreementDocPath = $request->file('agreement_doc')->store($folder, 'public');
+                $validatedData['agreement_doc'] = $agreementDocPath;
             }
+
+            $client = $this->model()->create($validatedData);
+
+            $states = $request->state;
+            $gstnNos = $request->gstn_no;
+
+            if (count($states) === count($gstnNos)) {
+                foreach ($states as $index => $state) {
+                    ClientGstn::create([
+                        'client_id' => $client->id,
+                        'state' => $state,
+                        'gstn_no' => strtoupper($gstnNos[$index]),
+                        'status' => $request->status ?? 1,
+                    ]);
+                }
+            }
+
+            DB::commit();
+
+            return redirect()->route('admin.cdms')->with('success', 'Client data has been successfully added!');
+        } catch (Exception $e) {
+            DB::rollBack();
+            dd($e);
         }
-        return redirect()->route('admin.cdms')->with('success', 'Client data has been successfully added!');
     }
+
+
 
     public function show($id)
     {
-        $client = ClientManagement::findOrFail($id);
-
-        // Prepare the data for the modal
-        $htmlContent = view('admin.client_mangement.cdms.view', compact('client'))->render();
-
-        // Return the HTML content wrapped in a JSON response
+        $client = $this->model()->findOrFail($id);
+        $clientgstn = ClientGstn::where('client_id', $client->id)->get();
+        $htmlContent = view('admin.client_mangement.cdms.view', compact('client', 'clientgstn'))->render();
         return response()->json(['html_content' => $htmlContent]);
     }
     public function edit($id)
@@ -143,7 +156,7 @@ class CDMSController extends Controller
     }
     public function update(Request $request, $id)
     {
-        $validatedData = $request->validate([
+        $request->validate([
             'client_code' => 'required|string|max:255',
             'client_name' => 'required|string|max:255',
             'land_line' => 'required|string|max:15',
@@ -160,8 +173,8 @@ class CDMSController extends Controller
             'tan' => 'required|string|max:10',
             'gstn' => 'nullable',
             'website_url' => 'required|url',
-            'mode_agreement' => 'required|in:1,2',
-            'agreement_type' => 'required|in:1,2,3',
+            'mode_agreement' => 'required|string',
+            'agreement_type' => 'required|string',
             'other_agreement' => 'nullable',
             'agreement_doc' => 'max:5000',
             'region' => 'required|string|max:255',
@@ -173,19 +186,27 @@ class CDMSController extends Controller
             'remark' => 'required|string',
         ]);
 
-        $client = $this->model()->findOrFail($id);
-        $client->update($validatedData);
+        DB::beginTransaction();
+        try {
+            $client = $this->model()->findOrFail($id);
+            $validatedData = $request->all();
+            $client->update($validatedData);
 
-        if ($request->hasFile('agreement_doc')) {
-            $folder = 'agreements';
-            $agreement_doc1 = $request->file('agreement_doc')->store($folder, 'public');
-            $client->agreement_doc = $agreement_doc1;
-            $client->save();
+            if ($request->hasFile('agreement_doc')) {
+                $folder = 'agreements';
+                $agreementDocPath = $request->file('agreement_doc')->store($folder, 'public');
+                $client->agreement_doc = $agreementDocPath;
+                $client->save();
+            }
+
+            DB::commit();
+
+            return redirect()->route('admin.cdms')->with('success', 'Client data has been successfully updated!');
+        } catch (Exception $e) {
+            DB::rollBack();
+            dd($e);
         }
-        // $this->gststore($request, $client->id);
-        return redirect()->route('admin.cdms')->with('success', 'Client data has been successfully updated!');
     }
-
     public function destroy($id)
     {
         $client = $this->model()->findOrFail($id);
@@ -231,5 +252,18 @@ class CDMSController extends Controller
         $gstn->delete();
         return redirect()->back()->with('success', 'GST NO deleted successfully.');
     }
+    public function export(Request $request)
+    {
+        $from_date = $request->from_date;
+        $to_date = $request->to_date;
+        $query = $this->model()->with('gstn')->get();
+        if ($from_date && $to_date) {
+            $query->whereBetween('created_at', [$from_date, $to_date]);
+        }
+        $clients = $query;
+
+        return Excel::download(new CDMSExport($clients), 'cdms.xlsx');
+    }
+
 
 }

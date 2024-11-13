@@ -25,6 +25,29 @@
                 ];
             @endphp
             <x-table :columns="$columns" :data="$client" :checkAll=true :bulk="route('admin.cdms.bulk')" :route="route('admin.cdms')">
+                <x-slot:filters>
+                    <form action="{{ route('admin.cdms.export') }}" method="POST">
+                        @csrf
+                        <div class="row px-2">
+                            <div class="col-lg-3">
+                                <div class="cdate">
+                                    <input type="date" class="form-control" name="from_date" id="from_date">
+                                </div>
+                            </div>
+                            <div class="col-lg-1 text-center my-auto">
+                                <span class="fw-semibold fs-6">To</span>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="cdate">
+                                    <input type="date" class="form-control" name="to_date" id="to_date">
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <button type="submit" class="add-btn bg-success text-white">Export</button>
+                            </div>
+                        </div>
+                    </form>
+                </x-slot:filters>
                 @foreach ($client as $key => $item)
                     <tr>
                         <td>
@@ -76,48 +99,30 @@
         </div>
     </div>
     <!-- Modal HTML -->
-    <div class="modal fade" id="client_details" tabindex="-1" role="dialog" aria-labelledby="clientDetailsLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header bg-primary">
-                    <h5 class="modal-title" id="clientDetailsLabel">Client Details</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <!-- The modal content will be dynamically inserted here -->
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn bg-primary" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
+    <x-model1 />
     @push('scripts')
-    <script>
-        function showClientDetails(clientId) {
-            // Send a request to fetch client details
-            fetch(`/admin/cdms/show/${clientId}`)
-                .then(response => response.json()) // Expecting JSON response
-                .then(data => {
-                    // Check if 'html_content' is in the response
-                    if (data.html_content) {
-                        // Insert the HTML content into the modal body
-                        document.querySelector('#client_details .modal-body').innerHTML = data.html_content;
-                        // Show the modal
-                        $('#client_details').modal('show');
-                    } else {
-                        console.error('No HTML content found in the response');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error fetching client details:', error);
-                });
-        }
-    </script>
-    
+        <script>
+            function showClientDetails(clientId) {
+                fetch(`/admin/cdms/show/${clientId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.html_content) {
+                            document.querySelector('#client_details .modal-body').innerHTML = data.html_content;
+                            $('#client_details').modal('show');
+                            const closeButton = document.querySelector('#closeModalButton');
+                            if (closeButton) {
+                                closeButton.addEventListener('click', function() {
+                                    $('#client_details').modal('hide');
+                                });
+                            }
+                        } else {
+                            console.error('No HTML content found in the response');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching client details:', error);
+                    });
+            }
+        </script>
     @endpush
 </x-applayout>

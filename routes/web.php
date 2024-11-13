@@ -60,6 +60,7 @@ Route::prefix('admin')->group(function () {
         Route::get('cdms/update_gst/{id}', [CDMSController::class, 'updateGst'])->name('cdms.update_gst');
         Route::get('cdms/update_state/{id}', [CDMSController::class, 'updateState'])->name('cdms.updateState');
         Route::get('cdms/{id}/gstdelete', [CDMSController::class, 'gstdestroy'])->name('cdms.gstdelete');
+        Route::post('cdms/export', [CDMSController::class, 'export'])->name('cdms.export');
 
         // roles
         Route::get('/roles', [RolePermissionController::class, 'index'])->name('roles');
