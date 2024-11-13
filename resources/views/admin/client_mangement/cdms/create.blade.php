@@ -86,7 +86,7 @@
                                                     required>
                                                     <option value="">Select State</option>
                                                     @foreach ($states as $state)
-                                                        <option value="{{ $state->name }}">{{ $state->state_name }}
+                                                        <option value="{{ $state->state_name }}">{{ $state->state_name }}
                                                         </option>
                                                     @endforeach
                                                 </select>
