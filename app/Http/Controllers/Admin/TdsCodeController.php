@@ -44,7 +44,7 @@ class TdsCodeController extends Controller
             'code' => 'required',
 
         ]);
-        TdsCode::create([
+        $this->model()->create([
             'code' => $request->code,
             'discount' => 0,
             'status' => 1,
@@ -54,8 +54,7 @@ class TdsCodeController extends Controller
     }
     public function destroy($id)
     {
-        $tds_code = $this->model()->findOrFail($id);
-        $tds_code->delete();
+        $this->model()->destroy($id);
         return redirect()->route('admin.tds_code')->with('success', 'Tds Code deleted successfully');
     }
     public function bulk(Request $request)
