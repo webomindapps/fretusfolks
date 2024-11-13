@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Role;
 
 class DatabaseSeeder extends Seeder
 {
@@ -20,9 +21,9 @@ class DatabaseSeeder extends Seeder
         $roles = ['Admin', 'Finance', 'Hroperations', 'Compliance', 'Recruitment', 'Sales'];
 
         foreach ($roles as $role) {
-            DB::table('roles')->insertOrIgnore([
+            Role::insertOrIgnore([
                 'name' => $role,
-                'guard_name'=>'web',
+                'guard_name' => 'web',
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
@@ -32,6 +33,5 @@ class DatabaseSeeder extends Seeder
             'email' => 'admin@example.com',
             'password' => Hash::make('password')
         ]);
-
     }
 }

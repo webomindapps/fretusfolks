@@ -14,16 +14,17 @@
     @endif
     <div class="col-lg-12 pb-4">
         <div class="form-card px-3">
-            <form method="POST" class="formSubmit" action="{{ route('admin.usermasters.edit',$users->id) }}"
+            <form method="POST" class="formSubmit" action="{{ route('admin.usermasters.edit', $users->id) }}"
                 enctype="multipart/form-data">
                 @csrf
                 <div class="row">
                     <div class="col-lg-6">
                         <label for="user_type">User Type</label>
                         <select name="user_type" id="user_type" class="form-control col-lg-4 mt-4">
-                            @foreach ($roles as $id => $name)
-                                <option value="{{ $id }}" {{ old('user_type',$users->user_type) == $id ? 'selected' : '' }}>
-                                    {{ $name }}
+                            @foreach ($roles as $role)
+                                <option value="{{ $role->name }}"
+                                    {{ old('user_type', $users->user_type) == $role->name ? 'selected' : '' }}>
+                                    {{ $role->name }}
                                 </option>
                             @endforeach
                         </select>

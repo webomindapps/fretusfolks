@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('client_management', function (Blueprint $table) {
-            // $table->bigInteger('id')->unsigned()->autoIncrement()->primary()->change();
+            $table->bigInteger('id')->unsigned()->autoIncrement()->change();
             // $table->string('client_code');
             // $table->string('client_name');
             // $table->string('land_line');
@@ -27,11 +27,11 @@ return new class extends Migration
             // $table->text('communication_address');
             // $table->string('pan');
             // $table->string('tan');
-            $table->string('gstn')->nullable();
+            $table->string('gstn')->nullable()->change();
             // $table->string('website_url');
             // $table->string('mode_agreement');
             // $table->string('agreement_type');
-            $table->string('other_agreement')->nullable();
+            $table->string('other_agreement')->nullable()->change();
             // $table->string('agreement_doc');
             // $table->string('region');
             // $table->integer('service_state ');

@@ -11,9 +11,9 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('client_gstn', function (Blueprint $table) {
-            $table->bigInteger('id')->unsigned()->autoIncrement()->primary()->change();
+            $table->bigInteger('id')->unsigned()->autoIncrement()->change();
             // $table->string('client_id');
-            $table->unsignedBigInteger('state')->after('client_id');
+            $table->unsignedBigInteger('state')->change();
             // $table->string('gstn_no');
             // $table->integer('status');
             $table->timestamps();
