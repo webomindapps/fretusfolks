@@ -29,20 +29,20 @@
                                 <x-forms.input label="Enter Client Name:" type="text" name="client_name"
                                     id="client_name" :required="true" size="col-lg-6 mt-2" :value="old('client_name', $client->client_name)" />
 
-                                <x-forms.input label="Enter Office Land-line Number:" type="text" name="land_line"
+                                <x-forms.input label="Enter Office Land-line Number:" type="number" name="land_line"
                                     id="land_line" :required="true" size="col-lg-6 mt-2" :value="old('land_line', $client->land_line)" />
 
-                                <x-forms.input label="Enter Client Mail ID:" type="text" name="client_email"
+                                <x-forms.input label="Enter Client Mail ID:" type="email" name="client_email"
                                     id="client_email" :required="true" size="col-lg-6 mt-2" :value="old('client_email', $client->client_email)" />
 
                                 <x-forms.input label="Enter Contact Person Name:" type="text" name="contact_person"
                                     id="contact_person" :required="true" size="col-lg-6 mt-2" :value="old('contact_person', $client->contact_person)" />
 
-                                <x-forms.input label="Enter Contact Person Mobile Number:" type="text"
+                                <x-forms.input label="Enter Contact Person Mobile Number:" type="number"
                                     name="contact_person_phone" id="contact_person_phone" :required="true"
                                     size="col-lg-6 mt-2" :value="old('contact_person_phone', $client->contact_person_phone)" />
 
-                                <x-forms.input label="Enter Contact Person Mail ID:" type="text"
+                                <x-forms.input label="Enter Contact Person Mail ID:" type="email"
                                     name="contact_person_email" id="contact_person_email" :required="true"
                                     size="col-lg-6 mt-2" :value="old('contact_person_email', $client->contact_person_email)" />
 
@@ -50,11 +50,11 @@
                                     name="contact_name_comm" id="contact_name_comm" :required="true"
                                     size="col-lg-6 mt-2" :value="old('contact_name_comm', $client->contact_name_comm)" />
 
-                                <x-forms.input label="Contact Person Phone (Communication):" type="text"
+                                <x-forms.input label="Contact Person Phone (Communication):" type="number"
                                     name="contact_phone_comm" id="contact_phone_comm" :required="true"
                                     size="col-lg-6 mt-2" :value="old('contact_phone_comm', $client->contact_phone_comm)" />
 
-                                <x-forms.input label="Contact Person Mail (Communication):" type="text"
+                                <x-forms.input label="Contact Person Mail (Communication):" type="email"
                                     name="contact_email_comm" id="contact_email_comm" :required="true"
                                     size="col-lg-6 mt-2" :value="old('contact_email_comm', $client->contact_email_comm)" />
 
@@ -72,33 +72,25 @@
                                 <x-forms.input label="Enter Client TAN Number:" type="text" name="tan"
                                     id="tan" :required="true" size="col-lg-6 mt-2" :value="old('tan', $client->tan)" />
 
-                                <x-forms.input label="Enter Client website URL: " type="text" name="website_url"
+                                <x-forms.input label="Enter Client website URL: " type="url" name="website_url"
                                     id="website_url" :required="true" size="col-lg-4 mt-2" :value="old('website_url', $client->website_url)" />
 
                                 <x-forms.select label="Service Location:" name="region" id="region"
-                                    :required="true" size="col-lg-4 mt-2" :options="[
-                                        ['label' => 'North', 'value' => 1],
-                                        ['label' => 'South', 'value' => 2],
-                                        ['label' => 'East', 'value' => 3],
-                                        ['label' => 'West', 'value' => 4],
-                                        ['label' => 'Pan India', 'value' => 5],
-                                    ]" :value="old('region', $client->region)" />
+                                    :required="true" size="col-lg-4 mt-2" :options="FretusFolks::getRegion()" :value="old('region', $client->region)" />
 
                                 <x-forms.select label="State:" name="service_state" id="service_state"
-                                    :required="true" size="col-lg-4 mt-2" :options="$states
-                                        ->map(fn($state) => ['value' => $state->id, 'label' => $state->state_name])
-                                        ->toArray()" :value="old('service_state', $client->service_state)" />
+                                    :required="true" size="col-lg-4 mt-2" :options="FretusFolks::getStates()" :value="old('service_state', $client->service_state)" />
 
                                 <x-forms.radio label="Mode of Agreement:" :options="[
-                                    ['value' => '1', 'label' => 'LOI'],
-                                    ['value' => '2', 'label' => 'Agreement'],
+                                    ['value' => 'LOI', 'label' => 'LOI'],
+                                    ['value' => 'Agreement', 'label' => 'Agreement'],
                                 ]" id="mode_agreement"
                                     name="mode_agreement" :required="true" size="col-lg-6 mt-2" :value="old('mode_agreement', $client->mode_agreement)" />
 
                                 <x-forms.radio label="Type of Agreement:" :options="[
-                                    ['value' => '1', 'label' => 'One Time Sourcing'],
-                                    ['value' => '2', 'label' => 'Contractual'],
-                                    ['value' => '3', 'label' => 'Other'],
+                                    ['value' => 'One Time Sourcing', 'label' => 'One Time Sourcing'],
+                                    ['value' => 'Contractual', 'label' => 'Contractual'],
+                                    ['value' => 'Other', 'label' => 'Other'],
                                 ]" id="agreement_type"
                                     name="agreement_type" :required="true" size="col-lg-6 mt-2"
                                     :value="old('agreement_type', $client->agreement_type)" />
@@ -175,7 +167,7 @@
                                         size="col-lg-4 mt-2" :options="$states
                                             ->map(
                                                 fn($state) => [
-                                                    'value' => $state->id,
+                                                    'value' => $state->state_name,
                                                     'label' => $state->state_name,
                                                 ],
                                             )
@@ -208,8 +200,8 @@
                                                 id="state_{{ $item->id }}"
                                                 onchange="updateState(this, {{ $item->id }})">
                                                 @foreach ($states as $state)
-                                                    <option value="{{ $state->id }}"
-                                                        {{ old('state.' . $item->id, $item->state) == $state->id ? 'selected' : '' }}>
+                                                    <option value="{{ $state->state_name }}"
+                                                        {{ old('state.' . $item->id, $item->state) == $state->state_name ? 'selected' : '' }}>
                                                         {{ $state->state_name }}
                                                     </option>
                                                 @endforeach

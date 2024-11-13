@@ -1,4 +1,9 @@
 <div class="row">
+    <div class="col-md-4 col-sm-12">
+        <p><b>Client Code :</b> <span>{{ $client->client_code }}</span></p>
+    </div>
+</div>
+<div class="row">
     <div class="col-md-4 col-sm-6">
         <p><b>Client Name :</b> <span>{{ $client->client_name }}</span></p>
     </div>
@@ -37,11 +42,11 @@
 <div class="row">
     <div class="col-md-4 col-sm-6">
         <p><b>PAN No :</b> <span>{{ $client->pan }}</span></p>
-        <p><b>Agreement Mode :</b> <span>{{ $client->agreement_mode }}</span></p>
+        <p><b>Agreement Mode :</b> <span>{{ $client->mode_agreement }}</span></p>
     </div>
     <div class="col-md-4 col-sm-6">
         <p><b>TAN No :</b> <span>{{ $client->tan }}</span></p>
-        <p><b>Agreement Type :</b> <span>{{ $client->other_agreement }}</span></p>
+        <p><b>Agreement Type :</b> <span>{{ $client->agreement_type }}</span></p>
     </div>
     <div class="col-md-4 col-sm-6">
         <p><b>Website URL :</b> <span>{{ $client->website_url }}</span></p>
@@ -64,13 +69,13 @@
 <div class="row">
     <div class="col-md-4 col-sm-6">
         <p><b>Zone :</b> <span>{{ $client->region }}</span></p>
-        <p><b>Servicing State :</b> <span>{{ $client->state ? $client->state->name : 'Not Available' }}</span></p>
+        <p><b>Servicing State :</b> <span>{{ $client->state->state_name }}</span></p>
         <p><b>Rate :</b> <span>{{ $client->rate }}</span></p>
     </div>
     <div class="col-md-4 col-sm-6">
         <p><b>Contract Start :</b> <span>{{ \Carbon\Carbon::parse($client->contract_start)->format('d-m-Y') }}</span>
         </p>
-        <p><b>Commercial Type :</b> <span>{{ $client->commercial_type }}</span></p>
+        <p><b>Commercial Type :</b> <span>{{ $client->commercial_type == 1 ? '%' : 'Rs' }}</span></p>
     </div>
     <div class="col-md-4 col-sm-6">
         <p><b>Contract End :</b> <span>{{ \Carbon\Carbon::parse($client->contract_end)->format('d-m-Y') }}</span></p>
@@ -82,7 +87,7 @@
 
 <div class="row">
     <div class="col-md-4 col-sm-6">
-        <p><b><a href="{{ $client->agreement_doc_url }}" target="_blank"><i class="fa fa-book"></i> Agreement
+        <p><b><a href="{{ $client->agreement_doc }}"><i class="fa fa-book"></i> Agreement
                     Document</a></b></p>
     </div>
 </div>
@@ -91,26 +96,31 @@
 
 <h6 class="font-weight-semibold">GSTN Details</h6>
 
-{{-- 
 <div class="row">
     <div class="col-md-12 col-sm-12">
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>Si No</th>
-                    <th>State</th>
-                    <th>GSTN No</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($client->gstn as $gst)
+        @if ($clientgstn->isNotEmpty())
+            <table class="table table-bordered">
+                <thead>
                     <tr>
-                        <td>{{ $loop->iteration }}</td>
-                        <td>{{ $gst->state_name }}</td>
-                        <td>{{ $gst->gstn_no }}</td>
+                        <th>Si No</th>
+                        <th>State</th>
+                        <th>GSTN No</th>
                     </tr>
-                @endforeach
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach ($clientgstn as $gst)
+                        <tr>
+                            <td>{{ $loop->iteration }}</td>
+                            <td>{{ $gst->state }}</td>
+                            <td>{{ $gst->gstn_no }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        @else
+            <p>No GSTN details available for this client.</p>
+        @endif
     </div>
-</div> --}}
+</div>
+
+</div>
