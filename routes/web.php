@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\TdsCodeController;
 use App\Http\Controllers\Admin\LetterContentController;
+use App\Http\Controllers\RolePermissionController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -60,6 +61,8 @@ Route::prefix('admin')->group(function () {
         Route::get('cdms/update_state/{id}', [CDMSController::class, 'updateState'])->name('cdms.updateState');
         Route::get('cdms/{id}/gstdelete', [CDMSController::class, 'gstdestroy'])->name('cdms.gstdelete');
 
+        // roles
+        Route::get('/roles', [RolePermissionController::class, 'index'])->name('roles');
 
 
     });

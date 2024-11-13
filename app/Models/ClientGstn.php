@@ -13,11 +13,6 @@ class ClientGstn extends Model
         'gstn_no',
         'status',
     ] ;
-       
-    public function state()
-    {
-        return $this->belongsTo(States::class, 'state');
-    }
     public function clientManagement()
     {
         return $this->hasMany(ClientManagement::class);
