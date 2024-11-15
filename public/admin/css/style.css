@@ -1097,6 +1097,8 @@ i.fas.fa-edit {
 
 .dropdown-menu.show {
   transform: translate(-133px, 25px) !important;
+  inset: 21px auto auto 135px !important;
+
 }
 
 .badge.sactive {
@@ -1844,7 +1846,32 @@ custom-dropdown {
   text-align: left;
   padding: 10px;
 }
+
 .modal-dialog {
   max-width: 938px;
   margin: 1.75rem auto;
+}
+
+.dropdown .btn.dropdown-toggle {
+  width: 100%;
+  text-align: left;
+  background-color: #f8f9fa;
+  border: 1px solid #ced4da;
+  padding: 0.375rem 0.75rem;
+  color: #495057;
+}
+
+.dropdown-menu {
+  max-height: 200px;
+  overflow-y: auto;
+  width: 100%;
+  padding-left: 15px;
+}
+
+.form-check {
+  padding: 5px 15px;
+}
+
+.dropdown-divider {
+  margin: 5px 0;
 }

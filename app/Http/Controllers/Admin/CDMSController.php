@@ -7,6 +7,7 @@ use App\Models\States;
 use App\Models\ClientGstn;
 use App\Exports\CDMSExport;
 use Illuminate\Http\Request;
+use App\Exports\ClientExport;
 use App\Models\ClientManagement;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
@@ -39,7 +40,6 @@ class CDMSController extends Controller
                     ($key == 0) ? $q->where($value, 'LIKE', '%' . $search . '%') : $q->orWhere($value, 'LIKE', '%' . $search . '%');
             });
 
-        // sorting
         ($order == '') ? $query->orderByDesc('id') : $query->orderBy($order, $orderBy);
 
         $client = $paginate ? $query->paginate($paginate)->appends(request()->query()) : $query->paginate(10)->appends(request()->query());
@@ -54,7 +54,7 @@ class CDMSController extends Controller
     }
     public function store(Request $request)
     {
-        dd($request->all());
+        // dd($request->all());
         $validatedData = $request->validate([
             'client_code' => 'required|string|max:255',
             'client_name' => 'required|string|max:255',
@@ -75,7 +75,7 @@ class CDMSController extends Controller
             'mode_agreement' => 'required|string',
             'agreement_type' => 'required|string',
             'other_agreement' => 'nullable',
-            'agreement_doc' => 'max:5000',
+            'agreement_doc' => 'mimes:doc,docx,pdf|max:5000',
             'region' => 'required|string|max:255',
             'service_state' => 'required|integer',
             'contract_start' => 'required|date',
@@ -85,7 +85,7 @@ class CDMSController extends Controller
             'remark' => 'required|string',
         ]);
 
-        $validatedData['status'] = $request->input('status', 0);
+        $validatedData['status'] = $request->input('status', 1);
         $validatedData['active_status'] = $request->input('active_status', 0);
         $validatedData['modify_date'] = $request->input('modify_date', now());
         $validatedData['modify_by'] = $request->input('modify_by', 1);
@@ -94,7 +94,9 @@ class CDMSController extends Controller
         try {
             if ($request->hasFile('agreement_doc')) {
                 $folder = 'agreements';
-                $agreementDocPath = $request->file('agreement_doc')->store($folder, 'public');
+                $file = $request->file('agreement_doc');
+                $fileName = time() . '-' . $file->getClientOriginalName();
+                $agreementDocPath = $file->storeAs($folder, $fileName, 'public');
                 $validatedData['agreement_doc'] = $agreementDocPath;
             }
 
@@ -122,9 +124,6 @@ class CDMSController extends Controller
             dd($e);
         }
     }
-
-
-
     public function show($id)
     {
         $client = $this->model()->findOrFail($id);
@@ -143,7 +142,7 @@ class CDMSController extends Controller
     {
         $client = $this->model()->findOrFail($id);
         $request->validate([
-            'state' => 'exists:states,id',
+            'state' => 'exists:states,state_name',
             'gstn_no' => '',
         ]);
         ClientGstn::create([
@@ -256,14 +255,65 @@ class CDMSController extends Controller
     {
         $from_date = $request->from_date;
         $to_date = $request->to_date;
-        $query = $this->model()->with('gstn')->get();
+        $query = $this->model()->with('gstn');
         if ($from_date && $to_date) {
             $query->whereBetween('created_at', [$from_date, $to_date]);
         }
-        $clients = $query;
+        $clients = $query->get();
 
         return Excel::download(new CDMSExport($clients), 'cdms.xlsx');
     }
+    public function exportReport(Request $request)
+    {
+        $fields = explode(',', $request->input('fields'));
+        if (empty($fields)) {
+            return redirect()->route('admin.cdms_report')->with('error', 'No fields selected for export');
+        }
 
+        return Excel::download(new ClientExport($fields), 'cdmsreport.xlsx');
+    }
+
+    public function showCodeReport()
+    {
+        return view('admin.client_mangement.cdms_report.index', [
+            'results' => [],
+            'fromDate' => null,
+            'toDate' => null,
+            'selectedData' => [],
+            'selectedStates' => [],
+            'region' => null,
+            'status' => null,
+        ]);
+    }
+    public function codeReport(Request $request)
+    {
+        $fromDate = $request->input('from-date');
+        $toDate = $request->input('to-date');
+        $selectedData = $request->input('data', []);
+        $selectedStates = $request->input('service_state', []);
+        $region = $request->input('region');
+        $status = $request->input('status');
+        $perPage = $request->input('per_page', 10);
+
+        $filteredResults = $this->model();
+
+        if ($fromDate && $toDate) {
+            $filteredResults->whereBetween('created_at', [$fromDate, $toDate]);
+        }
+        if (!empty($selectedStates)) {
+            $filteredResults->whereIn('service_state', $selectedStates);
+        }
+        if ($region) {
+            $filteredResults->where('region', $region);
+        }
+        if ($status !== null && $status !== '') {
+            $filteredResults->where('status', (int) $status);
+        }
+        if (!empty($selectedData)) {
+            $filteredResults->select($selectedData);
+        }
+        $results = $filteredResults->paginate($perPage)->appends($request->query());
+        return view('admin.client_mangement.cdms_report.index', compact('results', 'fromDate', 'toDate', 'selectedData', 'selectedStates', 'region', 'status'));
+    }
 
 }

@@ -1,12 +1,13 @@
 <?php
 
-use App\Http\Controllers\Admin\CDMSController;
-use App\Http\Controllers\Admin\LoginController;
-use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\CDMSController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\TdsCodeController;
-use App\Http\Controllers\Admin\LetterContentController;
 use App\Http\Controllers\RolePermissionController;
+use App\Http\Controllers\Admin\CDMSReportController;
+use App\Http\Controllers\Admin\LetterContentController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -61,6 +62,9 @@ Route::prefix('admin')->group(function () {
         Route::get('cdms/update_state/{id}', [CDMSController::class, 'updateState'])->name('cdms.updateState');
         Route::get('cdms/{id}/gstdelete', [CDMSController::class, 'gstdestroy'])->name('cdms.gstdelete');
         Route::post('cdms/export', [CDMSController::class, 'export'])->name('cdms.export');
+        Route::get('cdms/cdms_report', [CDMSController::class, 'showCodeReport'])->name('cdms_report.get');
+        Route::post('cdms/cdms_report', [CDMSController::class, 'codeReport'])->name('cdms_report');
+        Route::post('cdms/cdms_report/export', [CDMSController::class, 'exportReport'])->name('cdms_report.export');
 
         // roles
         Route::get('/roles', [RolePermissionController::class, 'index'])->name('roles');

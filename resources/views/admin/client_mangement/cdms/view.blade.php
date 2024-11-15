@@ -87,10 +87,16 @@
 
 <div class="row">
     <div class="col-md-4 col-sm-6">
-        <p><b><a href="{{ $client->agreement_doc }}"><i class="fa fa-book"></i> Agreement
-                    Document</a></b></p>
+        <p>
+            <b>
+                <a href="{{ url($client->agreement_doc) }}" target="_blank" rel="noopener noreferrer">
+                    <i class="fa fa-book"></i> Agreement Document
+                </a>
+            </b>
+        </p>
     </div>
 </div>
+
 
 <hr>
 
