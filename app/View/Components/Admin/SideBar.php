@@ -67,6 +67,29 @@ class SideBar extends Component
             ],
 
         ],
+        [
+            'title' => 'ADMS',
+            'name' => 'adms',
+            'icon' => '  bx bxl-slack',
+            'route' => '',
+            'isSubMenu' => true,
+            'subMenus' => [
+                [
+                    'title' => 'CFIS',
+                    'icon' => 'bx bx-chevron-right',
+                    'route' => 'admin.cfis',
+                    'name' => 'cfis',
+                ],
+                // [
+                //     'title' => 'CFIS Report',
+                //     'icon' => 'bx bx-chevron-right',
+                //     'route' => 'admin.cfis_report',
+                //     'name' => 'cfis_report',
+                // ],
+               
+            ],
+
+        ],
     ];
 
 

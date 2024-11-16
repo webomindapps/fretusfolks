@@ -67,5 +67,13 @@ class FretusFolks extends Controller
         }
         return $data;
     }
-
+    public function getClientname()
+    {
+        $clientnames = ClientManagement::all();
+        $clientname_arr = [];
+        foreach ($clientnames as $clientname) {
+            $clientname_arr[] = ['label' => $clientname->client_name, 'value' => $clientname->client_name];
+        }
+        return $clientname_arr;
+    }
 }

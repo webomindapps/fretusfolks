@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\CDMSController;
+use App\Http\Controllers\Admin\CFISController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\TdsCodeController;
@@ -71,6 +72,15 @@ Route::prefix('admin')->group(function () {
         Route::get('/role/{id}/permissions', [RolePermissionController::class, 'permission'])->name('permission');
         Route::post('/role/{id}/permissions', [RolePermissionController::class, 'assignPermission']);
 
+        //cfis
+        Route::get('/cfis', [CFISController::class, 'index'])->name('cfis');
+        Route::get('cfis/create', [CFISController::class, 'create'])->name('cfis.create');
+        Route::post('cfis/create', [CFISController::class, 'store']);
+        Route::post('cfis/bulk_operation', [CFISController::class, 'bulk'])->name('cfis.bulk');
+        Route::get('cfis/{id}/delete', [CFISController::class, 'destroy'])->name('cfis.delete');
+        Route::post('cfis/export', [CFISController::class, 'export'])->name('cfis.export');
+        Route::get('cfis/status/{id}', [CFISController::class, 'toggleStatus'])->name('cfis.status');
+        Route::get('cfis/data_status/{id}', [CFISController::class, 'toggleData_status'])->name('cfis.data_status');
 
     });
 });

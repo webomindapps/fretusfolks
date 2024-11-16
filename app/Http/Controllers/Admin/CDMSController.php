@@ -77,7 +77,7 @@ class CDMSController extends Controller
             'other_agreement' => 'nullable',
             'agreement_doc' => 'mimes:doc,docx,pdf|max:5000',
             'region' => 'required|string|max:255',
-            'service_state' => 'required|integer',
+            'service_state' => 'required',
             'contract_start' => 'required|date',
             'contract_end' => 'required|date',
             'rate' => 'required|string|max:255',

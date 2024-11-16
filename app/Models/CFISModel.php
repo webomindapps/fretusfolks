@@ -115,4 +115,5 @@ class CFISModel extends Model
         'psd',
     ];
 
+    public $timestamps = false;
 }
