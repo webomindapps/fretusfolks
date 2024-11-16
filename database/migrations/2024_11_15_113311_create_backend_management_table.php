@@ -96,7 +96,7 @@ return new class extends Migration
             $table->integer('created_by')->nullable()->change();
             $table->integer('active_status')->nullable()->change();
             $table->integer('dcs_approval')->nullable()->change();
-            //  $table->timestamps();
+            // $table->timestamps();
         });
     }
 
