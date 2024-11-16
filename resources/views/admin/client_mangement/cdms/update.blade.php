@@ -162,7 +162,7 @@
                                 <h5 class="card-title mb-0">Add GST Details</h5>
                             </div>
                             <div class="card-body">
-                                <div class="row">
+                                <div class="row align-items-end">
                                     <x-forms.select label="State:" name="state" id="state" :required="true"
                                         size="col-lg-4 mt-2" :options="$states
                                             ->map(
@@ -174,9 +174,7 @@
                                             ->toArray()" />
                                     <x-forms.input label="GST NO" name="gstn_no" id="gstn_no" :required="true"
                                         style="text-transform:uppercase" size="col-lg-4 mt-2" />
-                                </div>
-                                <div class="col-lg-4 mt-2">
-                                    <x-forms.button type="submit" label="Save" class="btn btn-primary" />
+                                    <x-forms.button type="submit" label="Save" class="btn btn-primary col-1" />
                                 </div>
                             </div>
                         </div>

@@ -1,17 +1,5 @@
 <x-applayout>
-    <x-admin.breadcrumb title=" Client Database Management System" />
-    <div class="col-lg-12 mt-4">
-        <div class="form-card">
-            <div class="row mb-2">
-                <div class="col-lg-5 my-auto text-end ms-auto">
-                    </a>
-                    <a href="{{ route('admin.cdms.create') }}" class="add-btn bg-success text-white">
-                        New Client
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
+    <x-admin.breadcrumb title=" Client Database Management System" :create="route('admin.cdms.create')" />
     <div class="row">
         <div class="col-lg-12">
             @php
@@ -24,7 +12,7 @@
                     ['label' => 'Actions', 'column' => 'action', 'sort' => false],
                 ];
             @endphp
-            <x-table :columns="$columns" :data="$client" :checkAll=true :bulk="route('admin.cdms.bulk')" :route="route('admin.cdms')">
+            <x-table :columns="$columns" :data="$client" :checkAll=false :bulk="route('admin.cdms.bulk')" :route="route('admin.cdms')">
                 <x-slot:filters>
                     <form action="{{ route('admin.cdms.export') }}" method="POST">
                         @csrf
@@ -50,10 +38,10 @@
                 </x-slot:filters>
                 @foreach ($client as $key => $item)
                     <tr>
-                        <td>
+                        {{-- <td>
                             <input type="checkbox" name="selected_items[]" class="single-item-check"
                                 value="{{ $item->id }}">
-                        </td>
+                        </td> --}}
                         <td>{{ $item->id }}</td>
                         <td>
                             {{ $item->client_name }}
@@ -107,7 +95,7 @@
                     .then(response => response.json())
                     .then(data => {
                         if (data.html_content) {
-                            document.querySelector('#client_details .modal-body').innerHTML = data.html_content;
+                            document.querySelector('#client_details').innerHTML = data.html_content;
                             $('#client_details').modal('show');
                             const closeButton = document.querySelector('#closeModalButton');
                             if (closeButton) {

@@ -20,7 +20,7 @@
                 @csrf
                 <div class="row">
                     <x-forms.textarea label="Content" name="content" id="content" :required="false"
-                        size="col-lg-8 mt-3" value="{!! $letter_content->content !!}" />
+                        size="col-lg-12 mt-3" value="{!! $letter_content->content !!}" />
                 </div>
                 <button type="submit" class="submit-btn submitBtn" id="submitButton">Update</button>
             </form>

@@ -1,17 +1,5 @@
 <x-applayout>
-    <x-admin.breadcrumb title="Letter Content" />
-    <div class="col-lg-12 mt-4">
-        <div class="form-card">
-            <div class="row mb-2">
-                <div class="col-lg-5 my-auto text-end ms-auto">
-                    </a>
-                    <a href="{{ route('admin.letter_content.create') }}" class="add-btn bg-success text-white">
-                        Add
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
+    <x-admin.breadcrumb title="Letter Content" :create="route('admin.letter_content.create')" />
     <div class="row">
         <div class="col-lg-12">
             @php

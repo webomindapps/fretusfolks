@@ -14,6 +14,7 @@
     <link defer rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" />
     <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="{{ asset('admin/css/style.css') }}">
+    @stack('styles')
 </head>
 
 <body>

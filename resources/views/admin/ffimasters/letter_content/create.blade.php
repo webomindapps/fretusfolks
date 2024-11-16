@@ -19,13 +19,13 @@
                 @csrf
                 <div class="form-contents">
                     <div class="row">
-                    <x-forms.input label="Type" type="text" name="type" id="type" :required="true"
-                        size="col-lg-6 mt-4" />
-                    <x-forms.input label="Letter Type" type="text" name="letter_type" id="letter_type"
-                        :required="true" size="col-lg-6 mt-4" />
-                    <x-forms.textarea label="Content" type="text" name="content" id="content" :required="true"
-                        size="col-lg-12" />
-                </div>
+                        <x-forms.input label="Type" type="text" name="type" id="type" :required="true"
+                            size="col-lg-6 mt-4" />
+                        <x-forms.input label="Letter Type" type="text" name="letter_type" id="letter_type"
+                            :required="true" size="col-lg-6 mt-4" />
+                        <x-forms.textarea label="Content" type="text" name="content" id="content" :required="true"
+                            size="col-lg-12" />
+                    </div>
                 </div>
                 <div class="row">
                     <div class="col-lg-12">

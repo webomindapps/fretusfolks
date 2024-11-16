@@ -54,7 +54,6 @@ class CDMSController extends Controller
     }
     public function store(Request $request)
     {
-        dd($request->all());
         $validatedData = $request->validate([
             'client_code' => 'required|string|max:255',
             'client_name' => 'required|string|max:255',
