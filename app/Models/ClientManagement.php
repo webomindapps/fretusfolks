@@ -42,7 +42,7 @@ class ClientManagement extends Model
     ];
     public function gstn()
     {
-        return $this->belongsTo(ClientGstn::class, 'gstn');
+        return $this->belongsTo(ClientGstn::class);
     }
     public function state()
     {
