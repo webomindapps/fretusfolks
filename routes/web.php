@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\TdsCodeController;
 use App\Http\Controllers\RolePermissionController;
 use App\Http\Controllers\Admin\CDMSReportController;
+use App\Http\Controllers\Admin\CMSESICController;
 use App\Http\Controllers\Admin\LetterContentController;
 
 Route::get('/', function () {
@@ -70,7 +71,11 @@ Route::prefix('admin')->group(function () {
         Route::get('/roles', [RolePermissionController::class, 'index'])->name('roles');
         Route::get('/role/{id}/permissions', [RolePermissionController::class, 'permission'])->name('permission');
         Route::post('/role/{id}/permissions', [RolePermissionController::class, 'assignPermission']);
-
+        
+        // CMS ESIC
+        Route::get('/cms_esic', [CMSESICController::class, 'index'])->name('cms.esic');
+        Route::get('/cms_esic/create', [CMSESICController::class, 'create'])->name('cms.esic.create');
+        Route::post('/cms_esic/create', [CMSESICController::class, 'store']);
 
     });
 });
