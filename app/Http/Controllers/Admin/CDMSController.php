@@ -287,6 +287,15 @@ class CDMSController extends Controller
     }
     public function codeReport(Request $request)
     {
+        $request->validate([
+            'from-date' => 'nullable|date',
+            'to-date' => 'nullable|date',
+            'data' => 'nullable|array',
+            'service_state' => 'nullable|array',
+            'region' => 'nullable|string',
+            'status' => 'nullable|integer',
+            'per_page' => 'nullable|integer|min:1',
+        ]);
         $fromDate = $request->input('from-date');
         $toDate = $request->input('to-date');
         $selectedData = $request->input('data', []);
@@ -295,25 +304,33 @@ class CDMSController extends Controller
         $status = $request->input('status');
         $perPage = $request->input('per_page', 10);
 
-        $filteredResults = $this->model();
+        $filteredResults = $this->model()->newQuery();
 
         if ($fromDate && $toDate) {
-            $filteredResults->whereBetween('created_at', [$fromDate, $toDate]);
+            $filteredResults->whereBetween('created_at', ["{$fromDate} 00:00:00", "{$toDate} 23:59:59"]);
         }
         if (!empty($selectedStates)) {
             $filteredResults->whereIn('service_state', $selectedStates);
         }
-        if ($region) {
+        if (!empty($region)) {
             $filteredResults->where('region', $region);
         }
         if ($status !== null && $status !== '') {
             $filteredResults->where('status', (int) $status);
         }
         if (!empty($selectedData)) {
-            $filteredResults->select($selectedData);
+            $filteredResults->select(array_merge($selectedData, ['id', 'created_at', 'region', 'service_state', 'status']));
         }
         $results = $filteredResults->paginate($perPage)->appends($request->query());
-        return view('admin.client_mangement.cdms_report.index', compact('results', 'fromDate', 'toDate', 'selectedData', 'selectedStates', 'region', 'status'));
-    }
 
+        return view('admin.client_mangement.cdms_report.index', compact(
+            'results',
+            'fromDate',
+            'toDate',
+            'selectedData',
+            'selectedStates',
+            'region',
+            'status'
+        ));
+    }
 }

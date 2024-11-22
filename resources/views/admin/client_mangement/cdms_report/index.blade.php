@@ -129,6 +129,7 @@
                                     @endforeach
                                     <td>
                                         <a href="javascript:void(0);" class="btn btn-info"
+                                            data-target="#client_details"
                                             onclick="showClientDetails({{ $result->id }})">
                                             <i class='bx bx-link-alt'></i> View
                                         </a>
@@ -164,12 +165,11 @@
             }
 
             function showClientDetails(clientId) {
-
                 fetch(`/admin/cdms/show/${clientId}`)
                     .then(response => response.json())
                     .then(data => {
                         if (data.html_content) {
-                            document.querySelector('#client_details .modal-body').innerHTML = data.html_content;
+                            document.querySelector('#client_details').innerHTML = data.html_content;
                             $('#client_details').modal('show');
                             const closeButton = document.querySelector('#closeModalButton');
                             if (closeButton) {
@@ -178,7 +178,7 @@
                                 });
                             }
                         } else {
-                            console.error('Error: No HTML content found in the response');
+                            console.error('No HTML content found in the response');
                         }
                     })
                     .catch(error => {

@@ -1,34 +1,21 @@
 <x-applayout>
-    <x-admin.breadcrumb title="  Candidate First Information System" />
-    <div class="col-lg-12 mt-4">
-        <div class="form-card">
-            <div class="row mb-2">
-                <div class="col-lg-5 my-auto text-end ms-auto">
-                    </a>
-                    <a href="{{ route('admin.cfis.create') }}" class="add-btn bg-success text-white">
-                        New Client
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
+    <x-admin.breadcrumb title=" DCS Approval" />
     <div class="row">
         <div class="col-lg-12">
             @php
                 $columns = [
                     ['label' => 'Id', 'column' => 'id', 'sort' => true],
-                    ['label' => 'Client Name', 'column' => 'client_id', 'sort' => true],
+                    ['label' => 'Client Name', 'column' => 'entity_name', 'sort' => true],
                     ['label' => 'Employee Name', 'column' => 'emp_name', 'sort' => true],
-                    ['label' => 'Joining date', 'column' => 'joining_date', 'sort' => true],
                     ['label' => 'Phone', 'column' => 'phone1', 'sort' => true],
                     ['label' => 'Approval Status', 'column' => 'data_status', 'sort' => true],
                     ['label' => 'Status', 'column' => 'status', 'sort' => true],
                     ['label' => 'Actions', 'column' => 'action', 'sort' => false],
                 ];
             @endphp
-            <x-table :columns="$columns" :data="$candidate" :checkAll=true :bulk="route('admin.cfis.bulk')" :route="route('admin.cfis')">
-                <x-slot:filters>
-                    <form action="{{ route('admin.cfis.export') }}" method="POST">
+            <x-table :columns="$columns" :data="$candidate" :checkAll=true :bulk="route('admin.cfis.bulk')" :route="route('admin.dcs_approval')">
+                {{-- <x-slot:filters>
+                    <form action="{{ route('admin.dcs_approval.export') }}" method="POST">
                         @csrf
                         <div class="row px-2">
                             <div class="col-lg-3">
@@ -49,7 +36,7 @@
                             </div>
                         </div>
                     </form>
-                </x-slot:filters>
+                </x-slot:filters> --}}
                 @foreach ($candidate as $key => $item)
                     <tr>
                         <td>
@@ -58,10 +45,9 @@
                         </td>
                         <td>{{ $item->id }}</td>
                         <td>
-                            {{ $item->client_id }}
+                            {{ $item->entity_name }}
                         </td>
                         <td> {{ $item->emp_name }}</td>
-                        <td> {{ $item->joining_date }}</td>
                         <td> {{ $item->phone1 }}</td>
                         <td>
                             <a href="{{ route('admin.cfis.data_status', $item->id) }}">
@@ -100,15 +86,15 @@
                                         onclick="showClientDetails({{ $item->id }})">
                                         <i class='bx bx-link-alt'></i>
                                         View Details
-                                    </a>
+                                    </a> --}}
 
-                                    <a class="dropdown-item" href="{{ route('admin.cdms.edit', $item) }}">
+                                    <a class="dropdown-item" href="{{ route('admin.dcs_approval.edit', $item) }}">
                                         <i class='bx bx-edit-alt'></i>
                                         Edit
-                                    </a> --}}
+                                    </a>
                                         <a class="dropdown-item"
                                             onclick="return confirm('Are you sure to delete this ?')"
-                                            href="{{ route('admin.cfis.delete', $item) }}">
+                                            href="{{ route('admin.dcs_approval.delete', $item) }}">
                                             <i class='bx bx-trash-alt'></i>
                                             Delete
                                         </a>

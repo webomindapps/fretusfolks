@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\DCSApprovalController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\CDMSController;
 use App\Http\Controllers\Admin\CFISController;
@@ -81,6 +82,12 @@ Route::prefix('admin')->group(function () {
         Route::post('cfis/export', [CFISController::class, 'export'])->name('cfis.export');
         Route::get('cfis/status/{id}', [CFISController::class, 'toggleStatus'])->name('cfis.status');
         Route::get('cfis/data_status/{id}', [CFISController::class, 'toggleData_status'])->name('cfis.data_status');
+
+        //dcs_approval
+        Route::get('/dcs_approval', [DCSApprovalController::class, 'index'])->name('dcs_approval');
+        Route::get('dcs_approval/{id}/edit', [DCSApprovalController::class, 'edit'])->name('dcs_approval.edit');
+        Route::post('dcs_approval/{id}/edit', [DCSApprovalController::class, 'update']);
+        Route::get('dcs_approval/{id}/delete', [DCSApprovalController::class, 'destroy'])->name('dcs_approval.delete');
 
     });
 });

@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Exception;
 use App\Models\CFISModel;
 use App\Exports\CDMSExport;
 use App\Exports\CFISExport;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -67,6 +69,7 @@ class CFISController extends Controller
             'photo' => 'required|file|mimes:jpg,jpeg,png|max:2048',
             'resume' => 'required|file|max:2048',
         ]);
+        $validatedData['created_at'] = $request->input('created_at', now());
         $validatedData['status'] = $request->input('status', 1);
         $validatedData['data_status'] = $request->input('data_status', 1);
         $validatedData['active_status'] = $request->input('active_status', 1);
@@ -74,9 +77,17 @@ class CFISController extends Controller
         $validatedData['driving_license_path'] = $request->file('driving_license_path')->store('uploads/license');
         $validatedData['photo'] = $request->file('photo')->store('uploads/photos');
         $validatedData['resume'] = $request->file('resume')->store('uploads/resumes');
+        
+        DB::beginTransaction();
+        try {
+            $this->model()->create($validatedData);
+            DB::commit();
 
-        $this->model()->create($validatedData);
-        return redirect()->route('admin.cfis')->with('success', 'Candidate data added successfully!');
+            return redirect()->route('admin.cfis')->with('success', 'Candidate data added successfully!');
+        } catch (Exception $e) {
+            DB::rollBack();
+            dd($e);
+        }
     }
     public function destroy($id)
     {
@@ -103,7 +114,7 @@ class CFISController extends Controller
     {
         $from_date = $request->from_date;
         $to_date = $request->to_date;
-        $query = $this->model();
+        $query = $this->model()->query();
         if ($from_date && $to_date) {
             $query->whereBetween('created_at', [$from_date, $to_date]);
         }

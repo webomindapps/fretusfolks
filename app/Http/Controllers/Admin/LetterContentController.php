@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use App\Models\LetterContent;
+use Exception;
 use Illuminate\Http\Request;
+use App\Models\LetterContent;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 
 class LetterContentController extends Controller
 {
@@ -52,13 +54,20 @@ class LetterContentController extends Controller
             'content' => 'required',
 
         ]);
-        $this->model()->create([
-            'type' => $request->type,
-            'letter_type' => $request->letter_type,
-            'content' => $request->content,
-        ]);
-        return redirect()->route('admin.letter_content')->with('success', 'Letter Content added successfully');
+        DB::beginTransaction();
+        try {
+            $this->model()->create([
+                'type' => $request->type,
+                'letter_type' => $request->letter_type,
+                'content' => $request->content,
+            ]);
+            DB::commit();
 
+            return redirect()->route('admin.letter_content')->with('success', 'Letter Content added successfully');
+        } catch (Exception $e) {
+            DB::rollBack();
+            dd($e);
+        }
     }
     public function edit($id)
     {
@@ -67,11 +76,19 @@ class LetterContentController extends Controller
     }
     public function update(Request $request, $id)
     {
-        $letter_content = $this->model()->find($id);
-        $letter_content->update([
-            'content' => $request->content,
-        ]);
-        return redirect()->route('admin.letter_content')->with('success', 'Letter Content Updated successfully');
+        DB::beginTransaction();
+        try {
+            $letter_content = $this->model()->find($id);
+            $letter_content->update([
+                'content' => $request->content,
+            ]);
+            DB::commit();
+
+            return redirect()->route('admin.letter_content')->with('success', 'Letter Content Updated successfully');
+        } catch (Exception $e) {
+            DB::rollBack();
+            dd($e);
+        }
     }
     public function bulk(Request $request)
     {

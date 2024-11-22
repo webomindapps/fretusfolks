@@ -35,19 +35,11 @@
                 <td>{{ $candidate->interview_date }}</td>
                 <td>{{ $candidate->joining_date }}</td>
                 <td>{{ $candidate->aadhar_no }}</td>
-                <td>
-                    <a href="{{ asset($candidate->aadhar_path) }}" target="_blank">View Document</a>
-                </td>
+                <td>{{ $candidate->aadhar_path }}</td>
                 <td>{{ $candidate->driving_license_no }}</td>
-                <td>
-                    <a href="{{ asset($candidate->driving_license_path) }}" target="_blank">View Document</a>
-                </td>
-                <td>
-                    <img src="{{ asset($candidate->photo) }}" alt="Photo" width="50" height="50">
-                </td>
-                <td>
-                    <a href="{{ asset($candidate->resume) }}" target="_blank">View Resume</a>
-                </td>
+                <td>{{ $candidate->driving_license_path }} </td>
+                <td>{{ $candidate->photo }} </td>
+                <td>{{ $candidate->resume }} </td>
             </tr>
         @endforeach
     </tbody>

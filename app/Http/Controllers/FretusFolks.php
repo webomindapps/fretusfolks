@@ -76,4 +76,24 @@ class FretusFolks extends Controller
         }
         return $clientname_arr;
     }
+    public function getMarital()
+    {
+        return [
+            ['label' => 'Single', 'value' => 'Single'],
+            ['label' => 'Married', 'value' => 'Married'],
+        ];
+    }
+    public function getBlood()
+    {
+        return [
+            ['label' => 'O+', 'value' => 'O+'],
+            ['label' => 'O-', 'value' => 'O-'],
+            ['label' => 'A+', 'value' => 'A+'],
+            ['label' => 'A-', 'value' => 'A-'],
+            ['label' => 'B+', 'value' => 'B+'],
+            ['label' => 'B-', 'value' => 'B-'],
+            ['label' => 'AB+', 'value' => 'AB+'],
+            ['label' => 'AB-', 'value' => 'AB-'],
+        ];
+    }
 }
