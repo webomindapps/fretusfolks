@@ -90,6 +90,29 @@ class SideBar extends Component
             ],
 
         ],
+        [
+            'title' => 'FHRMS',
+            'name' => 'fhrms',
+            'icon' => '  bx bxl-slack',
+            'route' => '',
+            'isSubMenu' => true,
+            'subMenus' => [
+                [
+                    'title' => 'FHRMS',
+                    'icon' => 'bx bx-chevron-right',
+                    'route' => 'admin.fhrms',
+                    'name' => 'fhrms',
+                ],
+                // [
+                //     'title' => 'DCS Approval',
+                //     'icon' => 'bx bx-chevron-right',
+                //     'route' => 'admin.dcs_approval',
+                //     'name' => 'dcs_approval',
+                // ],
+
+            ],
+
+        ],
     ];
 
 

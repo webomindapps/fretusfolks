@@ -96,4 +96,11 @@ class FretusFolks extends Controller
             ['label' => 'AB-', 'value' => 'AB-'],
         ];
     }
+    public function getUan()
+    {
+        return [
+            ['label' => 'Old', 'value' => 'old'],
+            ['label' => 'New', 'value' => 'new'],
+            ];
+    }
 }
