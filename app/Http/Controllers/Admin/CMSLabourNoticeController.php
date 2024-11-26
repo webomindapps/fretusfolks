@@ -4,15 +4,15 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\ClientManagement;
-use App\Models\CMSESIC;
+use App\Models\CMSLabour;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 
-class CMSESICController extends Controller
+class CMSLabourNoticeController extends Controller
 {
     public function model()
     {
-        return new CMSESIC;
+        return new CMSLabour;
     }
     public function index()
     {
@@ -41,12 +41,12 @@ class CMSESICController extends Controller
             $challans = $query->paginate();
         }
         $clients = ClientManagement::where('status', true)->get();
-        return view("admin.cms.esic_chalan.index", compact("challans", "clients"));
+        return view("admin.cms.form_t.index", compact("challans", "clients"));
     }
     public function create()
     {
         $clients = ClientManagement::where('status', true)->get();
-        return view("admin.cms.esic_chalan.create", compact('clients'));
+        return view("admin.cms.labour.create", compact('clients'));
     }
     public function store(Request $request)
     {
@@ -58,7 +58,7 @@ class CMSESICController extends Controller
         foreach ($request->years as $key => $year) {
             $filePath = null;
             if ($request->hasFile("files.{$key}")) {
-                $folder = 'cms_esic';
+                $folder = 'cms_form_t';
                 $file = $request->file("files.{$key}");
                 $fileName = time() . '-' . $file->getClientOriginalName();
                 $filePath = $file->storeAs($folder, $fileName, 'public');
@@ -73,11 +73,11 @@ class CMSESICController extends Controller
                 'path' => $filePath
             ]);
         }
-        return to_route('admin.cms.esic')->with('success', 'added successfully');
+        return to_route('admin.cms.formt')->with('success', 'added successfully');
     }
     public function destroy($id)
     {
         $this->model()->destroy($id);
-        return back()->with('success', 'ESIC Challan removed successfully');
+        return back()->with('success', 'Form t registration removed successfully');
     }
 }

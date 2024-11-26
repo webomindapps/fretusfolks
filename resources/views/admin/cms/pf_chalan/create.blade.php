@@ -1,5 +1,5 @@
 <x-applayout>
-    <x-admin.breadcrumb title="New CMS ESIC Challan" />
+    <x-admin.breadcrumb title="New CMS PF Challan" />
     @if ($errors->any())
         <div class="col-lg-12 pb-4 px-2">
             <div class="alert alert-danger">
@@ -13,7 +13,7 @@
     @endif
 
     <div class="form-card px-3">
-        <form method="POST" class="formSubmit" action="{{ route('admin.cms.esic.create') }}" enctype="multipart/form-data">
+        <form method="POST" class="formSubmit" action="{{ route('admin.cms.pf.create') }}" enctype="multipart/form-data">
             @csrf
             <div class="row">
                 <div class="col-lg-6 mt-4" id="form-group-state">

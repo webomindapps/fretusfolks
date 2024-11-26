@@ -1,5 +1,5 @@
 <x-applayout>
-    <x-admin.breadcrumb title="New CMS ESIC Challan" />
+    <x-admin.breadcrumb title="New CMS Labour Notice" />
     @if ($errors->any())
         <div class="col-lg-12 pb-4 px-2">
             <div class="alert alert-danger">
@@ -13,7 +13,8 @@
     @endif
 
     <div class="form-card px-3">
-        <form method="POST" class="formSubmit" action="{{ route('admin.cms.esic.create') }}" enctype="multipart/form-data">
+        <form method="POST" class="formSubmit" action="{{ route('admin.cms.formt.create') }}"
+            enctype="multipart/form-data">
             @csrf
             <div class="row">
                 <div class="col-lg-6 mt-4" id="form-group-state">
@@ -29,53 +30,18 @@
                         @endforeach
                     </select>
                 </div>
-                <div class="mb-4">
-                    <x-forms.select label="State" name="state_id" id="state" :required="true" size="col-lg-6 mt-4"
-                        :options="FretusFolks::getStates()" :value="old('state_id')" />
-                </div>
-                <div class="col-12">
-                    <table class="w-100 table-bordered" id="dynamicTable">
-                        <thead>
-                            <tr>
-                                <td>Month</td>
-                                <td>Year</td>
-                                <td>Document</td>
-                                <td>Actions</td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <select name="months[]" id="month">
-                                        <option value="">Select Month</option>
-                                        @foreach (range(1, 12) as $month)
-                                            <option value="{{ $month }}">
-                                                {{ \Carbon\Carbon::create()->month($month)->format('F') }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </td>
-                                <td>
-                                    <select name="years[]" id="year">
-                                        <option value="">Select Year</option>
-                                        @php
-                                            $currentYear = now()->year;
-                                        @endphp
-                                        @foreach (range($currentYear, $currentYear - 6) as $year)
-                                            <option value="{{ $year }}">{{ $year }}</option>
-                                        @endforeach
-                                    </select>
-                                </td>
-                                <td>
-                                    <input type="file" name="files[]" multiple>
-                                </td>
-                                <td>
-                                    <button type="button" class="btn btn-sm btn-info" onclick="addRow()">+</button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                <x-forms.select label="State" name="state_id" id="state" :required="true" size="col-lg-6 mt-4"
+                    :options="FretusFolks::getStates()" :value="old('state_id')" />
+                <x-forms.input label="Location: " type="text" name="location" id="location"
+                    :required="true" size="col-lg-12 mt-2" :value="old('location')" />
+                <x-forms.input label="Notice Received date: " type="date" name="notice_date" id="notice_date"
+                    :required="true" size="col-lg-6 mt-2" :value="old('notice_date')" />
+                <x-forms.input label="Notice Document: " type="file" name="notice_file" id="notice_file"
+                    :required="true" size="col-lg-6 mt-2" :value="old('notice_file')" />
+                <x-forms.input label="Closure Date: " type="date" name="closure_date" id="closure_date"
+                    :required="true" size="col-lg-6 mt-2" :value="old('closure_date')" />
+                <x-forms.input label="Closure Document: " type="file" name="closure_file" id="closure_file"
+                    :required="true" size="col-lg-6 mt-2" :value="old('closure_file')" />
             </div>
             <button type="submit" class="submit-btn submitBtn" id="submitButton">Submit</button>
         </form>

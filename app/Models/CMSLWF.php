@@ -4,9 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class CMSESIC extends Model
+class CMSLWF extends Model
 {
-    protected $table = 'cms_esic';
+    protected $table = 'cms_lwf';
     protected $fillable = [
         'state_id',
         'client_id',
@@ -22,6 +22,6 @@ class CMSESIC extends Model
     }
     public function state()
     {
-        return $this->hasOne(States::class, 'id','state_id');
+        return $this->hasOne(States::class, 'id', 'state_id');
     }
 }

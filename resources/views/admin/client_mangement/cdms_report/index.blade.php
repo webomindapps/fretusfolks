@@ -1,6 +1,6 @@
 <x-applayout>
     <x-admin.breadcrumb title="Search">
-        <div class="row text-end ml-2">
+        <div class="row text-end me-2">
             <form id="export-form" action="{{ route('admin.cdms_report.export') }}" method="POST">
                 @csrf
                 <input type="hidden" name="fields" id="export-fields">
@@ -18,10 +18,10 @@
                         @csrf
                         <div class="row">
                             <x-forms.input label="From Date" type="date" name="from-date" id="from-date"
-                                :required="false" size="col-lg-3 mt-2" />
+                                :required="false" size="col-lg-4 mt-2" />
                             <x-forms.input label="To Date" type="date" name="to-date" id="to-date"
-                                :required="false" size="col-lg-3 mt-2" />
-                            <div class="col-lg-3 mt-2">
+                                :required="false" size="col-lg-4 mt-2" />
+                            <div class="col-lg-4 mt-2">
                                 <label for="data">Data</label>
                                 <div class="dropdown">
                                     <input type="text" class="btn dropdown-toggle" id="dropdownMenuButton"
@@ -54,7 +54,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-lg-3 mt-2">
+                            <div class="col-lg-4 mt-2">
                                 <label for="service_state">State</label>
                                 <div class="dropdown">
                                     <input type="text" class="btn btn-secondary dropdown-toggle"

@@ -9,7 +9,12 @@ use App\Http\Controllers\Admin\TdsCodeController;
 use App\Http\Controllers\RolePermissionController;
 use App\Http\Controllers\Admin\CDMSReportController;
 use App\Http\Controllers\Admin\CMSESICController;
+use App\Http\Controllers\Admin\CMSFormTController;
+use App\Http\Controllers\Admin\CMSLabourNoticeController;
+use App\Http\Controllers\Admin\CMSPFController;
+use App\Http\Controllers\Admin\CMSPTController;
 use App\Http\Controllers\Admin\LetterContentController;
+use App\Http\Controllers\Admin\CMSLWFController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -72,11 +77,40 @@ Route::prefix('admin')->group(function () {
         Route::get('/roles', [RolePermissionController::class, 'index'])->name('roles');
         Route::get('/role/{id}/permissions', [RolePermissionController::class, 'permission'])->name('permission');
         Route::post('/role/{id}/permissions', [RolePermissionController::class, 'assignPermission']);
-        
+
         // CMS ESIC
         Route::get('/cms_esic', [CMSESICController::class, 'index'])->name('cms.esic');
         Route::get('/cms_esic/create', [CMSESICController::class, 'create'])->name('cms.esic.create');
         Route::post('/cms_esic/create', [CMSESICController::class, 'store']);
+        Route::get('/cms_esic/id/delete', [CMSESICController::class, 'destroy'])->name('cms.esic.delete');
+
+        // CMS PF
+        Route::get('/cms_pf', [CMSPFController::class, 'index'])->name('cms.pf');
+        Route::get('/cms_pf/create', [CMSPFController::class, 'create'])->name('cms.pf.create');
+        Route::post('/cms_pf/create', [CMSPFController::class, 'store']);
+        Route::get('/cms_pf/id/delete', [CMSPFController::class, 'destroy'])->name('cms.pf.delete');
+
+        // CMS PT
+        Route::get('/cms_pt', [CMSPTController::class, 'index'])->name('cms.pt');
+        Route::get('/cms_pt/create', [CMSPTController::class, 'create'])->name('cms.pt.create');
+        Route::post('/cms_pt/create', [CMSPTController::class, 'store']);
+        Route::get('/cms_pt/id/delete', [CMSPTController::class, 'destroy'])->name('cms.pt.delete');
+
+        // CMS LWF
+        Route::get('/cms_lwf', [CMSLWFController::class, 'index'])->name('cms.lwf');
+        Route::get('/cms_lwf/create', [CMSLWFController::class, 'create'])->name('cms.lwf.create');
+        Route::post('/cms_lwf/create', [CMSLWFController::class, 'store']);
+        Route::get('/cms_lwf/id/delete', [CMSLWFController::class, 'destroy'])->name('cms.lwf.delete');
+
+        // Form T Register
+        Route::get('/cms_formt', [CMSFormTController::class, 'index'])->name('cms.formt');
+        Route::get('/cms_formt/create', [CMSFormTController::class, 'create'])->name('cms.formt.create');
+        Route::post('/cms_formt/create', [CMSFormTController::class, 'store']);
+        Route::get('/cms_formt/id/delete', [CMSFormTController::class, 'destroy'])->name('cms.formt.delete');
+
+        // Form T Register
+        Route::get('/cms/labour/notice', [CMSLabourNoticeController::class, 'index'])->name('cms.labour');
+        Route::get('/cms/labour/notice/create', [CMSLabourNoticeController::class, 'create'])->name('cms.labour.create');
 
         //cfis
         Route::get('/cfis', [CFISController::class, 'index'])->name('cfis');
@@ -87,6 +121,5 @@ Route::prefix('admin')->group(function () {
         Route::post('cfis/export', [CFISController::class, 'export'])->name('cfis.export');
         Route::get('cfis/status/{id}', [CFISController::class, 'toggleStatus'])->name('cfis.status');
         Route::get('cfis/data_status/{id}', [CFISController::class, 'toggleData_status'])->name('cfis.data_status');
-
     });
 });

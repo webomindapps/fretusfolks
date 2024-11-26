@@ -1,7 +1,7 @@
 <x-applayout>
-    <x-admin.breadcrumb title="CMS ESIC Challan" :create="route('admin.cms.esic.create')" />
+    <x-admin.breadcrumb title="CMS LWF Challan" :create="route('admin.cms.lwf.create')" />
     <div class="form-card px-3 mt-4">
-        <form action="{{ route('admin.cms.esic') }}">
+        <form action="{{ route('admin.cms.lwf') }}">
             <div class="row">
                 <div class="col-lg-4">
                     <label for="client">Select Client

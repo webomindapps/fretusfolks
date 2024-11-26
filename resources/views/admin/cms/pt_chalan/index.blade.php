@@ -1,7 +1,7 @@
 <x-applayout>
-    <x-admin.breadcrumb title="CMS ESIC Challan" :create="route('admin.cms.esic.create')" />
+    <x-admin.breadcrumb title="CMS PT Challan" :create="route('admin.cms.pt.create')" />
     <div class="form-card px-3 mt-4">
-        <form action="{{ route('admin.cms.esic') }}">
+        <form action="{{ route('admin.cms.pt') }}">
             <div class="row">
                 <div class="col-lg-4">
                     <label for="client">Select Client
@@ -36,7 +36,9 @@
                             $currentYear = now()->year;
                         @endphp
                         @foreach (range($currentYear, $currentYear - 6) as $year)
-                            <option value="{{ $year }}" {{ request()->year == $year ? 'selected' : '' }}>{{ $year }}</option>
+                            <option value="{{ $year }}" {{ request()->year == $year ? 'selected' : '' }}>
+                                {{ $year }}
+                            </option>
                         @endforeach
                     </select>
                 </div>

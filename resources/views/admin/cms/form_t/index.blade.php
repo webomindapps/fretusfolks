@@ -1,7 +1,7 @@
 <x-applayout>
-    <x-admin.breadcrumb title="CMS ESIC Challan" :create="route('admin.cms.esic.create')" />
+    <x-admin.breadcrumb title="CMS Form T Register" :create="route('admin.cms.formt.create')" />
     <div class="form-card px-3 mt-4">
-        <form action="{{ route('admin.cms.esic') }}">
+        <form action="{{ route('admin.cms.formt') }}">
             <div class="row">
                 <div class="col-lg-4">
                     <label for="client">Select Client
@@ -56,7 +56,7 @@
                     ['label' => 'Actions', 'column' => 'action', 'sort' => false],
                 ];
             @endphp
-            <x-table :columns="$columns" :data="$challans" :checkAll=false :bulk="route('admin.cms.esic')" :route="route('admin.cms.esic')">
+            <x-table :columns="$columns" :data="$challans" :checkAll=false :bulk="route('admin.cms.formt')" :route="route('admin.cms.formt')">
                 @foreach ($challans as $key => $item)
                     <tr>
                         <td>{{ $item->id }}</td>

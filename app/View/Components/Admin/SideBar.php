@@ -90,6 +90,52 @@ class SideBar extends Component
             ],
 
         ],
+        [
+            'title' => 'CMS',
+            'name' => 'cms',
+            'icon' => '  bx bxl-slack',
+            'route' => '',
+            'isSubMenu' => true,
+            'subMenus' => [
+                [
+                    'title' => 'ESIC Challan',
+                    'icon' => 'bx bx-chevron-right',
+                    'route' => 'admin.cms.esic',
+                    'name' => 'cfis',
+                ],
+                [
+                    'title' => 'PF Challan',
+                    'icon' => 'bx bx-chevron-right',
+                    'route' => 'admin.cms.pf',
+                    'name' => 'cfis',
+                ],
+                [
+                    'title' => 'PT Challan',
+                    'icon' => 'bx bx-chevron-right',
+                    'route' => 'admin.cms.pt',
+                    'name' => 'cfis',
+                ],
+                [
+                    'title' => 'LWF Challan',
+                    'icon' => 'bx bx-chevron-right',
+                    'route' => 'admin.cms.lwf',
+                    'name' => 'lwf',
+                ],
+                [
+                    'title' => 'Form T Register',
+                    'icon' => 'bx bx-chevron-right',
+                    'route' => 'admin.cms.formt',
+                    'name' => 'formt',
+                ],
+                [
+                    'title' => 'Labour Notice',
+                    'icon' => 'bx bx-chevron-right',
+                    'route' => 'admin.cms.labour',
+                    'name' => 'formt',
+                ],
+            ],
+
+        ],
     ];
 
 

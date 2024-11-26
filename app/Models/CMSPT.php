@@ -4,9 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class CMSESIC extends Model
+class CMSPT extends Model
 {
-    protected $table = 'cms_esic';
+    protected $table = 'cms_pt';
     protected $fillable = [
         'state_id',
         'client_id',

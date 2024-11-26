@@ -4,15 +4,17 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class CMSESIC extends Model
+class CMSLabour extends Model
 {
-    protected $table = 'cms_esic';
+    protected $table = 'cms_labour';
     protected $fillable = [
         'state_id',
         'client_id',
-        'year',
-        'month',
-        'path',
+        'location',
+        'notice_received_date',
+        'notice_document',
+        'closure_date',
+        'closure_document',
         'status',
     ];
 
@@ -22,6 +24,6 @@ class CMSESIC extends Model
     }
     public function state()
     {
-        return $this->hasOne(States::class, 'id','state_id');
+        return $this->hasOne(States::class, 'id', 'state_id');
     }
 }
