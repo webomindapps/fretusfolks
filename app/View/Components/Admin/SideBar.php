@@ -63,7 +63,7 @@ class SideBar extends Component
                     'route' => 'admin.cdms_report',
                     'name' => 'cdms_report',
                 ],
-               
+
             ],
 
         ],
@@ -80,13 +80,36 @@ class SideBar extends Component
                     'route' => 'admin.cfis',
                     'name' => 'cfis',
                 ],
-                // [
-                //     'title' => 'CFIS Report',
-                //     'icon' => 'bx bx-chevron-right',
-                //     'route' => 'admin.cfis_report',
-                //     'name' => 'cfis_report',
-                // ],
-               
+                [
+                    'title' => 'DCS Approval',
+                    'icon' => 'bx bx-chevron-right',
+                    'route' => 'admin.dcs_approval',
+                    'name' => 'dcs_approval',
+                ],
+
+            ],
+
+        ],
+        [
+            'title' => 'FHRMS',
+            'name' => 'fhrms',
+            'icon' => '  bx bxl-slack',
+            'route' => '',
+            'isSubMenu' => true,
+            'subMenus' => [
+                [
+                    'title' => 'FHRMS',
+                    'icon' => 'bx bx-chevron-right',
+                    'route' => 'admin.fhrms',
+                    'name' => 'fhrms',
+                ],
+                [
+                    'title' => 'FHRMS Report',
+                    'icon' => 'bx bx-chevron-right',
+                    'route' => 'admin.fhrms_report',
+                    'name' => 'fhrms_report',
+                ],
+
             ],
 
         ],

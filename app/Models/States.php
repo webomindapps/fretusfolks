@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\ClientGstn;
+use App\Models\FHRMSModel;
 use Illuminate\Database\Eloquent\Model;
 
 class States extends Model
@@ -14,5 +16,9 @@ class States extends Model
     public function clientGstns()
     {
         return $this->hasMany(ClientGstn::class);
+    }
+    public function fhrms()
+    {
+        return $this->hasMany(FHRMSModel::class);
     }
 }

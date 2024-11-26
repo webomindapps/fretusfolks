@@ -23,8 +23,8 @@
                     <div class="card-body">
                         <div class="form-contents">
                             <div class="row">
-                                <x-forms.select label="Enter Client Name:" name="entity_name" id="entity_name"
-                                    :required="true" size="col-lg-6 mt-2" :options="FretusFolks::getClientname()" :value="old('entity_name')" />
+                                <x-forms.select label="Enter Client Name:" name="client_id" id="client_id"
+                                    :required="true" size="col-lg-6 mt-2" :options="FretusFolks::getClientname()" :value="old('client_id')" />
                                 <x-forms.input label="Enter Associate Name: " type="text" name="emp_name"
                                     id="emp_name" :required="true" size="col-lg-6 mt-2" :value="old('emp_name')" />
                                 <x-forms.input label="Employee Mobile: " type="number" name="phone1" id="phone1"

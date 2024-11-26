@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\CDMSController;
 use App\Http\Controllers\Admin\CFISController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\FHRMSController;
 use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\TdsCodeController;
 use App\Http\Controllers\RolePermissionController;
@@ -13,6 +14,7 @@ use App\Http\Controllers\Admin\CMSFormTController;
 use App\Http\Controllers\Admin\CMSLabourNoticeController;
 use App\Http\Controllers\Admin\CMSPFController;
 use App\Http\Controllers\Admin\CMSPTController;
+use App\Http\Controllers\Admin\DCSApprovalController;
 use App\Http\Controllers\Admin\LetterContentController;
 use App\Http\Controllers\Admin\CMSLWFController;
 
@@ -121,5 +123,29 @@ Route::prefix('admin')->group(function () {
         Route::post('cfis/export', [CFISController::class, 'export'])->name('cfis.export');
         Route::get('cfis/status/{id}', [CFISController::class, 'toggleStatus'])->name('cfis.status');
         Route::get('cfis/data_status/{id}', [CFISController::class, 'toggleData_status'])->name('cfis.data_status');
+
+        //dcs_approval
+        Route::get('/dcs_approval', [DCSApprovalController::class, 'index'])->name('dcs_approval');
+        Route::get('dcs_approval/{id}/edit', [DCSApprovalController::class, 'edit'])->name('dcs_approval.edit');
+        Route::post('dcs_approval/{id}/edit', [DCSApprovalController::class, 'update']);
+        Route::get('dcs_approval/{id}/delete', [DCSApprovalController::class, 'destroy'])->name('dcs_approval.delete');
+
+        //fhrms
+        Route::get('/fhrms', [FHRMSController::class, 'index'])->name('fhrms');
+        Route::get('fhrms/create', [FHRMSController::class, 'create'])->name('fhrms.create');
+        Route::post('fhrms/create', [FHRMSController::class, 'store']);
+        Route::get('fhrms/{id}/edit', [FHRMSController::class, 'edit'])->name('fhrms.edit');
+        Route::post('fhrms/{id}/edit', [FHRMSController::class, 'update']);
+        Route::post('fhrms/bulk_operation', [FHRMSController::class, 'bulk'])->name('fhrms.bulk');
+        Route::get('fhrms/{id}/delete', [FHRMSController::class, 'destroy'])->name('fhrms.delete');
+        Route::post('fhrms/export', [FHRMSController::class, 'export'])->name('fhrms.export');
+        Route::get('fhrms/show/{id}', [FHRMSController::class, 'show'])->name('fhrms.show');
+        Route::get('fhrms/{id}/eduDelete', [FHRMSController::class, 'eduDelete'])->name('fhrms.eduDelete');
+        Route::get('fhrms/{id}/otherDelete', [FHRMSController::class, 'otherDelete'])->name('fhrms.otherDelete');
+        Route::post('fhrms/bulk-upload', [FHRMSController::class, 'bulkUpload'])->name('fhrms.bulk.upload');
+        Route::get('fhrms/fhrms_report', [FHRMSController::class, 'showCodeReport'])->name('fhrms_report.get');
+        Route::post('fhrms/fhrms_report', [FHRMSController::class, 'codeReport'])->name('fhrms_report');
+        Route::post('fhrms/fhrms_report/export', [FHRMSController::class, 'exportReport'])->name('fhrms_report.export');
+
     });
 });
