@@ -63,8 +63,27 @@
             </div>
             <hr>
             <div class="row">
-                <h6 class="font-weight-semibold">Salary Details</h6>
                 <div class="col-md-4 col-sm-6">
+                    <p><b>PAN Doc:</b> <span> <a href="{{ $employee->pan_path }}">
+                                <i class="fa fa-book"></i>
+                                PAN
+                            </a></span></p>
+                    <p><b>Aadhar Doc: </b> <span> <a href="{{ $employee->aadhar_path }}">
+                                <i class="fa fa-book"></i>
+                                Aadhar
+                            </a></span></p>
+                    <p><b>Driving License Doc:</b> <span> <a href="{{ $employee->driving_license_path }}">
+                                <i class="fa fa-book"></i>
+                                Driving License
+                            </a></span></p>
+                    <p><b>Bank Doc:</b> <span> <a href="{{ $employee->bank_document }}">
+                                <i class="fa fa-book"></i>
+                                Bank Doc
+                            </a></span></p>
+                </div>
+                <div class="col-md-4 col-sm-6">
+                    <h6 class="font-weight-semibold">Salary Details</h6>
+
                     <p><b>Basic Salary :Rs</b> <span>{{ $employee->basic_salary }}</span></p>
                     <p><b>HRA :Rs</b> <span>{{ $employee->hra }}</span></p>
                     <p><b>Conveyance :Rs</b> <span>{{ $employee->conveyance }}</span></p>
@@ -96,7 +115,10 @@
                                 @foreach ($education as $edu)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $edu->path }}</td>
+                                        <td> <a href="{{ $edu->path }}">
+                                                <i class="fa fa-book"></i>
+                                                Education Certificate
+                                            </a></td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -118,7 +140,12 @@
                                 @foreach ($others as $other)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $other->path }}</td>
+                                        <td>
+                                            <a href="{{ $other->path }}">
+                                                <i class="fa fa-book"></i>
+                                                Certificate
+                                            </a>
+                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>

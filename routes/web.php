@@ -103,6 +103,9 @@ Route::prefix('admin')->group(function () {
         Route::get('fhrms/{id}/eduDelete', [FHRMSController::class, 'eduDelete'])->name('fhrms.eduDelete');
         Route::get('fhrms/{id}/otherDelete', [FHRMSController::class, 'otherDelete'])->name('fhrms.otherDelete');
         Route::post('fhrms/bulk-upload', [FHRMSController::class, 'bulkUpload'])->name('fhrms.bulk.upload');
+        Route::get('fhrms/fhrms_report', [FHRMSController::class, 'showCodeReport'])->name('fhrms_report.get');
+        Route::post('fhrms/fhrms_report', [FHRMSController::class, 'codeReport'])->name('fhrms_report');
+        Route::post('fhrms/fhrms_report/export', [FHRMSController::class, 'exportReport'])->name('fhrms_report.export');
 
     });
 });

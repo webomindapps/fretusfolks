@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Exports\FHRMSReportExport;
 use Exception;
 use App\Models\FHRMSModel;
 use App\Exports\FHRMSExport;
@@ -405,5 +406,89 @@ class FHRMSController extends Controller
 
     }
 
+    public function showCodeReport()
+    {
+        return view('admin.hr_management.fhrms_report.index', [
+            'results' => [],
+            'fromDate' => null,
+            'toDate' => null,
+            'selectedData' => [],
+            'selectedStates' => [],
+            'location' => null,
+            'status' => null,
+        ]);
+    }
+    public function codeReport(Request $request)
+    {
+        $request->validate([
+            'from-date' => 'nullable|date',
+            'to-date' => 'nullable|date',
+            'data' => 'nullable|array',
+            'state' => 'nullable|array',
+            'location' => 'nullable|string',
+            'status' => 'nullable|integer',
+            'per_page' => 'nullable|integer|min:1',
+            'pending_doc' => 'nullable|array', // Validate pending documents
+        ]);
 
+        $fromDate = $request->input('from-date');
+        $toDate = $request->input('to-date');
+        $selectedData = $request->input('data', []);
+        $selectedStates = $request->input('state', []);
+        $location = $request->input('location');
+        $status = $request->input('status');
+        $pendingDocs = $request->input('pending_doc', []);
+        $perPage = $request->input('per_page', 10);
+
+        $filteredResults = $this->model()->newQuery();
+
+        if ($fromDate && $toDate) {
+            $filteredResults->whereBetween('created_at', ["{$fromDate} 00:00:00", "{$toDate} 23:59:59"]);
+        }
+        if (!empty($selectedStates)) {
+            $filteredResults->whereIn('state', $selectedStates);
+        }
+
+        if (!empty($location)) {
+            $filteredResults->where('location', $location);
+        }
+        if ($status !== null && $status !== '') {
+            $filteredResults->where('status', $status);
+        }
+
+        if (!empty($pendingDocs)) {
+            $filteredResults->where(function ($query) use ($pendingDocs) {
+                foreach ($pendingDocs as $doc) {
+                    $query->orWhereNull($doc)->orWhere($doc, '');
+                }
+            });
+        }
+
+        if (!empty($selectedData)) {
+            $filteredResults->select(array_merge($selectedData, ['id', 'created_at', 'location', 'state', 'status']));
+        }
+
+        $results = $filteredResults->paginate($perPage)->appends($request->query());
+
+        return view('admin.hr_management.fhrms_report.index', compact(
+            'results',
+            'fromDate',
+            'toDate',
+            'selectedData',
+            'selectedStates',
+            'location',
+            'status',
+            'pendingDocs'
+        ));
+    }
+
+    public function exportReport(Request $request)
+    {
+        $fields = explode(',', $request->input('fields'));
+        if (empty($fields)) {
+            return redirect()->route('admin.fhrms_report')->with('error', 'No fields selected for export');
+        }
+
+        return Excel::download(new FHRMSReportExport($fields), 'fhrms_report.xlsx');
+    }
 }

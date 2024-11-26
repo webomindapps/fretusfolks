@@ -103,12 +103,12 @@ class SideBar extends Component
                     'route' => 'admin.fhrms',
                     'name' => 'fhrms',
                 ],
-                // [
-                //     'title' => 'DCS Approval',
-                //     'icon' => 'bx bx-chevron-right',
-                //     'route' => 'admin.dcs_approval',
-                //     'name' => 'dcs_approval',
-                // ],
+                [
+                    'title' => 'FHRMS Report',
+                    'icon' => 'bx bx-chevron-right',
+                    'route' => 'admin.fhrms_report',
+                    'name' => 'fhrms_report',
+                ],
 
             ],
 
