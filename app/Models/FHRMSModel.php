@@ -82,4 +82,8 @@ class FHRMSModel extends Model
     {
         return $this->belongsTo(States::class);
     }
+    public function employee()
+    {
+        return $this->hasMany(FFIOfferLetterModel::class);
+    }
 }

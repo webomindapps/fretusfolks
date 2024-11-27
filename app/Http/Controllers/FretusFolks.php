@@ -190,5 +190,11 @@ class FretusFolks extends Controller
 
         return $pending_doc;
     }
+    public function getLetterFormate()
+    {
+        return [
+            ['label' => 'Formate 1', 'value' => '1'],
+        ];
+    }
 
 }

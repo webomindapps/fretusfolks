@@ -33,7 +33,10 @@ class FFIOfferLetterModel extends Model
         'mediclaim',
         'ctc'
     ];
-
+    public function employee()
+    {
+        return $this->belongsTo(FHRMSModel::class, 'employee_id', 'ffi_emp_id');
+    }
 
 
 }

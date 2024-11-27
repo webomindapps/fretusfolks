@@ -4,19 +4,20 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\CDMSController;
 use App\Http\Controllers\Admin\CFISController;
 use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\Admin\FHRMSController;
-use App\Http\Controllers\Admin\LoginController;
-use App\Http\Controllers\Admin\TdsCodeController;
-use App\Http\Controllers\RolePermissionController;
-use App\Http\Controllers\Admin\CDMSReportController;
-use App\Http\Controllers\Admin\CMSESICController;
-use App\Http\Controllers\Admin\CMSFormTController;
-use App\Http\Controllers\Admin\CMSLabourNoticeController;
 use App\Http\Controllers\Admin\CMSPFController;
 use App\Http\Controllers\Admin\CMSPTController;
+use App\Http\Controllers\Admin\FHRMSController;
+use App\Http\Controllers\Admin\LoginController;
+use App\Http\Controllers\Admin\CMSLWFController;
+use App\Http\Controllers\Admin\CMSESICController;
+use App\Http\Controllers\Admin\TdsCodeController;
+use App\Http\Controllers\Admin\CMSFormTController;
+use App\Http\Controllers\RolePermissionController;
+use App\Http\Controllers\Admin\CDMSReportController;
 use App\Http\Controllers\Admin\DCSApprovalController;
 use App\Http\Controllers\Admin\LetterContentController;
-use App\Http\Controllers\Admin\CMSLWFController;
+use App\Http\Controllers\Admin\FFIOfferLetterController;
+use App\Http\Controllers\Admin\CMSLabourNoticeController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -147,6 +148,14 @@ Route::prefix('admin')->group(function () {
         Route::post('fhrms/fhrms_report', [FHRMSController::class, 'codeReport'])->name('fhrms_report');
         Route::post('fhrms/fhrms_report/export', [FHRMSController::class, 'exportReport'])->name('fhrms_report.export');
         Route::post('fhrms/pending-details', [FHRMSController::class, 'storePendingDetails'])->name('fhrms.pending.store');
+
+        //FFI-Offer Letter
+        Route::get('/ffi_offer_letter', [FFIOfferLetterController::class, 'index'])->name('ffi_offer_letter');
+        Route::get('ffi_offer_letter/create', [FFIOfferLetterController::class, 'create'])->name('ffi_offer_letter.create');
+        Route::post('ffi_offer_letter/create', [FFIOfferLetterController::class, 'store']);
+        Route::get('/get-employee-details/{ffi_emp_id}', [FFIOfferLetterController::class, 'getEmployeeDetails'])->name('get.employee.details');
+        Route::get('ffi_offer_letter/{id}/delete', [FFIOfferLetterController::class, 'destroy'])->name('ffi_offer_letter.delete');
+        Route::get('/generate-offer-letter/{id}', [FFIOfferLetterController::class, 'generateOfferLetterPdf'])->name('generate.offer.letter');
 
     });
 });
