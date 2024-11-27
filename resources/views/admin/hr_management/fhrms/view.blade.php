@@ -25,7 +25,9 @@
                     <p><b>State :</b> <span>{{ $employee->state }}</span></p>
                     <p><b>Location :</b> <span>{{ $employee->location }}</span></p>
                     <p><b>Date of Birth :</b> <span>{{ $employee->dob }}</span></p>
-                    <p><b>Gender :</b> <span>{{ $employee->gender }}</span></p>
+                    <p><b>Gender :</b>
+                        <span>{{ $employee->gender == 1 ? 'Male' : ($employee->gender == 2 ? 'Female' : 'Others') }}</span>
+                    </p>
                     <p><b>Father Name :</b> <span>{{ $employee->father_name }}</span></p>
                     <p><b>Blood Group :</b> <span>{{ $employee->blood_group }}</span></p>
                 </div>
@@ -64,19 +66,19 @@
             <hr>
             <div class="row">
                 <div class="col-md-4 col-sm-6">
-                    <p><b>PAN Doc:</b> <span> <a href="{{ $employee->pan_path }}">
+                    <p><b>PAN Doc:</b> <span> <a href="{{ $employee->pan_path }}"target="_blank">
                                 <i class="fa fa-book"></i>
                                 PAN
                             </a></span></p>
-                    <p><b>Aadhar Doc: </b> <span> <a href="{{ $employee->aadhar_path }}">
+                    <p><b>Aadhar Doc: </b> <span> <a href="{{ $employee->aadhar_path }}"target="_blank">
                                 <i class="fa fa-book"></i>
                                 Aadhar
                             </a></span></p>
-                    <p><b>Driving License Doc:</b> <span> <a href="{{ $employee->driving_license_path }}">
+                    <p><b>Driving License Doc:</b> <span> <a href="{{ $employee->driving_license_path }}"target="_blank">
                                 <i class="fa fa-book"></i>
                                 Driving License
                             </a></span></p>
-                    <p><b>Bank Doc:</b> <span> <a href="{{ $employee->bank_document }}">
+                    <p><b>Bank Doc:</b> <span> <a href="{{ $employee->bank_document }}"target="_blank">
                                 <i class="fa fa-book"></i>
                                 Bank Doc
                             </a></span></p>
@@ -115,7 +117,7 @@
                                 @foreach ($education as $edu)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
-                                        <td> <a href="{{ $edu->path }}">
+                                        <td> <a href="{{ $edu->path }}"target="_blank">
                                                 <i class="fa fa-book"></i>
                                                 Education Certificate
                                             </a></td>
@@ -141,7 +143,7 @@
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
                                         <td>
-                                            <a href="{{ $other->path }}">
+                                            <a href="{{ $other->path }}"target="_blank">
                                                 <i class="fa fa-book"></i>
                                                 Certificate
                                             </a>

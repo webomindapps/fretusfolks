@@ -64,7 +64,7 @@
 
             <div class="row">
                 <div class="col-md-4 col-sm-6">
-                    <a href="{{ $client->agreement_doc }}">
+                    <a href="{{ $client->agreement_doc }}"target="_blank">
                         <i class="fa fa-book"></i>
                         Agreement Document
                     </a>

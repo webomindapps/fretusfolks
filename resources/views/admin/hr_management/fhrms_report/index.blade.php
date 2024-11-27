@@ -125,8 +125,7 @@
                                     </ul>
                                 </div>
                             </div>
-                            {{-- <x-forms.select label="Pending Documents" name="pending_doc" id="pending_doc"
-                                :required="false" size="col-lg-4 mt-2" :options="FretusFolks::getDocuments()" /> --}}
+                           
                             <x-forms.select label="Status:" name="status" id="status" :required="false"
                                 size="col-lg-4 mt-2" :options="FretusFolks::getStatus()" :selected="request()->get('status')" />
                         </div>

@@ -46,9 +46,9 @@
                                 <x-forms.input label="Father's Name: " type="text" name="father_name"
                                     id="father_name" :required="true" size="col-lg-6 mt-2" :value="old('father_name', $employee->father_name)" />
                                 <x-forms.radio label="Gender: " :options="[
-                                    ['value' => 'Male', 'label' => 'Male'],
-                                    ['value' => 'Female', 'label' => 'Female'],
-                                    ['value' => 'Other', 'label' => 'Other'],
+                                    ['value' => '1', 'label' => 'Male'],
+                                    ['value' => '2', 'label' => 'Female'],
+                                    ['value' => '3', 'label' => 'Other'],
                                 ]" id="gender" name="gender"
                                     :required="true" size="col-lg-6 mt-2 mr-2" :value="old('gender', $employee->gender)" />
                                 <x-forms.select label="Blood Group:" name="blood_group" id="blood_group"
@@ -183,8 +183,8 @@
                                             id="others" :required="false" size="col-lg-4 mt-2" multiple />
                                     </div>
                                 </div>
-                                <x-forms.input label="Password: " type="password" name="password" id="password"
-                                    :required="true" size="col-lg-3 mt-2" :value="old('password', $employee->password)" />
+                                <x-forms.input label="Password: " type="text" name="password" id="password"
+                                    :required="true" size="col-lg-3 mt-2" :value="old('psd', $employee->psd)" />
                             </div>
                             <div class="row">
                                 <div class="col-lg-12 mt-4">

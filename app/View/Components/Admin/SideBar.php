@@ -109,6 +109,12 @@ class SideBar extends Component
                     'route' => 'admin.fhrms_report',
                     'name' => 'fhrms_report',
                 ],
+                // [
+                //     'title' => 'FFI Offer Letter',
+                //     'icon' => 'bx bx-chevron-right',
+                //     'route' => 'admin.ffi_offer_letter',
+                //     'name' => 'ffi_offer_letter',
+                // ],
 
             ],
 

@@ -47,7 +47,7 @@
     <tbody>
         @foreach ($employees as $key => $employee)
             <tr>
-                
+
                 <td>{{ $key + 1 }}</td>
                 <td>{{ $employee->ffi_emp_id }}</td>
                 <td>{{ $employee->emp_name }}</td>
@@ -60,7 +60,7 @@
                 <td>{{ $employee->location }}</td>
                 <td>{{ $employee->dob }}</td>
                 <td>{{ $employee->father_name }}</td>
-                <td>{{ $employee->gender }}</td>
+                <td>{{ $employee->gender == 1 ? 'Male' : ($employee->gender == 2 ? 'Female' : 'Others') }}</td>
                 <td>{{ $employee->blood_group }}</td>
                 <td>{{ $employee->qualification }}</td>
                 <td>{{ $employee->phone1 }}</td>

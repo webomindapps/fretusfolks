@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Pagination\Paginator;
 use App\Http\Controllers\FretusFolks;
 use Illuminate\Support\ServiceProvider;
 
@@ -16,6 +17,5 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot()
     {
-        // Other bootstrapping if needed
-    }
+        Paginator::useBootstrap();    }
 }

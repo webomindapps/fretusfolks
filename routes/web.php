@@ -146,6 +146,7 @@ Route::prefix('admin')->group(function () {
         Route::get('fhrms/fhrms_report', [FHRMSController::class, 'showCodeReport'])->name('fhrms_report.get');
         Route::post('fhrms/fhrms_report', [FHRMSController::class, 'codeReport'])->name('fhrms_report');
         Route::post('fhrms/fhrms_report/export', [FHRMSController::class, 'exportReport'])->name('fhrms_report.export');
+        Route::post('fhrms/pending-details', [FHRMSController::class, 'storePendingDetails'])->name('fhrms.pending.store');
 
     });
 });

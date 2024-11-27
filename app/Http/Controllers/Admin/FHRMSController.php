@@ -67,7 +67,7 @@ class FHRMSController extends Controller
             'location' => 'required|string|max:255',
             'dob' => 'required|date',
             'father_name' => 'required|string|max:255',
-            'gender' => 'required|in:Male,Female,Other',
+            'gender' => 'required|in:1,2,3',
             'blood_group' => 'required|string',
             'qualification' => 'required|string|max:255',
             'phone1' => 'required|digits:10',
@@ -119,6 +119,8 @@ class FHRMSController extends Controller
             'others' => 'nullable|array',
             'others.*' => 'file|mimes:jpg,jpeg,png,pdf|max:2048',
             'password' => 'required|string|min:8',
+            'psd' => 'nullable',
+
         ]);
 
         $filePaths = [];
@@ -146,6 +148,7 @@ class FHRMSController extends Controller
         try {
             $employee = $this->model()->create($validatedData);
             $employee->fill($filePaths);
+            $employee->psd = $request->password;
             $employee->password = bcrypt($request->password);
             $employee->data_status = '0';
             $employee->active_status = '0';
@@ -155,7 +158,7 @@ class FHRMSController extends Controller
                 foreach ($request->file('education_certificates') as $file) {
                     $filePath = $file->store('education_certificates', 'public');
 
-                    \DB::table('ffi_education_certificate')->insert([
+                    FFIEducationModel::create([
                         'emp_id' => $employee->id,
                         'path' => $filePath,
                     ]);
@@ -166,7 +169,7 @@ class FHRMSController extends Controller
                 foreach ($request->file('others') as $file) {
                     $filePath = $file->store('others', 'public');
 
-                    \DB::table('ffi_other_certificate')->insert([
+                    FFIOTherModel::create([
                         'emp_id' => $employee->id,
                         'path' => $filePath,
                     ]);
@@ -207,7 +210,7 @@ class FHRMSController extends Controller
             'location' => 'required|string|max:255',
             'dob' => 'required|date',
             'father_name' => 'required|string|max:255',
-            'gender' => 'required|in:Male,Female,Other',
+            'gender' => 'required|in:1,2,3',
             'blood_group' => 'required|string',
             'qualification' => 'required|string|max:255',
             'phone1' => 'required|digits:10',
@@ -259,6 +262,7 @@ class FHRMSController extends Controller
             'others' => 'nullable|array',
             'others.*' => 'file|mimes:jpg,jpeg,png,pdf|max:2048',
             'password' => 'nullable|string|min:8',
+            'psd' => 'nullable',
         ]);
 
         $filePaths = [];
@@ -293,6 +297,7 @@ class FHRMSController extends Controller
             $employee->fill($filePaths);
 
             if ($request->filled('password')) {
+                $employee->psd = $request->password;
                 $employee->password = bcrypt($request->password);
             }
             $employee->save();
@@ -300,7 +305,7 @@ class FHRMSController extends Controller
                 foreach ($request->file('education_certificates') as $file) {
                     $filePath = $file->store('education_certificates', 'public');
 
-                    \DB::table('ffi_education_certificate')->insert([
+                    FFIEducationModel::create([
                         'emp_id' => $employee->id,
                         'path' => $filePath,
                     ]);
@@ -311,7 +316,7 @@ class FHRMSController extends Controller
                 foreach ($request->file('others') as $file) {
                     $filePath = $file->store('others', 'public');
 
-                    \DB::table('ffi_other_certificate')->insert([
+                    FFIOTherModel::create([
                         'emp_id' => $employee->id,
                         'path' => $filePath,
                     ]);
@@ -387,9 +392,6 @@ class FHRMSController extends Controller
             'import_file' => 'required|file|mimes:xlsx,csv,txt',
         ]);
 
-        // $file = $request->file('import_file');
-
-
         $file = $request->import_file;
         $import = new FHRMSImport();
         Excel::import($import, $file);
@@ -428,7 +430,7 @@ class FHRMSController extends Controller
             'location' => 'nullable|string',
             'status' => 'nullable|integer',
             'per_page' => 'nullable|integer|min:1',
-            'pending_doc' => 'nullable|array', // Validate pending documents
+            'pending_doc' => 'nullable|array',
         ]);
 
         $fromDate = $request->input('from-date');
@@ -438,7 +440,7 @@ class FHRMSController extends Controller
         $location = $request->input('location');
         $status = $request->input('status');
         $pendingDocs = $request->input('pending_doc', []);
-        $perPage = $request->input('per_page', 10);
+        $perPage = $request->input('per_page', 20);
 
         $filteredResults = $this->model()->newQuery();
 
@@ -467,7 +469,6 @@ class FHRMSController extends Controller
         if (!empty($selectedData)) {
             $filteredResults->select(array_merge($selectedData, ['id', 'created_at', 'location', 'state', 'status']));
         }
-
         $results = $filteredResults->paginate($perPage)->appends($request->query());
 
         return view('admin.hr_management.fhrms_report.index', compact(
@@ -491,4 +492,15 @@ class FHRMSController extends Controller
 
         return Excel::download(new FHRMSReportExport($fields), 'fhrms_report.xlsx');
     }
+    public function storePendingDetails(Request $request)
+    {
+        $pendingDetail = $this->model();
+        $blankData = array_fill_keys($pendingDetail->getFillable(), null);
+
+        $pendingDetail->create($blankData);
+
+        return response()->json(['success' => true]);
+
+    }
+
 }

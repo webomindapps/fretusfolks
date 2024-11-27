@@ -14,7 +14,8 @@
     @endif
     <div class="col-lg-12 pb-4">
         <div class="form-card px-3">
-            <form action="{{ route('admin.fhrms.create') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('admin.fhrms.create') }}" method="POST" enctype="multipart/form-data"
+                id="pendingDetailsForm">
                 @csrf
                 <div class="card mt-3">
                     <div class="card-header header-elements-inline d-flex justify-content-between align-items-center">
@@ -46,9 +47,9 @@
                                 <x-forms.input label="Father's Name: " type="text" name="father_name"
                                     id="father_name" :required="true" size="col-lg-6 mt-2" :value="old('father_name')" />
                                 <x-forms.radio label="Gender: " :options="[
-                                    ['value' => 'Male', 'label' => 'Male'],
-                                    ['value' => 'Female', 'label' => 'Female'],
-                                    ['value' => 'Other', 'label' => 'Other'],
+                                    ['value' => '1', 'label' => 'Male'],
+                                    ['value' => '2', 'label' => 'Female'],
+                                    ['value' => '3', 'label' => 'Other'],
                                 ]" id="gender" name="gender"
                                     :required="true" size="col-lg-6 mt-2 mr-2" :value="old('gender')" />
 
@@ -190,8 +191,9 @@
                             <div class="row">
                                 <div class="col-lg-12 mt-4">
                                     <x-forms.button type="submit" label="Save" class="btn btn-primary" />
-                                    {{-- <x-forms.button type="button" label="Pending Save" class="btn btn-primary"
-                                        onclick="pending_update()" /> --}}
+                                    <button type="button" onclick="return pending_update()"
+                                        class="btn btn-primary">Pending Save</button>
+
                                 </div>
                             </div>
                         </div>
@@ -200,5 +202,33 @@
             </form>
         </div>
     </div>
+    @push('scripts')
+        <script>
+            function pending_update() {
+                var formData = new FormData(document.getElementById('pendingDetailsForm'));
+
+                fetch('{{ route('admin.fhrms.pending.store') }}', {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        },
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert('Pending details saved successfully!');
+                            window.location.href = '{{ route('admin.fhrms') }}';
+                        } else {
+                            alert('Something went wrong.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Error saving pending details');
+                    });
+            }
+        </script>
+    @endpush
 
 </x-applayout>
