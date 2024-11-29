@@ -1,5 +1,5 @@
 <x-applayout>
-    <x-admin.breadcrumb title=" New FFI Offer Letter" />
+    <x-admin.breadcrumb title=" New FFI Increment Letter" />
 
     @if ($errors->any())
         <div class="col-lg-12 pb-4 px-2">
@@ -14,12 +14,12 @@
     @endif
     <div class="col-lg-12 pb-4">
         <div class="form-card px-3">
-            <form action="{{ route('admin.ffi_offer_letter.create') }}" method="POST" enctype="multipart/form-data"
+            <form action="{{ route('admin.ffi_increment_letter.create') }}" method="POST" enctype="multipart/form-data"
                 id="employeeForm">
                 @csrf
                 <div class="card mt-3">
                     <div class="card-header header-elements-inline d-flex justify-content-between align-items-center">
-                        <h5 class="card-title mb-0">Offer Letter Details</h5>
+                        <h5 class="card-title mb-0">Increment Letter Details</h5>
                     </div>
                     <div class="card-body">
                         <div class="form-contents">
@@ -29,26 +29,18 @@
                                     <input type="text" id="ffi_emp_id" name="ffi_emp_id"
                                         onchange="return fetchEmployeeDetails()" required>
                                     <input type="hidden" id="fetchEmployeeRoute"
-                                        data-url="{{ route('admin.get.employee.details', ['ffi_emp_id' => ':ffi_emp_id']) }}">
+                                        data-url="{{ route('admin.get.employeeIncrement.details', ['ffi_emp_id' => ':ffi_emp_id']) }}">
                                 </div>
                                 <x-forms.input label="Enter Employee Name: " type="text" name="emp_name"
                                     id="emp_name" :required="true" size="col-lg-6 mt-2" readonly />
-                                <x-forms.input label="Interview Date: " type="date" name="interview_date"
-                                    id="interview_date" :required="true" size="col-lg-6 mt-2" readonly />
-                                <x-forms.input label="Contract End Date: " type="date" name="contract_date"
-                                    id="contract_date" :required="true" size="col-lg-6 mt-2" readonly />
                                 <x-forms.input label="Designation: " type="text" name="designation" id="designation"
                                     :required="true" size="col-lg-6 mt-2" readonly />
                                 <x-forms.input label="Department: " type="text" name="department" id="department"
                                     :required="false" size="col-lg-6 mt-2" readonly />
                                 <x-forms.input label="Location: " type="text" name="location" id="location"
                                     :required="true" size="col-lg-6 mt-2" readonly />
-                               
-                                <x-forms.select label="Offer Letter For:" name="offer_letter_type"
-                                    id="offer_letter_type" :required="true" class="form-control" size="col-lg-6 mt-2"
-                                    :options="FretusFolks::getLetterFormate()" />
-
-
+                                <x-forms.textarea label="Content: " type="text" name="content" id="content"
+                                    :required="true" size="col-lg-12 mt-2" :value="old('content', $content->content ?? '')" />
                                 <label size="col-lg-12 mt-4"><strong>Salary Details</strong></label>
                                 <div
                                     style="border:
@@ -113,7 +105,6 @@
                                             :value="old('mediclaim')" />
                                         <x-forms.input label="CTC: " type="number" name="ctc" id="ctc"
                                             :required="true" size="col-lg-3 mt-2" :value="old('ctc')" />
-
                                     </div>
                                 </div>
                             </div>
@@ -138,7 +129,6 @@
                     clearFields();
                     return;
                 }
-
                 const routeUrl = $('#fetchEmployeeRoute').data('url').replace(':ffi_emp_id', ffi_emp_id);
 
                 $.ajax({
@@ -147,8 +137,6 @@
                     success: function(response) {
                         if (response.success) {
                             $('#emp_name').val(response.data.emp_name);
-                            $('#interview_date').val(response.data.interview_date);
-                            $('#contract_date').val(response.data.contract_date);
                             $('#designation').val(response.data.designation);
                             $('#department').val(response.data.department);
                             $('#location').val(response.data.location);
@@ -165,7 +153,7 @@
             }
 
             function clearFields() {
-                $('#emp_name, #interview_date, #contract_date, #designation, #department, #location').val('');
+                $('#emp_name, #designation, #department, #location').val('');
                 alert('All fields have been cleared.');
             }
         </script>

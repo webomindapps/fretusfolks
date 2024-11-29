@@ -74,7 +74,8 @@
                                 <i class="fa fa-book"></i>
                                 Aadhar
                             </a></span></p>
-                    <p><b>Driving License Doc:</b> <span> <a href="{{ $employee->driving_license_path }}"target="_blank">
+                    <p><b>Driving License Doc:</b> <span> <a
+                                href="{{ $employee->driving_license_path }}"target="_blank">
                                 <i class="fa fa-book"></i>
                                 Driving License
                             </a></span></p>

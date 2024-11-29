@@ -52,7 +52,7 @@ class CFISController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'entity_name' => 'required|string',
+            'client_id' => 'required|string',
             'emp_name' => 'required|string',
             'phone1' => 'required|digits:10',
             'email' => 'required|email|max:255',

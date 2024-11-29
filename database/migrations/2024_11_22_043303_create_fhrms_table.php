@@ -21,7 +21,7 @@ return new class extends Migration {
             $table->date('contract_date')->nullable()->change();
             $table->text('designation')->nullable()->change();
             $table->text('department')->nullable()->change();
-            $table->text('state')->nullable()->change();
+            $table->integer('state')->nullable()->change();
             $table->text('location')->nullable()->change();
             $table->date('dob')->nullable()->change();
             $table->string('gender', 100)->nullable()->change();

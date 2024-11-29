@@ -45,8 +45,9 @@
                 <td>{{ $client->pan }}</td>
                 <td>{{ $client->tan }}</td>
                 <td>{{ $client->website_url }}</td>
-                <td>{{ $client->mode_agreement }}</td>
-                <td>{{ $client->agreement_type }}</td>
+                <td>{{ $client->mode_agreement == 1 ? 'LOI' : 'Agreement' }}</td>
+                <td>{{ $client->agreement_type == 1 ? 'One Time Sourcing' : ($client->agreement_type == 2 ? 'Contractual' : 'Other') }}
+                </td>
                 <td>{{ $client->agreement_doc }}</td>
                 <td>{{ $client->region }}</td>
                 <td>{{ $client->state->state_name }}</td>
@@ -55,11 +56,11 @@
                 <td>{{ $client->rate }}</td>
                 <td>{{ $client->commercial_type == 1 ? '%' : 'Rs' }}</td>
                 <td>{{ $client->remark }}</td>
-              
+
                 <td>
                     @if ($client->gstn && $client->gstn->count())
                         @foreach ($client->gstn as $gst)
-                            {{ $gst->state_name ?? 'N/A' }} - {{ $gstn->gstn_no }}<br>
+                            {{ $gst->state->state_name ?? 'N/A' }} - {{ $gstn->gstn_no }}<br>
                         @endforeach
                     @endif
                 </td>

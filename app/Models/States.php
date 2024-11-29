@@ -19,6 +19,6 @@ class States extends Model
     }
     public function fhrms()
     {
-        return $this->hasMany(FHRMSModel::class);
+        return $this->hasMany(FHRMSModel::class, 'state');
     }
 }

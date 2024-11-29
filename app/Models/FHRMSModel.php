@@ -3,6 +3,9 @@
 namespace App\Models;
 
 use App\Models\States;
+use App\Models\FFIOfferLetterModel;
+use App\Models\FFITerminationModel;
+use App\Models\FFIIncrementLetterModel;
 use Illuminate\Database\Eloquent\Model;
 
 class FHRMSModel extends Model
@@ -78,12 +81,20 @@ class FHRMSModel extends Model
         'ref_no',
         'active_status',
     ];
-    public function state()
+    public function stateRelation()
     {
-        return $this->belongsTo(States::class);
+        return $this->belongsTo(States::class, 'state', 'id');
     }
     public function employee()
     {
         return $this->hasMany(FFIOfferLetterModel::class);
+    }
+    public function incrementletter()
+    {
+        return $this->hasMany(FFIIncrementLetterModel::class);
+    }
+    public function term_letter()
+    {
+        return $this->hasMany(FFITerminationModel::class);
     }
 }

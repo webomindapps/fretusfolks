@@ -63,7 +63,7 @@ class FHRMSController extends Controller
             'contract_date' => 'required|date',
             'designation' => 'required|string|max:255',
             'department' => 'nullable|string|max:255',
-            'state' => 'required|string',
+            'state' => 'required|integer',
             'location' => 'required|string|max:255',
             'dob' => 'required|date',
             'father_name' => 'required|string|max:255',
@@ -206,7 +206,7 @@ class FHRMSController extends Controller
             'contract_date' => 'required|date',
             'designation' => 'required|string|max:255',
             'department' => 'nullable|string|max:255',
-            'state' => 'required|string',
+            'state' => 'required|integer',
             'location' => 'required|string|max:255',
             'dob' => 'required|date',
             'father_name' => 'required|string|max:255',
@@ -356,7 +356,7 @@ class FHRMSController extends Controller
     {
         $from_date = $request->from_date;
         $to_date = $request->to_date;
-        $query = $this->model()->query();
+        $query = $this->model()->with('stateRelation');
         if ($from_date && $to_date) {
             $query->whereBetween('created_at', [$from_date, $to_date]);
         }
@@ -429,7 +429,7 @@ class FHRMSController extends Controller
             'state' => 'nullable|array',
             'location' => 'nullable|string',
             'status' => 'nullable|integer',
-            'per_page' => 'nullable|integer|min:1',
+           
             'pending_doc' => 'nullable|array',
         ]);
 
@@ -440,7 +440,7 @@ class FHRMSController extends Controller
         $location = $request->input('location');
         $status = $request->input('status');
         $pendingDocs = $request->input('pending_doc', []);
-        $perPage = $request->input('per_page', 20);
+       
 
         $filteredResults = $this->model()->newQuery();
 
@@ -469,7 +469,7 @@ class FHRMSController extends Controller
         if (!empty($selectedData)) {
             $filteredResults->select(array_merge($selectedData, ['id', 'created_at', 'location', 'state', 'status']));
         }
-        $results = $filteredResults->paginate($perPage)->appends($request->query());
+        $results = $filteredResults->paginate(20)->appends($request->query());
 
         return view('admin.hr_management.fhrms_report.index', compact(
             'results',

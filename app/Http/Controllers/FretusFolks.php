@@ -23,7 +23,7 @@ class FretusFolks extends Controller
             ['label' => 'South', 'value' => 'South'],
             ['label' => 'East', 'value' => 'East'],
             ['label' => 'West', 'value' => 'West'],
-            ['label' => 'Pan India', 'value' => 'Pan India'],
+            ['label' => 'PAN India', 'value' => 'Pan India'],
 
         ];
     }

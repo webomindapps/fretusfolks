@@ -6,16 +6,16 @@ use Exception;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\FHRMSModel;
 use Illuminate\Http\Request;
+use App\Models\LetterContent;
 use Illuminate\Support\Facades\DB;
-use App\Models\FFIOfferLetterModel;
 use App\Http\Controllers\Controller;
+use App\Models\FFIIncrementLetterModel;
 
-class FFIOfferLetterController extends Controller
+class FFIIncrementLetterController extends Controller
 {
-
     public function model()
     {
-        return new FFIOfferLetterModel();
+        return new FFIIncrementLetterModel();
     }
     public function index()
     {
@@ -27,7 +27,7 @@ class FFIOfferLetterController extends Controller
         $orderBy = request()->orderBy;
         $paginate = request()->paginate;
 
-        $query = $this->model()->with('employee');
+        $query = $this->model()->with('incrementletter');
 
         if ($from_date && $to_date) {
             $query->whereBetween('created_at', [$from_date, $to_date]);
@@ -47,20 +47,20 @@ class FFIOfferLetterController extends Controller
             $query->orderBy($order, $orderBy);
         }
 
-        $offer = $paginate ? $query->paginate($paginate)->appends(request()->query()) : $query->paginate(10)->appends(request()->query());
+        $increment = $paginate ? $query->paginate($paginate)->appends(request()->query()) : $query->paginate(10)->appends(request()->query());
 
-        return view("admin.hr_management.ffi.offer_letter.index", compact("offer"));
+        return view("admin.hr_management.ffi.increment_letter.index", compact("increment"));
     }
-
 
     public function create()
     {
-        return view("admin.hr_management.ffi.offer_letter.create");
+        $content = LetterContent::where('type', 1)->first();
+        return view("admin.hr_management.ffi.increment_letter.create", compact("content"));
     }
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'ffi_emp_id' => 'required', // Ensure the employee exists
+            'ffi_emp_id' => 'required',
             'offer_letter_type' => 'nullable|string|max:255',
             'status' => 'nullable|string',
             'basic_salary' => 'required|numeric|min:0',
@@ -73,6 +73,7 @@ class FFIOfferLetterController extends Controller
             'pf_percentage' => 'required|numeric|min:0|max:100',
             'emp_pf' => 'nullable|numeric|min:0',
             'esic_percentage' => 'required|numeric|min:0|max:100',
+            'gross_salary' => 'nullable|numeric|min:0',
             'emp_esic' => 'nullable|numeric|min:0',
             'pt' => 'required|numeric|min:0',
             'total_deduction' => 'nullable|numeric|min:0',
@@ -82,38 +83,39 @@ class FFIOfferLetterController extends Controller
             'employer_esic' => 'nullable|numeric|min:0',
             'mediclaim' => 'required|numeric|min:0',
             'ctc' => 'nullable|numeric|min:0',
+            'content' => 'required|string',
             'employee_id' => 'nullable',
+
         ]);
         DB::beginTransaction();
         try {
-            $offer = $this->model()->create($validatedData);
-            $offer->employee_id = $request->ffi_emp_id;
-            $offer->date = now();
-            $offer->status = '1';
-            $offer->save();
+            $increment = $this->model()->create($validatedData);
+            $increment->employee_id = $request->ffi_emp_id;
+            $increment->date = now();
+            $increment->effective_date = now();
+            $increment->status = '1';
+            $increment->save();
 
             DB::commit();
-            return redirect()->route('admin.ffi_offer_letter')->with('success', 'Offer Letter has been Created!');
+            return redirect()->route('admin.ffi_increment_letter')->with('success', 'Increment Letter has been Created!');
         } catch (Exception $e) {
             DB::rollBack();
             dd($e);
         }
-
     }
+
     public function getEmployeeDetails(Request $request)
     {
-        $employee = FHRMSModel::where('ffi_emp_id', $request->ffi_emp_id)->first();
+        $increment = FHRMSModel::where('ffi_emp_id', $request->ffi_emp_id)->first();
 
-        if ($employee) {
+        if ($increment) {
             return response()->json([
                 'success' => true,
                 'data' => [
-                    'emp_name' => $employee->emp_name,
-                    'interview_date' => $employee->interview_date,
-                    'contract_date' => $employee->contract_date,
-                    'designation' => $employee->designation,
-                    'department' => $employee->department,
-                    'location' => $employee->location,
+                    'emp_name' => $increment->emp_name,
+                    'designation' => $increment->designation,
+                    'department' => $increment->department,
+                    'location' => $increment->location,
                 ],
             ]);
         }
@@ -123,26 +125,25 @@ class FFIOfferLetterController extends Controller
             'message' => 'Employee not found.',
         ]);
     }
-
     public function destroy($id)
     {
         $this->model()->destroy($id);
-        return redirect()->route('admin.ffi_offer_letter')->with('success', 'Successfully deleted!');
+        return redirect()->route('admin.ffi_increment_letter')->with('success', 'Successfully deleted!');
     }
-    public function generateOfferLetterPdf($id)
+    public function generateIncrementLetterPdf($id)
     {
-        $offerLetter = $this->model()->with('employee')->findOrFail($id);
+        $incrementLetter = $this->model()->with('incrementLetter')->findOrFail($id);
 
         $data = [
-            'offerLetter' => $offerLetter,
+            'incrementLetter' => $incrementLetter,
         ];
 
-        $pdf = PDF::loadView('admin.hr_management.ffi.offer_letter.formate1', $data)
+        $pdf = PDF::loadView('admin.hr_management.ffi.increment_letter.formate_1', $data)
             ->setPaper('A4', 'portrait')
             ->setOptions(['margin-top' => 10, 'margin-bottom' => 10, 'margin-left' => 15, 'margin-right' => 15]);
 
 
-        return $pdf->stream('offer_letter_' . $offerLetter->id . '.pdf');
+        return $pdf->stream('increment_letter_' . $incrementLetter->id . '.pdf');
     }
     public function bulk(Request $request)
     {

@@ -115,7 +115,18 @@ class SideBar extends Component
                     'route' => 'admin.ffi_offer_letter',
                     'name' => 'ffi_offer_letter',
                 ],
-
+                [
+                    'title' => 'FFI Increment Letter',
+                    'icon' => 'bx bx-chevron-right',
+                    'route' => 'admin.ffi_increment_letter',
+                    'name' => 'ffi_increment_letter',
+                ],
+                [
+                    'title' => 'FFI Termination Letter',
+                    'icon' => 'bx bx-chevron-right',
+                    'route' => 'admin.ffi_termination',
+                    'name' => 'ffi_termination',
+                ],
             ],
 
         ],

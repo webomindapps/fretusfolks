@@ -17,7 +17,9 @@ use App\Http\Controllers\Admin\CDMSReportController;
 use App\Http\Controllers\Admin\DCSApprovalController;
 use App\Http\Controllers\Admin\LetterContentController;
 use App\Http\Controllers\Admin\FFIOfferLetterController;
+use App\Http\Controllers\Admin\FFITerminationController;
 use App\Http\Controllers\Admin\CMSLabourNoticeController;
+use App\Http\Controllers\Admin\FFIIncrementLetterController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -156,6 +158,26 @@ Route::prefix('admin')->group(function () {
         Route::get('/get-employee-details/{ffi_emp_id}', [FFIOfferLetterController::class, 'getEmployeeDetails'])->name('get.employee.details');
         Route::get('ffi_offer_letter/{id}/delete', [FFIOfferLetterController::class, 'destroy'])->name('ffi_offer_letter.delete');
         Route::get('/generate-offer-letter/{id}', [FFIOfferLetterController::class, 'generateOfferLetterPdf'])->name('generate.offer.letter');
+        Route::post('ffi_offer_letter/bulk_operation', [FFIOfferLetterController::class, 'bulk'])->name('ffi_offer_letter.bulk');
 
+        //ffi_increment_letter
+        Route::get('/ffi_increment_letter', [FFIIncrementLetterController::class, 'index'])->name('ffi_increment_letter');
+        Route::get('ffi_increment_letter/create', [FFIIncrementLetterController::class, 'create'])->name('ffi_increment_letter.create');
+        Route::post('ffi_increment_letter/create', [FFIIncrementLetterController::class, 'store']);
+        Route::get('/get-employeeIncrement-details/{ffi_emp_id}', [FFIIncrementLetterController::class, 'getEmployeeDetails'])->name('get.employeeIncrement.details');
+        Route::get('ffi_increment_letter/{id}/delete', action: [FFIIncrementLetterController::class, 'destroy'])->name('ffi_increment_letter.delete');
+        Route::get('/generate-increment-letter/{id}', [FFIIncrementLetterController::class, 'generateIncrementLetterPdf'])->name('generate.increment.letter');
+        Route::post('ffi_increment_letter/bulk_operation', [FFIIncrementLetterController::class, 'bulk'])->name('ffi_increment_letter.bulk');
+
+        //termination
+        Route::get('/ffi_termination', [FFITerminationController::class, 'index'])->name('ffi_termination');
+        Route::get('ffi_termination/create', [FFITerminationController::class, 'create'])->name('ffi_termination.create');
+        Route::post('ffi_termination/create', [FFITerminationController::class, 'store']);
+        Route::get('/get-employeeTermination-details/{ffi_emp_id}', [FFITerminationController::class, 'getEmployeeDetails'])->name('get.employeeTermination.details');
+        Route::post('ffi_termination/bulk_operation', [FFITerminationController::class, 'bulk'])->name('ffi_termination.bulk');
+        Route::get('ffi_termination/{id}/delete', action: [FFITerminationController::class, 'destroy'])->name('ffi_termination.delete');
+        Route::get('/generate-termination-letter/{id}', [FFITerminationController::class, 'generateTerminationPdf'])->name('generate.termination.letter');
+        Route::get('/ffi-termination/{id}/edit', [FFITerminationController::class, 'edit'])->name('ffi_termination.edit');
+        Route::post('/ffi-termination/{id}/edit', [FFITerminationController::class, 'update']);
     });
 });

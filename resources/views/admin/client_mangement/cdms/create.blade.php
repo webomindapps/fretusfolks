@@ -115,14 +115,14 @@
                                 <x-forms.select label="State:" name="service_state" id="service_state"
                                     :required="true" size="col-lg-4 mt-2" :options="FretusFolks::getStates()" :value="old('service_state')" />
                                 <x-forms.radio label="Mode of Agreement:" :options="[
-                                    ['value' => 'LOI', 'label' => 'LOI'],
-                                    ['value' => 'Agreement', 'label' => 'Agreement'],
+                                    ['value' => '1', 'label' => 'LOI'],
+                                    ['value' => '2', 'label' => 'Agreement'],
                                 ]" id="mode_agreement"
                                     name="mode_agreement" :required="true" size="col-lg-6 mt-2" />
                                 <x-forms.radio label="Type of Agreement:" :options="[
-                                    ['value' => 'One Time Sourcing', 'label' => 'One Time Sourcing'],
-                                    ['value' => 'Contractual', 'label' => 'Contractual'],
-                                    ['value' => 'Other', 'label' => 'Other'],
+                                    ['value' => '1', 'label' => 'One Time Sourcing'],
+                                    ['value' => '2', 'label' => 'Contractual'],
+                                    ['value' => '3', 'label' => 'Other'],
                                 ]" id="agreement_type"
                                     name="agreement_type" :required="true" size="col-lg-6 mt-2" />
 

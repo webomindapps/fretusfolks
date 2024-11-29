@@ -46,7 +46,7 @@ class ClientManagement extends Model
     }
     public function state()
     {
-        return $this->belongsTo(States::class,'service_state');
+        return $this->belongsTo(States::class, 'service_state', 'id');
     }
 
 }

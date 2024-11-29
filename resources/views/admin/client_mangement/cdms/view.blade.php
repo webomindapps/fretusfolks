@@ -17,7 +17,7 @@
                     <p><b>Contact Person Name :</b> <span>{{ $client->contact_person }}</span></p>
                     <p><b>Contact Name (Comm) :</b> <span>{{ $client->contact_name_comm }}</span></p>
                     <p><b>PAN No :</b> <span>{{ $client->pan }}</span></p>
-                    <p><b>Agreement Mode :</b> <span>{{ $client->mode_agreement }}</span></p>
+                    <p><b>Agreement Mode :</b> <span>{{ $client->mode_agreement == 1 ? 'LOI' : 'Agreement' }}</span></p>
                     <p><b>Registered Address :</b> <span>{{ $client->registered_address }}</span></p>
                 </div>
                 <div class="col-md-4 col-sm-6">
@@ -25,7 +25,9 @@
                     <p><b>Email :</b> <span>{{ $client->contact_person_email }}</span></p>
                     <p><b>Contact Email (Comm) :</b> <span>{{ $client->contact_email_comm }}</span></p>
                     <p><b>TAN No :</b> <span>{{ $client->tan }}</span></p>
-                    <p><b>Agreement Type :</b> <span>{{ $client->agreement_type }}</span></p>
+                    <p><b>Agreement Type :</b>
+                        <span>{{ $client->agreement_type == 1 ? 'One Time Sourcing' : ($client->agreement_type == 2 ? 'Contractual' : 'Other') }}</span>
+                    </p>
                     <p><b>Communication Address :</b> <span>{{ $client->communication_address }}</span></p>
                 </div>
                 <div class="col-md-4 col-sm-6">

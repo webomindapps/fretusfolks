@@ -72,12 +72,12 @@ class CDMSController extends Controller
             'tan' => 'required|string|max:10',
             'gstn' => 'nullable',
             'website_url' => 'required|url',
-            'mode_agreement' => 'required|string',
-            'agreement_type' => 'required|string',
+            'mode_agreement' => 'required|string|in:1,2',
+            'agreement_type' => 'required|string|in:1,2,3',
             'other_agreement' => 'nullable',
             'agreement_doc' => 'mimes:doc,docx,pdf|max:5000',
             'region' => 'required|string|max:255',
-            'service_state' => 'required',
+            'service_state' => 'required|integer',
             'contract_start' => 'required|date',
             'contract_end' => 'required|date',
             'rate' => 'required|string|max:255',
@@ -172,8 +172,8 @@ class CDMSController extends Controller
             'tan' => 'required|string|max:10',
             'gstn' => 'nullable',
             'website_url' => 'required|url',
-            'mode_agreement' => 'required|string',
-            'agreement_type' => 'required|string',
+            'mode_agreement' => 'required|string|in:1,2',
+            'agreement_type' => 'required|string|in:1,2,3',
             'other_agreement' => 'nullable',
             'agreement_doc' => 'max:5000',
             'region' => 'required|string|max:255',
@@ -255,12 +255,11 @@ class CDMSController extends Controller
     {
         $from_date = $request->from_date;
         $to_date = $request->to_date;
-        $query = $this->model()->with('gstn');
+        $query = $this->model()->with('gstn', 'state');
         if ($from_date && $to_date) {
             $query->whereBetween('created_at', [$from_date, $to_date]);
         }
         $clients = $query->get();
-
         return Excel::download(new CDMSExport($clients), 'cdms.xlsx');
     }
     public function exportReport(Request $request)
