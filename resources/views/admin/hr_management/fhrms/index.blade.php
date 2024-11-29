@@ -1,12 +1,9 @@
 <x-applayout>
-    <x-admin.breadcrumb title=" Fretus HR Management System" />
+    <x-admin.breadcrumb title=" Fretus HR Management System" :create="route('admin.fhrms.create')" />
     <div class="col-lg-12 mt-4">
         <div class="form-card">
             <div class="row mb-2">
                 <div class="col-lg-5 my-auto text-end ms-auto">
-                    <a href="{{ route('admin.fhrms.create') }}" class="add-btn bg-success text-white">
-                        New Employee
-                    </a>
                     <a href="{{ asset('admin/FHRMS_Formate.xlsx') }}" class="btn btn-info text-white ms-3">
                         Download Sample
                     </a>

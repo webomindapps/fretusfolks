@@ -1,18 +1,6 @@
 <x-applayout>
-    <x-admin.breadcrumb title=" FFI Increment Letters" />
-    <div class="col-lg-12 mt-4">
-        <div class="form-card">
-            <div class="row mb-2">
-                <div class="col-lg-5 my-auto text-end ms-auto">
-                    <a href="{{ route('admin.ffi_increment_letter.create') }}" class="add-btn bg-success text-white">
-                        New FFI Increment Letter
-                    </a>
-
-                </div>
-            </div>
-
-        </div>
-    </div>
+    <x-admin.breadcrumb title=" FFI Increment Letters" :create="route('admin.ffi_increment_letter.create')"/>
+    
     <div class="row">
         <div class="col-lg-12">
             @php

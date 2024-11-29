@@ -70,8 +70,8 @@ class FHRMSController extends Controller
             'gender' => 'required|in:1,2,3',
             'blood_group' => 'required|string',
             'qualification' => 'required|string|max:255',
-            'phone1' => 'required|digits:10',
-            'phone2' => 'nullable|digits:10',
+            'phone1' => 'required|digits:10|min:10|min:10|max:15',
+            'phone2' => 'nullable|digits:10min:10|min:10|max:15',
             'email' => 'nullable|email|max:255',
             'permanent_address' => 'required|string',
             'present_address' => 'required|string',
@@ -118,7 +118,7 @@ class FHRMSController extends Controller
             'education_certificates.*' => 'file|mimes:jpg,jpeg,png,pdf|max:2048',
             'others' => 'nullable|array',
             'others.*' => 'file|mimes:jpg,jpeg,png,pdf|max:2048',
-            'password' => 'required|string|min:8',
+            'password' => 'required|string',
             'psd' => 'nullable',
 
         ]);

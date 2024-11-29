@@ -127,6 +127,24 @@ class SideBar extends Component
                     'route' => 'admin.ffi_termination',
                     'name' => 'ffi_termination',
                 ],
+                [
+                    'title' => 'FFI Warning Letter',
+                    'icon' => 'bx bx-chevron-right',
+                    'route' => 'admin.ffi_warning',
+                    'name' => 'ffi_warning',
+                ],
+                [
+                    'title' => 'FFI Show Cause Letter',
+                    'icon' => 'bx bx-chevron-right',
+                    'route' => 'admin.ffi_show_cause',
+                    'name' => 'ffi_show_cause',
+                ],
+                [
+                    'title' => 'FFI PIP Letter',
+                    'icon' => 'bx bx-chevron-right',
+                    'route' => 'admin.ffi_pip_letter',
+                    'name' => 'ffi_pip_letter',
+                ],
             ],
 
         ],
