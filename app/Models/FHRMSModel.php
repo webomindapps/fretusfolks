@@ -3,6 +3,9 @@
 namespace App\Models;
 
 use App\Models\States;
+use App\Models\FFIWarningModel;
+use App\Models\FFIPipLetterModel;
+use App\Models\FFIShowCauseModel;
 use App\Models\FFIOfferLetterModel;
 use App\Models\FFITerminationModel;
 use App\Models\FFIIncrementLetterModel;
@@ -96,5 +99,17 @@ class FHRMSModel extends Model
     public function term_letter()
     {
         return $this->hasMany(FFITerminationModel::class);
+    }
+    public function warning_letter()
+    {
+        return $this->hasMany(FFIWarningModel::class);
+    }
+    public function show_letter()
+    {
+        return $this->hasMany(FFIShowCauseModel::class);
+    }
+    public function pip_letter()
+    {
+        return $this->hasMany(FFIPipLetterModel::class);
     }
 }

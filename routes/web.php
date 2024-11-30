@@ -14,7 +14,10 @@ use App\Http\Controllers\Admin\TdsCodeController;
 use App\Http\Controllers\Admin\CMSFormTController;
 use App\Http\Controllers\RolePermissionController;
 use App\Http\Controllers\Admin\CDMSReportController;
+use App\Http\Controllers\Admin\FFIWarningController;
 use App\Http\Controllers\Admin\DCSApprovalController;
+use App\Http\Controllers\Admin\FFIPipLetterController;
+use App\Http\Controllers\Admin\FFIShowCauseController;
 use App\Http\Controllers\Admin\LetterContentController;
 use App\Http\Controllers\Admin\FFIOfferLetterController;
 use App\Http\Controllers\Admin\FFITerminationController;
@@ -183,5 +186,38 @@ Route::prefix('admin')->group(function () {
         Route::get('/generate-termination-letter/{id}', [FFITerminationController::class, 'generateTerminationPdf'])->name('generate.termination.letter');
         Route::get('/ffi-termination/{id}/edit', [FFITerminationController::class, 'edit'])->name('ffi_termination.edit');
         Route::post('/ffi-termination/{id}/edit', [FFITerminationController::class, 'update']);
+
+        //warning_letter
+        Route::get('/ffi_warning', [FFIWarningController::class, 'index'])->name('ffi_warning');
+        Route::get('ffi_warning/create', [FFIWarningController::class, 'create'])->name('ffi_warning.create');
+        Route::post('ffi_warning/create', [FFIWarningController::class, 'store']);
+        Route::get('/get-employeeWarning-details/{ffi_emp_id}', [FFIWarningController::class, 'getEmployeeDetails'])->name('get.employeeWarning.details');
+        Route::post('ffi_warning/bulk_operation', [FFIWarningController::class, 'bulk'])->name('ffi_warning.bulk');
+        Route::get('ffi_warning/{id}/delete', action: [FFIWarningController::class, 'destroy'])->name('ffi_warning.delete');
+        Route::get('/generate-warning-letter/{id}', [FFIWarningController::class, 'generateWarningPdf'])->name('generate.warning.letter');
+        Route::get('/ffi_warning/{id}/edit', [FFIWarningController::class, 'edit'])->name('ffi_warning.edit');
+        Route::post('/ffi_warning/{id}/edit', [FFIWarningController::class, 'update']);
+
+        //show_case_letter
+        Route::get('/ffi_show_cause', [FFIShowCauseController::class, 'index'])->name('ffi_show_cause');
+        Route::get('ffi_show_cause/create', [FFIShowCauseController::class, 'create'])->name('ffi_show_cause.create');
+        Route::post('ffi_show_cause/create', [FFIShowCauseController::class, 'store']);
+        Route::get('/get-employeeShow-details/{ffi_emp_id}', [FFIShowCauseController::class, 'getEmployeeDetails'])->name('get.employeeShow.details');
+        Route::post('ffi_show_cause/bulk_operation', [FFIShowCauseController::class, 'bulk'])->name('ffi_show_cause.bulk');
+        Route::get('ffi_show_cause/{id}/delete', action: [FFIShowCauseController::class, 'destroy'])->name('ffi_show_cause.delete');
+        Route::get('/generate-show-letter/{id}', [FFIShowCauseController::class, 'generateShowPdf'])->name('generate.show.letter');
+        Route::get('/ffi_show_cause/{id}/edit', [FFIShowCauseController::class, 'edit'])->name('ffi_show_cause.edit');
+        Route::post('/ffi_show_cause/{id}/edit', [FFIShowCauseController::class, 'update']);
+
+        //ffi_pip_letter
+        Route::get('/ffi_pip_letter', [FFIPipLetterController::class, 'index'])->name('ffi_pip_letter');
+        Route::get('ffi_pip_letter/create', [FFIPipLetterController::class, 'create'])->name('ffi_pip_letter.create');
+        Route::post('ffi_pip_letter/create', [FFIPipLetterController::class, 'store']);
+        Route::get('/get-employeePip-details/{ffi_emp_id}', [FFIPipLetterController::class, 'getEmployeeDetails'])->name('get.employeePip.details');
+        Route::post('ffi_pip_letter/bulk_operation', [FFIPipLetterController::class, 'bulk'])->name('ffi_pip_letter.bulk');
+        Route::get('ffi_pip_letter/{id}/delete', action: [FFIPipLetterController::class, 'destroy'])->name('ffi_pip_letter.delete');
+        Route::get('/generate-pip-letter/{id}', [FFIPipLetterController::class, 'generatePipPdf'])->name('generate.pip.letter');
+        Route::get('/ffi_pip_letter/{id}/edit', [FFIPipLetterController::class, 'edit'])->name('ffi_pip_letter.edit');
+        Route::post('/ffi_pip_letter/{id}/edit', [FFIPipLetterController::class, 'update']);
     });
 });
