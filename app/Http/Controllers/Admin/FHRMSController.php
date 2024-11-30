@@ -429,7 +429,7 @@ class FHRMSController extends Controller
             'state' => 'nullable|array',
             'location' => 'nullable|string',
             'status' => 'nullable|integer',
-           
+
             'pending_doc' => 'nullable|array',
         ]);
 
@@ -440,7 +440,7 @@ class FHRMSController extends Controller
         $location = $request->input('location');
         $status = $request->input('status');
         $pendingDocs = $request->input('pending_doc', []);
-       
+
 
         $filteredResults = $this->model()->newQuery();
 
@@ -494,10 +494,76 @@ class FHRMSController extends Controller
     }
     public function storePendingDetails(Request $request)
     {
+        $validatedData = $request->validate([
+            'ffi_emp_id' => 'required|string|max:255',
+            'emp_name' => 'required|string|max:255',
+            'interview_date' => 'required|date',
+            'joining_date' => 'required|date',
+            'contract_date' => 'required|date',
+            'designation' => 'required|string|max:255',
+            'department' => 'nullable|string|max:255',
+            'state' => 'required|integer',
+            'location' => 'required|string|max:255',
+            'dob' => 'required|date',
+            'father_name' => 'required|string|max:255',
+            'gender' => 'required|in:1,2,3',
+            'blood_group' => 'required|string',
+            'qualification' => 'required|string|max:255',
+            'phone1' => 'required|digits:10',
+            'phone2' => 'nullable|digits:10',
+            'email' => 'nullable|email|max:255',
+            'permanent_address' => 'required|string',
+            'present_address' => 'required|string',
+            'pan_no' => 'nullable|string|max:20',
+            'pan_path' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'aadhar_no' => 'required|string|max:20',
+            'aadhar_path' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'driving_license_no' => 'nullable|string|max:20',
+            'driving_license_path' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'photo' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
+            'resume' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'bank_name' => 'nullable|string|max:255',
+            'bank_document' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'bank_account_no' => 'nullable|string|max:20',
+            'repeat_acc_no' => 'nullable|string|same:bank_account_no',
+            'bank_ifsc_code' => 'required|string|max:20',
+            'uan_generatted' => 'nullable|string|max:255',
+            'uan_type' => 'nullable|string',
+            'uan_no' => 'nullable|string|max:20',
+            'status' => 'nullable|string',
+            'basic_salary' => 'required|numeric',
+            'hra' => 'required|numeric',
+            'conveyance' => 'required|numeric',
+            'medical_reimbursement' => 'required|numeric',
+            'special_allowance' => 'required|numeric',
+            'other_allowance' => 'required|numeric',
+            'st_bonus' => 'required|numeric',
+            'gross_salary' => 'required|numeric',
+            'emp_pf' => 'required|numeric',
+            'emp_esic' => 'required|numeric',
+            'pt' => 'required|numeric',
+            'total_deduction' => 'required|numeric',
+            'take_home' => 'required|numeric',
+            'employer_pf' => 'required|numeric',
+            'employer_esic' => 'required|numeric',
+            'mediclaim' => 'required|numeric',
+            'ctc' => 'required|numeric',
+            'voter_id' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'emp_form' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'pf_esic_form' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'payslip' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'exp_letter' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'education_certificates' => 'nullable|array',
+            'education_certificates.*' => 'file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'others' => 'nullable|array',
+            'others.*' => 'file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'password' => 'nullable|string|min:8',
+            'psd' => 'nullable',
+        ]);
         $pendingDetail = $this->model();
-        $blankData = array_fill_keys($pendingDetail->getFillable(), null);
+        // $blankData = array_fill_keys($pendingDetail->getFillable(), null);
 
-        $pendingDetail->create($blankData);
+        $pendingDetail->create($validatedData);
 
         return response()->json(['success' => true]);
 

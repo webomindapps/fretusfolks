@@ -212,7 +212,7 @@ Route::prefix('admin')->group(function () {
         Route::get('/get-employeePip-details/{ffi_emp_id}', [FFIPipLetterController::class, 'getEmployeeDetails'])->name('get.employeePip.details');
         Route::post('ffi_pip_letter/bulk_operation', [FFIPipLetterController::class, 'bulk'])->name('ffi_pip_letter.bulk');
         Route::get('ffi_pip_letter/{id}/delete', action: [FFIPipLetterController::class, 'destroy'])->name('ffi_pip_letter.delete');
-        Route::get('/generate-pip-letter/{id}', [FFIPipLetterController::class, 'generateShowPdf'])->name('generate.pip.letter');
+        Route::get('/generate-pip-letter/{id}', [FFIPipLetterController::class, 'generatePipPdf'])->name('generate.pip.letter');
         Route::get('/ffi_pip_letter/{id}/edit', [FFIPipLetterController::class, 'edit'])->name('ffi_pip_letter.edit');
         Route::post('/ffi_pip_letter/{id}/edit', [FFIPipLetterController::class, 'update']);
     });

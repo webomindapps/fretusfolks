@@ -225,7 +225,7 @@
                     })
                     .catch(error => {
                         console.error('Error:', error);
-                        alert('Error saving pending details');
+                        alert(`Error saving pending details: ${error.message}`);
                     });
             }
         </script>

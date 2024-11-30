@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Exception;
+use App\Models\FHRMSModel;
 use Illuminate\Http\Request;
-use App\Models\FFIPipLetterModel;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\FFIPipLetterModel;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 
 class FFIPipLetterController extends Controller
@@ -51,6 +54,91 @@ class FFIPipLetterController extends Controller
     {
         return view("admin.hr_management.ffi.pip_letter.create");
     }
+    public function store(Request $request)
+    {
+        $validatedData = $request->validate([
+            'ffi_emp_id' => 'required',
+            'status' => 'nullable|string',
+            'from_name' => 'required|string',
+            'emp_id' => 'nullable',
+            'date' => 'required|date',
+            'content' => 'required|string',
+            'observation' => 'required|string',
+            'goals' => 'required|string',
+            'updates' => 'required|string',
+            'timeline' => 'required|string',
+        ]);
+        DB::beginTransaction();
+        try {
+            $warning = $this->model()->create($validatedData);
+            $warning->emp_id = $request->ffi_emp_id;
+            $warning->date_of_update = now();
+            $warning->status = '1';
+            $warning->save();
+
+            DB::commit();
+            return redirect()->route('admin.ffi_pip_letter')->with('success', 'Pip Letter has been Created!');
+        } catch (Exception $e) {
+            DB::rollBack();
+            dd($e);
+        }
+    }
+    public function getEmployeeDetails(Request $request)
+    {
+        $pip_letter = FHRMSModel::where('ffi_emp_id', $request->ffi_emp_id)->first();
+
+        if ($pip_letter) {
+            return response()->json([
+                'success' => true,
+                'data' => [
+                    'emp_name' => $pip_letter->emp_name,
+                    'designation' => $pip_letter->designation,
+                ],
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Employee not found.',
+        ]);
+    }
+    public function edit($id)
+    {
+        $pip = $this->model()->with('pip_letter')->findOrFail($id);
+        return view('admin.hr_management.ffi.pip_letter.update', compact('pip'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $validatedData = $request->validate([
+            'ffi_emp_id' => 'required',
+            'status' => 'nullable|string',
+            'from_name' => 'required|string',
+            'emp_id' => 'nullable',
+            'date' => 'required|date',
+            'content' => 'required|string',
+            'observation' => 'required|string',
+            'goals' => 'required|string',
+            'updates' => 'required|string',
+            'timeline' => 'required|string',
+        ]);
+
+        DB::beginTransaction();
+        try {
+            $show = $this->model()->findOrFail($id);
+            $show->update($validatedData);
+            $show->emp_id = $request->ffi_emp_id;
+            $show->date_of_update = now();
+            $show->status = '1';
+            $show->save();
+
+            DB::commit();
+            return redirect()->route('admin.ffi_pip_letter')->with('success', 'Pip Letter details have been updated!');
+        } catch (Exception $e) {
+            DB::rollBack();
+            dd($e);
+        }
+    }
     public function destroy($id)
     {
         $this->model()->destroy($id);
@@ -71,5 +159,20 @@ class FFIPipLetterController extends Controller
             }
         }
         return response()->json(['success' => true, 'message' => 'Bulk operation is completed']);
+    }
+    public function generatePipPdf($id)
+    {
+        $pipLetter = $this->model()->with('pip_letter')->findOrFail($id);
+
+        $data = [
+            'pipLetter' => $pipLetter,
+        ];
+
+        $pdf = PDF::loadView('admin.hr_management.ffi.pip_letter.print_pip', $data)
+            ->setPaper('A4', 'portrait')
+            ->setOptions(['margin-top' => 10, 'margin-bottom' => 10, 'margin-left' => 15, 'margin-right' => 15]);
+
+
+        return $pdf->stream('pip_letter_' . $pipLetter->id . '.pdf');
     }
 }
