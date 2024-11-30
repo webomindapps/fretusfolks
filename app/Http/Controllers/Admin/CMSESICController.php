@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\ClientManagement;
 use App\Models\CMSESIC;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\DB;
 
 class CMSESICController extends Controller
 {
@@ -54,26 +56,32 @@ class CMSESICController extends Controller
             'client_id' => 'required',
             'state_id' => 'required',
         ]);
+        DB::beginTransaction();
+        try {
+            foreach ($request->years as $key => $year) {
+                $filePath = null;
+                if ($request->hasFile("files.{$key}")) {
+                    $folder = 'cms_esic';
+                    $file = $request->file("files.{$key}");
+                    $fileName = time() . '-' . $file->getClientOriginalName();
+                    $filePath = $file->storeAs($folder, $fileName, 'public');
+                }
 
-        foreach ($request->years as $key => $year) {
-            $filePath = null;
-            if ($request->hasFile("files.{$key}")) {
-                $folder = 'cms_esic';
-                $file = $request->file("files.{$key}");
-                $fileName = time() . '-' . $file->getClientOriginalName();
-                $filePath = $file->storeAs($folder, $fileName, 'public');
+                $this->model()->create([
+                    'client_id' => $request->client_id,
+                    'state_id' => $request->state_id,
+                    'year' => $year,
+                    'status' => 0,
+                    'month' => $request->months[$key],
+                    'path' => $filePath
+                ]);
             }
-
-            $this->model()->create([
-                'client_id' => $request->client_id,
-                'state_id' => $request->state_id,
-                'year' => $year,
-                'status' => 0,
-                'month' => $request->months[$key],
-                'path' => $filePath
-            ]);
+            DB::commit();
+            return to_route('admin.cms.esic')->with('success', 'added successfully');
+        } catch (Exception $e) {
+            DB::rollBack();
+            dd($e);
         }
-        return to_route('admin.cms.esic')->with('success', 'added successfully');
     }
     public function destroy($id)
     {
