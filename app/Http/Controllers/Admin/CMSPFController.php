@@ -42,12 +42,12 @@ class CMSPFController extends Controller
 
             $challans = $query->paginate();
         }
-        $clients = ClientManagement::where('status', true)->get();
+        $clients = ClientManagement::where('status', 0)->latest()->get();
         return view("admin.cms.pf_chalan.index", compact("challans", "clients"));
     }
     public function create()
     {
-        $clients = ClientManagement::where('status', true)->get();
+        $clients = ClientManagement::where('status', 0)->latest()->get();
         return view("admin.cms.pf_chalan.create", compact('clients'));
     }
     public function store(Request $request)

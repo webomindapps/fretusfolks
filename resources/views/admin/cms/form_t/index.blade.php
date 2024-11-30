@@ -64,7 +64,7 @@
                             {{ $item->client?->client_name }}
                         </td>
                         <td> {{ $item->state?->state_name }}</td>
-                        <td>{{ $item->month }}</td>
+                        <td>{{ \DateTime::createFromFormat('!m', $item->month)->format('F') }}</td>
                         <td> {{ $item->year }}</td>
 
                         <td>

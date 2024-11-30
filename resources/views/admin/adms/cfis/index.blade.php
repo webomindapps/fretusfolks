@@ -79,9 +79,7 @@
                                     data-bs-toggle="dropdown" aria-expanded="true">
                                     Action
                                 </div>
-                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1"
-                                    style="position: absolute; inset: auto auto 0px 0px; margin: 0px; transform: translate(-95px, -25.4219px);"
-                                    data-popper-placement="top-end">
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1" data-popper-placement="top-end">
                                     <li>
                                         {{-- <a href="javascript:void(0);" class="dropdown-item" data-toggle="modal"
                                         data-target="#client_details"

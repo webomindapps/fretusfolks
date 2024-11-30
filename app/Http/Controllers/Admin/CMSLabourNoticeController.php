@@ -42,12 +42,12 @@ class CMSLabourNoticeController extends Controller
 
             $notices = $query->paginate();
         }
-        $clients = ClientManagement::where('status', true)->get();
+        $clients = ClientManagement::where('status', 0)->latest()->get();
         return view("admin.cms.labour.index", compact("notices", "clients"));
     }
     public function create()
     {
-        $clients = ClientManagement::where('status', true)->get();
+        $clients = ClientManagement::where('status', 0)->latest()->get();
         return view("admin.cms.labour.create", compact('clients'));
     }
     public function store(Request $request)
