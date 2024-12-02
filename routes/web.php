@@ -116,9 +116,13 @@ Route::prefix('admin')->group(function () {
         Route::post('/cms_formt/create', [CMSFormTController::class, 'store']);
         Route::get('/cms_formt/id/delete', [CMSFormTController::class, 'destroy'])->name('cms.formt.delete');
 
-        // Form T Register
+        // Form Labour Notice
         Route::get('/cms/labour/notice', [CMSLabourNoticeController::class, 'index'])->name('cms.labour');
         Route::get('/cms/labour/notice/create', [CMSLabourNoticeController::class, 'create'])->name('cms.labour.create');
+        Route::post('/cms/labour/notice/create', [CMSLabourNoticeController::class, 'store']);
+        Route::get('/cms/labour/notice/{id}/edit', [CMSLabourNoticeController::class, 'edit'])->name('cms.labour.edit');
+        Route::post('/cms/labour/notice/{id}/edit', [CMSLabourNoticeController::class, 'update']);
+        Route::get('/cms/labour/id/delete', [CMSLabourNoticeController::class, 'destroy'])->name('cms.labour.delete');
 
         //cfis
         Route::get('/cfis', [CFISController::class, 'index'])->name('cfis');

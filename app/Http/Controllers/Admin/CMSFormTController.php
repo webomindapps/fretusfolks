@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\ClientManagement;
 use App\Models\CMSFormT;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\DB;
 
 class CMSFormTController extends Controller
 {
@@ -40,12 +42,12 @@ class CMSFormTController extends Controller
 
             $challans = $query->paginate();
         }
-        $clients = ClientManagement::where('status', true)->get();
+        $clients = ClientManagement::where('status', 0)->latest()->get();
         return view("admin.cms.form_t.index", compact("challans", "clients"));
     }
     public function create()
     {
-        $clients = ClientManagement::where('status', true)->get();
+        $clients = ClientManagement::where('status', 0)->latest()->get();
         return view("admin.cms.form_t.create", compact('clients'));
     }
     public function store(Request $request)
@@ -55,25 +57,32 @@ class CMSFormTController extends Controller
             'state_id' => 'required',
         ]);
 
-        foreach ($request->years as $key => $year) {
-            $filePath = null;
-            if ($request->hasFile("files.{$key}")) {
-                $folder = 'cms_form_t';
-                $file = $request->file("files.{$key}");
-                $fileName = time() . '-' . $file->getClientOriginalName();
-                $filePath = $file->storeAs($folder, $fileName, 'public');
-            }
+        DB::beginTransaction();
+        try {
+            foreach ($request->years as $key => $year) {
+                $filePath = null;
+                if ($request->hasFile("files.{$key}")) {
+                    $folder = 'cms_form_t';
+                    $file = $request->file("files.{$key}");
+                    $fileName = time() . '-' . $file->getClientOriginalName();
+                    $filePath = $file->storeAs($folder, $fileName, 'public');
+                }
 
-            $this->model()->create([
-                'client_id' => $request->client_id,
-                'state_id' => $request->state_id,
-                'year' => $year,
-                'status' => 0,
-                'month' => $request->months[$key],
-                'path' => $filePath
-            ]);
+                $this->model()->create([
+                    'client_id' => $request->client_id,
+                    'state_id' => $request->state_id,
+                    'year' => $year,
+                    'status' => 0,
+                    'month' => $request->months[$key],
+                    'path' => $filePath
+                ]);
+            }
+            DB::commit();
+            return to_route('admin.cms.formt')->with('success', 'added successfully');
+        } catch (Exception $e) {
+            DB::rollBack();
+            dd($e);
         }
-        return to_route('admin.cms.formt')->with('success', 'added successfully');
     }
     public function destroy($id)
     {

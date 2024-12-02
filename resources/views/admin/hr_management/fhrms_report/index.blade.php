@@ -1,11 +1,10 @@
 <x-applayout>
     <x-admin.breadcrumb title="Search">
-        <div class="row text-end ml-2">
+        <div class="text-end me-3">
             <form id="export-form" action="{{ route('admin.fhrms_report.export') }}" method="POST">
                 @csrf
                 <input type="hidden" name="fields" id="export-fields">
                 <button type="submit" class="btn btn-success">Export to Excel</button>
-
             </form>
         </div>
     </x-admin.breadcrumb>
@@ -125,7 +124,7 @@
                                     </ul>
                                 </div>
                             </div>
-                           
+
                             <x-forms.select label="Status:" name="status" id="status" :required="false"
                                 size="col-lg-4 mt-2" :options="FretusFolks::getStatus()" :selected="request()->get('status')" />
                         </div>
