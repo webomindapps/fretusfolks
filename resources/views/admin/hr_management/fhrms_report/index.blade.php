@@ -221,7 +221,7 @@
 
                 function toggleSelectAll(selectAllCheckbox, checkboxClass, dropdownInputId, defaultText) {
                     const dropdown = selectAllCheckbox.closest('.dropdown-menu');
-                    const checkboxes = dropdown.querySelectorAll(checkboxClass); // Scopes to the dropdown
+                    const checkboxes = dropdown.querySelectorAll(checkboxClass); 
                     const isChecked = selectAllCheckbox.checked;
 
                     checkboxes.forEach(cb => cb.checked = isChecked);

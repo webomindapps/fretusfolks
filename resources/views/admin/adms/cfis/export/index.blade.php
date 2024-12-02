@@ -24,7 +24,7 @@
         @foreach ($candidates as $key => $candidate)
             <tr>
                 <td>{{ $key + 1 }}</td>
-                <td>{{ $candidate->entity_name }}</td>
+                <td>{{ $candidate->client_id }}</td>
                 <td>{{ $candidate->emp_name }}</td>
                 <td>{{ $candidate->phone1 }}</td>
                 <td>{{ $candidate->email }}</td>
@@ -32,8 +32,8 @@
                 <td>{{ $candidate->location }}</td>
                 <td>{{ $candidate->designation }}</td>
                 <td>{{ $candidate->department }}</td>
-                <td>{{ $candidate->interview_date }}</td>
-                <td>{{ $candidate->joining_date }}</td>
+                <td>{{ \Carbon\Carbon::parse($candidate->interview_date)->format('d-m-Y') }}</td>
+                <td>{{ \Carbon\Carbon::parse($candidate->joining_date)->format('d-m-Y') }}</td>
                 <td>{{ $candidate->aadhar_no }}</td>
                 <td>{{ $candidate->aadhar_path }}</td>
                 <td>{{ $candidate->driving_license_no }}</td>

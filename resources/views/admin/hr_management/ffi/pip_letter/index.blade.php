@@ -26,7 +26,7 @@
                         <td>{{ $item->from_name }}</td>
                         <td>{{ $item->emp_id }}</td>
                         <td>{{ $item->pip_letter ? $item->pip_letter->emp_name : 'N/A' }}</td>
-                        <td>{{ $item->date }}</td>
+                        <td>{{ \Carbon\Carbon::parse($item->date)->format('d-m-Y') }}</td>
                         <td>{{ $item->pip_letter ? $item->pip_letter->phone1 : 'N/A' }}</td>
                         <td>{{ $item->pip_letter ? $item->pip_letter->designation : 'N/A' }}</td>
                         <td>

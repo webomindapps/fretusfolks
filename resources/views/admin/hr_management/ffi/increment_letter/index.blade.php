@@ -1,6 +1,6 @@
 <x-applayout>
-    <x-admin.breadcrumb title=" FFI Increment Letters" :create="route('admin.ffi_increment_letter.create')"/>
-    
+    <x-admin.breadcrumb title=" FFI Increment Letters" :create="route('admin.ffi_increment_letter.create')" />
+
     <div class="row">
         <div class="col-lg-12">
             @php
@@ -22,7 +22,7 @@
                         </td>
                         <td>{{ $item->id }}</td>
                         <td>{{ $item->incrementletter ? $item->incrementletter->emp_name : 'N/A' }}</td>
-                        <td>{{ $item->date }}</td>
+                        <td>{{ \Carbon\Carbon::parse($item->date)->format('d-m-Y') }}</td>
                         <td>{{ $item->incrementletter ? $item->incrementletter->phone1 : 'N/A' }}</td>
                         <td>{{ $item->incrementletter ? $item->incrementletter->email : 'N/A' }}</td>
                         <td>
