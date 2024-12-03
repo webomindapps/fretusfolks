@@ -70,7 +70,7 @@
         <tbody>
             <tr>
                 <td style="padding-left:5%;padding-right:5%;">
-                    <img src="{{ asset('admin/images/ffi_header.jpg') }}">
+                    <img src="/public/admin/images/ffi_header.jpg">
                     <div style="color:#000;font-size: 21px;margin-top: 0%;margin-bottom: 5%;">
                         <div
                             style="color: #000;font-family: Tahoma;font-size: 17px;line-height: 18px;text-align: justify; padding-left: 0%;">
@@ -173,7 +173,7 @@
                         </div>
                     </div>
                     <br />
-                    <img class="abc" src="{{ asset('admin/images/ffi_footer.jpg') }}" style="">
+                    <img class="abc" src="/public/admin/images/ffi_footer.jpg" style="">
                     <br><br>
                     <table width="100%" border="0" cellspacing="0" cellpadding="0">
                         <tbody>
@@ -266,7 +266,7 @@
                     </table>
 
                     <br />
-                    <img class="abc" src="{{ asset('admin/images/ffi_footer.jpg') }}">
+                    <img class="abc" src="/public/admin/images/ffi_footer.jpg">
                     <br>
                     <table width="100%" border="0" cellspacing="0" cellpadding="0">
                         <tbody>
@@ -351,8 +351,7 @@
                                                             Yours faithfully,<br>
                                                             <b>For : Fretus Folks India Pvt Ltd.</b><br>
                                                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img
-                                                                src="{{ asset('admin/images/seal.png') }}"
-                                                                width="100"><br>
+                                                                src="/public/admin/images/seal.png" width="100"><br>
                                                             <b>&nbsp;&nbsp;Authorized Signatory</b>
                                                         </p>
                                                     </td>
@@ -372,7 +371,7 @@
                     </table>
                     <br />
 
-                    <img class="abc" src="{{ asset('admin/images/ffi_footer.jpg') }}">
+                    <img class="abc" src="/public/admin/images/ffi_footer.jpg">
                     <br>
                     <table width="100%" border="0" cellspacing="0" cellpadding="0">
                         <tbody>
@@ -380,7 +379,7 @@
                                 <td style="padding-left:5%;padding-right:5%;">
                                     <div
                                         style="color: #000;font-family: Tahoma;font-size: 12px;line-height: 1.5;text-align: justify;padding-left: 0%;">
-                                        <img src="{{ asset('admin/images/ffi_header.jpg') }}">
+                                        <img src="/public/admin/images/ffi_header.jpg">
                                         <h1 style="font-size:17px;text-align:center;text-decoration: underline;">
                                             Annexure - 1</h1>
                                         <center>
@@ -487,10 +486,11 @@
                         </tbody>
                     </table>
                     <br /><br /><br /><br /><br />
-                    <img class="abc" src="{{ asset('admin/images/ffi_footer.jpg') }}" style="">
+                    <img class="abc" src="/public/admin/images/ffi_footer.jpg" style="">
                 </td>
             </tr>
         </tbody>
     </table>
 </body>
+
 </html>

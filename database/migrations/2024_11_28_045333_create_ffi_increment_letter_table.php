@@ -50,6 +50,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('ffi_increment_letter');
+        // Schema::dropIfExists('ffi_increment_letter');
     }
 };

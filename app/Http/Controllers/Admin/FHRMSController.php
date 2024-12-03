@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Exports\FHRMSReportExport;
 use Exception;
 use App\Models\FHRMSModel;
 use App\Exports\FHRMSExport;
@@ -10,10 +9,12 @@ use App\Imports\FHRMSImport;
 use Illuminate\Http\Request;
 use App\Models\FFIOTherModel;
 use App\Models\FFIEducationModel;
+use App\Exports\FHRMSReportExport;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class FHRMSController extends Controller
 {
@@ -408,31 +409,8 @@ class FHRMSController extends Controller
 
     }
 
-    public function showCodeReport()
+    public function showCodeReport(Request $request)
     {
-        return view('admin.hr_management.fhrms_report.index', [
-            'results' => [],
-            'fromDate' => null,
-            'toDate' => null,
-            'selectedData' => [],
-            'selectedStates' => [],
-            'location' => null,
-            'status' => null,
-        ]);
-    }
-    public function codeReport(Request $request)
-    {
-        $request->validate([
-            'from-date' => 'nullable|date',
-            'to-date' => 'nullable|date',
-            'data' => 'nullable|array',
-            'state' => 'nullable|array',
-            'location' => 'nullable|string',
-            'status' => 'nullable|integer',
-
-            'pending_doc' => 'nullable|array',
-        ]);
-
         $fromDate = $request->input('from-date');
         $toDate = $request->input('to-date');
         $selectedData = $request->input('data', []);
@@ -441,36 +419,39 @@ class FHRMSController extends Controller
         $status = $request->input('status');
         $pendingDocs = $request->input('pending_doc', []);
 
-
         $filteredResults = $this->model()->newQuery();
 
-        if ($fromDate && $toDate) {
-            $filteredResults->whereBetween('created_at', ["{$fromDate} 00:00:00", "{$toDate} 23:59:59"]);
-        }
-        if (!empty($selectedStates)) {
-            $filteredResults->whereIn('state', $selectedStates);
-        }
+        if ($fromDate || $toDate || !empty($selectedStates) || !empty($location) || (!empty($pendingDocs)) || $status !== null) {
+            if ($fromDate && $toDate) {
+                $filteredResults->whereBetween('created_at', ["{$fromDate} 00:00:00", "{$toDate} 23:59:59"]);
+            }
+            if (!empty($selectedStates)) {
+                $filteredResults->whereIn('state', $selectedStates);
+            }
 
-        if (!empty($location)) {
-            $filteredResults->where('location', $location);
-        }
-        if ($status !== null && $status !== '') {
-            $filteredResults->where('status', $status);
-        }
+            if (!empty($location)) {
+                $filteredResults->where('location', $location);
+            }
+            if ($status !== null && $status !== '') {
+                $filteredResults->where('status', $status);
+            }
 
-        if (!empty($pendingDocs)) {
-            $filteredResults->where(function ($query) use ($pendingDocs) {
-                foreach ($pendingDocs as $doc) {
-                    $query->orWhereNull($doc)->orWhere($doc, '');
-                }
-            });
-        }
+            if (!empty($pendingDocs)) {
+                $filteredResults->where(function ($query) use ($pendingDocs) {
+                    foreach ($pendingDocs as $doc) {
+                        $query->orWhereNull($doc)->orWhere($doc, '');
+                    }
+                });
+            }
+            if (!empty($selectedData)) {
+                $filteredResults->select(array_merge($selectedData, ['id', 'created_at', 'location', 'state', 'status']));
+            }
 
-        if (!empty($selectedData)) {
-            $filteredResults->select(array_merge($selectedData, ['id', 'created_at', 'location', 'state', 'status']));
-        }
-        $results = $filteredResults->paginate(20)->appends($request->query());
+            $results = $filteredResults->paginate(10)->appends($request->query());
+        } else {
+            $results = new LengthAwarePaginator([], 0, 10);
 
+        }
         return view('admin.hr_management.fhrms_report.index', compact(
             'results',
             'fromDate',

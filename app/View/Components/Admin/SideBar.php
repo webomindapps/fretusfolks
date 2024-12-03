@@ -145,6 +145,12 @@ class SideBar extends Component
                     'route' => 'admin.ffi_pip_letter',
                     'name' => 'ffi_pip_letter',
                 ],
+                [
+                    'title' => 'FFI Payslips',
+                    'icon' => 'bx bx-chevron-right',
+                    'route' => 'admin.ffi_payslips',
+                    'name' => 'ffi_payslips',
+                ],
             ],
 
         ],

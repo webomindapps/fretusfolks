@@ -84,9 +84,9 @@
                                             <td>
                                                 <select class="form-control required" name="state[]" id="state"
                                                     required>
-                                                    <option value="FretusFolks::getStates()">Select State</option>
+                                                    <option value="">Select State</option>
                                                     @foreach ($states as $state)
-                                                        <option value="{{ $state->state_name }}">{{ $state->state_name }}
+                                                        <option value="{{ $state->id }}">{{ $state->state_name }}
                                                         </option>
                                                     @endforeach
                                                 </select>

@@ -124,7 +124,7 @@
                                             <td colspan="3" style="font-size:12px; text-align:left; padding:7px">
                                                 <p>
                                                     <b>For: Fretus Folks India Pvt Ltd.</b> <br>
-                                                    <img src="{{ asset('admin/images/seal.jpg') }}" width="100"><br>
+                                                    <img src="/public/admin/images/seal.png" width="100"><br>
                                                     <b>Authorized Signatory</b>
                                                 </p>
                                             </td>

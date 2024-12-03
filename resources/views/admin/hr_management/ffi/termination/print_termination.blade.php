@@ -80,7 +80,7 @@
         <tbody>
             <tr>
                 <td style="padding-left:5%;padding-right:5%;">
-                    <img src="{{ asset('admin/images/ffi_header.jpg') }}">
+                    <img src="/public/admin/images/ffi_header.jpg">
                     <div>
                         <div style="color:#000;font-size: 21px;margin-top: 4%;margin-bottom: 0%;">
                             <div
@@ -156,7 +156,7 @@
                                                 <p style="line-height:1.8;font-size:14px">
                                                     <b>For : Fretus Folks India Pvt Ltd.</b> <br>
                                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                    <img class="abc" src="{{ asset('admin/images/seal.jpg') }}">
+                                                    <img class="abc" src="/public/admin/images/seal.png">
                                                     <br>
                                                     <b>&nbsp;&nbsp;&nbsp;Authorized Signatory</b> <br>
                                                 </p>
@@ -172,6 +172,6 @@
             </tr>
         </tbody>
     </table>
-    <img src="{{ asset('admin/images/ffi_fotter.jpg') }}">
+    <img src="/public/admin/images/ffi_footer.jpg">
 
 </html>

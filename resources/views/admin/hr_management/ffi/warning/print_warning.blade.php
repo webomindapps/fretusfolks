@@ -87,13 +87,13 @@
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
-<body  class="body"
+<body class="body"
     style="padding:0 !important; margin:0 !important; display:block !important; background:#ffffff; -webkit-text-size-adjust:none">
     <table width="100%" border="0" cellspacing="0" cellpadding="0">
         <tbody>
             <tr>
                 <td style="padding-left: 5%; padding-right: 5%;">
-                    <img src="{{ asset('admin/images/ffi_header.jpg') }}">
+                    <img src="/public/admin/images/ffi_header.jpg">
                     <div>
                         <div style="color: #000; font-size: 21px; margin-top: 4%; margin-bottom: 0%;">
                             <div
@@ -112,7 +112,8 @@
                                                 </p>
                                                 <br>
                                                 <p style="line-height: 1.8; font-size: 14px">
-                                                    <b>To, <br>Mr./Mrs./Ms. {{ $warningLetter->warning_letter->emp_name }}</b>
+                                                    <b>To, <br>Mr./Mrs./Ms.
+                                                        {{ $warningLetter->warning_letter->emp_name }}</b>
                                                     <br>{{ $warningLetter->emp_id }}
                                                     <br>{{ $warningLetter->warning_letter->location }}
                                                     <br>
@@ -128,7 +129,8 @@
                                 </div>
                                 <br>
                                 <div class="content" style="line-height: 2; font-size: 14px">
-                                    <p style="line-height: 1.8; font-size: 14px"><b>Dear  {{ $warningLetter->warning_letter->emp_name }},</b>
+                                    <p style="line-height: 1.8; font-size: 14px"><b>Dear
+                                            {{ $warningLetter->warning_letter->emp_name }},</b>
                                     </p>
                                 </div>
                                 <br>
@@ -136,8 +138,10 @@
                                     {{ $warningLetter->content }}
                                     You, being an employee of Fretus Folks India Pvt Ltd, bearing employee no.
                                     <b>{{ $warningLetter->emp_id }}</b> Appointed on
-                                    <b>{{ \Carbon\Carbon::parse($warningLetter->warning_letter->joining_date)->format('d-m-Y') }}</b> and we have been
-                                    deputed with Client Place as <b>{{ $warningLetter->warning_letter->designation }}</b>.
+                                    <b>{{ \Carbon\Carbon::parse($warningLetter->warning_letter->joining_date)->format('d-m-Y') }}</b>
+                                    and we have been
+                                    deputed with Client Place as
+                                    <b>{{ $warningLetter->warning_letter->designation }}</b>.
 
                                     It has been found against you that you are not following standard disciplinary
                                     measures and <b>{{ $warningLetter->content }}</b>. This gross misconduct and a major
@@ -163,7 +167,7 @@
                                                     <br>
                                                     <b>For: Fretus Folks India Pvt Ltd.</b>
                                                     <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img
-                                                        src="{{ asset('admin/images/seal.jpg') }}" width="100"
+                                                        src="/public/admin/images/seal.png" width="100"
                                                         alt="Seal"><br>
                                                     <b>&nbsp;&nbsp;&nbsp;Authorized Signatory</b>
                                                     <br>
@@ -179,7 +183,7 @@
             </tr>
         </tbody>
     </table>
-    <img class="abc" src="{{ asset('admin/images/ffi_fotter.jpg') }}" alt="Footer">
+    <img class="abc" src="/public/admin/images/ffi_footer.jpg" alt="Footer">
 </body>
 
 </html>

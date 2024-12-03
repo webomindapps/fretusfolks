@@ -120,7 +120,7 @@
             <tbody>
                 <tr>
                     <td style="padding-left:5%;padding-right:5%;">
-                        <img src="{{ asset('admin/images/ffi_header.jpg') }}">
+                        <img src="/public/admin/images/ffi_header.jpg">
                         <div style="color:#000;font-size: 21px;margin-top: 4%;margin-bottom: 5%;">
                             <div
                                 style="color: #000;font-family: Tahoma;font-size: 17px;line-height: 18px;text-align: justify; padding-left: 0%;">
@@ -165,7 +165,7 @@
                                             <td colspan="3" style="font-size:12px;text-align:left;padding:7px">
                                                 <p style="line-height:1.8;font-size:12px">
                                                     <br><b>For : Fretus Folks India Pvt Ltd.</b><br>
-                                                    <img class="abc" src="{{ asset('admin/images/seal.jpg') }}">
+                                                    <img class="abc" src="/public/admin/images/seal.png">
                                                     <b>Authorized Signatory</b><br>
                                                 </p>
                                             </td>
@@ -186,7 +186,7 @@
             </tbody>
         </table>
     </div>
-    <img class="abc" src="{{ asset('admin/images/ffi_footer.jpg') }}">
+    <img class="abc" src="/public/admin/images/ffi_footer.jpg">
     <table width="100%" border="0" cellspacing="0" cellpadding="0">
         <tbody>
             <tr>
@@ -299,7 +299,7 @@
                                                 <br>
                                                 <b>For : Fretus Folks India Pvt Ltd.</b> <br>
                                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                <img class="abc" src="{{ asset('admin/images/seal.jpg') }}">
+                                                <img class="abc" src="/public/admin/images/ffi_footer.jpg">
 
                                                 <br>
                                                 <b>&nbsp;&nbsp;Authorized Signatory</b> <br>
@@ -321,7 +321,7 @@
             </tr>
         </tbody>
     </table>
-    <img class="abc" src="{{ asset('admin/images/ffi_footer.jpg') }}">
+    <img class="abc" src="/public/admin/images/ffi_footer.jpg">
 </body>
 
 </html>
