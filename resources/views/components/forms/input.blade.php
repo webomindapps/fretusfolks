@@ -4,7 +4,7 @@
         @endif
     </label>
     <input value="{{ $attributes->get('value') }}" class="{{ $attributes->get('class') }}"
-        type="{{ $attributes->get('type') }}" id="{{ $attributes->get('id') }}" name="{{ $attributes->get('name') }}"
+        type="{{ $attributes->get('type') }}" step=".01" id="{{ $attributes->get('id') }}" name="{{ $attributes->get('name') }}"
         placeholder="{{ $attributes->get('placeholder') }}" @if ($attributes->get('required')) required @endif
         @if ($attributes->get('readonly')) readonly @endif @if ($attributes->get('multiple')) multiple @endif>
 

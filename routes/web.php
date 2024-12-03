@@ -23,6 +23,8 @@ use App\Http\Controllers\Admin\FFIOfferLetterController;
 use App\Http\Controllers\Admin\FFITerminationController;
 use App\Http\Controllers\Admin\CMSLabourNoticeController;
 use App\Http\Controllers\Admin\FFIIncrementLetterController;
+use App\Http\Controllers\Admin\InvoiceController;
+use App\Http\Controllers\Admin\PaymentController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -219,5 +221,24 @@ Route::prefix('admin')->group(function () {
         Route::get('/generate-pip-letter/{id}', [FFIPipLetterController::class, 'generatePipPdf'])->name('generate.pip.letter');
         Route::get('/ffi_pip_letter/{id}/edit', [FFIPipLetterController::class, 'edit'])->name('ffi_pip_letter.edit');
         Route::post('/ffi_pip_letter/{id}/edit', [FFIPipLetterController::class, 'update']);
+
+        // FCMS CIMS 
+        Route::get('/cims', [InvoiceController::class, 'index'])->name('fcms.cims');
+        Route::get('/cims/create', [InvoiceController::class, 'create'])->name('fcms.cims.create');
+        Route::post('/cims/create', [InvoiceController::class, 'store']);
+        Route::get('/cims/{id}/edit', [InvoiceController::class, 'edit'])->name('fcms.cims.edit');
+        Route::post('/cims/{id}/edit', [InvoiceController::class, 'update']);
+        Route::get('/get-client-location/{id}', [InvoiceController::class, 'getClientLocation'])->name('get.client.location');
+        Route::get('/get-client-gst/{client}/{gst}', [InvoiceController::class, 'getClientGST'])->name('get.client.gst');
+
+        // CIMS Report
+        Route::get('/cims/report', [InvoiceController::class, 'reports'])->name('fcms.cims.reports');
+
+        // Receivables
+        Route::get('/receivables', [PaymentController::class, 'index'])->name('fcms.receivables');
+        Route::get('/receivable/create', [PaymentController::class, 'create'])->name('fcms.receivable.create');
+        Route::post('/receivable/create', [PaymentController::class, 'store']);
+        Route::get('/get-client-invoices/{id}', [PaymentController::class, 'getClientInvoice'])->name('get.client.invoices');
+        Route::get('/get-invoice/{id}/details', [PaymentController::class, 'getInvoiceDetails'])->name('get.invoice.details');
     });
 });

@@ -26,7 +26,7 @@ class CMSLWFController extends Controller
         $paginate = request()->paginate;
 
         if (!$client_id && !$month && !$year) {
-            $challans = new LengthAwarePaginator([], 0, 10);;
+            $challans = new LengthAwarePaginator([], 0, 10);
         } else {
             $query = $this->model()->query();
 

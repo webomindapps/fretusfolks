@@ -93,7 +93,7 @@ class SideBar extends Component
         [
             'title' => 'FHRMS',
             'name' => 'fhrms',
-            'icon' => '  bx bxl-slack',
+            'icon' => 'bx bxl-slack',
             'route' => '',
             'isSubMenu' => true,
             'subMenus' => [
@@ -151,7 +151,7 @@ class SideBar extends Component
         [
             'title' => 'CMS',
             'name' => 'cms',
-            'icon' => '  bx bxl-slack',
+            'icon' => 'bx bxl-slack',
             'route' => '',
             'isSubMenu' => true,
             'subMenus' => [
@@ -192,8 +192,28 @@ class SideBar extends Component
                     'name' => 'formt',
                 ],
             ],
-
         ],
+        [
+            'title' => 'FCMS',
+            'name' => 'fims',
+            'icon' => 'bx bxl-slack',
+            'route' => '',
+            'isSubMenu' => true,
+            'subMenus' => [
+                [
+                    'title' => 'CIMS',
+                    'icon' => 'bx bx-chevron-right',
+                    'route' => 'admin.fcms.cims',
+                    'name' => 'cims',
+                ],
+                [
+                    'title' => 'CIMS Reports',
+                    'icon' => 'bx bx-chevron-right',
+                    'route' => 'admin.fcms.cims.reports',
+                    'name' => 'cimsreport',
+                ],
+            ]
+        ]
     ];
 
 

@@ -14,7 +14,7 @@ class ClientGstn extends Model
         'status',
     ] ;
        
-    public function state()
+    public function states()
     {
         return $this->belongsTo(States::class, 'state');
     }

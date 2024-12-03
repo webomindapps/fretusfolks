@@ -196,5 +196,35 @@ class FretusFolks extends Controller
             ['label' => 'Formate 1', 'value' => '1'],
         ];
     }
+    public function cimsData()
+    {
+        $fields = [
+            'invoice_no',
+            'client_id',
+            'service_location',
+            'gst_no',
+            'gross_value',
+            'service_value',
+            'source_value',
+            'total_employee',
+            'cgst',
+            'cgst_amount',
+            'sgst',
+            'sgst_amount',
+            'igst',
+            'igst_amount',
+            'tax_amount',
+            'total_value',
+            'date'
+        ];
+        $data = [];
+        foreach ($fields as $field) {
+            $data[] = [
+                'label' => ucfirst(str_replace('_', ' ', $field)),
+                'value' => $field,
+            ];
+        }
+        return $data;
 
+    }
 }
