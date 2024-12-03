@@ -22,7 +22,7 @@
                         </td>
                         <td>{{ $item->id }}</td>
                         <td>{{ $item->employee ? $item->employee->emp_name : 'N/A' }}</td>
-                        <td>{{ $item->date }}</td>
+                        <td>{{ \Carbon\Carbon::parse($item->date)->format('d-m-Y') }}</td>
                         <td>{{ $item->employee ? $item->employee->phone1 : 'N/A' }}</td>
                         <td>{{ $item->employee ? $item->employee->email : 'N/A' }}</td>
                         <td>

@@ -12,20 +12,20 @@
         <div class="row">
             <div class="col-lg-12 pb-4 ">
                 <div class="form-card px-3">
-                    <form id="my_form" action="{{ route('admin.fhrms_report') }}" method="POST"
+                    <form id="my_form" action="{{ route('admin.fhrms_report') }}" method="GET"
                         enctype="multipart/form-data">
                         @csrf
                         <div class="row">
                             <x-forms.input label="From Date" type="date" name="from-date" id="from-date"
-                                :required="false" size="col-lg-3 mt-2" />
+                                :required="false" size="col-lg-3 mt-2" :value="old('from-date', request()->fromDate ?? date('Y-m-d'))" />
                             <x-forms.input label="To Date" type="date" name="to-date" id="to-date"
-                                :required="false" size="col-lg-3 mt-2" />
+                                :required="false" size="col-lg-3 mt-2" :value="old('to-date', request()->toDate ?? date('Y-m-d'))" />
                             <div class="col-lg-3 mt-2">
                                 <label for="data">Data</label>
                                 <div class="dropdown">
                                     <input type="text" class="btn dropdown-toggle" id="dropdownMenuButton"
                                         data-bs-toggle="dropdown" aria-expanded="false" readonly value="Select Data" />
-                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <ul class="dropdown-menu ps-3" aria-labelledby="dropdownMenuButton">
                                         <li>
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox" id="select_all_data"
@@ -59,7 +59,7 @@
                                     <input type="text" class="btn btn-secondary dropdown-toggle"
                                         id="dropdownMenuButtonState" data-bs-toggle="dropdown" aria-expanded="false"
                                         readonly value="Select State" />
-                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButtonState">
+                                    <ul class="dropdown-menu ps-3" aria-labelledby="dropdownMenuButtonState">
                                         <li>
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox" id="select_all_states"
@@ -88,7 +88,7 @@
                             </div>
 
                             <x-forms.select label="Location" name="location" id="location" :required="false"
-                                size="col-lg-4 mt-2" :options="FretusFolks::getLocation()" />
+                                size="col-lg-4 mt-2" :options="FretusFolks::getLocation()" :value="old('location', request()->location)" />
 
                             <div class="col-lg-3 mt-2">
                                 <label for="pending_doc">Pending Documents</label>
@@ -96,7 +96,7 @@
                                     <input type="text" class="btn dropdown-toggle" id="dropdownMenuButtonDocument"
                                         data-bs-toggle="dropdown" aria-expanded="false" readonly
                                         value="Select Document" />
-                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButtonDocument">
+                                    <ul class="dropdown-menu ps-3" aria-labelledby="dropdownMenuButtonDocument">
                                         <li>
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox"
@@ -126,7 +126,7 @@
                             </div>
 
                             <x-forms.select label="Status:" name="status" id="status" :required="false"
-                                size="col-lg-4 mt-2" :options="FretusFolks::getStatus()" :selected="request()->get('status')" />
+                                size="col-lg-4 mt-2" :options="FretusFolks::getStatus()" :selected="request()->get('status')" :value="old('status', request()->status)" />
                         </div>
                         <div class="row">
                             <div class="col-lg-4 mt-4">
@@ -203,62 +203,66 @@
                 </table>
             </div>
         </div>
+        <div class="mt-3">
+            {{ $results->links() }}
 
-        <x-model1 />
-        @push('scripts')
-            <script>
-                function updateSelectedCount(checkboxClass, dropdownInputId, defaultText) {
-                    const checkboxes = document.querySelectorAll(checkboxClass);
-                    const dropdownInput = document.querySelector(dropdownInputId);
-                    const selectedCount = Array.from(checkboxes).filter(cb => cb.checked).length;
+        </div>
+    </div>
+    <x-model1 />
+    @push('scripts')
+        <script>
+            function updateSelectedCount(checkboxClass, dropdownInputId, defaultText) {
+                const checkboxes = document.querySelectorAll(checkboxClass);
+                const dropdownInput = document.querySelector(dropdownInputId);
+                const selectedCount = Array.from(checkboxes).filter(cb => cb.checked).length;
 
-                    dropdownInput.value = selectedCount > 0 ? `${selectedCount} selected` : defaultText;
-                    const selectAllCheckbox = document.querySelector(checkboxClass.includes('data') ? '#select_all_data' :
-                        '#select_all_states');
-                    selectAllCheckbox.checked = selectedCount === checkboxes.length;
-                }
+                dropdownInput.value = selectedCount > 0 ? `${selectedCount} selected` : defaultText;
+                const selectAllCheckbox = document.querySelector(checkboxClass.includes('data') ? '#select_all_data' :
+                    '#select_all_states');
+                selectAllCheckbox.checked = selectedCount === checkboxes.length;
+            }
 
-                function toggleSelectAll(selectAllCheckbox, checkboxClass, dropdownInputId, defaultText) {
-                    const dropdown = selectAllCheckbox.closest('.dropdown-menu');
-                    const checkboxes = dropdown.querySelectorAll(checkboxClass); // Scopes to the dropdown
-                    const isChecked = selectAllCheckbox.checked;
+            function toggleSelectAll(selectAllCheckbox, checkboxClass, dropdownInputId, defaultText) {
+                const dropdown = selectAllCheckbox.closest('.dropdown-menu');
+                const checkboxes = dropdown.querySelectorAll(checkboxClass);
+                const isChecked = selectAllCheckbox.checked;
 
-                    checkboxes.forEach(cb => cb.checked = isChecked);
-                    updateSelectedCount(checkboxClass, dropdownInputId, defaultText);
-                }
+                checkboxes.forEach(cb => cb.checked = isChecked);
+                updateSelectedCount(checkboxClass, dropdownInputId, defaultText);
+            }
 
 
-                function showEmployeeDetails(clientId) {
-                    fetch(`/admin/fhrms/show/${clientId}`)
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.html_content) {
-                                document.querySelector('#client_details').innerHTML = data.html_content;
-                                $('#client_details').modal('show');
-                                const closeButton = document.querySelector('#closeModalButton');
-                                if (closeButton) {
-                                    closeButton.addEventListener('click', function() {
-                                        $('#client_details').modal('hide');
-                                    });
-                                }
-                            } else {
-                                console.error('No HTML content found in the response');
+            function showEmployeeDetails(clientId) {
+                fetch(`/admin/fhrms/show/${clientId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.html_content) {
+                            document.querySelector('#client_details').innerHTML = data.html_content;
+                            $('#client_details').modal('show');
+                            const closeButton = document.querySelector('#closeModalButton');
+                            if (closeButton) {
+                                closeButton.addEventListener('click', function() {
+                                    $('#client_details').modal('hide');
+                                });
                             }
-                        })
-                        .catch(error => {
-                            console.error('Error fetching client details:', error);
-                        });
-                }
+                        } else {
+                            console.error('No HTML content found in the response');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching client details:', error);
+                    });
+            }
 
-                document.getElementById('export-form').addEventListener('submit', function(e) {
-                    const selectedFields = Array.from(document.querySelectorAll('.data-checkbox:checked'))
-                        .map(checkbox => checkbox.value);
-                    document.getElementById('export-fields').value = selectedFields.join(',');
-                    if (selectedFields.length === 0) {
-                        e.preventDefault();
-                        alert('Please select at least one field for export.');
-                    }
-                });
-            </script>
-        @endpush
+            document.getElementById('export-form').addEventListener('submit', function(e) {
+                const selectedFields = Array.from(document.querySelectorAll('.data-checkbox:checked'))
+                    .map(checkbox => checkbox.value);
+                document.getElementById('export-fields').value = selectedFields.join(',');
+                if (selectedFields.length === 0) {
+                    e.preventDefault();
+                    alert('Please select at least one field for export.');
+                }
+            });
+        </script>
+    @endpush
 </x-applayout>

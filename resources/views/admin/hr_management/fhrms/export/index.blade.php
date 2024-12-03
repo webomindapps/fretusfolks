@@ -51,14 +51,14 @@
                 <td>{{ $key + 1 }}</td>
                 <td>{{ $employee->ffi_emp_id }}</td>
                 <td>{{ $employee->emp_name }}</td>
-                <td>{{ $employee->interview_date }}</td>
-                <td>{{ $employee->joining_date }}</td>
-                <td>{{ $employee->contract_date }}</td>
+                <td>{{ \Carbon\Carbon::parse($employee->interview_date)->format('d-m-Y') }}</td>
+                <td>{{ \Carbon\Carbon::parse($employee->joining_date)->format('d-m-Y') }}</td>
+                <td>{{ \Carbon\Carbon::parse($employee->contract_date)->format('d-m-Y') }}</td>
                 <td>{{ $employee->designation }}</td>
                 <td>{{ $employee->department }}</td>
                 <td>{{ $employee->state }}</td>
                 <td>{{ $employee->location }}</td>
-                <td>{{ $employee->dob }}</td>
+                <td>{{ \Carbon\Carbon::parse($employee->dob)->format('d-m-Y') }}</td>
                 <td>{{ $employee->father_name }}</td>
                 <td>{{ $employee->gender == 1 ? 'Male' : ($employee->gender == 2 ? 'Female' : 'Others') }}</td>
                 <td>{{ $employee->blood_group }}</td>

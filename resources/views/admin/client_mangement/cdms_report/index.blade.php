@@ -13,20 +13,21 @@
         <div class="row">
             <div class="col-lg-12 pb-4 ">
                 <div class="form-card px-3">
-                    <form id="my_form" action="{{ route('admin.cdms_report') }}" method="POST"
+                    <form id="my_form" action="{{ route('admin.cdms_report') }}" method="GET"
                         enctype="multipart/form-data">
                         @csrf
                         <div class="row">
                             <x-forms.input label="From Date" type="date" name="from-date" id="from-date"
-                                :required="false" size="col-lg-4 mt-2" />
+                                :required="false" size="col-lg-4 mt-2" :value="old('from-date', request()->fromDate ?? date('Y-m-d'))" />
+
                             <x-forms.input label="To Date" type="date" name="to-date" id="to-date"
-                                :required="false" size="col-lg-4 mt-2" />
+                                :required="false" size="col-lg-4 mt-2" :value="old('to-date', request()->toDate ?? date('Y-m-d'))" />
                             <div class="col-lg-4 mt-2">
                                 <label for="data">Data</label>
                                 <div class="dropdown">
                                     <input type="text" class="btn dropdown-toggle" id="dropdownMenuButton"
                                         data-bs-toggle="dropdown" aria-expanded="false" readonly value="Select Data" />
-                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <ul class="dropdown-menu ps-3" aria-labelledby="dropdownMenuButton">
                                         <li>
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox" id="select_all_data"
@@ -60,7 +61,7 @@
                                     <input type="text" class="btn btn-secondary dropdown-toggle"
                                         id="dropdownMenuButtonState" data-bs-toggle="dropdown" aria-expanded="false"
                                         readonly value="Select State" />
-                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButtonState">
+                                    <ul class="dropdown-menu ps-3" aria-labelledby="dropdownMenuButtonState">
                                         <li>
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox" id="select_all_states"
@@ -88,10 +89,10 @@
                                 </div>
                             </div>
                             <x-forms.select label="Region" name="region" id="region" :required="false"
-                                size="col-lg-4 mt-2" :options="FretusFolks::getRegion()" />
+                                size="col-lg-4 mt-2" :options="FretusFolks::getRegion()" :value="old('region', request()->region)" />
 
                             <x-forms.select label="Status:" name="status" id="status" :required="false"
-                                size="col-lg-4 mt-2" :options="FretusFolks::getStatus()" :selected="request()->get('status')" />
+                                size="col-lg-4 mt-2" :options="FretusFolks::getStatus()" :selected="request()->get('status')" :value="old('status', request()->status)" />
                         </div>
                         <div class="row">
                             <div class="col-lg-4 mt-4">
@@ -169,6 +170,12 @@
                 </table>
             </div>
         </div>
+        <div class="mt-3">
+            @if (!$results->isEmpty())
+                {{ $results->links() }}
+            @endif
+        </div>
+
     </div>
     <x-model1 />
     @push('scripts')

@@ -171,7 +171,7 @@
                                             <td colspan="3" style="font-size: 12px; text-align: left; padding: 7px;">
                                                 <p style="line-height: 1.8; font-size: 14px">
                                                     <b>For: Fretus Folks India Pvt Ltd.</b><br>
-                                                    <img src="{{ asset('admin/images/seal.jpg') }}" width="100"
+                                                    <img src="/public/admin/images/seal.png" width="100"
                                                         alt="Seal"><br>
                                                     <b>Authorized Signatory</b><br>
                                                 </p>

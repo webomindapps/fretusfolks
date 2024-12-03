@@ -49,7 +49,7 @@
                             {{ $item->client_id }}
                         </td>
                         <td> {{ $item->emp_name }}</td>
-                        <td> {{ $item->joining_date }}</td>
+                        <td> {{ \Carbon\Carbon::parse($item->joining_date)->format('d-m-Y') }}</td>
                         <td> {{ $item->phone1 }}</td>
                         <td>
                             <a href="{{ route('admin.cfis.data_status', $item->id) }}">

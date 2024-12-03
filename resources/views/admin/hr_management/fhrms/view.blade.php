@@ -14,9 +14,12 @@
                 <div class="col-md-4 col-sm-6">
                     <p><b>FFI EMP ID :</b> <span>{{ $employee->ffi_emp_id }}</span></p>
                     <p><b>Employee Name :</b> <span>{{ $employee->emp_name }}</span></p>
-                    <p><b>Interview Date :</b> <span>{{ $employee->interview_date }}</span></p>
-                    <p><b>Joining Date :</b> <span>{{ $employee->joining_date }}</span></p>
-                    <p><b>Contract Date :</b> <span>{{ $employee->contract_date }}</span></p>
+                    <p><b>Interview Date :</b>
+                        <span>{{ \Carbon\Carbon::parse($employee->interview_date)->format('d-m-Y') }}</span></p>
+                    <p><b>Joining Date :</b>
+                        <span>{{ \Carbon\Carbon::parse($employee->joining_date)->format('d-m-Y') }}</span></p>
+                    <p><b>Contract Date :</b>
+                        <span>{{ \Carbon\Carbon::parse($employee->contract_date)->format('d-m-Y') }}</span></p>
                     <p><b>Designation :</b> <span>{{ $employee->designation }}</span></p>
                     <p><b>Department :</b> <span>{{ $employee->department }}</span></p>
                 </div>
@@ -24,7 +27,8 @@
 
                     <p><b>State :</b> <span>{{ $employee->state }}</span></p>
                     <p><b>Location :</b> <span>{{ $employee->location }}</span></p>
-                    <p><b>Date of Birth :</b> <span>{{ $employee->dob }}</span></p>
+                    <p><b>Date of Birth :</b> <span>{{ \Carbon\Carbon::parse($employee->dob)->format('d-m-Y') }}</span>
+                    </p>
                     <p><b>Gender :</b>
                         <span>{{ $employee->gender == 1 ? 'Male' : ($employee->gender == 2 ? 'Female' : 'Others') }}</span>
                     </p>

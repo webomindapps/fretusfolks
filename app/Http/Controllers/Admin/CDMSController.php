@@ -12,6 +12,7 @@ use App\Models\ClientManagement;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class CDMSController extends Controller
 {
@@ -271,57 +272,38 @@ class CDMSController extends Controller
 
         return Excel::download(new ClientExport($fields), 'cdmsreport.xlsx');
     }
-
-    public function showCodeReport()
+    public function showCodeReport(Request $request)
     {
-        return view('admin.client_mangement.cdms_report.index', [
-            'results' => [],
-            'fromDate' => null,
-            'toDate' => null,
-            'selectedData' => [],
-            'selectedStates' => [],
-            'region' => null,
-            'status' => null,
-        ]);
-    }
-    public function codeReport(Request $request)
-    {
-        $request->validate([
-            'from-date' => 'nullable|date',
-            'to-date' => 'nullable|date',
-            'data' => 'nullable|array',
-            'service_state' => 'nullable|array',
-            'region' => 'nullable|string',
-            'status' => 'nullable|integer',
-            'per_page' => 'nullable|integer|min:1',
-        ]);
         $fromDate = $request->input('from-date');
         $toDate = $request->input('to-date');
         $selectedData = $request->input('data', []);
         $selectedStates = $request->input('service_state', []);
         $region = $request->input('region');
         $status = $request->input('status');
-        $perPage = $request->input('per_page', 10);
 
         $filteredResults = $this->model()->newQuery();
 
-        if ($fromDate && $toDate) {
-            $filteredResults->whereBetween('created_at', ["{$fromDate} 00:00:00", "{$toDate} 23:59:59"]);
-        }
-        if (!empty($selectedStates)) {
-            $filteredResults->whereIn('service_state', $selectedStates);
-        }
-        if (!empty($region)) {
-            $filteredResults->where('region', $region);
-        }
-        if ($status !== null && $status !== '') {
-            $filteredResults->where('status', (int) $status);
-        }
-        if (!empty($selectedData)) {
-            $filteredResults->select(array_merge($selectedData, ['id', 'created_at', 'region', 'service_state', 'status']));
-        }
-        $results = $filteredResults->paginate($perPage)->appends($request->query());
+        if ($fromDate || $toDate || !empty($selectedStates) || !empty($region) || $status !== null) {
+            if ($fromDate && $toDate) {
+                $filteredResults->whereBetween('created_at', ["{$fromDate} 00:00:00", "{$toDate} 23:59:59"]);
+            }
+            if (!empty($selectedStates)) {
+                $filteredResults->whereIn('service_state', $selectedStates);
+            }
+            if (!empty($region)) {
+                $filteredResults->where('region', $region);
+            }
+            if ($status !== null && $status !== '') {
+                $filteredResults->where('status', (int) $status);
+            }
+            if (!empty($selectedData)) {
+                $filteredResults->select(array_merge($selectedData, ['id', 'created_at', 'region', 'service_state', 'status']));
+            }
 
+            $results = $filteredResults->paginate(10)->appends($request->query());
+        } else {
+            $results = new LengthAwarePaginator([], 0, 10);
+        }
         return view('admin.client_mangement.cdms_report.index', compact(
             'results',
             'fromDate',

@@ -16,6 +16,7 @@ use App\Http\Controllers\RolePermissionController;
 use App\Http\Controllers\Admin\CDMSReportController;
 use App\Http\Controllers\Admin\FFIWarningController;
 use App\Http\Controllers\Admin\DCSApprovalController;
+use App\Http\Controllers\Admin\FFIPayslipsController;
 use App\Http\Controllers\Admin\FFIPipLetterController;
 use App\Http\Controllers\Admin\FFIShowCauseController;
 use App\Http\Controllers\Admin\LetterContentController;
@@ -79,8 +80,7 @@ Route::prefix('admin')->group(function () {
         Route::get('cdms/update_state/{id}', [CDMSController::class, 'updateState'])->name('cdms.updateState');
         Route::get('cdms/{id}/gstdelete', [CDMSController::class, 'gstdestroy'])->name('cdms.gstdelete');
         Route::post('cdms/export', [CDMSController::class, 'export'])->name('cdms.export');
-        Route::get('cdms/cdms_report', [CDMSController::class, 'showCodeReport'])->name('cdms_report.get');
-        Route::post('cdms/cdms_report', [CDMSController::class, 'codeReport'])->name('cdms_report');
+        Route::get('cdms/cdms_report', [CDMSController::class, 'showCodeReport'])->name('cdms_report');
         Route::post('cdms/cdms_report/export', [CDMSController::class, 'exportReport'])->name('cdms_report.export');
 
         // roles
@@ -155,8 +155,7 @@ Route::prefix('admin')->group(function () {
         Route::get('fhrms/{id}/eduDelete', [FHRMSController::class, 'eduDelete'])->name('fhrms.eduDelete');
         Route::get('fhrms/{id}/otherDelete', [FHRMSController::class, 'otherDelete'])->name('fhrms.otherDelete');
         Route::post('fhrms/bulk-upload', [FHRMSController::class, 'bulkUpload'])->name('fhrms.bulk.upload');
-        Route::get('fhrms/fhrms_report', [FHRMSController::class, 'showCodeReport'])->name('fhrms_report.get');
-        Route::post('fhrms/fhrms_report', [FHRMSController::class, 'codeReport'])->name('fhrms_report');
+        Route::get('fhrms/fhrms_report', [FHRMSController::class, 'showCodeReport'])->name('fhrms_report');
         Route::post('fhrms/fhrms_report/export', [FHRMSController::class, 'exportReport'])->name('fhrms_report.export');
         Route::post('fhrms/pending-details', [FHRMSController::class, 'storePendingDetails'])->name('fhrms.pending.store');
 
@@ -240,5 +239,13 @@ Route::prefix('admin')->group(function () {
         Route::post('/receivable/create', [PaymentController::class, 'store']);
         Route::get('/get-client-invoices/{id}', [PaymentController::class, 'getClientInvoice'])->name('get.client.invoices');
         Route::get('/get-invoice/{id}/details', [PaymentController::class, 'getInvoiceDetails'])->name('get.invoice.details');
+        //ffi_payslips
+        Route::get('/ffi_payslips', [FFIPayslipsController::class, 'index'])->name('ffi_payslips');
+        Route::post('ffi_payslips/bulk-upload', [FFIPayslipsController::class, 'bulkUpload'])->name('ffi_payslips.bulk.upload');
+        Route::post('ffi_payslips/export', [FFIPayslipsController::class, 'export'])->name('ffi_payslips.export');
+        Route::post('ffi_payslips/search-payslip', [FFIPayslipsController::class, 'searchPayslip'])->name('search.ffi_payslips');
+        Route::get('/generate-payslips/{id}', [FFIPayslipsController::class, 'generatePayslipsPdf'])->name('generate.payslips');
+        Route::get('/ffi_payslips/delete/{id}', [FFIPayslipsController::class, 'destroy'])->name('ffi_payslips.delete');
+
     });
 });

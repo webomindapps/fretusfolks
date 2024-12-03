@@ -30,6 +30,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('ffi_termination_letter');
+        // Schema::dropIfExists('ffi_termination_letter');
     }
 };
