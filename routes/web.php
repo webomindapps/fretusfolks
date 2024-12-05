@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\CDMSController;
 use App\Http\Controllers\Admin\CFISController;
+use App\Http\Controllers\Admin\FFCMController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\CMSPFController;
 use App\Http\Controllers\Admin\CMSPTController;
@@ -10,10 +11,11 @@ use App\Http\Controllers\Admin\FHRMSController;
 use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\CMSLWFController;
 use App\Http\Controllers\Admin\CMSESICController;
+use App\Http\Controllers\Admin\InvoiceController;
+use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\Admin\TdsCodeController;
 use App\Http\Controllers\Admin\CMSFormTController;
 use App\Http\Controllers\RolePermissionController;
-use App\Http\Controllers\Admin\CDMSReportController;
 use App\Http\Controllers\Admin\FFIWarningController;
 use App\Http\Controllers\Admin\DCSApprovalController;
 use App\Http\Controllers\Admin\FFIPayslipsController;
@@ -24,8 +26,6 @@ use App\Http\Controllers\Admin\FFIOfferLetterController;
 use App\Http\Controllers\Admin\FFITerminationController;
 use App\Http\Controllers\Admin\CMSLabourNoticeController;
 use App\Http\Controllers\Admin\FFIIncrementLetterController;
-use App\Http\Controllers\Admin\InvoiceController;
-use App\Http\Controllers\Admin\PaymentController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -247,5 +247,21 @@ Route::prefix('admin')->group(function () {
         Route::get('/generate-payslips/{id}', [FFIPayslipsController::class, 'generatePayslipsPdf'])->name('generate.payslips');
         Route::get('/ffi_payslips/delete/{id}', [FFIPayslipsController::class, 'destroy'])->name('ffi_payslips.delete');
 
+        //tds_report
+        Route::get('/fcms/tds_report', [PaymentController::class, 'tdsReports'])->name('fcms.tds_report');
+        Route::post('fcms/tds_report/export', [PaymentController::class, 'exportReport'])->name('tds_report.export');
+        Route::get('fcms/tds_report/show/{id}', [PaymentController::class, 'show'])->name('tds_report.show');
+
+        //ffcm
+        Route::get('/ffcm', [FFCMController::class, 'index'])->name('fcms.ffcm');
+        Route::get('ffcm/create', [FFCMController::class, 'create'])->name('fcms.ffcm.create');
+        Route::post('ffcm/create', [FFCMController::class, 'store']);
+        Route::get('ffcm/{id}/edit', [FFCMController::class, 'edit'])->name('fcms.ffcm.edit');
+        Route::post('ffcm/{id}/edit', [FFCMController::class, 'update']);
+        Route::post('ffcm/bulk_operation', [FFCMController::class, 'bulk'])->name('fcms.ffcm.bulk');
+        Route::get('ffcm/{id}/delete', [FFCMController::class, 'destroy'])->name('fcms.ffcm.delete');
+        Route::get('ffcm/export', [FFCMController::class, 'export'])->name('fcms.ffcm.export');
+        Route::get('/fcms/ffcm_report', [FFCMController::class, 'ffcmReports'])->name('fcms.ffcm_report');
+        Route::post('fcms/ffcm_report/export', [FFCMController::class, 'exportReport'])->name('fcms.ffcm_report.export');
     });
 });

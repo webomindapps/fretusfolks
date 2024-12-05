@@ -195,13 +195,13 @@ class SideBar extends Component
                     'title' => 'Labour Notice',
                     'icon' => 'bx bx-chevron-right',
                     'route' => 'admin.cms.labour',
-                    'name' => 'formt',
+                    'name' => 'labour',
                 ],
             ],
         ],
         [
             'title' => 'FCMS',
-            'name' => 'fims',
+            'name' => 'fcms',
             'icon' => 'bx bxl-slack',
             'route' => '',
             'isSubMenu' => true,
@@ -218,8 +218,26 @@ class SideBar extends Component
                     'route' => 'admin.fcms.cims.reports',
                     'name' => 'cimsreport',
                 ],
+                [
+                    'title' => 'TDS Reports',
+                    'icon' => 'bx bx-chevron-right',
+                    'route' => 'admin.fcms.tds_report',
+                    'name' => 'tds_report',
+                ],
+                [
+                    'title' => 'FFCM',
+                    'icon' => 'bx bx-chevron-right',
+                    'route' => 'admin.fcms.ffcm',
+                    'name' => 'ffcm',
+                ],
+                [
+                    'title' => 'FFCM Reports',
+                    'icon' => 'bx bx-chevron-right',
+                    'route' => 'admin.fcms.ffcm_report',
+                    'name' => 'ffcm_report',
+                ],
             ]
-        ]
+        ],
     ];
 
 
