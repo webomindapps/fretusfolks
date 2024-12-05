@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\InvoiceController;
 use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\Admin\TdsCodeController;
 use App\Http\Controllers\Admin\CMSFormTController;
+use App\Http\Controllers\Admin\FFIAssetController;
 use App\Http\Controllers\RolePermissionController;
 use App\Http\Controllers\Admin\FFIWarningController;
 use App\Http\Controllers\Admin\DCSApprovalController;
@@ -158,6 +159,7 @@ Route::prefix('admin')->group(function () {
         Route::get('fhrms/fhrms_report', [FHRMSController::class, 'showCodeReport'])->name('fhrms_report');
         Route::post('fhrms/fhrms_report/export', [FHRMSController::class, 'exportReport'])->name('fhrms_report.export');
         Route::post('fhrms/pending-details', [FHRMSController::class, 'storePendingDetails'])->name('fhrms.pending.store');
+        Route::get('/fhrms/ffi_birthday', [FHRMSController::class, 'todayBirthday'])->name('fhrms.ffi_birthday');
 
         //FFI-Offer Letter
         Route::get('/ffi_offer_letter', [FFIOfferLetterController::class, 'index'])->name('ffi_offer_letter');
@@ -263,5 +265,16 @@ Route::prefix('admin')->group(function () {
         Route::get('ffcm/export', [FFCMController::class, 'export'])->name('fcms.ffcm.export');
         Route::get('/fcms/ffcm_report', [FFCMController::class, 'ffcmReports'])->name('fcms.ffcm_report');
         Route::post('fcms/ffcm_report/export', [FFCMController::class, 'exportReport'])->name('fcms.ffcm_report.export');
+
+        //ffi_assets
+        Route::get('/ffi_assets', [FFIAssetController::class, 'index'])->name('fcms.ffi_assets');
+        Route::get('ffi_assets/create', [FFIAssetController::class, 'create'])->name('fcms.ffi_assets.create');
+        Route::post('ffi_assets/create', [FFIAssetController::class, 'store']);
+        Route::get('ffi_assets/{id}/edit', [FFIAssetController::class, 'edit'])->name('fcms.ffi_assets.edit');
+        Route::post('ffi_assets/{id}/edit', [FFIAssetController::class, 'update']);
+        Route::post('ffi_assets/bulk_operation', [FFIAssetController::class, 'bulk'])->name('fcms.ffi_assets.bulk');
+        Route::get('ffi_assets/{id}/delete', [FFIAssetController::class, 'destroy'])->name('fcms.ffi_assets.delete');
+        Route::get('ffi_assets/export', [FFIAssetController::class, 'export'])->name('fcms.ffi_assets.export');
+
     });
 });

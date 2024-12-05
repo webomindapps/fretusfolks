@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\States;
+use App\Models\FFIAssetModel;
 use App\Models\FFIWarningModel;
 use App\Models\FFIPipLetterModel;
 use App\Models\FFIShowCauseModel;
@@ -111,5 +112,9 @@ class FHRMSModel extends Model
     public function pip_letter()
     {
         return $this->hasMany(FFIPipLetterModel::class);
+    }
+    public function assets()
+    {
+        return $this->hasMany(FFIAssetModel::class, 'employee_id');
     }
 }

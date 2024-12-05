@@ -151,6 +151,12 @@ class SideBar extends Component
                     'route' => 'admin.ffi_payslips',
                     'name' => 'ffi_payslips',
                 ],
+                [
+                    'title' => 'FFI Birthdays',
+                    'icon' => 'bx bx-chevron-right',
+                    'route' => 'admin.fhrms.ffi_birthday',
+                    'name' => 'ffi_birthday',
+                ],
             ],
 
         ],
@@ -235,6 +241,12 @@ class SideBar extends Component
                     'icon' => 'bx bx-chevron-right',
                     'route' => 'admin.fcms.ffcm_report',
                     'name' => 'ffcm_report',
+                ],
+                [
+                    'title' => 'FFI Assets',
+                    'icon' => 'bx bx-chevron-right',
+                    'route' => 'admin.fcms.ffi_assets',
+                    'name' => 'ffi_assets',
                 ],
             ]
         ],
