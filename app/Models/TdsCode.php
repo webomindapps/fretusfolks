@@ -12,4 +12,8 @@ class TdsCode extends Model
         'discount',
         'status',
     ];
+    public function tds()
+    {
+        return $this->hasMany(Payment::class, 'id','tds_code');
+    }
 }

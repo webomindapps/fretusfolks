@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\Invoice;
 use App\Models\Payment;
+use App\Models\States;
 use App\Models\TdsCode;
 use Exception;
 use Illuminate\Http\Request;
@@ -37,7 +38,8 @@ class PaymentController extends Controller
         }
         if ($search != '')
             $query->where(function ($q) use ($search, $searchColumns) {
-                foreach ($searchColumns as $key => $value) ($key == 0) ? $q->where($value, 'LIKE', '%' . $search . '%') : $q->orWhere($value, 'LIKE', '%' . $search . '%');
+                foreach ($searchColumns as $key => $value)
+                    ($key == 0) ? $q->where($value, 'LIKE', '%' . $search . '%') : $q->orWhere($value, 'LIKE', '%' . $search . '%');
             });
 
         ($order == '') ? $query->orderByDesc('id') : $query->orderBy($order, $orderBy);
@@ -52,40 +54,40 @@ class PaymentController extends Controller
         return view('admin.fcms.receivables.create', compact('clients', 'tds_codes'));
     }
     // $client=$this->input->post('client');
-	// 	$invoice_no=$this->input->post('invoice_no');
-		
-	// 	$this->db->where('id',$invoice_no);
-	// 	$query=$this->db->get('invoice');
-	// 	$q=$query->result_array();
-		
-	// 	$already_paid=$q[0]['amount_received'];
-	// 	$already_tds_amount=$q[0]['tds_amount'];
-		
-	// 	$total_without_gst=$this->input->post('total_gst');
-	// 	$total_amount=$this->input->post('total_amount');
-		
-	// 	$payment_date=$this->input->post('payment_date');
-	// 	$month=$this->input->post('month');
-		
-	// 	$tds_code=$this->input->post('tds_code');
-	// 	$tds_percentage=$this->input->post('tds_percentage');
-	// 	$tds_amount=$this->input->post('tds_amount');
-	// 	$amount_paid=$this->input->post('amount_paid');
-	// 	$balance_amount=$this->input->post('balance_amount');
-	// 	$admin_id=$this->session->userdata('admin_id');
-	// 	$date=date("Y-m-d H:i:s");
-		
-	// 	$total_amount_paid=$already_paid+$amount_paid;
-	// 	$total_tds_amount=$already_tds_amount+$tds_amount;
-		
-	// 	$db_date=date("Y-m-d",strtotime($payment_date));
-		
-	// 	$data=array("invoice_id"=>$invoice_no,"client_id"=>$client,"total_amt"=>$total_without_gst,"total_amt_gst"=>$total_amount,"payment_received_date"=>$db_date,"month"=>$month,"tds_code"=>$tds_code,"tds_percentage"=>$tds_percentage,"tds_amount"=>$tds_amount,"amount_received"=>$amount_paid,"balance_amount"=>$balance_amount,"date_time"=>$date,"modify_by"=>$admin_id,"payment_received"=>"1");
-	// 	$this->db->insert('payments',$data);
-		
-	// 	$data1=array("amount_received"=>$total_amount_paid,"balance_amount"=>$balance_amount,"tds_code"=>$tds_code,"tds_amount"=>$total_tds_amount);
-	// 	$this->db->where('id',$invoice_no);
-	// 	$this->db->update('invoice',$data1);
+    // 	$invoice_no=$this->input->post('invoice_no');
+
+    // 	$this->db->where('id',$invoice_no);
+    // 	$query=$this->db->get('invoice');
+    // 	$q=$query->result_array();
+
+    // 	$already_paid=$q[0]['amount_received'];
+    // 	$already_tds_amount=$q[0]['tds_amount'];
+
+    // 	$total_without_gst=$this->input->post('total_gst');
+    // 	$total_amount=$this->input->post('total_amount');
+
+    // 	$payment_date=$this->input->post('payment_date');
+    // 	$month=$this->input->post('month');
+
+    // 	$tds_code=$this->input->post('tds_code');
+    // 	$tds_percentage=$this->input->post('tds_percentage');
+    // 	$tds_amount=$this->input->post('tds_amount');
+    // 	$amount_paid=$this->input->post('amount_paid');
+    // 	$balance_amount=$this->input->post('balance_amount');
+    // 	$admin_id=$this->session->userdata('admin_id');
+    // 	$date=date("Y-m-d H:i:s");
+
+    // 	$total_amount_paid=$already_paid+$amount_paid;
+    // 	$total_tds_amount=$already_tds_amount+$tds_amount;
+
+    // 	$db_date=date("Y-m-d",strtotime($payment_date));
+
+    // 	$data=array("invoice_id"=>$invoice_no,"client_id"=>$client,"total_amt"=>$total_without_gst,"total_amt_gst"=>$total_amount,"payment_received_date"=>$db_date,"month"=>$month,"tds_code"=>$tds_code,"tds_percentage"=>$tds_percentage,"tds_amount"=>$tds_amount,"amount_received"=>$amount_paid,"balance_amount"=>$balance_amount,"date_time"=>$date,"modify_by"=>$admin_id,"payment_received"=>"1");
+    // 	$this->db->insert('payments',$data);
+
+    // 	$data1=array("amount_received"=>$total_amount_paid,"balance_amount"=>$balance_amount,"tds_code"=>$tds_code,"tds_amount"=>$total_tds_amount);
+    // 	$this->db->where('id',$invoice_no);
+    // 	$this->db->update('invoice',$data1);
     public function store(Request $request)
     {
         $request->validate([]);
@@ -153,11 +155,18 @@ class PaymentController extends Controller
         $columnsToSelect = array_merge($defaultColumns, $selectedData);
 
         $query = $this->model()
-            ->with([
-                'invoice' => function ($query) {
-                    $query->select('id', 'invoice_no', 'service_location');
-                }
-            ]);
+            ->with(
+                [
+                    'invoice' => function ($query) {
+                        $query->select('id', 'invoice_no', 'service_location');
+                    }
+                ],
+                [
+                    'tds' => function ($query) {
+                        $query->select('id', 'code');
+                    }
+                ],
+            );
         // dd($query);
 
         if ($client_id) {
@@ -210,5 +219,79 @@ class PaymentController extends Controller
         $htmlContent = view('admin.fcms.tds_report.view', compact('payments', 'client', 'tds_code'))->render();
 
         return response()->json(['html_content' => $htmlContent]);
+    }
+    public function reports(Request $request)
+    {
+        $request->validate([
+            'from_date' => 'nullable|date',
+            'to_date' => 'nullable|date',
+            'data' => 'nullable|array',
+            'status' => 'nullable|integer',
+            'state' => 'nullable|integer',
+            'per_page' => 'nullable|integer|min:1',
+        ]);
+
+        $fromDate = $request->from_date;
+        $toDate = $request->to_date;
+        $selectedClient = $request->input('client_id', []);
+        $selectedStates = $request->input('states', []);
+        $status = $request->status;
+        $selectedData = $request->input('data', []);
+        $perPage = $request->input('per_page', 10);
+
+        $defaultColumns = ['id', 'client_name', 'invoice_no', 'tds_amount', 'amount_received', 'date_time'];
+
+        $columnsToSelect = array_merge($defaultColumns, $selectedData);
+
+        $query = $this->model()
+            ->with(
+                [
+                    'invoice' => function ($query) {
+                        $query->select('id', 'invoice_no', 'service_location', 'date');
+                    }
+                ],
+                [
+                    'client' => function ($query) {
+                        $query->select('id', 'client_name');
+                    }
+                ],
+                [
+                    'tds' => function ($query) {
+                        $query->select('id', 'code');
+                    }
+                ],
+            );
+        // dd($query);
+        if (!empty($selectedClient)) {
+            $query->whereIn('client_id', $selectedClient);
+        }
+
+        if ($fromDate && $toDate) {
+            $query->whereBetween('date_time', [$fromDate, $toDate]);
+        }
+        if (!empty($selectedStates)) {
+            $query->whereIn('states', $selectedStates);
+        }
+
+        if ($status !== null && $status !== '') {
+            $query->where('status', (int) $status);
+        }
+
+        $results = $query->paginate($perPage)->appends($request->query());
+        // dd($results);
+        $clients = ClientManagement::where('status', 0)->latest()->get();
+        $state = States::latest()->get();
+        $invoice = Invoice::where('status', 0)->latest()->get();
+
+        return view('admin.fcms.receivables.reports', compact(
+            'results',
+            'fromDate',
+            'toDate',
+            'selectedData',
+            'status',
+            'clients',
+            'selectedStates',
+            'invoice'
+        ));
     }
 }

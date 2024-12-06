@@ -118,6 +118,9 @@
                                     <input type="date" class="form-control" id="contract_end" name="contract_end"
                                         required value="{{ old('contract_end', $client->contract_end) }}">
                                 </div>
+                                <x-forms.select label="Status:" name="status" id="status" :required="true"
+                                    size="col-lg-6 mt-2" :options="FretusFolks::getStatus()" :value="old('status', $client->status)" />
+
                                 <div class="form-group col-md-12">
                                     <h5 class="card-title">Commercial</h5>
                                 </div>
@@ -206,11 +209,13 @@
                                             </select>
 
                                         </td>
-                                        <td contenteditable="true" onblur="updateCode(this, {{ $item->id }})"
-                                            style="text-transform:uppercase" id="{{ $item->id }}">
-                                            {{ $item->gstn_no }}
-                                        </td>
 
+                                        <td>
+                                            <input class="form-control" type="text" value="{{ $item->gstn_no }}"
+                                                onchange="updateCode(this, {{ $item->id }})"
+                                                style="text-transform:uppercase; width:100%; background:transparent;"
+                                                id="gstn_{{ $item->id }}" />
+                                        </td>
                                         <td>
                                             <a onclick="return confirm('Are you sure you want to delete this?')"
                                                 href="{{ route('admin.cdms.gstdelete', $item->id) }}">
@@ -229,12 +234,12 @@
     @push('scripts')
         <script>
             function updateCode(element, itemId) {
-                const gstn_no = element.innerText.trim();
+                const gstn_no = element.value.trim();
                 window.location.href = `/admin/cdms/update_gst/${itemId}?gstn_no=${encodeURIComponent(gstn_no)}`;
             }
 
             function updateState(element, itemId) {
-                const selectedStateId = element.value; // Get the selected state ID
+                const selectedStateId = element.value;
                 window.location.href = `/admin/cdms/update_state/${itemId}?state=${encodeURIComponent(selectedStateId)}`;
             }
         </script>

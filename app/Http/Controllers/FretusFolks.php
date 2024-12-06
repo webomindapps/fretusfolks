@@ -12,8 +12,8 @@ class FretusFolks extends Controller
     public function getStatus()
     {
         return [
-            ['label' => 'Active', 'value' => 1],
-            ['label' => 'In-Active', 'value' => 0],
+            ['label' => 'Active', 'value' => 0],
+            ['label' => 'In-Active', 'value' => 1],
         ];
     }
     public function getRegion()
@@ -23,7 +23,7 @@ class FretusFolks extends Controller
             ['label' => 'South', 'value' => 'South'],
             ['label' => 'East', 'value' => 'East'],
             ['label' => 'West', 'value' => 'West'],
-            ['label' => 'PAN India', 'value' => 'Pan India'],
+            ['label' => 'PAN India', 'value' => 'PAN India'],
 
         ];
     }
@@ -231,11 +231,11 @@ class FretusFolks extends Controller
     {
         $fields = [
             'invoice_no',
-            'client_id',
-            'service_location',
+            'client_name',
+            'state_name',
             'payment_received_date',
             'month',
-            'tds_code',
+            'code',
             'tds_percentage',
             'tds_amount',
             'amount_received',
@@ -280,5 +280,28 @@ class FretusFolks extends Controller
         }
         return $data;
     }
-
+    public function getReciveablesdata()
+    {
+        $fields = [
+            'invoice_no',
+            'date',
+            'client_name',
+            'state_name',
+            'payment_received_date',
+            'month',
+            'code',
+            'tds_percentage',
+            'tds_amount',
+            'amount_received',
+            'balance_amount',
+        ];
+        $data = [];
+        foreach ($fields as $field) {
+            $data[] = [
+                'label' => ucfirst(str_replace('_', ' ', $field)),
+                'value' => $field,
+            ];
+        }
+        return $data;
+    }
 }

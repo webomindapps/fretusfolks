@@ -184,6 +184,7 @@ class CDMSController extends Controller
             'rate' => 'required|string|max:255',
             'commercial_type' => 'required|integer',
             'remark' => 'required|string',
+            'status' => 'required|integer',
         ]);
 
         DB::beginTransaction();
@@ -240,7 +241,6 @@ class CDMSController extends Controller
     }
     public function updateState(Request $request, $id)
     {
-
         $gstn = ClientGstn::findOrFail($id);
         $gstn->state = $request->state;
         $gstn->save();
@@ -285,7 +285,7 @@ class CDMSController extends Controller
 
         if ($fromDate || $toDate || !empty($selectedStates) || !empty($region) || $status !== null) {
             if ($fromDate && $toDate) {
-                $filteredResults->whereBetween('created_at', ["{$fromDate} 00:00:00", "{$toDate} 23:59:59"]);
+                $filteredResults->whereBetween('modify_date', ["{$fromDate} 00:00:00", "{$toDate} 23:59:59"]);
             }
             if (!empty($selectedStates)) {
                 $filteredResults->whereIn('service_state', $selectedStates);
