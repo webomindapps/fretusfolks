@@ -225,6 +225,12 @@ class SideBar extends Component
                     'name' => 'cimsreport',
                 ],
                 [
+                    'title' => 'Receivables',
+                    'icon' => 'bx bx-chevron-right',
+                    'route' => 'admin.fcms.receivables',
+                    'name' => 'receivables',
+                ],
+                [
                     'title' => 'TDS Reports',
                     'icon' => 'bx bx-chevron-right',
                     'route' => 'admin.fcms.tds_report',
