@@ -6,7 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Models\ClientManagement;
 use App\Models\Invoice;
 use App\Models\Payment;
+use App\Models\TdsCode;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class PaymentController extends Controller
 {
@@ -41,10 +44,33 @@ class PaymentController extends Controller
     }
     public function create()
     {
+        $tds_codes = TdsCode::where('status', 0)->get();
         $clients = ClientManagement::where('status', 0)->latest()->get();
-        return view('admin.fcms.receivables.create', compact('clients'));
+        return view('admin.fcms.receivables.create', compact('clients', 'tds_codes'));
     }
-    public function store(Request $request) {}
+    public function store(Request $request)
+    {
+        $request->validate([]);
+        $data = $request->all();
+        DB::beginTransaction();
+        try {
+            $data['total_amt'] = $request->total_gst;
+            $data['total_amt_gst'] = $request->total_amt;
+            $data['payment_received_date'] = $request->payment_date;
+            $data['amount_received'] = $request->amount_paid;
+            $data['date_time'] = date("Y-m-d H:i:s");
+            $data['payment_received'] = 1;
+            $data['status'] = 0;
+            $data['active_status'] = 0;
+            $data['modify_by'] = auth()->user()->id;
+            $this->model()->create($data);
+            DB::commit();
+            return to_route('admin.fcms.receivables')->with('receivable added successfully');
+        } catch (Exception $e) {
+            DB::rollBack();
+            dd($e);
+        }
+    }
     public function getClientInvoice($client_id)
     {
         $invoices = Invoice::where('client_id', $client_id)->where('status', '0')->get();
@@ -57,6 +83,6 @@ class PaymentController extends Controller
     public function getInvoiceDetails($invoice_id)
     {
         $invoice = Invoice::find($invoice_id);
-        return $invoice->gstn_no;
+        return $invoice;
     }
 }
