@@ -599,4 +599,19 @@ class FHRMSController extends Controller
         }
     }
 
+    public function todayBirthday(Request $request)
+    {
+        $query = $this->model()->query();
+        if ($request->filled('dob')) {
+            $dob = \Carbon\Carbon::parse($request->dob)->format('Y-m-d');
+            $query->whereDate('dob', $dob);
+        } else {
+            $today = \Carbon\Carbon::now()->format('m-d');
+            $query->whereRaw("DATE_FORMAT(dob, '%m-%d') = ?", [$today]);
+        }
+        $employees = $query->paginate(10)->withQueryString();
+        return view('admin.hr_management.fhrms.today_birthday', [
+            'employee' => $employees,
+        ]);
+    }
 }

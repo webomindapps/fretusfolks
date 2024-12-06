@@ -2,14 +2,18 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use App\Models\ClientManagement;
 use App\Models\Invoice;
 use App\Models\Payment;
 use App\Models\TdsCode;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
+use App\Exports\tdsReportExport;
+use App\Models\ClientManagement;
+use App\Http\Controllers\Controller;
+use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class PaymentController extends Controller
 {
@@ -34,7 +38,8 @@ class PaymentController extends Controller
         }
         if ($search != '')
             $query->where(function ($q) use ($search, $searchColumns) {
-                foreach ($searchColumns as $key => $value) ($key == 0) ? $q->where($value, 'LIKE', '%' . $search . '%') : $q->orWhere($value, 'LIKE', '%' . $search . '%');
+                foreach ($searchColumns as $key => $value)
+                    ($key == 0) ? $q->where($value, 'LIKE', '%' . $search . '%') : $q->orWhere($value, 'LIKE', '%' . $search . '%');
             });
 
         ($order == '') ? $query->orderByDesc('id') : $query->orderBy($order, $orderBy);
@@ -85,4 +90,87 @@ class PaymentController extends Controller
         $invoice = Invoice::find($invoice_id);
         return $invoice;
     }
+    public function tdsReports(Request $request)
+    {
+        $request->validate([
+            'from_date' => 'nullable|date',
+            'to_date' => 'nullable|date',
+            'data' => 'nullable|array',
+            'status' => 'nullable|integer',
+            'per_page' => 'nullable|integer|min:1',
+        ]);
+
+        $fromDate = $request->from_date;
+        $toDate = $request->to_date;
+        $client_id = $request->client_id;
+        $tds_code = $request->tds_code;
+        $status = $request->status;
+        $selectedData = $request->input('data', []);
+        $perPage = $request->input('per_page', 10);
+
+        $defaultColumns = ['id', 'client_id', 'tds_code', 'date_time', 'status'];
+
+        $columnsToSelect = array_merge($defaultColumns, $selectedData);
+
+        $query = $this->model()
+            ->with([
+                'invoice' => function ($query) {
+                    $query->select('id', 'invoice_no', 'service_location');
+                }
+            ]);
+        // dd($query);
+
+        if ($client_id) {
+            $query->where('client_id', $client_id);
+        }
+
+        if ($fromDate && $toDate) {
+            $query->whereBetween('date_time', [$fromDate, $toDate]);
+        }
+
+        if ($tds_code) {
+            $query->where('tds_code', $tds_code);
+        }
+
+        if ($status !== null && $status !== '') {
+            $query->where('status', (int) $status);
+        }
+
+        $results = $query->paginate($perPage)->appends($request->query());
+        // dd($results);
+        $clients = ClientManagement::where('status', 0)->latest()->get();
+        $tds_code = TdsCode::where('status', 0)->latest()->get();
+        $invoice = Invoice::where('status', 0)->latest()->get();
+
+        return view('admin.fcms.tds_report.index', compact(
+            'results',
+            'fromDate',
+            'toDate',
+            'selectedData',
+            'status',
+            'clients',
+            'tds_code',
+            'invoice'
+        ));
+    }
+    public function exportReport(Request $request)
+    {
+        $fields = explode(',', $request->input('fields'));
+        if (empty($fields)) {
+            return redirect()->route('admin.tds_report')->with('error', 'No fields selected for export');
+        }
+
+        return Excel::download(new tdsReportExport($fields), 'tdsreport.xlsx');
+    }
+    public function show($id)
+    {
+        $payments = $this->model()->with('invoice')->findOrFail($id);
+        $client = ClientManagement::findOrFail($payments->client_id);
+        $tds_code = TdsCode::findOrFail($payments->tds_code);
+        $htmlContent = view('admin.fcms.tds_report.view', compact('payments', 'client', 'tds_code'))->render();
+
+        return response()->json(['html_content' => $htmlContent]);
+    }
+
+
 }

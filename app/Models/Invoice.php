@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use PhpOffice\PhpSpreadsheet\Calculation\Financial\CashFlow\Constant\Periodic\Payments;
 
 class Invoice extends Model
 {
@@ -45,5 +46,9 @@ class Invoice extends Model
     public function state()
     {
         return $this->hasOne(States::class, 'id','service_location');
+    }
+    public function invoice()
+    {
+        return $this->hasMany(Payment::class, 'id','invoice_id');
     }
 }

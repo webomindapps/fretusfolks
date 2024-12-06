@@ -225,6 +225,60 @@ class FretusFolks extends Controller
             ];
         }
         return $data;
-
     }
+
+    public function getTdsdata()
+    {
+        $fields = [
+            'invoice_no',
+            'client_id',
+            'service_location',
+            'payment_received_date',
+            'month',
+            'tds_code',
+            'tds_percentage',
+            'tds_amount',
+            'amount_received',
+            'balance_amount',
+        ];
+        $data = [];
+        foreach ($fields as $field) {
+            $data[] = [
+                'label' => ucfirst(str_replace('_', ' ', $field)),
+                'value' => $field,
+            ];
+        }
+        return $data;
+    }
+    public function getExpenses()
+    {
+        return [
+            ['label' => 'Select Expenses', 'value' => " "],
+            ['label' => 'Fuel', 'value' => 'Fuel'],
+            ['label' => 'Mobile', 'value' => 'Mobile'],
+            ['label' => 'Salary', 'value' => 'Salary'],
+            ['label' => 'Conveyance', 'value' => 'Conveyance'],
+            ['label' => 'Stationery', 'value' => 'Stationery'],
+            ['label' => 'Utility', 'value' => 'Utility'],
+            ['label' => 'Others', 'value' => 'Others'],
+        ];
+    }
+    public function getFFCSdata()
+    {
+        $fields = [
+            'date',
+            'month',
+            'amount',
+            'nature_expenses',
+        ];
+        $data = [];
+        foreach ($fields as $field) {
+            $data[] = [
+                'label' => ucfirst(str_replace('_', ' ', $field)),
+                'value' => $field,
+            ];
+        }
+        return $data;
+    }
+
 }

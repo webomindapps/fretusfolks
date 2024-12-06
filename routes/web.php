@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\CDMSController;
 use App\Http\Controllers\Admin\CFISController;
+use App\Http\Controllers\Admin\FFCMController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\CMSPFController;
 use App\Http\Controllers\Admin\CMSPTController;
@@ -10,10 +11,12 @@ use App\Http\Controllers\Admin\FHRMSController;
 use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\CMSLWFController;
 use App\Http\Controllers\Admin\CMSESICController;
+use App\Http\Controllers\Admin\InvoiceController;
+use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\Admin\TdsCodeController;
 use App\Http\Controllers\Admin\CMSFormTController;
+use App\Http\Controllers\Admin\FFIAssetController;
 use App\Http\Controllers\RolePermissionController;
-use App\Http\Controllers\Admin\CDMSReportController;
 use App\Http\Controllers\Admin\FFIWarningController;
 use App\Http\Controllers\Admin\DCSApprovalController;
 use App\Http\Controllers\Admin\FFIPayslipsController;
@@ -24,8 +27,6 @@ use App\Http\Controllers\Admin\FFIOfferLetterController;
 use App\Http\Controllers\Admin\FFITerminationController;
 use App\Http\Controllers\Admin\CMSLabourNoticeController;
 use App\Http\Controllers\Admin\FFIIncrementLetterController;
-use App\Http\Controllers\Admin\InvoiceController;
-use App\Http\Controllers\Admin\PaymentController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -158,6 +159,7 @@ Route::prefix('admin')->group(function () {
         Route::get('fhrms/fhrms_report', [FHRMSController::class, 'showCodeReport'])->name('fhrms_report');
         Route::post('fhrms/fhrms_report/export', [FHRMSController::class, 'exportReport'])->name('fhrms_report.export');
         Route::post('fhrms/pending-details', [FHRMSController::class, 'storePendingDetails'])->name('fhrms.pending.store');
+        Route::get('/fhrms/ffi_birthday', [FHRMSController::class, 'todayBirthday'])->name('fhrms.ffi_birthday');
 
         //FFI-Offer Letter
         Route::get('/ffi_offer_letter', [FFIOfferLetterController::class, 'index'])->name('ffi_offer_letter');
@@ -246,6 +248,33 @@ Route::prefix('admin')->group(function () {
         Route::post('ffi_payslips/search-payslip', [FFIPayslipsController::class, 'searchPayslip'])->name('search.ffi_payslips');
         Route::get('/generate-payslips/{id}', [FFIPayslipsController::class, 'generatePayslipsPdf'])->name('generate.payslips');
         Route::get('/ffi_payslips/delete/{id}', [FFIPayslipsController::class, 'destroy'])->name('ffi_payslips.delete');
+
+        //tds_report
+        Route::get('/fcms/tds_report', [PaymentController::class, 'tdsReports'])->name('fcms.tds_report');
+        Route::post('fcms/tds_report/export', [PaymentController::class, 'exportReport'])->name('tds_report.export');
+        Route::get('fcms/tds_report/show/{id}', [PaymentController::class, 'show'])->name('tds_report.show');
+
+        //ffcm
+        Route::get('/ffcm', [FFCMController::class, 'index'])->name('fcms.ffcm');
+        Route::get('ffcm/create', [FFCMController::class, 'create'])->name('fcms.ffcm.create');
+        Route::post('ffcm/create', [FFCMController::class, 'store']);
+        Route::get('ffcm/{id}/edit', [FFCMController::class, 'edit'])->name('fcms.ffcm.edit');
+        Route::post('ffcm/{id}/edit', [FFCMController::class, 'update']);
+        Route::post('ffcm/bulk_operation', [FFCMController::class, 'bulk'])->name('fcms.ffcm.bulk');
+        Route::get('ffcm/{id}/delete', [FFCMController::class, 'destroy'])->name('fcms.ffcm.delete');
+        Route::get('ffcm/export', [FFCMController::class, 'export'])->name('fcms.ffcm.export');
+        Route::get('/fcms/ffcm_report', [FFCMController::class, 'ffcmReports'])->name('fcms.ffcm_report');
+        Route::post('fcms/ffcm_report/export', [FFCMController::class, 'exportReport'])->name('fcms.ffcm_report.export');
+
+        //ffi_assets
+        Route::get('/ffi_assets', [FFIAssetController::class, 'index'])->name('fcms.ffi_assets');
+        Route::get('ffi_assets/create', [FFIAssetController::class, 'create'])->name('fcms.ffi_assets.create');
+        Route::post('ffi_assets/create', [FFIAssetController::class, 'store']);
+        Route::get('ffi_assets/{id}/edit', [FFIAssetController::class, 'edit'])->name('fcms.ffi_assets.edit');
+        Route::post('ffi_assets/{id}/edit', [FFIAssetController::class, 'update']);
+        Route::post('ffi_assets/bulk_operation', [FFIAssetController::class, 'bulk'])->name('fcms.ffi_assets.bulk');
+        Route::get('ffi_assets/{id}/delete', [FFIAssetController::class, 'destroy'])->name('fcms.ffi_assets.delete');
+        Route::get('ffi_assets/export', [FFIAssetController::class, 'export'])->name('fcms.ffi_assets.export');
 
     });
 });
