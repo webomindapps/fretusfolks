@@ -1,7 +1,7 @@
 <x-applayout>
     <x-admin.breadcrumb title="Search">
         <div class="row text-end me-2">
-            <form id="export-form" action="{{ route('admin.tds_report.export') }}" method="POST">
+            <form id="export-form" action="{{ route('admin.receivable.export') }}" method="POST">
                 @csrf
                 <input type="hidden" name="fields" id="export-fields">
                 <button type="submit" class="btn btn-success">Export to Excel</button>
@@ -85,7 +85,7 @@
                                 </div>
                             </div>
                             <div class="col-lg-4 mt-2">
-                                <label for="service_state">State</label>
+                                <label for="service_location">State</label>
                                 <div class="dropdown">
                                     <input type="text" class="btn btn-secondary dropdown-toggle"
                                         id="dropdownMenuButtonState" data-bs-toggle="dropdown" aria-expanded="false"
@@ -198,10 +198,11 @@
                                                 style="position: absolute; inset: auto auto 0px 0px; margin: 0px; transform: translate(-95px, -25.4219px);"
                                                 data-popper-placement="top-end">
                                                 <li>
-                                                    <a href="javascript:void(0);" class="btn btn-info"
-                                                        data-target="#client_details"
-                                                        onclick="showInvoiceDetails({{ $result->id }})">
-                                                        <i class='bx bx-link-alt'></i> View
+                                                    <a href="javascript:void(0);" class="dropdown-item"
+                                                        data-toggle="modal" data-target="#client_details"
+                                                        onclick="showClientDetails({{ $result->id }})">
+                                                        <i class='bx bx-link-alt'></i>
+                                                        View Details
                                                     </a>
                                                 </li>
 
@@ -227,10 +228,11 @@
                                                 style="position: absolute; inset: auto auto 0px 0px; margin: 0px; transform: translate(-95px, -25.4219px);"
                                                 data-popper-placement="top-end">
                                                 <li>
-                                                    <a href="javascript:void(0);" class="btn btn-info"
-                                                        data-target="#client_details"
-                                                        onclick="showInvoiceDetails({{ $result->id }})">
-                                                        <i class='bx bx-link-alt'></i> View
+                                                    <a href="javascript:void(0);" class="dropdown-item"
+                                                        data-toggle="modal" data-target="#client_details"
+                                                        onclick="showClientDetails({{ $result->id }})">
+                                                        <i class='bx bx-link-alt'></i>
+                                                        View Details
                                                     </a>
                                                 </li>
 
@@ -262,7 +264,6 @@
 
                     dropdownInput.value = selectedCount > 0 ? `${selectedCount} selected` : defaultText;
 
-                    // Handle "Select All" checkbox state
                     const selectAllCheckbox = document.querySelector('#select_all_client');
                     selectAllCheckbox.checked = selectedCount === checkboxes.length;
                 }
@@ -287,15 +288,13 @@
                     }
                 });
 
-                function showInvoiceDetails(clientId) {
-                    fetch(`/admin/fcms/tds_report/show/${clientId}`)
+                function showClientDetails(clientId) {
+                    fetch(`/admin/receivable/show/${clientId}`)
                         .then(response => response.json())
                         .then(data => {
                             if (data.html_content) {
-                                const modalContent = document.querySelector('#client_details');
-                                modalContent.innerHTML = data.html_content;
+                                document.querySelector('#client_details').innerHTML = data.html_content;
                                 $('#client_details').modal('show');
-
                                 const closeButton = document.querySelector('#closeModalButton');
                                 if (closeButton) {
                                     closeButton.addEventListener('click', function() {

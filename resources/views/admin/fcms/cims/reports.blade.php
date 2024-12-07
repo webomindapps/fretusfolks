@@ -285,8 +285,7 @@
                     checkboxes.forEach(cb => cb.checked = isChecked);
                     updateSelectedCount(checkboxClass, dropdownInputId, defaultText);
                 }
-            </script>
-            <script>
+
                 function showClientDetails(clientId) {
                     fetch(`/admin/cims/show/${clientId}`)
                         .then(response => response.json())

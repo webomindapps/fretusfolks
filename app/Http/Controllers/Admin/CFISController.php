@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\ClientManagement;
 use Exception;
 use App\Models\CFISModel;
 use App\Exports\CDMSExport;
@@ -77,10 +78,12 @@ class CFISController extends Controller
         $validatedData['driving_license_path'] = $request->file('driving_license_path')->store('uploads/license');
         $validatedData['photo'] = $request->file('photo')->store('uploads/photos');
         $validatedData['resume'] = $request->file('resume')->store('uploads/resumes');
-        
+
         DB::beginTransaction();
         try {
-            $this->model()->create($validatedData);
+            $client = $this->model()->create($validatedData);
+            $client->entity_name = ClientManagement::where('id', $request->client_id)->value('client_name');
+            $client->save();
             DB::commit();
 
             return redirect()->route('admin.cfis')->with('success', 'Candidate data added successfully!');

@@ -40,7 +40,7 @@
                 <td>{{ $item->name }}</td>
                 <td>{{ $item->email }}</td>
                 <td>{{ $item->username }}</td>
-                <td>{{ $item->date }}</td>
+                <td>{{ \Carbon\Carbon::parse($item->date)->format('d-m-Y') }}</td>
                 <td>{{ $item->getRoleNames()->first() ?? 'N/A' }}</td>
                 <td>
                     @if ($item->status)

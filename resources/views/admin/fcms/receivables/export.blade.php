@@ -7,33 +7,37 @@
         </tr>
     </thead>
     <tbody>
-        @foreach ($payments as $payment)
+        @foreach ($receivables as $recive)
             <tr>
                 @foreach ($fields as $field)
                     <td>
                         @switch($field)
                             @case('invoice_no')
-                                {{ $payment->invoice->invoice_no }}
+                                {{ $recive->invoice->invoice_no }}
                             @break
 
                             @case('state_name')
-                                {{ $payment->invoice->state?->state_name }}
+                                {{ $recive->invoice->state?->state_name }}
                             @break
 
                             @case('client_name')
-                                {{ $payment->client?->client_name }}
+                                {{ $recive->client?->client_name }}
                             @break
 
                             @case('code')
-                                {{ $payment->tds?->code }}
+                                {{ $recive->tds?->code }}
                             @break
 
-                            @case('date_time')
-                                {{ $payment->date_time }}
+                            @case('payment_received_date')
+                                {{ \Carbon\Carbon::parse($recive->payment_received_date)->format('d-m-Y') }}
+                            @break
+
+                            @case('date')
+                                {{ \Carbon\Carbon::parse($recive->invoice?->dat)->format('d-m-Y') }}
                             @break
 
                             @default
-                                {{ $payment->$field }}
+                                {{ $recive->$field }}
                         @endswitch
                     </td>
                 @endforeach

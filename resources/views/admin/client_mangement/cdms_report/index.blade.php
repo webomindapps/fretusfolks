@@ -135,7 +135,24 @@
                                 @if (count($selectedData) > 0)
                                     <td>{{ $loop->iteration }}</td>
                                     @foreach ($selectedData as $field)
-                                        <td>{{ $result->$field }}</td>
+                                        <td style="white-space: nowrap;">
+                                            @switch($field)
+                                                @case('service_state')
+                                                    {{ $result->state?->state_name }}
+                                                @break
+
+                                                @case('contract_start')
+                                                    {{ \Carbon\Carbon::parse($result->contract_start)->format('d-m-Y') }}
+                                                @break
+
+                                                @case('contract_end')
+                                                    {{ \Carbon\Carbon::parse($result->contract_date)->format('d-m-Y') }}
+                                                @break
+
+                                                @default
+                                                    {{ $result->$field ?? 'N/A' }}
+                                            @endswitch
+                                        </td>
                                     @endforeach
                                     <td>
                                         <a href="javascript:void(0);" class="btn btn-info"
@@ -160,74 +177,74 @@
                                     </td>
                                 @endif
                             </tr>
-                        @empty
-                            <tr>
-                                <td colspan="7" class="text-center">No records found.</td>
-                            </tr>
-                        @endforelse
+                            @empty
+                                <tr>
+                                    <td colspan="7" class="text-center">No records found.</td>
+                                </tr>
+                            @endforelse
 
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </div>
             </div>
+            <div class="mt-3">
+                {{ $results->withQueryString()->links() }}
+            </div>
+
         </div>
-        <div class="mt-3">
-            {{ $results->withQueryString()->links() }}
-        </div>
+        <x-model1 />
+        @push('scripts')
+            <script>
+                function updateSelectedCount(checkboxClass, dropdownInputId, defaultText) {
+                    const checkboxes = document.querySelectorAll(checkboxClass);
+                    const dropdownInput = document.querySelector(dropdownInputId);
+                    const selectedCount = Array.from(checkboxes).filter(cb => cb.checked).length;
 
-    </div>
-    <x-model1 />
-    @push('scripts')
-        <script>
-            function updateSelectedCount(checkboxClass, dropdownInputId, defaultText) {
-                const checkboxes = document.querySelectorAll(checkboxClass);
-                const dropdownInput = document.querySelector(dropdownInputId);
-                const selectedCount = Array.from(checkboxes).filter(cb => cb.checked).length;
-
-                dropdownInput.value = selectedCount > 0 ? `${selectedCount} selected` : defaultText;
-                const selectAllCheckbox = document.querySelector(checkboxClass.includes('data') ? '#select_all_data' :
-                    '#select_all_states');
-                selectAllCheckbox.checked = selectedCount === checkboxes.length;
-            }
-
-            function toggleSelectAll(selectAllCheckbox, checkboxClass, dropdownInputId, defaultText) {
-                const checkboxes = document.querySelectorAll(checkboxClass);
-                const isChecked = selectAllCheckbox.checked;
-
-                checkboxes.forEach(cb => cb.checked = isChecked);
-                updateSelectedCount(checkboxClass, dropdownInputId, defaultText);
-            }
-
-            function showClientDetails(clientId) {
-                fetch(`/admin/cdms/show/${clientId}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.html_content) {
-                            document.querySelector('#client_details').innerHTML = data.html_content;
-                            $('#client_details').modal('show');
-                            const closeButton = document.querySelector('#closeModalButton');
-                            if (closeButton) {
-                                closeButton.addEventListener('click', function() {
-                                    $('#client_details').modal('hide');
-                                });
-                            }
-                        } else {
-                            console.error('No HTML content found in the response');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error fetching client details:', error);
-                    });
-            }
-
-            document.getElementById('export-form').addEventListener('submit', function(e) {
-                const selectedFields = Array.from(document.querySelectorAll('.data-checkbox:checked'))
-                    .map(checkbox => checkbox.value);
-                document.getElementById('export-fields').value = selectedFields.join(',');
-                if (selectedFields.length === 0) {
-                    e.preventDefault();
-                    alert('Please select at least one field for export.');
+                    dropdownInput.value = selectedCount > 0 ? `${selectedCount} selected` : defaultText;
+                    const selectAllCheckbox = document.querySelector(checkboxClass.includes('data') ? '#select_all_data' :
+                        '#select_all_states');
+                    selectAllCheckbox.checked = selectedCount === checkboxes.length;
                 }
-            });
-        </script>
-    @endpush
-</x-applayout>
+
+                function toggleSelectAll(selectAllCheckbox, checkboxClass, dropdownInputId, defaultText) {
+                    const checkboxes = document.querySelectorAll(checkboxClass);
+                    const isChecked = selectAllCheckbox.checked;
+
+                    checkboxes.forEach(cb => cb.checked = isChecked);
+                    updateSelectedCount(checkboxClass, dropdownInputId, defaultText);
+                }
+
+                function showClientDetails(clientId) {
+                    fetch(`/admin/cdms/show/${clientId}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.html_content) {
+                                document.querySelector('#client_details').innerHTML = data.html_content;
+                                $('#client_details').modal('show');
+                                const closeButton = document.querySelector('#closeModalButton');
+                                if (closeButton) {
+                                    closeButton.addEventListener('click', function() {
+                                        $('#client_details').modal('hide');
+                                    });
+                                }
+                            } else {
+                                console.error('No HTML content found in the response');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error fetching client details:', error);
+                        });
+                }
+
+                document.getElementById('export-form').addEventListener('submit', function(e) {
+                    const selectedFields = Array.from(document.querySelectorAll('.data-checkbox:checked'))
+                        .map(checkbox => checkbox.value);
+                    document.getElementById('export-fields').value = selectedFields.join(',');
+                    if (selectedFields.length === 0) {
+                        e.preventDefault();
+                        alert('Please select at least one field for export.');
+                    }
+                });
+            </script>
+        @endpush
+    </x-applayout>

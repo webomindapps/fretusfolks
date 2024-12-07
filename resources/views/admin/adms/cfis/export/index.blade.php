@@ -24,11 +24,11 @@
         @foreach ($candidates as $key => $candidate)
             <tr>
                 <td>{{ $key + 1 }}</td>
-                <td>{{ $candidate->client_id }}</td>
+                <td>{{ $candidate->client?->client_name }}</td>
                 <td>{{ $candidate->emp_name }}</td>
                 <td>{{ $candidate->phone1 }}</td>
                 <td>{{ $candidate->email }}</td>
-                <td>{{ $candidate->state }}</td>
+                <td>{{ $candidate->clientstate?->state_name }}</td>
                 <td>{{ $candidate->location }}</td>
                 <td>{{ $candidate->designation }}</td>
                 <td>{{ $candidate->department }}</td>
