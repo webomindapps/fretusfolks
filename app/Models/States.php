@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\CFISModel;
 use App\Models\ClientGstn;
 use App\Models\FHRMSModel;
 use Illuminate\Database\Eloquent\Model;
@@ -20,5 +21,9 @@ class States extends Model
     public function fhrms()
     {
         return $this->hasMany(FHRMSModel::class, 'state');
+    }
+    public function clientstate()
+    {
+        return $this->hasMany(CFISModel::class, 'state', 'id');
     }
 }

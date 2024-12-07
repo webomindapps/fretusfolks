@@ -2,11 +2,12 @@
 
 namespace App\Exports;
 
-use App\Models\Payment;
-use Illuminate\View\View;
+use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
+use App\Models\Payment;
 
-class tdsReportExport implements FromView
+
+class ReciveablesExport implements FromView
 {
     protected $fields;
 
@@ -24,11 +25,10 @@ class tdsReportExport implements FromView
             $query->with('invoice:id,invoice_no,service_location');
         }
 
-        $payments = $query->get();
-        return view('admin.fcms.tds_report.export', [
-            'payments' => $payments,
+        $receivables = $query->get();
+        return view('admin.fcms.receivables.export', [
+            'receivables' => $receivables,
             'fields' => $this->fields
         ]);
     }
 }
-

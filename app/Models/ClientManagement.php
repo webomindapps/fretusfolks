@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\CFISModel;
 use Illuminate\Database\Eloquent\Model;
 
 class ClientManagement extends Model
@@ -48,5 +49,8 @@ class ClientManagement extends Model
     {
         return $this->belongsTo(States::class, 'service_state', 'id');
     }
-
+    public function client()
+    {
+        return $this->hasMany(CFISModel::class, 'client_id', 'id');
+    }
 }

@@ -245,6 +245,7 @@ Route::prefix('admin')->group(function () {
         Route::get('/get-client-invoices/{id}', [PaymentController::class, 'getClientInvoice'])->name('get.client.invoices');
         Route::get('/get-invoice/{id}/details', [PaymentController::class, 'getInvoiceDetails'])->name('get.invoice.details');
         Route::get('/receivable/report', [PaymentController::class, 'reports'])->name('fcms.receivable.reports');
+        Route::post('/receivable/export', [PaymentController::class, 'exportReciveables'])->name('receivable.export');
 
         //ffi_payslips
         Route::get('/ffi_payslips', [FFIPayslipsController::class, 'index'])->name('ffi_payslips');
@@ -257,7 +258,6 @@ Route::prefix('admin')->group(function () {
         //tds_report
         Route::get('/fcms/tds_report', [PaymentController::class, 'tdsReports'])->name('fcms.tds_report');
         Route::post('fcms/tds_report/export', [PaymentController::class, 'exportReport'])->name('tds_report.export');
-        Route::get('fcms/tds_report/show/{id}', [PaymentController::class, 'show'])->name('tds_report.show');
 
         //ffcm
         Route::get('/ffcm', [FFCMController::class, 'index'])->name('fcms.ffcm');

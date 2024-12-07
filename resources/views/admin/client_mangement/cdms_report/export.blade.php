@@ -10,7 +10,25 @@
         @foreach ($clients as $client)
             <tr>
                 @foreach ($fields as $field)
-                    <td>{{ $client->$field }}</td>
+                    <td>
+                        @switch($field)
+                            @case('service_state')
+                                {{ $client->state?->state_name }}
+                            @break
+
+                            @case('contract_start')
+                                {{ \Carbon\Carbon::parse($client->contract_start)->format('d-m-Y') }}
+                            @break
+
+                            @case('contract_end')
+                                {{ \Carbon\Carbon::parse($client->contract_date)->format('d-m-Y') }}
+                            @break
+
+                            @default
+                                {{ $client->$field ?? 'N/A' }}
+                        @endswitch
+                    </td>
+                    {{-- <td>{{ $client->$field }}</td> --}}
                 @endforeach
             </tr>
         @endforeach

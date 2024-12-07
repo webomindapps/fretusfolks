@@ -30,17 +30,18 @@ class SideBar extends Component
                     'name' => 'usermasters',
                 ],
                 [
-                    'title' => 'TDS code',
-                    'icon' => 'bx bx-chevron-right',
-                    'route' => 'admin.tds_code',
-                    'name' => 'tds_code',
-                ],
-                [
                     'title' => 'Letter Content',
                     'icon' => 'bx bx-chevron-right',
                     'route' => 'admin.letter_content',
                     'name' => 'letter_content',
                 ],
+                [
+                    'title' => 'TDS code',
+                    'icon' => 'bx bx-chevron-right',
+                    'route' => 'admin.tds_code',
+                    'name' => 'tds_code',
+                ],
+
             ],
 
         ],
@@ -122,22 +123,10 @@ class SideBar extends Component
                     'name' => 'ffi_increment_letter',
                 ],
                 [
-                    'title' => 'FFI Termination Letter',
+                    'title' => 'FFI Payslips',
                     'icon' => 'bx bx-chevron-right',
-                    'route' => 'admin.ffi_termination',
-                    'name' => 'ffi_termination',
-                ],
-                [
-                    'title' => 'FFI Warning Letter',
-                    'icon' => 'bx bx-chevron-right',
-                    'route' => 'admin.ffi_warning',
-                    'name' => 'ffi_warning',
-                ],
-                [
-                    'title' => 'FFI Show Cause Letter',
-                    'icon' => 'bx bx-chevron-right',
-                    'route' => 'admin.ffi_show_cause',
-                    'name' => 'ffi_show_cause',
+                    'route' => 'admin.ffi_payslips',
+                    'name' => 'ffi_payslips',
                 ],
                 [
                     'title' => 'FFI PIP Letter',
@@ -146,13 +135,25 @@ class SideBar extends Component
                     'name' => 'ffi_pip_letter',
                 ],
                 [
-                    'title' => 'FFI Payslips',
+                    'title' => 'FFI Termination Letter',
                     'icon' => 'bx bx-chevron-right',
-                    'route' => 'admin.ffi_payslips',
-                    'name' => 'ffi_payslips',
+                    'route' => 'admin.ffi_termination',
+                    'name' => 'ffi_termination',
                 ],
                 [
-                    'title' => 'FFI Birthdays',
+                    'title' => 'FFI Show Cause Letter',
+                    'icon' => 'bx bx-chevron-right',
+                    'route' => 'admin.ffi_show_cause',
+                    'name' => 'ffi_show_cause',
+                ],
+                [
+                    'title' => 'FFI Warning Letter',
+                    'icon' => 'bx bx-chevron-right',
+                    'route' => 'admin.ffi_warning',
+                    'name' => 'ffi_warning',
+                ],
+                [
+                    'title' => 'Birthday Details',
                     'icon' => 'bx bx-chevron-right',
                     'route' => 'admin.fhrms.ffi_birthday',
                     'name' => 'ffi_birthday',

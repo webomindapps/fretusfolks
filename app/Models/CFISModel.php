@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\States;
+use App\Models\ClientManagement;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -116,4 +118,12 @@ class CFISModel extends Model
     ];
 
     public $timestamps = false;
+    public function client()
+    {
+        return $this->belongsTo(ClientManagement::class, 'client_id', 'id');
+    }
+    public function clientstate()
+    {
+        return $this->belongsTo(States::class, 'state', 'id');
+    }
 }

@@ -73,7 +73,7 @@ class FretusFolks extends Controller
         $clientnames = ClientManagement::all();
         $clientname_arr = [];
         foreach ($clientnames as $clientname) {
-            $clientname_arr[] = ['label' => $clientname->client_name, 'value' => $clientname->client_name];
+            $clientname_arr[] = ['label' => $clientname->client_name, 'value' => $clientname->id];
         }
         return $clientname_arr;
     }

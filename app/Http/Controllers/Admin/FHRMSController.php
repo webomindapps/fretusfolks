@@ -32,7 +32,7 @@ class FHRMSController extends Controller
         $orderBy = request()->orderBy;
         $paginate = request()->paginate;
 
-        $query = $this->model()->query();
+        $query = $this->model()->where('status', 0);
 
         if ($from_date && $to_date) {
             $query->whereBetween('created_at', [$from_date, $to_date]);

@@ -18,7 +18,7 @@
                                 :required="false" size="col-lg-4 mt-2" :value="request()->from_date" />
                             <x-forms.input label="To Date" type="date" name="to_date" id="to-date"
                                 :required="false" size="col-lg-4 mt-2" :value="request()->to_date" />
-                            <div class="col-lg-4 mt-2" id="form-group-state">
+                            {{-- <div class="col-lg-4 mt-2" id="form-group-state">
                                 <label for="client">Client Name
                                 </label>
                                 <select class="form-select" id="client" name="client_id"
@@ -34,6 +34,40 @@
                                 @error('client_id')
                                     <span>{{ $message }}</span>
                                 @enderror
+                            </div> --}}
+                            <div class="col-lg-4 mt-2">
+                                <label for="client">Client Name</label>
+                                <div class="dropdown">
+                                    <input type="text" class="btn dropdown-toggle" id="dropdownMenuButtonclient"
+                                        data-bs-toggle="dropdown" aria-expanded="false" readonly
+                                        value="Select client" />
+                                    <ul class="dropdown-menu ps-3" aria-labelledby="dropdownMenuButtonclient">
+                                        <li>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="select_all_client"
+                                                    onchange="toggleSelectAll(this, '.client-checkbox', '#dropdownMenuButtonclient', 'Select client')">
+                                                <label class="form-check-label" for="select_all_client">Select
+                                                    All</label>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <hr class="dropdown-divider">
+                                        </li>
+                                        @foreach ($clients as $client)
+                                            <li>
+                                                <div class="form-check">
+                                                    <input class="form-check-input client-checkbox" type="checkbox"
+                                                        name="client_id[]" value="{{ $client->id }}"
+                                                        id="client_{{ $loop->index }}"
+                                                        onchange="updateSelectedCount('.client-checkbox', '#dropdownMenuButtonclient', 'Select client')">
+
+                                                    <label class="form-check-label"
+                                                        for="client_{{ $loop->index }}">{{ $client->client_name }}</label>
+                                                </div>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
                             </div>
                             <div class="col-lg-4 mt-2" id="form-group-state">
                                 <label for="client">TDS Code
@@ -165,10 +199,11 @@
                                                 style="position: absolute; inset: auto auto 0px 0px; margin: 0px; transform: translate(-95px, -25.4219px);"
                                                 data-popper-placement="top-end">
                                                 <li>
-                                                    <a href="javascript:void(0);" class="btn btn-info"
-                                                        data-target="#client_details"
-                                                        onclick="showInvoiceDetails({{ $result->id }})">
-                                                        <i class='bx bx-link-alt'></i> View
+                                                    <a href="javascript:void(0);" class="dropdown-item"
+                                                        data-toggle="modal" data-target="#client_details"
+                                                        onclick="showClientDetails({{ $result->id }})">
+                                                        <i class='bx bx-link-alt'></i>
+                                                        View Details
                                                     </a>
                                                 </li>
 
@@ -195,10 +230,11 @@
                                                 style="position: absolute; inset: auto auto 0px 0px; margin: 0px; transform: translate(-95px, -25.4219px);"
                                                 data-popper-placement="top-end">
                                                 <li>
-                                                    <a href="javascript:void(0);" class="btn btn-info"
-                                                        data-target="#client_details"
-                                                        onclick="showInvoiceDetails({{ $result->id }})">
-                                                        <i class='bx bx-link-alt'></i> View
+                                                    <a href="javascript:void(0);" class="dropdown-item"
+                                                        data-toggle="modal" data-target="#client_details"
+                                                        onclick="showClientDetails({{ $result->id }})">
+                                                        <i class='bx bx-link-alt'></i>
+                                                        View Details
                                                     </a>
                                                 </li>
 
@@ -229,8 +265,8 @@
                     const selectedCount = Array.from(checkboxes).filter(cb => cb.checked).length;
 
                     dropdownInput.value = selectedCount > 0 ? `${selectedCount} selected` : defaultText;
-                    const selectAllCheckbox = document.querySelector(checkboxClass.includes('data') ? '#select_all_data' :
-                        '#select_all_states');
+
+                    const selectAllCheckbox = document.querySelector('#select_all_client');
                     selectAllCheckbox.checked = selectedCount === checkboxes.length;
                 }
 
@@ -252,8 +288,8 @@
                     }
                 });
 
-                function showInvoiceDetails(clientId) {
-                    fetch(`/admin/fcms/tds_report/show/${clientId}`)
+                function showClientDetails(clientId) {
+                    fetch(`/admin/receivable/show/${clientId}`)
                         .then(response => response.json())
                         .then(data => {
                             if (data.html_content) {

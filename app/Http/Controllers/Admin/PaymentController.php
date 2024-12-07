@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Exports\ReciveablesExport;
 use App\Models\Invoice;
 use App\Models\Payment;
 use App\Models\States;
@@ -115,7 +116,7 @@ class PaymentController extends Controller
 
         $fromDate = $request->from_date;
         $toDate = $request->to_date;
-        $client_id = $request->client_id;
+        $selectedClient = $request->input('client_id', []);
         $tds_code = $request->tds_code;
         $status = $request->status;
         $selectedData = $request->input('data', []);
@@ -137,26 +138,37 @@ class PaymentController extends Controller
                         $query->select('id', 'code');
                     }
                 ],
-            );
+                [
+                    'client' => function ($query) {
+                        $query->select('id', 'client_name');
+                    }
+                ],
+            )->newQuery();
         // dd($query);
+        if (!empty($selectedClients) || $fromDate || $toDate || !empty($selectedStates) || !empty($selectedData) || $status !== null) {
 
-        if ($client_id) {
-            $query->where('client_id', $client_id);
+            if (!empty($selectedClient)) {
+                $query->whereIn('client_id', $selectedClient);
+            }
+            if ($fromDate && $toDate) {
+                $query->whereBetween('date_time', [$fromDate, $toDate]);
+            }
+
+            if ($tds_code) {
+                $query->where('tds_code', $tds_code);
+            }
+
+            if ($status !== null && $status !== '') {
+                $query->where('status', (int) $status);
+            }
+
+            $results = $query->paginate($perPage)->appends($request->query());
+
+        } else {
+            $results = new LengthAwarePaginator([], 0, 10);
         }
 
-        if ($fromDate && $toDate) {
-            $query->whereBetween('date_time', [$fromDate, $toDate]);
-        }
-
-        if ($tds_code) {
-            $query->where('tds_code', $tds_code);
-        }
-
-        if ($status !== null && $status !== '') {
-            $query->where('status', (int) $status);
-        }
-
-        $results = $query->paginate($perPage)->appends($request->query());
+        // $results = $query->paginate($perPage)->appends($request->query());
         // dd($results);
         $clients = ClientManagement::where('status', 0)->latest()->get();
         $tds_code = TdsCode::where('status', 0)->latest()->get();
@@ -182,13 +194,21 @@ class PaymentController extends Controller
 
         return Excel::download(new tdsReportExport($fields), 'tdsreport.xlsx');
     }
+    public function exportReciveables(Request $request)
+    {
+        $fields = explode(',', $request->input('fields'));
+        if (empty($fields)) {
+            return redirect()->route('admin.receivable')->with('error', 'No fields selected for export');
+        }
+
+        return Excel::download(new ReciveablesExport($fields), 'receivablesreport.xlsx');
+    }
     public function show($id)
     {
-        $payments = $this->model()->with('invoice')->findOrFail($id);
+        $payments = $this->model()->with('invoice')->find($id);
         $client = ClientManagement::findOrFail($payments->client_id);
         $tds_code = TdsCode::findOrFail($payments->tds_code);
         $htmlContent = view('admin.fcms.tds_report.view', compact('payments', 'client', 'tds_code'))->render();
-
         return response()->json(['html_content' => $htmlContent]);
     }
     public function destroy($id)
@@ -209,14 +229,14 @@ class PaymentController extends Controller
             'to_date' => 'nullable|date',
             'data' => 'nullable|array',
             'status' => 'nullable|integer',
-            'state' => 'nullable|integer',
+            'service_location' => 'nullable|array',
             'per_page' => 'nullable|integer|min:1',
         ]);
 
         $fromDate = $request->from_date;
         $toDate = $request->to_date;
         $selectedClient = $request->input('client_id', []);
-        $selectedStates = $request->input('states', []);
+        $selectedStates = $request->input('service_location', []);
         $status = $request->status;
         $selectedData = $request->input('data', []);
         $perPage = $request->input('per_page', 10);
@@ -242,27 +262,31 @@ class PaymentController extends Controller
                         $query->select('id', 'code');
                     }
                 ],
-            );
+            )->newQuery();
         // dd($query);
-        if (!empty($selectedClient)) {
-            $query->whereIn('client_id', $selectedClient);
-        }
+        if (!empty($selectedClients) || $fromDate || $toDate || !empty($selectedStates) || $status !== null) {
 
-        if ($fromDate && $toDate) {
-            $query->whereBetween('date_time', [$fromDate, $toDate]);
-        }
-        if (!empty($selectedStates)) {
-            $query->whereIn('states', $selectedStates);
-        }
+            if (!empty($selectedClient)) {
+                $query->whereIn('client_id', $selectedClient);
+            }
 
-        if ($status !== null && $status !== '') {
-            $query->where('status', (int) $status);
-        }
+            if ($fromDate && $toDate) {
+                $query->whereBetween('date_time', [$fromDate, $toDate]);
+            }
+            if (!empty($selectedStates)) {
+                $query->whereIn('service_location', $selectedStates);
+            }
 
-        $results = $query->paginate($perPage)->appends($request->query());
-        // dd($results);
+            if ($status !== null && $status !== '') {
+                $query->where('status', (int) $status);
+            }
+
+            $results = $query->paginate($perPage)->appends($request->query());
+
+        } else {
+            $results = new LengthAwarePaginator([], 0, 10);
+        }
         $clients = ClientManagement::where('status', 0)->latest()->get();
-        $state = States::latest()->get();
         $invoice = Invoice::where('status', 0)->latest()->get();
 
         return view('admin.fcms.receivables.reports', compact(

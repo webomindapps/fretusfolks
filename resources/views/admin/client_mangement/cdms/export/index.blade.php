@@ -51,8 +51,8 @@
                 <td>{{ $client->agreement_doc }}</td>
                 <td>{{ $client->region }}</td>
                 <td>{{ $client->state?->state_name }}</td>
-                <td>{{ $client->contract_start }}</td>
-                <td>{{ $client->contract_end }}</td>
+                <td> {{ \Carbon\Carbon::parse($client->contract_start)->format('d-m-Y') }}</td>
+                <td> {{ \Carbon\Carbon::parse($client->contract_end)->format('d-m-Y') }}</td>
                 <td>{{ $client->rate }}</td>
                 <td>{{ $client->commercial_type == 1 ? '%' : 'Rs' }}</td>
                 <td>{{ $client->remark }}</td>
