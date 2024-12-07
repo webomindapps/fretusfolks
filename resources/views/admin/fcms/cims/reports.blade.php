@@ -14,40 +14,56 @@
                 <div class="form-card px-3">
                     <form id="my_form" action="" method="get" enctype="multipart/form-data">
                         <div class="row">
-                            <div class="col-lg-4 mt-2" id="form-group-state">
-                                <label for="client">Client Name
-                                    <span style="color: red">*</span>
-                                </label>
-                                <select class="form-select" id="client" name="client_id"
-                                    onchange="get_client_location();" required>
-                                    <option value="">Select</option>
-                                    @foreach ($clients as $client)
-                                        <option value="{{ $client->id }}"
-                                            {{ request()->client_id == $client->id ? 'selected' : '' }}>
-                                            {{ $client->client_name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                                @error('client_id')
-                                    <span>{{ $message }}</span>
-                                @enderror
-                            </div>
                             <x-forms.input label="From Date" type="date" name="from_date" id="from-date"
                                 :required="false" size="col-lg-4 mt-2" :value="request()->from_date" />
                             <x-forms.input label="To Date" type="date" name="to_date" id="to-date"
                                 :required="false" size="col-lg-4 mt-2" :value="request()->to_date" />
                             <div class="col-lg-4 mt-2">
-                                <label for="data">Data</label>
+                                <label for="clientDropdown">Enter Client Name</label>
                                 <div class="dropdown">
-                                    <input type="text" class="btn dropdown-toggle" id="dropdownMenuButton"
+                                    <input type="text" class="btn dropdown-toggle" id="clientDropdown"
+                                        data-bs-toggle="dropdown" aria-expanded="false" readonly
+                                        value="Select Client" />
+                                    <ul class="dropdown-menu ps-3" aria-labelledby="clientDropdown">
+                                        <li>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="select_all_client"
+                                                    onchange="toggleSelectAll(this, '.client-checkbox', '#clientDropdown', 'Select Client')">
+                                                <label class="form-check-label" for="select_all_client">Select
+                                                    All</label>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <hr class="dropdown-divider">
+                                        </li>
+                                        @foreach ($clients as $client)
+                                            <li>
+                                                <div class="form-check">
+                                                    <input class="form-check-input client-checkbox" type="checkbox"
+                                                        name="client_ids[]" value="{{ $client->id }}"
+                                                        id="client_{{ $loop->iteration }}"
+                                                        onchange="updateSelectedCount('.client-checkbox', '#clientDropdown', 'Select Client')">
+                                                    <label class="form-check-label" for="client_{{ $loop->iteration }}">
+                                                        {{ $client->client_name }}
+                                                    </label>
+                                                </div>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 mt-2">
+                                <label for="dataDropdown">Data</label>
+                                <div class="dropdown">
+                                    <input type="text" class="btn dropdown-toggle" id="dataDropdown"
                                         data-bs-toggle="dropdown" aria-expanded="false" readonly value="Select Data" />
-                                    <ul class="dropdown-menu ps-3" aria-labelledby="dropdownMenuButton">
+                                    <ul class="dropdown-menu ps-3" aria-labelledby="dataDropdown">
                                         <li>
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox" id="select_all_data"
-                                                    onchange="toggleSelectAll(this, '.data-checkbox', '#dropdownMenuButton', 'Select Data')">
-                                                <label class="form-check-label" for="select_all_data">Select
-                                                    All</label>
+                                                    onchange="toggleSelectAll(this, '.data-checkbox', '#dataDropdown', 'Select Data')">
+                                                <label class="form-check-label" for="select_all_data">Select All</label>
                                             </div>
                                         </li>
                                         <li>
@@ -59,7 +75,7 @@
                                                     <input class="form-check-input data-checkbox" type="checkbox"
                                                         name="data[]" value="{{ $option['value'] }}"
                                                         id="data_{{ $loop->index }}"
-                                                        onchange="updateSelectedCount('.data-checkbox', '#dropdownMenuButton', 'Select Data')">
+                                                        onchange="updateSelectedCount('.data-checkbox', '#dataDropdown', 'Select Data')">
                                                     <label class="form-check-label"
                                                         for="data_{{ $loop->index }}">{{ $option['label'] }}</label>
                                                 </div>
@@ -70,16 +86,15 @@
                             </div>
 
                             <div class="col-lg-4 mt-2">
-                                <label for="service_state">State</label>
+                                <label for="stateDropdown">State</label>
                                 <div class="dropdown">
-                                    <input type="text" class="btn btn-secondary dropdown-toggle"
-                                        id="dropdownMenuButtonState" data-bs-toggle="dropdown" aria-expanded="false"
-                                        readonly value="Select State" />
-                                    <ul class="dropdown-menu ps-3" aria-labelledby="dropdownMenuButtonState">
+                                    <input type="text" class="btn dropdown-toggle" id="stateDropdown"
+                                        data-bs-toggle="dropdown" aria-expanded="false" readonly value="Select State" />
+                                    <ul class="dropdown-menu ps-3" aria-labelledby="stateDropdown">
                                         <li>
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox" id="select_all_states"
-                                                    onchange="toggleSelectAll(this, '.state-checkbox', '#dropdownMenuButtonState', 'Select State')">
+                                                    onchange="toggleSelectAll(this, '.state-checkbox', '#stateDropdown', 'Select State')">
                                                 <label class="form-check-label" for="select_all_states">Select
                                                     All</label>
                                             </div>
@@ -92,10 +107,10 @@
                                                 <div class="form-check">
                                                     <input class="form-check-input state-checkbox" type="checkbox"
                                                         name="service_location[]" value="{{ $option['value'] }}"
-                                                        id="service_location_{{ $loop->index }}"
-                                                        onchange="updateSelectedCount('.state-checkbox', '#dropdownMenuButtonState', 'Select State')">
+                                                        id="state_{{ $loop->index }}"
+                                                        onchange="updateSelectedCount('.state-checkbox', '#stateDropdown', 'Select State')">
                                                     <label class="form-check-label"
-                                                        for="service_location_{{ $loop->index }}">{{ $option['label'] }}</label>
+                                                        for="state_{{ $loop->index }}">{{ $option['label'] }}</label>
                                                 </div>
                                             </li>
                                         @endforeach
@@ -175,6 +190,14 @@
                                                 style="position: absolute; inset: auto auto 0px 0px; margin: 0px; transform: translate(-95px, -25.4219px);"
                                                 data-popper-placement="top-end">
                                                 <li>
+                                                    <a href="javascript:void(0);" class="dropdown-item"
+                                                        data-toggle="modal" data-target="#client_details"
+                                                        onclick="showClientDetails({{ $result->id }})">
+                                                        <i class='bx bx-link-alt'></i>
+                                                        View Details
+                                                    </a>
+                                                </li>
+                                                <li>
                                                     <a class="dropdown-item"
                                                         href="{{ route('admin.fcms.cims.edit', $result) }}">
                                                         <i class='bx bx-pencil'></i>
@@ -212,18 +235,11 @@
                                                 style="position: absolute; inset: auto auto 0px 0px; margin: 0px; transform: translate(-95px, -25.4219px);"
                                                 data-popper-placement="top-end">
                                                 <li>
-                                                    <a class="dropdown-item"
-                                                        href="{{ route('admin.fcms.cims.edit', $result) }}">
-                                                        <i class='bx bx-pencil'></i>
-                                                        Edit
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item"
-                                                        onclick="return confirm('Are you sure to delete this ?')"
-                                                        href="{{ route('admin.cms.esic.delete', $result) }}">
-                                                        <i class='bx bx-trash-alt'></i>
-                                                        Delete
+                                                    <a href="javascript:void(0);" class="dropdown-item"
+                                                        data-toggle="modal" data-target="#client_details"
+                                                        onclick="showClientDetails({{ $result->id }})">
+                                                        <i class='bx bx-link-alt'></i>
+                                                        View Details
                                                     </a>
                                                 </li>
                                             </ul>
@@ -243,6 +259,8 @@
                 </div>
             </div>
         </div>
+        <!-- Modal HTML -->
+        <x-model1 />
         @push('scripts')
             <script>
                 function updateSelectedCount(checkboxClass, dropdownInputId, defaultText) {
@@ -251,8 +269,12 @@
                     const selectedCount = Array.from(checkboxes).filter(cb => cb.checked).length;
 
                     dropdownInput.value = selectedCount > 0 ? `${selectedCount} selected` : defaultText;
-                    const selectAllCheckbox = document.querySelector(checkboxClass.includes('data') ? '#select_all_data' :
-                        '#select_all_states');
+
+                    // Update the "Select All" checkbox
+                    const selectAllCheckboxId = dropdownInputId === '#dataDropdown' ? '#select_all_data' :
+                        dropdownInputId === '#stateDropdown' ? '#select_all_states' :
+                        '#select_all_client';
+                    const selectAllCheckbox = document.querySelector(selectAllCheckboxId);
                     selectAllCheckbox.checked = selectedCount === checkboxes.length;
                 }
 
@@ -263,16 +285,29 @@
                     checkboxes.forEach(cb => cb.checked = isChecked);
                     updateSelectedCount(checkboxClass, dropdownInputId, defaultText);
                 }
-
-                document.getElementById('export-form').addEventListener('submit', function(e) {
-                    const selectedFields = Array.from(document.querySelectorAll('.data-checkbox:checked'))
-                        .map(checkbox => checkbox.value);
-                    document.getElementById('export-fields').value = selectedFields.join(',');
-                    if (selectedFields.length === 0) {
-                        e.preventDefault();
-                        alert('Please select at least one field for export.');
-                    }
-                });
+            </script>
+            <script>
+                function showClientDetails(clientId) {
+                    fetch(`/admin/cims/show/${clientId}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.html_content) {
+                                document.querySelector('#client_details').innerHTML = data.html_content;
+                                $('#client_details').modal('show');
+                                const closeButton = document.querySelector('#closeModalButton');
+                                if (closeButton) {
+                                    closeButton.addEventListener('click', function() {
+                                        $('#client_details').modal('hide');
+                                    });
+                                }
+                            } else {
+                                console.error('No HTML content found in the response');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error fetching client details:', error);
+                        });
+                }
             </script>
         @endpush
     </x-applayout>

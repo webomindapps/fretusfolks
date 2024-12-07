@@ -13,12 +13,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('invoice', function (Blueprint $table) {
-            DB::statement('ALTER TABLE invoice ADD PRIMARY KEY (`id`);');
             $table->bigInteger('id')->unsigned()->autoIncrement()->change();
             $table->tinyInteger('status')->default(0)->change();
-            $table->double('amount_received')->nullable()->change();
+            $table->string('amount_received')->nullable()->change();
             $table->string('tds_code')->nullable()->change();
-            $table->double('tds_amount')->nullable()->change();
+            $table->string('tds_amount')->nullable()->change();
             $table->tinyInteger('active_status')->default(0)->change();
             $table->timestamps();
         });

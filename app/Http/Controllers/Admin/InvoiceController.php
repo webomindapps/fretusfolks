@@ -94,6 +94,11 @@ class InvoiceController extends Controller
             dd($e);
         }
     }
+    public function show($id){
+        $invoice = $this->model()->find($id);
+        $htmlContent = view('admin.fcms.cims.view', compact('invoice'))->render();
+        return response()->json(['html_content' => $htmlContent]);
+    }
     public function edit($id)
     {
         $invoice = $this->model()->find($id);
@@ -150,9 +155,9 @@ class InvoiceController extends Controller
             'status' => 'nullable|integer',
             'per_page' => 'nullable|integer|min:1',
         ]);
-        $client_id = $request->client_id;
         $fromDate = $request->from_date;
         $toDate = $request->to_date;
+        $selectedClients = $request->input('client_ids', []);
         $selectedData = $request->input('data', []);
         $selectedStates = $request->input('service_state', []);
         $region = $request->region;
@@ -160,9 +165,9 @@ class InvoiceController extends Controller
         $perPage = $request->input('per_page', 10);
 
         $filteredResults = $this->model()->newQuery();
-        if ($client_id || $fromDate || $toDate || !empty($selectedStates) || $status !== null) {
-            if ($client_id) {
-                $filteredResults->where('client_id', $client_id);
+        if (!empty($selectedClients) || $fromDate || $toDate || !empty($selectedStates)||!empty($selectedData) || $status !== null) {
+            if (!empty($selectedClients)) {
+                $filteredResults->whereIn('client_id', $selectedClients);
             }
             if ($fromDate && $toDate) {
                 $filteredResults->whereBetween('date', [$fromDate, $toDate]);

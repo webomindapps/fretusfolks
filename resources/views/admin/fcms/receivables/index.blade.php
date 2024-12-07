@@ -39,15 +39,17 @@
                                     style="position: absolute; inset: auto auto 0px 0px; margin: 0px; transform: translate(-95px, -25.4219px);"
                                     data-popper-placement="top-end">
                                     <li>
-                                        <a class="dropdown-item" href="{{ route('admin.fcms.cims.edit', $item) }}">
-                                            <i class='bx bx-pencil'></i>
-                                            Edit
+                                        <a href="javascript:void(0);" class="dropdown-item" data-toggle="modal"
+                                            data-target="#client_details"
+                                            onclick="showClientDetails({{ $item->id }})">
+                                            <i class='bx bx-link-alt'></i>
+                                            View Details
                                         </a>
                                     </li>
                                     <li>
                                         <a class="dropdown-item"
                                             onclick="return confirm('Are you sure to delete this ?')"
-                                            href="{{ route('admin.cms.esic.delete', $item) }}">
+                                            href="{{ route('admin.receivable.delete', $item) }}">
                                             <i class='bx bx-trash-alt'></i>
                                             Delete
                                         </a>
@@ -60,4 +62,31 @@
             </x-table>
         </div>
     </div>
+    <!-- Modal HTML -->
+    <x-model1 />
+    @push('scripts')
+        <script>
+            function showClientDetails(clientId) {
+                fetch(`/admin/receivable/show/${clientId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.html_content) {
+                            document.querySelector('#client_details').innerHTML = data.html_content;
+                            $('#client_details').modal('show');
+                            const closeButton = document.querySelector('#closeModalButton');
+                            if (closeButton) {
+                                closeButton.addEventListener('click', function() {
+                                    $('#client_details').modal('hide');
+                                });
+                            }
+                        } else {
+                            console.error('No HTML content found in the response');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching client details:', error);
+                    });
+            }
+        </script>
+    @endpush
 </x-applayout>

@@ -11,7 +11,7 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('muser_master', function (Blueprint $table) {
-            $table->bigInteger('id')->unsigned()->autoIncrement()->primary()->change();
+            $table->bigInteger('id')->unsigned()->autoIncrement()->change();
             // $table->string('emp_id');
             // $table->string('name');
             // $table->string('email');

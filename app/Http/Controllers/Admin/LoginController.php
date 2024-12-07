@@ -22,7 +22,7 @@ class LoginController extends Controller
             'password' => 'required'
         ]);
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password], $request->remember)) {
-            if (auth()->user()->status != 1) {
+            if (auth()->user()->status != 0) {
                 Auth::guard('web')->logout();
                 return back()->with('danger', 'User is not active');
             }

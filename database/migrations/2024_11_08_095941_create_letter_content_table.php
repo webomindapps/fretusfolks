@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('letter_content', function (Blueprint $table) {
-            $table->bigInteger('id')->unsigned()->autoIncrement()->primary()->change();
+            $table->bigInteger('id')->unsigned()->autoIncrement()->change();
             // $table->string('type');
             // $table->string('letter_type');
             // $table->text('content');

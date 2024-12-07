@@ -22,7 +22,7 @@ class PaymentController extends Controller
     }
     public function index()
     {
-        $searchColumns = ['id', 'month', 'tds_code', 'amount_received', 'payment_received_date'];
+        $searchColumns = ['id', 'month', 'tds_code', 'amount_received', 'month'];
         $search = request()->search;
         $from_date = request()->from_date;
         $to_date = request()->to_date;
@@ -51,64 +51,35 @@ class PaymentController extends Controller
         $clients = ClientManagement::where('status', 0)->latest()->get();
         return view('admin.fcms.receivables.create', compact('clients', 'tds_codes'));
     }
-    // $client=$this->input->post('client');
-	// 	$invoice_no=$this->input->post('invoice_no');
-		
-	// 	$this->db->where('id',$invoice_no);
-	// 	$query=$this->db->get('invoice');
-	// 	$q=$query->result_array();
-		
-	// 	$already_paid=$q[0]['amount_received'];
-	// 	$already_tds_amount=$q[0]['tds_amount'];
-		
-	// 	$total_without_gst=$this->input->post('total_gst');
-	// 	$total_amount=$this->input->post('total_amount');
-		
-	// 	$payment_date=$this->input->post('payment_date');
-	// 	$month=$this->input->post('month');
-		
-	// 	$tds_code=$this->input->post('tds_code');
-	// 	$tds_percentage=$this->input->post('tds_percentage');
-	// 	$tds_amount=$this->input->post('tds_amount');
-	// 	$amount_paid=$this->input->post('amount_paid');
-	// 	$balance_amount=$this->input->post('balance_amount');
-	// 	$admin_id=$this->session->userdata('admin_id');
-	// 	$date=date("Y-m-d H:i:s");
-		
-	// 	$total_amount_paid=$already_paid+$amount_paid;
-	// 	$total_tds_amount=$already_tds_amount+$tds_amount;
-		
-	// 	$db_date=date("Y-m-d",strtotime($payment_date));
-		
-	// 	$data=array("invoice_id"=>$invoice_no,"client_id"=>$client,"total_amt"=>$total_without_gst,"total_amt_gst"=>$total_amount,"payment_received_date"=>$db_date,"month"=>$month,"tds_code"=>$tds_code,"tds_percentage"=>$tds_percentage,"tds_amount"=>$tds_amount,"amount_received"=>$amount_paid,"balance_amount"=>$balance_amount,"date_time"=>$date,"modify_by"=>$admin_id,"payment_received"=>"1");
-	// 	$this->db->insert('payments',$data);
-		
-	// 	$data1=array("amount_received"=>$total_amount_paid,"balance_amount"=>$balance_amount,"tds_code"=>$tds_code,"tds_amount"=>$total_tds_amount);
-	// 	$this->db->where('id',$invoice_no);
-	// 	$this->db->update('invoice',$data1);
     public function store(Request $request)
     {
         $request->validate([]);
-        $data = $request->all();
         DB::beginTransaction();
         try {
-            $data['total_amt'] = $request->total_gst;
-            $data['total_amt_gst'] = $request->total_amt;
-            $data['payment_received_date'] = $request->payment_date;
-            $data['amount_received'] = $request->amount_paid;
-            $data['date_time'] = date("Y-m-d H:i:s");
-            $data['payment_received'] = 1;
-            $data['status'] = 0;
-            $data['active_status'] = 0;
-            $data['modify_by'] = auth()->user()->id;
-            $this->model()->create($data);
+            $this->model()->create([
+                'client_id' => $request->client_id,
+                'invoice_id' => $request->invoice_id,
+                'total_amt' => $request->total_gst,
+                'total_amt_gst' => $request->total_amt,
+                'payment_received_date' => $request->payment_date,
+                'month' => $request->month,
+                'tds_code' => $request->tds_code,
+                'tds_percentage' => $request->tds_percentage,
+                'tds_amount' => $request->tds_amount,
+                'amount_received' => $request->amount_paid,
+                'balance_amount' => $request->balance_amount,
+                'date_time' => date("Y-m-d H:i:s"),
+                'modify_by' => auth()->user()->id,
+                "payment_received" => "1"
+            ]);
             $invoice = Invoice::find($request->invoice_id);
-            // $invoice->update([
-            //     'amount_received'=>$request->
-            //     'balance_amount'
-            //     'tds_code'
-            //     'tds_amount'
-            // ]);
+            $amount_received = $invoice->amount_received + $request->amount_paid;
+            $invoice->update([
+                'amount_received' => $amount_received,
+                'balance_amount' => $request->balance_amount,
+                'tds_code' => $request->tds_code,
+                'tds_amount' => $request->tds_amount
+            ]);
             DB::commit();
             return to_route('admin.fcms.receivables')->with('receivable added successfully');
         } catch (Exception $e) {
@@ -209,6 +180,17 @@ class PaymentController extends Controller
         $tds_code = TdsCode::findOrFail($payments->tds_code);
         $htmlContent = view('admin.fcms.tds_report.view', compact('payments', 'client', 'tds_code'))->render();
 
+        return response()->json(['html_content' => $htmlContent]);
+    }
+    public function destroy($id)
+    {
+        $this->model()->destroy($id);
+        return to_route('admin.fcms.receivables')->with('receivable removed successfully');
+    }
+    public function paymentView($id)
+    {
+        $payment = $this->model()->with('invoice')->findOrFail($id);
+        $htmlContent = view('admin.fcms.receivables.view', compact('payment'))->render();
         return response()->json(['html_content' => $htmlContent]);
     }
 }

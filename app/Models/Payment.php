@@ -33,8 +33,8 @@ class Payment extends Model
     {
         return $this->belongsTo(Invoice::class, 'invoice_id', 'id');
     }
-    public function tds_code()
+    public function tds()
     {
-        return $this->belongsTo(TdsCode::class, 'tds_code', 'code');
+        return $this->belongsTo(TdsCode::class, 'tds_code', 'id');
     }
 }

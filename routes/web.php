@@ -231,6 +231,7 @@ Route::prefix('admin')->group(function () {
         Route::post('/cims/{id}/edit', [InvoiceController::class, 'update']);
         Route::get('/get-client-location/{id}', [InvoiceController::class, 'getClientLocation'])->name('get.client.location');
         Route::get('/get-client-gst/{client}/{gst}', [InvoiceController::class, 'getClientGST'])->name('get.client.gst');
+        Route::get('/cims/show/{id}', [InvoiceController::class, 'show'])->name('cims.show');
 
         // CIMS Report
         Route::get('/cims/report', [InvoiceController::class, 'reports'])->name('fcms.cims.reports');
@@ -239,6 +240,8 @@ Route::prefix('admin')->group(function () {
         Route::get('/receivables', [PaymentController::class, 'index'])->name('fcms.receivables');
         Route::get('/receivable/create', [PaymentController::class, 'create'])->name('fcms.receivable.create');
         Route::post('/receivable/create', [PaymentController::class, 'store']);
+        Route::get('/receivable/show/{id}', [PaymentController::class, 'paymentView'])->name('receivable.show');
+        Route::get('/receivable/delete/{id}', [PaymentController::class, 'destroy'])->name('receivable.delete');
         Route::get('/get-client-invoices/{id}', [PaymentController::class, 'getClientInvoice'])->name('get.client.invoices');
         Route::get('/get-invoice/{id}/details', [PaymentController::class, 'getInvoiceDetails'])->name('get.invoice.details');
         //ffi_payslips
@@ -275,6 +278,5 @@ Route::prefix('admin')->group(function () {
         Route::post('ffi_assets/bulk_operation', [FFIAssetController::class, 'bulk'])->name('fcms.ffi_assets.bulk');
         Route::get('ffi_assets/{id}/delete', [FFIAssetController::class, 'destroy'])->name('fcms.ffi_assets.delete');
         Route::get('ffi_assets/export', [FFIAssetController::class, 'export'])->name('fcms.ffi_assets.export');
-
     });
 });

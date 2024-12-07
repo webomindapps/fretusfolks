@@ -13,7 +13,6 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('cms_pt', function (Blueprint $table) {
-            DB::statement('ALTER TABLE cms_pt ADD PRIMARY KEY (`id`);');
             $table->bigInteger('id')->unsigned()->autoIncrement()->change();
             $table->timestamps();
         });

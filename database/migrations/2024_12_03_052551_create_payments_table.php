@@ -13,8 +13,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('payments', function (Blueprint $table) {
-            DB::statement('ALTER TABLE payments ADD PRIMARY KEY (`id`);');
             $table->bigInteger('id')->unsigned()->autoIncrement()->change();
+            $table->tinyInteger('status')->default(0)->change();
+            $table->tinyInteger('active_status')->default(0)->change();
             $table->timestamps();
         });
     }

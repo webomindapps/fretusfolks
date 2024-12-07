@@ -13,7 +13,6 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('cms_esic', function (Blueprint $table) {
-            DB::statement('ALTER TABLE cms_esic ADD PRIMARY KEY (`id`);');
             $table->bigInteger('id')->unsigned()->autoIncrement()->change();
             // $table->unsignedBigInteger('state_id');
             // $table->unsignedBigInteger('client_id');
