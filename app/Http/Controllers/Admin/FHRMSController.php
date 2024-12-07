@@ -149,6 +149,7 @@ class FHRMSController extends Controller
         try {
             $employee = $this->model()->create($validatedData);
             $employee->fill($filePaths);
+            $employee->modified_date = now();
             $employee->psd = $request->password;
             $employee->password = bcrypt($request->password);
             $employee->data_status = '0';
@@ -423,7 +424,7 @@ class FHRMSController extends Controller
 
         if ($fromDate || $toDate || !empty($selectedStates) || !empty($location) || (!empty($pendingDocs)) || $status !== null) {
             if ($fromDate && $toDate) {
-                $filteredResults->whereBetween('created_at', ["{$fromDate} 00:00:00", "{$toDate} 23:59:59"]);
+                $filteredResults->whereBetween('modified_date', ["{$fromDate} 00:00:00", "{$toDate} 23:59:59"]);
             }
             if (!empty($selectedStates)) {
                 $filteredResults->whereIn('state', $selectedStates);

@@ -18,38 +18,39 @@
                                 :required="false" size="col-lg-4 mt-2" :value="request()->from_date" />
                             <x-forms.input label="To Date" type="date" name="to_date" id="to-date"
                                 :required="false" size="col-lg-4 mt-2" :value="request()->to_date" />
-                            <div class="col-lg-4 mt-2" id="form-group-state">
-                                <label for="client">Client Name
-                                </label>
-                                <select class="form-select" id="client" name="client_id"
-                                    onchange="get_client_location();">
-                                    <option value="">Select</option>
-                                    @foreach ($clients as $client)
-                                        <option value="{{ $client->id }}"
-                                            {{ request()->client_id == $client->id ? 'selected' : '' }}>
-                                            {{ $client->client_name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                                @error('client_id')
-                                    <span>{{ $message }}</span>
-                                @enderror
-                            </div>
-                            <div class="col-lg-4 mt-2" id="form-group-state">
-                                <label for="client">TDS Code
-                                </label>
-                                <select class="form-select" id="tds_code" name="tds_code">
-                                    <option value="">Select</option>
-                                    @foreach ($tds_code as $tds)
-                                        <option value="{{ $tds->id }}"
-                                            {{ request()->tds_code == $tds->id ? 'selected' : '' }}>
-                                            {{ $tds->code }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                                @error('tds_code')
-                                    <span>{{ $message }}</span>
-                                @enderror
+                            <div class="col-lg-4 mt-2">
+                                <label for="client">Client Name</label>
+                                <div class="dropdown">
+                                    <input type="text" class="btn dropdown-toggle" id="dropdownMenuButtonclient"
+                                        data-bs-toggle="dropdown" aria-expanded="false" readonly
+                                        value="Select client" />
+                                    <ul class="dropdown-menu ps-3" aria-labelledby="dropdownMenuButtonclient">
+                                        <li>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="select_all_client"
+                                                    onchange="toggleSelectAll(this, '.client-checkbox', '#dropdownMenuButtonclient', 'Select client')">
+                                                <label class="form-check-label" for="select_all_client">Select
+                                                    All</label>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <hr class="dropdown-divider">
+                                        </li>
+                                        @foreach ($clients as $client)
+                                            <li>
+                                                <div class="form-check">
+                                                    <input class="form-check-input client-checkbox" type="checkbox"
+                                                        name="client_id[]" value="{{ $client->id }}"
+                                                        id="client_{{ $loop->index }}"
+                                                        onchange="updateSelectedCount('.client-checkbox', '#dropdownMenuButtonclient', 'Select client')">
+
+                                                    <label class="form-check-label"
+                                                        for="client_{{ $loop->index }}">{{ $client->client_name }}</label>
+                                                </div>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
                             </div>
                             <div class="col-lg-4 mt-2">
                                 <label for="data">Data</label>
@@ -68,7 +69,7 @@
                                         <li>
                                             <hr class="dropdown-divider">
                                         </li>
-                                        @foreach (FretusFolks::getTdsdata() as $option)
+                                        @foreach (FretusFolks::getReciveablesdata() as $option)
                                             <li>
                                                 <div class="form-check">
                                                     <input class="form-check-input data-checkbox" type="checkbox"
@@ -83,7 +84,39 @@
                                     </ul>
                                 </div>
                             </div>
-
+                            <div class="col-lg-4 mt-2">
+                                <label for="service_state">State</label>
+                                <div class="dropdown">
+                                    <input type="text" class="btn btn-secondary dropdown-toggle"
+                                        id="dropdownMenuButtonState" data-bs-toggle="dropdown" aria-expanded="false"
+                                        readonly value="Select State" />
+                                    <ul class="dropdown-menu ps-3" aria-labelledby="dropdownMenuButtonState">
+                                        <li>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="select_all_states"
+                                                    onchange="toggleSelectAll(this, '.state-checkbox', '#dropdownMenuButtonState', 'Select State')">
+                                                <label class="form-check-label" for="select_all_states">Select
+                                                    All</label>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <hr class="dropdown-divider">
+                                        </li>
+                                        @foreach (FretusFolks::getStates() as $option)
+                                            <li>
+                                                <div class="form-check">
+                                                    <input class="form-check-input state-checkbox" type="checkbox"
+                                                        name="service_location[]" value="{{ $option['value'] }}"
+                                                        id="service_location_{{ $loop->index }}"
+                                                        onchange="updateSelectedCount('.state-checkbox', '#dropdownMenuButtonState', 'Select State')">
+                                                    <label class="form-check-label"
+                                                        for="service_location_{{ $loop->index }}">{{ $option['label'] }}</label>
+                                                </div>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            </div>
                             <x-forms.select label="Status:" name="status" id="status" :required="false"
                                 size="col-lg-4 mt-2" :options="FretusFolks::getStatus()" :value="request()->status" />
                         </div>
@@ -116,8 +149,8 @@
                                 <th>Invoice No</th>
                                 <th>Invoice Amount</th>
                                 <th>TDS Amount</th>
-                                <th>Month</th>
-                                <th>TDS Code</th>
+                                <th>Total Amount</th>
+                                <th>Payment Date</th>
                                 <th>Action</th>
                             @endif
                         </tr>
@@ -135,7 +168,7 @@
                                                 @break
 
                                                 @case('date')
-                                                    {{ !empty($result->date) ? date('d-m-Y', strtotime($result->date)) : 'N/A' }}
+                                                    {{ !empty($result->invoice?->date) ? date('d-m-Y', strtotime($result->invoice?->date)) : 'N/A' }}
                                                 @break
 
                                                 @case('invoice_no')
@@ -147,7 +180,7 @@
                                                 @break
 
                                                 @case('code')
-                                                    {{ $result->tds?->code }}
+                                                    {{ $result->tds?->code ?? 'N/A' }}
                                                 @break
 
                                                 @default
@@ -181,9 +214,8 @@
                                     <td>{{ $result->invoice?->invoice_no ?? 'N/A' }}</td>
                                     <td>{{ $result->total_amt_gst }}</td>
                                     <td>{{ $result->tds_amount }}</td>
-                                    <td>{{ $result->month }}</td>
-                                    <td>{{ $result->tds?->code }}</td>
-
+                                    <td>{{ $result->amount_received }}</td>
+                                    <td>{{ $result->payment_received_date }}</td>
 
                                     <td>
                                         <div class="dropdown pop_Up dropdown_bg">
@@ -229,8 +261,9 @@
                     const selectedCount = Array.from(checkboxes).filter(cb => cb.checked).length;
 
                     dropdownInput.value = selectedCount > 0 ? `${selectedCount} selected` : defaultText;
-                    const selectAllCheckbox = document.querySelector(checkboxClass.includes('data') ? '#select_all_data' :
-                        '#select_all_states');
+
+                    // Handle "Select All" checkbox state
+                    const selectAllCheckbox = document.querySelector('#select_all_client');
                     selectAllCheckbox.checked = selectedCount === checkboxes.length;
                 }
 
@@ -242,10 +275,12 @@
                     updateSelectedCount(checkboxClass, dropdownInputId, defaultText);
                 }
 
+
                 document.getElementById('export-form').addEventListener('submit', function(e) {
                     const selectedFields = Array.from(document.querySelectorAll('.data-checkbox:checked'))
                         .map(checkbox => checkbox.value);
                     document.getElementById('export-fields').value = selectedFields.join(',');
+
                     if (selectedFields.length === 0) {
                         e.preventDefault();
                         alert('Please select at least one field for export.');
@@ -257,8 +292,10 @@
                         .then(response => response.json())
                         .then(data => {
                             if (data.html_content) {
-                                document.querySelector('#client_details').innerHTML = data.html_content;
+                                const modalContent = document.querySelector('#client_details');
+                                modalContent.innerHTML = data.html_content;
                                 $('#client_details').modal('show');
+
                                 const closeButton = document.querySelector('#closeModalButton');
                                 if (closeButton) {
                                     closeButton.addEventListener('click', function() {

@@ -244,6 +244,8 @@ Route::prefix('admin')->group(function () {
         Route::get('/receivable/delete/{id}', [PaymentController::class, 'destroy'])->name('receivable.delete');
         Route::get('/get-client-invoices/{id}', [PaymentController::class, 'getClientInvoice'])->name('get.client.invoices');
         Route::get('/get-invoice/{id}/details', [PaymentController::class, 'getInvoiceDetails'])->name('get.invoice.details');
+        Route::get('/receivable/report', [PaymentController::class, 'reports'])->name('fcms.receivable.reports');
+
         //ffi_payslips
         Route::get('/ffi_payslips', [FFIPayslipsController::class, 'index'])->name('ffi_payslips');
         Route::post('ffi_payslips/bulk-upload', [FFIPayslipsController::class, 'bulkUpload'])->name('ffi_payslips.bulk.upload');

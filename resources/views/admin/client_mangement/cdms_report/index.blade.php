@@ -18,10 +18,10 @@
                         @csrf
                         <div class="row">
                             <x-forms.input label="From Date" type="date" name="from-date" id="from-date"
-                                :required="false" size="col-lg-4 mt-2" :value="old('from-date', request()->fromDate ?? date('Y-m-d'))" />
+                                :required="false" size="col-lg-4 mt-2" :value="request()->fromdate" />
 
                             <x-forms.input label="To Date" type="date" name="to-date" id="to-date"
-                                :required="false" size="col-lg-4 mt-2" :value="old('to-date', request()->toDate ?? date('Y-m-d'))" />
+                                :required="false" size="col-lg-4 mt-2" :value="request()->todate" />
                             <div class="col-lg-4 mt-2">
                                 <label for="data">Data</label>
                                 <div class="dropdown">
@@ -150,7 +150,7 @@
                                     <td>{{ $result->client_name }}</td>
                                     <td>{{ $result->client_email }}</td>
                                     <td>{{ $result->contact_person }}</td>
-                                    <td>{{ ucfirst($result->status == 1 ? 'Active' : 'In-Active') }}</td>
+                                    <td>{{ ucfirst($result->status == 1 ? 'In-Active' : 'Active') }}</td>
                                     <td>
                                         <a href="javascript:void(0);" class="btn btn-info"
                                             data-target="#client_details"
@@ -171,9 +171,7 @@
             </div>
         </div>
         <div class="mt-3">
-            @if (!$results->isEmpty())
-                {{ $results->links() }}
-            @endif
+            {{ $results->withQueryString()->links() }}
         </div>
 
     </div>

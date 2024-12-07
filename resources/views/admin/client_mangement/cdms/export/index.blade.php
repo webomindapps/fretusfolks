@@ -50,7 +50,7 @@
                 </td>
                 <td>{{ $client->agreement_doc }}</td>
                 <td>{{ $client->region }}</td>
-                <td>{{ $client->state->state_name }}</td>
+                <td>{{ $client->state?->state_name }}</td>
                 <td>{{ $client->contract_start }}</td>
                 <td>{{ $client->contract_end }}</td>
                 <td>{{ $client->rate }}</td>
@@ -60,7 +60,7 @@
                 <td>
                     @if ($client->gstn && $client->gstn->count())
                         @foreach ($client->gstn as $gst)
-                            {{ $gst->state->state_name ?? 'N/A' }} - {{ $gstn->gstn_no }}<br>
+                            {{ $gst->states?->state_name ?? 'N/A' }} - {{ $gstn->gstn_no }}<br>
                         @endforeach
                     @endif
                 </td>

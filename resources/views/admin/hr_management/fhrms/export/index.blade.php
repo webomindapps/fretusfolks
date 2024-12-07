@@ -56,7 +56,7 @@
                 <td>{{ \Carbon\Carbon::parse($employee->contract_date)->format('d-m-Y') }}</td>
                 <td>{{ $employee->designation }}</td>
                 <td>{{ $employee->department }}</td>
-                <td>{{ $employee->state }}</td>
+                <td>{{ $employee->stateRelation?->state_name }}</td>
                 <td>{{ $employee->location }}</td>
                 <td>{{ \Carbon\Carbon::parse($employee->dob)->format('d-m-Y') }}</td>
                 <td>{{ $employee->father_name }}</td>

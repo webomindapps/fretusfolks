@@ -17,9 +17,9 @@
                         @csrf
                         <div class="row">
                             <x-forms.input label="From Date" type="date" name="from-date" id="from-date"
-                                :required="false" size="col-lg-3 mt-2" :value="old('from-date', request()->fromDate ?? date('Y-m-d'))" />
+                                :required="false" size="col-lg-3 mt-2" :value="request()->fromdate" />
                             <x-forms.input label="To Date" type="date" name="to-date" id="to-date"
-                                :required="false" size="col-lg-3 mt-2" :value="old('to-date', request()->toDate ?? date('Y-m-d'))" />
+                                :required="false" size="col-lg-3 mt-2" :value="request()->todate" />
                             <div class="col-lg-3 mt-2">
                                 <label for="data">Data</label>
                                 <div class="dropdown">
@@ -204,8 +204,7 @@
             </div>
         </div>
         <div class="mt-3">
-            {{ $results->links() }}
-
+            {{ $results->withQueryString()->links() }}
         </div>
     </div>
     <x-model1 />

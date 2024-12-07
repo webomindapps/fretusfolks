@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\Invoice;
 use App\Models\Payment;
+use App\Models\States;
 use App\Models\TdsCode;
 use Exception;
 use Illuminate\Http\Request;
@@ -37,7 +38,8 @@ class PaymentController extends Controller
         }
         if ($search != '')
             $query->where(function ($q) use ($search, $searchColumns) {
-                foreach ($searchColumns as $key => $value) ($key == 0) ? $q->where($value, 'LIKE', '%' . $search . '%') : $q->orWhere($value, 'LIKE', '%' . $search . '%');
+                foreach ($searchColumns as $key => $value)
+                    ($key == 0) ? $q->where($value, 'LIKE', '%' . $search . '%') : $q->orWhere($value, 'LIKE', '%' . $search . '%');
             });
 
         ($order == '') ? $query->orderByDesc('id') : $query->orderBy($order, $orderBy);
@@ -124,11 +126,18 @@ class PaymentController extends Controller
         $columnsToSelect = array_merge($defaultColumns, $selectedData);
 
         $query = $this->model()
-            ->with([
-                'invoice' => function ($query) {
-                    $query->select('id', 'invoice_no', 'service_location');
-                }
-            ]);
+            ->with(
+                [
+                    'invoice' => function ($query) {
+                        $query->select('id', 'invoice_no', 'service_location');
+                    }
+                ],
+                [
+                    'tds' => function ($query) {
+                        $query->select('id', 'code');
+                    }
+                ],
+            );
         // dd($query);
 
         if ($client_id) {
@@ -192,5 +201,79 @@ class PaymentController extends Controller
         $payment = $this->model()->with('invoice')->findOrFail($id);
         $htmlContent = view('admin.fcms.receivables.view', compact('payment'))->render();
         return response()->json(['html_content' => $htmlContent]);
+    }
+    public function reports(Request $request)
+    {
+        $request->validate([
+            'from_date' => 'nullable|date',
+            'to_date' => 'nullable|date',
+            'data' => 'nullable|array',
+            'status' => 'nullable|integer',
+            'state' => 'nullable|integer',
+            'per_page' => 'nullable|integer|min:1',
+        ]);
+
+        $fromDate = $request->from_date;
+        $toDate = $request->to_date;
+        $selectedClient = $request->input('client_id', []);
+        $selectedStates = $request->input('states', []);
+        $status = $request->status;
+        $selectedData = $request->input('data', []);
+        $perPage = $request->input('per_page', 10);
+
+        $defaultColumns = ['id', 'client_name', 'invoice_no', 'tds_amount', 'amount_received', 'date_time'];
+
+        $columnsToSelect = array_merge($defaultColumns, $selectedData);
+
+        $query = $this->model()
+            ->with(
+                [
+                    'invoice' => function ($query) {
+                        $query->select('id', 'invoice_no', 'service_location', 'date');
+                    }
+                ],
+                [
+                    'client' => function ($query) {
+                        $query->select('id', 'client_name');
+                    }
+                ],
+                [
+                    'tds' => function ($query) {
+                        $query->select('id', 'code');
+                    }
+                ],
+            );
+        // dd($query);
+        if (!empty($selectedClient)) {
+            $query->whereIn('client_id', $selectedClient);
+        }
+
+        if ($fromDate && $toDate) {
+            $query->whereBetween('date_time', [$fromDate, $toDate]);
+        }
+        if (!empty($selectedStates)) {
+            $query->whereIn('states', $selectedStates);
+        }
+
+        if ($status !== null && $status !== '') {
+            $query->where('status', (int) $status);
+        }
+
+        $results = $query->paginate($perPage)->appends($request->query());
+        // dd($results);
+        $clients = ClientManagement::where('status', 0)->latest()->get();
+        $state = States::latest()->get();
+        $invoice = Invoice::where('status', 0)->latest()->get();
+
+        return view('admin.fcms.receivables.reports', compact(
+            'results',
+            'fromDate',
+            'toDate',
+            'selectedData',
+            'status',
+            'clients',
+            'selectedStates',
+            'invoice'
+        ));
     }
 }

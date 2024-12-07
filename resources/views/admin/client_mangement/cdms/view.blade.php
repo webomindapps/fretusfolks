@@ -31,8 +31,8 @@
                     <p><b>Communication Address :</b> <span>{{ $client->communication_address }}</span></p>
                 </div>
                 <div class="col-md-4 col-sm-6">
-                    <p><b>Phone No :</b> <span>{{ $client->contact_person_phone }}</span></p>
                     <p><b>Landline No :</b> <span>{{ $client->land_line }}</span></p>
+                    <p><b>Phone No :</b> <span>{{ $client->contact_person_phone }}</span></p>
                     <p><b>Contact Phone (Comm) :</b> <span>{{ $client->contact_phone_comm }}</span></p>
                     <p><b>Website URL :</b> <span>{{ $client->website_url }}</span></p>
                 </div>
@@ -45,7 +45,7 @@
             <div class="row">
                 <div class="col-md-4 col-sm-6">
                     <p><b>Zone :</b> <span>{{ $client->region }}</span></p>
-                    <p><b>Servicing State :</b> <span>{{ $client->state->state_name }}</span></p>
+                    <p><b>Servicing State :</b> <span>{{ $client->state?->state_name }}</span></p>
                     <p><b>Rate :</b> <span>{{ $client->rate }}</span></p>
                 </div>
                 <div class="col-md-4 col-sm-6">
@@ -92,7 +92,7 @@
                                 @foreach ($clientgstn as $gst)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $gst->state }}</td>
+                                        <td>{{ $gst->states->state_name }}</td>
                                         <td>{{ $gst->gstn_no }}</td>
                                     </tr>
                                 @endforeach
