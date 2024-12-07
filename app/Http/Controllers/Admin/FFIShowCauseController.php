@@ -128,9 +128,11 @@ class FFIShowCauseController extends Controller
             'showLetter' => $showLetter,
         ];
 
-        $pdf = PDF::loadView('admin.hr_management.ffi.show_cause.print_show', $data)
-            ->setPaper('A4', 'portrait')
-            ->setOptions(['margin-top' => 10, 'margin-bottom' => 10, 'margin-left' => 15, 'margin-right' => 15]);
+        $pdf = PDF::setOptions([
+            'isHtml5ParserEnabled' => true,
+            'isRemoteEnabled' => true,
+            'chroot' => public_path()
+        ])->loadView('admin.hr_management.ffi.show_cause.print_show', $data);
 
 
         return $pdf->stream('show_letter_' . $showLetter->id . '.pdf');

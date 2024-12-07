@@ -82,7 +82,6 @@ class FFITerminationController extends Controller
             DB::rollBack();
             dd($e);
         }
-
     }
     public function getEmployeeDetails(Request $request)
     {
@@ -132,9 +131,11 @@ class FFITerminationController extends Controller
             'termLetter' => $termLetter,
         ];
 
-        $pdf = PDF::loadView('admin.hr_management.ffi.termination.print_termination', $data)
-            ->setPaper('A4', 'portrait')
-            ->setOptions(['margin-top' => 10, 'margin-bottom' => 10, 'margin-left' => 15, 'margin-right' => 15]);
+        $pdf = PDF::setOptions([
+            'isHtml5ParserEnabled' => true,
+            'isRemoteEnabled' => true,
+            'chroot' => public_path()
+        ])->loadView('admin.hr_management.ffi.termination.print_termination', $data);
 
 
         return $pdf->stream('termination_letter_' . $termLetter->id . '.pdf');
@@ -148,7 +149,7 @@ class FFITerminationController extends Controller
     public function update(Request $request, $id)
     {
         $validatedData = $request->validate([
-            'ffi_emp_id' => 'required', 
+            'ffi_emp_id' => 'required',
             'status' => 'nullable|string',
             'emp_id' => 'nullable',
             'date' => 'required|date',
@@ -174,5 +175,4 @@ class FFITerminationController extends Controller
             dd($e);
         }
     }
-
 }

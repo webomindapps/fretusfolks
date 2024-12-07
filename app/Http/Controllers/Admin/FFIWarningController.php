@@ -128,9 +128,11 @@ class FFIWarningController extends Controller
             'warningLetter' => $warningLetter,
         ];
 
-        $pdf = PDF::loadView('admin.hr_management.ffi.warning.print_warning', $data)
-            ->setPaper('A4', 'portrait')
-            ->setOptions(['margin-top' => 10, 'margin-bottom' => 10, 'margin-left' => 15, 'margin-right' => 15]);
+        $pdf = PDF::setOptions([
+            'isHtml5ParserEnabled' => true,
+            'isRemoteEnabled' => true,
+            'chroot' => public_path()
+        ])->loadView('admin.hr_management.ffi.warning.print_warning', $data);
 
 
         return $pdf->stream('warning_letter_' . $warningLetter->id . '.pdf');
@@ -167,5 +169,4 @@ class FFIWarningController extends Controller
             dd($e);
         }
     }
-
 }

@@ -137,9 +137,10 @@ class FFIOfferLetterController extends Controller
             'offerLetter' => $offerLetter,
         ];
 
-        $pdf = PDF::loadView('admin.hr_management.ffi.offer_letter.formate1', $data)
-            ->setPaper('A4', 'portrait')
-            ->setOptions(['margin-top' => 10, 'margin-bottom' => 10, 'margin-left' => 15, 'margin-right' => 15]);
+        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 
+        'isRemoteEnabled' => true,'chroot' => public_path()])->loadView('admin.hr_management.ffi.offer_letter.formate1', $data);
+            // ->setPaper('A4', 'portrait')
+            // ->setOptions(['margin-top' => 10, 'margin-bottom' => 10, 'margin-left' => 15, 'margin-right' => 15]);
 
 
         return $pdf->stream('offer_letter_' . $offerLetter->id . '.pdf');
