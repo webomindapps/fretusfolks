@@ -13,8 +13,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('cms_labour', function (Blueprint $table) {
-            DB::statement('ALTER TABLE cms_labour ADD PRIMARY KEY (`id`);');
-            $table->bigInteger('id')->unsigned()->autoIncrement()->change();
+            // DB::statement('ALTER TABLE cms_labour ADD PRIMARY KEY (`id`);');
+            // $table->bigInteger('id')->unsigned()->autoIncrement()->change();
             $table->timestamps();
         });
     }

@@ -12,8 +12,8 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('ffi_warning_letter', function (Blueprint $table) {
-            DB::statement('ALTER TABLE ffi_warning_letter ADD PRIMARY KEY (`id`);');
-            $table->bigInteger('id')->unsigned()->autoIncrement()->change();
+            // DB::statement('ALTER TABLE ffi_warning_letter ADD PRIMARY KEY (`id`);');
+            // $table->bigInteger('id')->unsigned()->autoIncrement()->change();
             $table->string('emp_id')->nullable()->change();
             $table->date('date')->nullable()->change();
             $table->text('content')->nullable()->change();

@@ -12,8 +12,8 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('ffi_education_certificate', function (Blueprint $table) {
-            DB::statement('ALTER TABLE ffi_education_certificate ADD PRIMARY KEY (`id`);');
-            $table->bigInteger('id')->unsigned()->autoIncrement()->change();
+            // DB::statement('ALTER TABLE ffi_education_certificate ADD PRIMARY KEY (`id`);');
+            // $table->bigInteger('id')->unsigned()->autoIncrement()->change();
             $table->string('emp_id', 100)->nullable()->change();
             $table->string('path', 100)->nullable()->change();
             $table->timestamps();

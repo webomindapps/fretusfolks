@@ -12,8 +12,8 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('assets_management', function (Blueprint $table) {
-            DB::statement('ALTER TABLE assets_management ADD PRIMARY KEY (`id`);');
-            $table->bigInteger('id')->unsigned()->autoIncrement()->change();
+            // DB::statement('ALTER TABLE assets_management ADD PRIMARY KEY (`id`);');
+            // $table->bigInteger('id')->unsigned()->autoIncrement()->change();
             $table->tinyInteger('status')->default('0')->change();
             $table->timestamps();
         });

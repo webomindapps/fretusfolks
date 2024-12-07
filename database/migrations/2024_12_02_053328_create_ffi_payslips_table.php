@@ -12,8 +12,8 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('ffi_payslips', function (Blueprint $table) {
-            DB::statement('ALTER TABLE ffi_payslips ADD PRIMARY KEY (`id`);');
-            $table->bigInteger('id')->unsigned()->autoIncrement()->change();
+            // DB::statement('ALTER TABLE ffi_payslips ADD PRIMARY KEY (`id`);');
+            // $table->bigInteger('id')->unsigned()->autoIncrement()->change();
             $table->string('emp_id', 128)->nullable()->change();
             $table->string('employee_name', 256)->nullable()->change();
             $table->string('designation', 128)->nullable()->change();
