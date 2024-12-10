@@ -40,7 +40,7 @@
                                 <x-forms.input label="Location: " type="text" name="location" id="location"
                                     :required="true" size="col-lg-6 mt-2" readonly />
                                 <x-forms.textarea label="Content: " type="text" name="content" id="content"
-                                    :required="true" size="col-lg-12 mt-2" :value="old('content', $content->content ?? '')" />
+                                    :editor="true" :required="true" size="col-lg-12 mt-2" :value="old('content', $content->content ?? '')" />
                                 <label size="col-lg-12 mt-4"><strong>Salary Details</strong></label>
                                 <div
                                     style="border:

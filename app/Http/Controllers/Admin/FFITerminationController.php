@@ -53,8 +53,7 @@ class FFITerminationController extends Controller
     }
     public function create()
     {
-        $content = LetterContent::where('type', 2)->first();
-        return view("admin.hr_management.ffi.termination.create", compact('content'));
+        return view("admin.hr_management.ffi.termination.create");
     }
     public function store(Request $request)
     {
@@ -66,7 +65,7 @@ class FFITerminationController extends Controller
             'termination_date' => 'required|date',
             'show_cause_date' => 'required|date',
             'absent_date' => 'required|date',
-            'content' => 'required|string',
+            'content' => 'nullable|string',
         ]);
         DB::beginTransaction();
         try {
@@ -156,7 +155,7 @@ class FFITerminationController extends Controller
             'termination_date' => 'required|date',
             'show_cause_date' => 'required|date',
             'absent_date' => 'required|date',
-            'content' => 'required|string',
+            'content' => 'nullable|string',
         ]);
 
         DB::beginTransaction();

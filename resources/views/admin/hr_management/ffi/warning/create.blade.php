@@ -38,7 +38,7 @@
                                 <x-forms.input label="Date: " type="date" name="date" id="date"
                                     :required="false" size="col-lg-6 mt-2" :value="old('date')" />
                                 <x-forms.textarea label="Content: " type="text" name="content" id="content"
-                                    :required="true" size="col-lg-12 mt-2" :value="old('content', $content->content ?? '')" />
+                                    :required="true" size="col-lg-12 mt-2" :value="old('content')" />
 
                             </div>
                             <div class="row">

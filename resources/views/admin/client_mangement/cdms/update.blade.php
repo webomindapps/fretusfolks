@@ -170,7 +170,7 @@
                                         size="col-lg-4 mt-2" :options="$states
                                             ->map(
                                                 fn($state) => [
-                                                    'value' => $state->state_name,
+                                                    'value' => $state->id,
                                                     'label' => $state->state_name,
                                                 ],
                                             )
@@ -201,8 +201,8 @@
                                                 id="state_{{ $item->id }}"
                                                 onchange="updateState(this, {{ $item->id }})">
                                                 @foreach ($states as $state)
-                                                    <option value="{{ $state->state_name }}"
-                                                        {{ old('state.' . $item->id, $item->state) == $state->state_name ? 'selected' : '' }}>
+                                                    <option value="{{ $state->id }}"
+                                                        {{ old('state.' . $item->id, $item->state) == $state->id ? 'selected' : '' }}>
                                                         {{ $state->state_name }}
                                                     </option>
                                                 @endforeach

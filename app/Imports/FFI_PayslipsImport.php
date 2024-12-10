@@ -114,7 +114,7 @@ class FFI_PayslipsImport implements SkipsEmptyRows, ToModel, WithHeadingRow, Ski
     }
     public function batchSize(): int
     {
-        return 50;
+        return 500;
     }
 
     public function chunkSize(): int

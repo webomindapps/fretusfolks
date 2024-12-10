@@ -53,8 +53,7 @@ class FFIShowCauseController extends Controller
     }
     public function create()
     {
-        $content = LetterContent::where('type', 3)->first();
-        return view("admin.hr_management.ffi.show_cause.create", compact('content'));
+        return view("admin.hr_management.ffi.show_cause.create");
     }
     public function store(Request $request)
     {

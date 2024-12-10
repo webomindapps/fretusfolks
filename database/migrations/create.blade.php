@@ -1,5 +1,5 @@
 <x-applayout>
-    <x-admin.breadcrumb title=" New FFI Show Cause Letter" />
+    <x-admin.breadcrumb title=" New FFI Termination Letter" />
 
     @if ($errors->any())
         <div class="col-lg-12 pb-4 px-2">
@@ -14,12 +14,12 @@
     @endif
     <div class="col-lg-12 pb-4">
         <div class="form-card px-3">
-            <form action="{{ route('admin.ffi_show_cause.create') }}" method="POST" enctype="multipart/form-data"
+            <form action="{{ route('admin.ffi_termination.create') }}" method="POST" enctype="multipart/form-data"
                 id="employeeForm">
                 @csrf
                 <div class="card mt-3">
                     <div class="card-header header-elements-inline d-flex justify-content-between align-items-center">
-                        <h5 class="card-title mb-0">Show Cause Letter Details</h5>
+                        <h5 class="card-title mb-0">Termination Letter Details</h5>
                     </div>
                     <div class="card-body">
                         <div class="form-contents">
@@ -29,7 +29,7 @@
                                     <input type="text" id="ffi_emp_id" name="ffi_emp_id"
                                         onchange="return fetchEmployeeDetails()" required>
                                     <input type="hidden" id="fetchEmployeeRoute"
-                                        data-url="{{ route('admin.get.employeeShow.details', ['ffi_emp_id' => ':ffi_emp_id']) }}">
+                                        data-url="{{ route('admin.get.employeeTermination.details', ['ffi_emp_id' => ':ffi_emp_id']) }}">
                                 </div>
                                 <x-forms.input label="Enter Employee Name: " type="text" name="emp_name"
                                     id="emp_name" :required="true" size="col-lg-6 mt-2" readonly />
@@ -37,8 +37,14 @@
                                     :required="true" size="col-lg-6 mt-2" readonly />
                                 <x-forms.input label="Date: " type="date" name="date" id="date"
                                     :required="false" size="col-lg-6 mt-2" :value="old('date')" />
+                                <x-forms.input label="Absent From date: " type="date" name="absent_date"
+                                    id="absent_date" :required="false" size="col-lg-6 mt-2" :value="old('absent_date')" />
+                                <x-forms.input label="Show cause Notice date: " type="date" name="show_cause_date"
+                                    id="show_cause_date" :required="false" size="col-lg-6 mt-2" :value="old('show_cause_date')" />
+                                <x-forms.input label="Termination Date: " type="date" name="termination_date"
+                                    id="termination_date" :required="false" size="col-lg-6 mt-2" :value="old('termination_date')" />
                                 <x-forms.textarea label="Content: " type="text" name="content" id="content"
-                                    :required="true" size="col-lg-12 mt-2" :value="old('content')" />
+                                    :required="true" size="col-lg-12 mt-2" :value="old('content', $content->content ?? '')" />
 
                             </div>
                             <div class="row">

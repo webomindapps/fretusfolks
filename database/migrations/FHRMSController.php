@@ -71,8 +71,8 @@ class FHRMSController extends Controller
             'gender' => 'required|in:1,2,3',
             'blood_group' => 'required|string',
             'qualification' => 'required|string|max:255',
-            'phone1' => 'required|digits:10|min:10|min:10|max:15',
-            'phone2' => 'nullable|digits:10min:10|min:10|max:15',
+            'phone1' => 'required|digits:10|min:10|max:15',
+            'phone2' => 'nullable|digits:10|min:10|max:15',
             'email' => 'nullable|email|max:255',
             'permanent_address' => 'required|string',
             'present_address' => 'required|string',
@@ -469,15 +469,11 @@ class FHRMSController extends Controller
     {
         $fields = explode(',', $request->input('fields'));
         if (empty($fields)) {
-            dd($fields);
             return redirect()->route('admin.fhrms_report')->with('error', 'No fields selected for export');
         }
 
-        $filters = $request->only(['from_date', 'to_date', 'data', 'state', 'location', 'status', 'pending_doc']);
-
-        return Excel::download(new FHRMSReportExport($fields, $filters), 'fhrms_report.xlsx');
+        return Excel::download(new FHRMSReportExport($fields), 'fhrms_report.xlsx');
     }
-
     public function storePendingDetails(Request $request)
     {
         $validatedData = $request->validate([

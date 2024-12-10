@@ -33,7 +33,7 @@ class CDMSController extends Controller
         $query = $this->model()->query();
 
         if ($from_date && $to_date) {
-            $query->whereBetween('created_at', [$from_date, $to_date]);
+            $query->whereBetween('modify_date', [$from_date, $to_date]);
         }
         if ($search != '')
             $query->where(function ($q) use ($search, $searchColumns) {
@@ -143,7 +143,7 @@ class CDMSController extends Controller
     {
         $client = $this->model()->findOrFail($id);
         $request->validate([
-            'state' => 'exists:states,state_name',
+            'state' => 'exists:states,id',
             'gstn_no' => '',
         ]);
         ClientGstn::create([
@@ -258,7 +258,7 @@ class CDMSController extends Controller
         $to_date = $request->to_date;
         $query = $this->model()->with('gstn', 'state');
         if ($from_date && $to_date) {
-            $query->whereBetween('created_at', [$from_date, $to_date]);
+            $query->whereBetween('modify_date', [$from_date, $to_date]);
         }
         $clients = $query->get();
         return Excel::download(new CDMSExport($clients), 'cdms.xlsx');
@@ -274,8 +274,8 @@ class CDMSController extends Controller
     }
     public function showCodeReport(Request $request)
     {
-        $fromDate = $request->input('from-date');
-        $toDate = $request->input('to-date');
+        $fromDate = $request->input('from_date');
+        $toDate = $request->input('to_date');
         $selectedData = $request->input('data', []);
         $selectedStates = $request->input('service_state', []);
         $region = $request->input('region');
