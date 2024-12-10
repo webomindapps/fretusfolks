@@ -22,7 +22,8 @@
                         <label for="user_type">User Type</label>
                         <select name="user_type" id="user_type" class="form-control col-lg-4 mt-4">
                             @foreach ($roles as $role)
-                                <option value="{{ $role->name }}" {{ old('user_type') == $role->name ? 'selected' : '' }}>
+                                <option value="{{ $role->name }}"
+                                    {{ old('user_type') == $role->name ? 'selected' : '' }}>
                                     {{ $role->name }}
                                 </option>
                             @endforeach
@@ -40,18 +41,16 @@
                     <x-forms.input label="Username" type="text" name="username" id="username" :required="true"
                         size="col-lg-6 mt-4" :value="old('username')" />
 
-                    <x-forms.input label="Password" type="password" name="password" id="password" :required="true"
-                        size="col-lg-6 mt-4" />
-
-                    <x-forms.input label="Confirm Password" type="password" name="enc_pass" id="enc_pass"
-                        :required="true" size="col-lg-6 mt-4" :value="old('enc_pass')" />
-
                     <x-forms.select label="Status" name="status" id="status" :required="true" size="col-lg-6 mt-4"
                         :options="FretusFolks::getStatus()" :value="old('status')" />
                     <x-forms.input label="Email" type="email" name="email" id="email" :required="true"
                         size="col-lg-6 mt-4" :value="old('email')" />
 
+                    <x-forms.input label="Password" type="password" name="password" id="password" :required="true"
+                        size="col-lg-6 mt-4" />
 
+                    <x-forms.input label="Confirm Password" type="password" name="enc_pass" id="enc_pass"
+                        :required="true" size="col-lg-6 mt-4" :value="old('enc_pass')" />
                 </div>
 
                 <button type="submit" class="submit-btn submitBtn" id="submitButton">Submit</button>

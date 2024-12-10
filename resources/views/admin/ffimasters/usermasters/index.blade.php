@@ -20,22 +20,22 @@
                 'options' => [
                     [
                         'label' => 'Active',
-                        'value' => '1',
+                        'value' => '0',
                     ],
                     [
                         'label' => 'Inactive',
-                        'value' => '0',
+                        'value' => '1',
                     ],
                 ],
             ],
         ];
     @endphp
-    <x-table :columns="$columns" :data="$users" checkAll="{{ true }}" :bulk="route('admin.usermasters.bulk')" :route="route('admin.usermasters')">
+    <x-table :columns="$columns" :data="$users" checkAll="{{ false }}" :bulk="route('admin.usermasters.bulk')" :route="route('admin.usermasters')">
         @foreach ($users as $key => $item)
             <tr>
-                <td>
+                {{-- <td>
                     <input type="checkbox" name="selected_items[]" class="single-item-check" value="{{ $item->id }}">
-                </td>
+                </td> --}}
                 <td>{{ $key + 1 }}</td>
                 <td>{{ $item->name }}</td>
                 <td>{{ $item->email }}</td>
@@ -43,11 +43,15 @@
                 <td>{{ \Carbon\Carbon::parse($item->date)->format('d-m-Y') }}</td>
                 <td>{{ $item->getRoleNames()->first() ?? 'N/A' }}</td>
                 <td>
-                    @if ($item->status)
-                        <span class="badge bg-success">Active</span>
-                    @else
-                        <span class="badge bg-danger">In-Active</span>
-                    @endif
+                    <a href="{{ route('admin.user.status', $item->id) }}">
+                        @if ($item->status)
+                            <i class="fa fa-toggle-off text-danger" aria-hidden="true"
+                                style="font-size: 24px;"></i>
+                        @else
+                            <i class="fa fa-toggle-on text-success" aria-hidden="true"
+                                style="font-size: 24px;"></i>
+                        @endif
+                    </a>
                 </td>
                 <td>
                     <div class="dropdown pop_Up dropdown_bg">
@@ -65,7 +69,8 @@
                                 </a>
                             </li>
                             <li>
-                                <a class="dropdown-item" href="{{ route('admin.usermasters.delete', $item->id) }}">
+                                <a class="dropdown-item" onclick="return confirm('Are you sure you want to delete?')"
+                                    href="{{ route('admin.usermasters.delete', $item->id) }}">
                                     <i class='bx bx-trash-alt'></i>
                                     Delete
                                 </a>

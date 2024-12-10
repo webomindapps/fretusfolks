@@ -61,7 +61,7 @@
 
         td,
         th {
-            padding: 3px;
+            padding: 0 3px;
             border-right: 2px solid #333;
             font-family: 'Open Sans', sans-serif;
             text-align: left;
@@ -141,12 +141,10 @@
         <div class="row">
             <div class="col-md-12" style="border:2px solid #333;">
                 <div class="col-md-12" style="margin-left:40px;">
-                    <img src="/public/admin/images/logo.png" width="200" style="padding: 3px;margin-left: -3%;" />
-                    <span>
-                        <h4 style="float:right;text-decoration:none;font-size:12px">Payslip
-                            {{ substr(date('F', mktime(0, 0, 0, $payslip->month, 3)), 0, 3) . ' - ' . $payslip->year }}
-                        </h4>
-                    </span>/
+                    <img src="{{ public_path('admin/images/main_logo.png') }}" width="200" />
+                    <h4 style="text-decoration:none;font-size:12px">Payslip
+                        {{ substr(date('F', mktime(0, 0, 0, $payslip->month, 3)), 0, 3) . ' - ' . $payslip->year }}
+                    </h4>
                 </div>
                 <div class="col-md-6">
                 </div>
@@ -163,8 +161,6 @@
             </div>
 
             <table>
-                <thead>
-                </thead>
                 <tbody>
                     <tr>
                         <td style="width: 50%;">Employee Name: {{ $payslip->employee_name }}</td>
@@ -236,101 +232,102 @@
                         <td>{{ $payslip->fixed_hra ?? 0 }}</td>
                         <td>{{ $payslip->earned_hra ?? 0 }}</td>
                         <td>ESIC</td>
-                        <td>{{ $payslip->esic ?? 0 }}</td>
+                        <td>{{ empty($payslip->esic) ? 0 : $payslip->esic }}</td>
                     </tr>
                     <tr>
                         <td>Conveyance Allowance</td>
-                        <td>{{ $payslip->fixed_con_allow ?? 0 }}</td>
-                        <td>{{ $payslip->earned_con_allow ?? 0 }}</td>
+                        <td>{{ empty($payslip->fixed_con_allow) ? 0 : $payslip->fixed_con_allow }}</td>
+                        <td>{{ empty($payslip->earned_con_allow) ? 0 : $payslip->earned_con_allow }}</td>
                         <td>PT</td>
-                        <td>{{ $payslip->pt ?? 0 }}</td>
+                        <td>{{ empty($payslip->pt) ? 0 : $payslip->pt }}</td>
                     </tr>
                     <tr>
                         <td>Education Allowance</td>
-                        <td>{{ $payslip->fixed_edu_allowance ?? 0 }}</td>
-                        <td>{{ $payslip->earned_education_allowance ?? 0 }}</td>
+                        <td>{{ empty($payslip->fixed_edu_allowance) ? 0 : $payslip->fixed_edu_allowance }}</td>
+                        <td>{{ empty($payslip->earned_education_allowance) ? 0 : $payslip->earned_education_allowance }}
+                        </td>
                         <td>IT</td>
-                        <td>{{ $payslip->it ?? 0 }}</td>
+                        <td>{{ empty($payslip->it) ? 0 : $payslip->it }}</td>
 
                     </tr>
                     <tr>
                         <td>Medical Reimbursement</td>
-                        <td>{{ $payslip->fixed_med_reim ?? 0 }}</td>
-                        <td>{{ $payslip->earned_med_reim ?? 0 }}</td>
+                        <td>{{ empty($payslip->fixed_med_reim) ? 0 : $payslip->fixed_med_reim }}</td>
+                        <td>{{ empty($payslip->earned_med_reim) ? 0 : $payslip->earned_med_reim }}</td>
                         <td>LWF</td>
-                        <td>{{ $payslip->lwf ?? 0 }}</td>
+                        <td>{{ empty($payslip->lwf) ? 0 : $payslip->lwf }}</td>
                     </tr>
                     <tr>
                         <td>Special Allowance</td>
-                        <td>{{ $payslip->fixed_spec_allow ?? 0 }}</td>
-                        <td>{{ $payslip->earned_spec_allow ?? 0 }}</td>
+                        <td>{{ empty($payslip->fixed_spec_allow) ? 0 : $payslip->fixed_spec_allow }}</td>
+                        <td>{{ empty($payslip->earned_spec_allow) ? 0 : $payslip->earned_spec_allow }}</td>
                         <td>Salary Advance</td>
-                        <td>{{ $payslip->salary_advance ?? 0 }}</td>
+                        <td>{{ empty($payslip->salary_advance) ? 0 : $payslip->salary_advance }}</td>
                     </tr>
                     <tr>
                         <td>Other Allowance</td>
-                        <td>{{ $payslip->fixed_oth_allow ?? 0 }}</td>
-                        <td>{{ $payslip->earned_oth_allow ?? 0 }}</td>
+                        <td>{{ empty($payslip->fixed_oth_allow) ? 0 : $payslip->fixed_oth_allow }}</td>
+                        <td>{{ empty($payslip->earned_oth_allow) ? 0 : $payslip->earned_oth_allow }}</td>
                         <td>Other Deduction</td>
-                        <td>{{ $payslip->other_deduction ?? 0 }}</td>
+                        <td>{{ empty($payslip->other_deduction) ? 0 : $payslip->other_deduction }}</td>
                     </tr>
                     <tr>
                         <td>St. Bonus</td>
-                        <td>{{ $payslip->fixed_st_bonus ?? 0 }}</td>
-                        <td>{{ $payslip->earned_st_bonus ?? 0 }}</td>
+                        <td>{{ empty($payslip->fixed_st_bonus) ? 0 : $payslip->fixed_st_bonus }}</td>
+                        <td>{{ empty($payslip->earned_st_bonus) ? 0 : $payslip->earned_st_bonus }}</td>
                         <td></td>
                         <td></td>
                     </tr>
                     <tr>
                         <td>Leave Wages</td>
-                        <td>{{ $payslip->fixed_leave_wages ?? 0 }}</td>
-                        <td>{{ $payslip->earned_leave_wages ?? 0 }}</td>
+                        <td>{{ empty($payslip->fixed_leave_wages) ? 0 : $payslip->fixed_leave_wages }}</td>
+                        <td>{{ empty($payslip->earned_leave_wages) ? 0 : $payslip->earned_leave_wages }}</td>
                         <td></td>
                         <td></td>
                     </tr>
                     <tr>
                         <td>Holiday Wages</td>
-                        <td>{{ $payslip->fixed_holidays_wages ?? 0 }}</td>
-                        <td>{{ $payslip->earned_holiday_wages ?? 0 }}</td>
+                        <td>{{ empty($payslip->fixed_holidays_wages) ? 0 : $payslip->fixed_holidays_wages }}</td>
+                        <td>{{ empty($payslip->earned_holiday_wages) ? 0 : $payslip->earned_holiday_wages }}</td>
                         <td></td>
                         <td></td>
                     </tr>
                     <tr>
                         <td>Attendance Bonus</td>
-                        <td>{{ $payslip->fixed_attendance_bonus ?? 0 }}</td>
-                        <td>{{ $payslip->earned_attendance_bonus ?? 0 }}</td>
+                        <td>{{ empty($payslip->fixed_attendance_bonus) ? 0 : $payslip->fixed_attendance_bonus }}</td>
+                        <td>{{ empty($payslip->earned_attendance_bonus) ? 0 : $payslip->earned_attendance_bonus }}</td>
                         <td></td>
                         <td></td>
                     </tr>
                     <tr>
                         <td>OT Wage</td>
-                        <td>{{ $payslip->fixed_ot_wages ?? 0 }}</td>
-                        <td>{{ $payslip->earned_ot_wages ?? 0 }}</td>
+                        <td>{{ empty($payslip->fixed_ot_wages) ? 0 : $payslip->fixed_ot_wages }}</td>
+                        <td>{{ empty($payslip->earned_ot_wages) ? 0 : $payslip->earned_ot_wages }}</td>
                         <td></td>
                         <td></td>
                     </tr>
                     <tr>
                         <td>Incentive</td>
-                        <td>{{ $payslip->fixed_incentive ?? 0 }}</td>
-                        <td>{{ $payslip->earned_incentive ?? 0 }}</td>
+                        <td>{{ empty($payslip->fixed_incentive) ? 0 : $payslip->fixed_incentive }}</td>
+                        <td>{{ empty($payslip->earned_incentive) ? 0 : $payslip->earned_incentive }}</td>
                         <td></td>
                         <td></td>
                     </tr>
                     <tr>
                         <td>Arrear Wages</td>
-                        <td>{{ $payslip->fixed_arrear_wages ?? 0 }}</td>
-                        <td>{{ $payslip->earned_arrear_wages ?? 0 }}</td>
+                        <td>{{ empty($payslip->fixed_arrear_wages) ? 0 : $payslip->fixed_arrear_wages }}</td>
+                        <td>{{ empty($payslip->earned_arrear_wages) ? 0 : $payslip->earned_arrear_wages }}</td>
                         <td></td>
                         <td></td>
                     </tr>
                     <tr>
                         <td>Other Wages</td>
-                        <td>{{ $payslip->fixed_other_wages ?? 0 }}</td>
-                        <td>{{ $payslip->earned_other_wages ?? 0 }}</td>
+                        <td>{{ empty($payslip->fixed_other_wages) ? 0 : $payslip->fixed_other_wages }}</td>
+                        <td>{{ empty($payslip->earned_other_wages) ? 0 : $payslip->earned_other_wages }}</td>
                         <td></td>
                         <td></td>
                     </tr>
-                    <tr style="border-top: 2px solid;">
+                    <tr>
                         <th style="width: 20%;">Total Gross</th>
                         <th style="width: 134px;">{{ $payslip->fixed_gross ?? 0 }}</th>
                         <th style="width: 151px;">{{ $payslip->earned_gross ?? 0 }}</th>

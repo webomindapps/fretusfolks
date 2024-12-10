@@ -29,6 +29,7 @@ use App\Http\Controllers\Admin\CMSLabourNoticeController;
 use App\Http\Controllers\Admin\FFIIncrementLetterController;
 
 Route::get('/', function () {
+    return to_route('admin.dashboard');
     return view('welcome');
 });
 
@@ -48,6 +49,7 @@ Route::prefix('admin')->group(function () {
         Route::get('usermasters/{id}/edit', [UserController::class, 'edit'])->name('usermasters.edit');
         Route::post('usermasters/{id}/edit', [UserController::class, 'update']);
         Route::get('usermasters/{id}/delete', [UserController::class, 'delete'])->name('usermasters.delete');
+        Route::get('user/status/{id}', [UserController::class, 'toggleStatus'])->name('user.status');
 
 
         //tds_code

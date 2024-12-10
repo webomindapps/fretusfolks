@@ -8,7 +8,12 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use App\Models\FFIPayslipsModel;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Response;
 use Maatwebsite\Excel\Facades\Excel;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
+use ZipArchive;
 
 class FFIPayslipsController extends Controller
 {
@@ -73,7 +78,6 @@ class FFIPayslipsController extends Controller
             $error .= 'Row no:-' . $failure->row() . ', Column:-' . $failure->attribute() . ', Error:-' . $failure->errors()[0] . '<br>';
         }
         return redirect()->route('admin.ffi_payslips')->with(['success' => 'Payslip added successfully', 'error_msg' => $error]);
-
     }
     public function export(Request $request)
     {
@@ -81,11 +85,11 @@ class FFIPayslipsController extends Controller
             'month' => 'required|integer',
             'year' => 'required|integer',
         ]);
-
-        $month = $request->input('month');
-        $year = $request->input('year');
-
-        return Excel::download(new FFI_PayslipsExport($month, $year), "Payslips_{$month}_{$year}.xlsx");
+        $payslips = FFIPayslipsModel::where('month', $request->month)
+            ->where('year', $request->year)
+            ->get();
+        return $this->zipDownload($payslips);
+        // return Excel::download(new FFI_PayslipsExport($month, $year), "Payslips_{$month}_{$year}.xlsx");
     }
 
     public function searchPayslip(Request $request)
@@ -111,8 +115,6 @@ class FFIPayslipsController extends Controller
             'success' => true,
             'data' => $payslips
         ]);
-
-
     }
     public function destroy($id)
     {
@@ -127,11 +129,34 @@ class FFIPayslipsController extends Controller
             'payslip' => $payslip,
         ];
 
-        $pdf = PDF::loadView('admin.hr_management.ffi.Payslips.print_Payslips', $data)
-            ->setPaper('A4', 'portrait')
-            ->setOptions(['margin-top' => 10, 'margin-bottom' => 10, 'margin-left' => 15, 'margin-right' => 15]);
-
-
+        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true, 'chroot' => public_path()])->loadView('admin.hr_management.ffi.payslips.print_payslips', $data);
         return $pdf->stream('payslip' . $payslip->id . '.pdf');
+    }
+    public function zipDownload($payslips)
+    {
+        $zipFileName = "ffi_payslips_" . date('Y') . '.zip';
+        $zipPath = public_path($zipFileName);
+
+        // Create ZIP archive
+        $zip = new ZipArchive();
+        if ($zip->open($zipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE) === true) {
+            foreach ($payslips as $payslip) {
+                $data = [
+                    'payslip' => $payslip,
+                ];
+
+                // Generate PDF content
+                $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true, 'chroot' => public_path()])
+                    ->loadView('admin.hr_management.ffi.payslips.print_payslips', $data);
+                $fileName = $payslip->emp_id . '_' . $payslip->employee_name . '.pdf';
+
+                // Add PDF to the ZIP archive as a stream
+                $zip->addFromString($fileName, $pdf->output());
+            }
+            $zip->close();
+        } else {
+            return response()->json(['error' => 'Could not create ZIP file.'], 500);
+        }
+        return response()->download($zipPath)->deleteFileAfterSend(true);
     }
 }

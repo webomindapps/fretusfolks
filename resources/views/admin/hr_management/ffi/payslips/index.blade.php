@@ -1,7 +1,7 @@
 <x-applayout>
     <x-admin.breadcrumb title=" FFI Payslips" />
 
-    <div class="card">
+    <div class="card p-2">
         <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item">
                 <a class="nav-link active" id="upload-tab" data-toggle="tab" href="#upload" role="tab"
@@ -254,7 +254,7 @@
                                 </div>
                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                                     <li>
-                                     <a href="/admin/generate-payslips/${item.id}" target="_blank" class="dropdown-item">
+                                     <a href="{{url('/')}}/admin/generate-payslips/${item.id}" target="_blank" class="dropdown-item">
                         <i class="bx bx-link-alt"></i> View Details
                     </a>
                     <a href="/admin/ffi-payslips/delete/${item.id}" class="dropdown-item" onclick="return confirm('Are you sure to delete this?')">

@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-applayout>
     <div class="main">
         <div class="container-fluid">
             <div class="row pt-3 pb-2 border-bottom">
@@ -39,7 +39,7 @@
                                         Orders
                                     </div>
                                     <div class="data">
-                                      10
+                                        10
                                     </div>
                                     <div class="icon">
                                         <i class="fal fa-box-full"></i>
@@ -47,7 +47,7 @@
                                 </div>
                             </a>
                         </div>
-                        
+
                     </div>
                 </div>
             </div>
@@ -60,4 +60,4 @@
             })
         </script>
     @endpush
-</x-app-layout>
+</x-applayout>
