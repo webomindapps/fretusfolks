@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\MuserMaster;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -28,11 +29,19 @@ class DatabaseSeeder extends Seeder
                 'updated_at' => now(),
             ]);
         }
-        User::create([
-            'name' => ' Super Admin',
-            'email' => 'admin@example.com',
-            'password' => Hash::make('password')
+        $user = MuserMaster::create([
+            'name' => 'Super Admin',
+            'username' => 'Super Admin',
+            'emp_id' => 'Super Admin',
+            'email' => 'superadmin@gmail.com',
+            'password' => Hash::make('password'),
+            'enc_pass' => Hash::make('password'),
+            'user_type' => 1,
+            'status' => 0,
+            'date' => date('Y-m-d'),
+            'ref_no' => "1",
         ]);
+        $user->assignRole('Admin');
         $this->call([PermissionSeeder::class]);
     }
 }

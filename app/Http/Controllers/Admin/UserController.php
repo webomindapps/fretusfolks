@@ -141,4 +141,11 @@ class UserController extends Controller
         $user->delete();
         return redirect()->route('admin.usermasters')->with('success', 'User Masters deleted successfully');
     }
+    public function toggleStatus($id)
+    {
+        $user = $this->model()->findOrFail($id);
+        $user->status = !$user->status;
+        $user->save();
+        return redirect()->back()->with('success', 'Status updated successfully.');
+    }
 }

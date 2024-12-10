@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-applayout>
     <x-admin.breadcrumb title="Update Letter Content" />
 
     @if ($errors->any())
@@ -26,4 +26,4 @@
             </form>
         </div>
     </div>
-</x-app-layout>
+</x-applayout>

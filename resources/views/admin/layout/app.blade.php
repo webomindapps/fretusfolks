@@ -14,6 +14,7 @@
     <link defer rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" />
     <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="{{ asset('admin/css/style.css') }}">
+    <link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/43.3.1/ckeditor5.css">
     @stack('styles')
 </head>
 
@@ -99,6 +100,43 @@
                 });
             });
         });
+    </script>
+    <script type="importmap">
+        {
+            "imports": {
+                "ckeditor5": "https://cdn.ckeditor.com/ckeditor5/43.3.1/ckeditor5.js",
+                "ckeditor5/": "https://cdn.ckeditor.com/ckeditor5/43.3.1/"
+            }
+        }
+    </script>
+    <script type="module">
+        import {
+            ClassicEditor,
+            Essentials,
+            Paragraph,
+            Bold,
+            Italic,
+            Font,
+            List,
+            Table,
+            TableToolbar,
+        } from 'ckeditor5';
+
+        ClassicEditor
+            .create(document.querySelector('#description'), {
+                plugins: [Essentials, Paragraph, Bold, Italic, Font, List, Table, TableToolbar],
+                toolbar: [
+                    'undo', 'redo', '|', 'bold', 'italic', '|',
+                    'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor', 'bulletedList', 'numberedList',
+                    'tableColumn', 'tableRow', 'mergeTableCells'
+                ]
+            })
+            .then(editor => {
+                window.editor = editor;
+            })
+            .catch(error => {
+                console.error(error);
+            });
     </script>
     @stack('scripts')
 

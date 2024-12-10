@@ -24,10 +24,10 @@ class SideBar extends Component
             'isSubMenu' => true,
             'subMenus' => [
                 [
-                    'title' => 'User Masters',
+                    'title' => 'TDS code',
                     'icon' => 'bx bx-chevron-right',
-                    'route' => 'admin.usermasters',
-                    'name' => 'usermasters',
+                    'route' => 'admin.tds_code',
+                    'name' => 'tds_code',
                 ],
                 [
                     'title' => 'Letter Content',
@@ -36,10 +36,10 @@ class SideBar extends Component
                     'name' => 'letter_content',
                 ],
                 [
-                    'title' => 'TDS code',
+                    'title' => 'User Masters',
                     'icon' => 'bx bx-chevron-right',
-                    'route' => 'admin.tds_code',
-                    'name' => 'tds_code',
+                    'route' => 'admin.usermasters',
+                    'name' => 'usermasters',
                 ],
 
             ],
