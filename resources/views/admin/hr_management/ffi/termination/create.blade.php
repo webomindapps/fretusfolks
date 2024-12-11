@@ -43,8 +43,7 @@
                                     id="show_cause_date" :required="false" size="col-lg-6 mt-2" :value="old('show_cause_date')" />
                                 <x-forms.input label="Termination Date: " type="date" name="termination_date"
                                     id="termination_date" :required="false" size="col-lg-6 mt-2" :value="old('termination_date')" />
-                                <x-forms.textarea label="Content: " type="text" name="content" id="content"
-                                    :required="true" size="col-lg-12 mt-2" :value="old('content', $content->content ?? '')" />
+                               
 
                             </div>
                             <div class="row">

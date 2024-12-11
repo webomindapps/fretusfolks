@@ -56,6 +56,30 @@ class FFIPayslipsController extends Controller
 
         return view("admin.hr_management.ffi.payslips.index", compact("payslip"));
     }
+    // public function bulkUpload(Request $request)
+    // {
+    //     $request->validate([
+    //         'month' => 'required',
+    //         'year' => 'required',
+    //         'file' => 'required|file|mimes:xlsx,csv,txt',
+    //     ]);
+    //     $file = $request->file('file');
+    //     $month = $request->input('month');
+    //     $year = $request->input('year');
+    //     $import = new FFI_PayslipsImport($month, $year);
+    //     Excel::import($import, $file);
+    //     $error = '';
+    //     // dd($import);
+    //     foreach ($import->failures() as $failure) {
+    //         $failure->row();
+    //         $failure->attribute();
+    //         $failure->errors();
+    //         $failure->values();
+    //         $error .= 'Row no:-' . $failure->row() . ', Column:-' . $failure->attribute() . ', Error:-' . $failure->errors()[0] . '<br>';
+    //     }
+    //     return redirect()->route('admin.ffi_payslips')->with(['success' => 'Payslip added successfully', 'error_msg' => $error]);
+
+    // }
     public function bulkUpload(Request $request)
     {
         $request->validate([
@@ -63,22 +87,30 @@ class FFIPayslipsController extends Controller
             'year' => 'required',
             'file' => 'required|file|mimes:xlsx,csv,txt',
         ]);
+
         $file = $request->file('file');
         $month = $request->input('month');
         $year = $request->input('year');
+
         $import = new FFI_PayslipsImport($month, $year);
-        Excel::import($import, $file);
-        $error = '';
-        // dd($import);
-        foreach ($import->failures() as $failure) {
-            $failure->row();
-            $failure->attribute();
-            $failure->errors();
-            $failure->values();
-            $error .= 'Row no:-' . $failure->row() . ', Column:-' . $failure->attribute() . ', Error:-' . $failure->errors()[0] . '<br>';
+
+        try {
+            Excel::import($import, $file);
+        } catch (\Exception $e) {
+            return redirect()->route('admin.ffi_payslips')->with('error', 'There was an error during the import process: ' . $e->getMessage());
         }
-        return redirect()->route('admin.ffi_payslips')->with(['success' => 'Payslip added successfully', 'error_msg' => $error]);
+
+        $error = '';
+        foreach ($import->failures() as $failure) {
+            $error .= 'Row no: ' . $failure->row() . ', Column: ' . $failure->attribute() . ', Error: ' . implode(', ', $failure->errors()) . '<br>';
+        }
+
+        return redirect()->route('admin.ffi_payslips')->with([
+            'success' => 'Payslips added successfully',
+            'error_msg' => $error
+        ]);
     }
+
     public function export(Request $request)
     {
         $request->validate([
@@ -129,7 +161,11 @@ class FFIPayslipsController extends Controller
             'payslip' => $payslip,
         ];
 
-        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true, 'chroot' => public_path()])->loadView('admin.hr_management.ffi.payslips.print_payslips', $data);
+        $pdf = PDF::loadView('admin.hr_management.ffi.payslips.print_payslips', $data)
+            ->setPaper('A4', 'portrait')
+            ->setOptions(['margin-top' => 10, 'margin-bottom' => 10, 'margin-left' => 15, 'margin-right' => 15]);
+
+
         return $pdf->stream('payslip' . $payslip->id . '.pdf');
     }
     public function zipDownload($payslips)

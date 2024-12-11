@@ -256,7 +256,27 @@
             document.getElementById('export-form').addEventListener('submit', function(e) {
                 const selectedFields = Array.from(document.querySelectorAll('.data-checkbox:checked'))
                     .map(checkbox => checkbox.value);
+
                 document.getElementById('export-fields').value = selectedFields.join(',');
+
+                const filters = {
+                    from_date: document.getElementById('from-date').value,
+                    to_date: document.getElementById('to-date').value,
+                    state: Array.from(document.querySelectorAll('.state-checkbox:checked')).map(cb => cb.value),
+                    location: document.getElementById('location').value,
+                    status: document.getElementById('status').value,
+                    pending_doc: Array.from(document.querySelectorAll('.document-checkbox:checked')).map(cb => cb
+                        .value),
+                };
+
+                Object.keys(filters).forEach(key => {
+                    const hiddenInput = document.createElement('input');
+                    hiddenInput.type = 'hidden';
+                    hiddenInput.name = key;
+                    hiddenInput.value = Array.isArray(filters[key]) ? filters[key].join(',') : filters[key];
+                    this.appendChild(hiddenInput);
+                });
+
                 if (selectedFields.length === 0) {
                     e.preventDefault();
                     alert('Please select at least one field for export.');

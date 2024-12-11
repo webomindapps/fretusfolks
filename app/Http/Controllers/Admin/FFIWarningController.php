@@ -53,8 +53,7 @@ class FFIWarningController extends Controller
     }
     public function create()
     {
-        $content = LetterContent::where('type', 4)->first();
-        return view("admin.hr_management.ffi.warning.create", compact('content'));
+        return view("admin.hr_management.ffi.warning.create");
     }
     public function store(Request $request)
     {

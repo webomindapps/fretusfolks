@@ -189,6 +189,8 @@
                             <div class="row">
                                 <div class="col-lg-12 mt-4">
                                     <x-forms.button type="submit" label="Save" class="btn btn-primary" />
+                                    <button type="button" onclick="return pending_update()"
+                                        class="btn btn-primary">Pending Save</button>
                                 </div>
                             </div>
                         </div>
