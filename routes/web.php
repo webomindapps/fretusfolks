@@ -95,31 +95,31 @@ Route::prefix('admin')->group(function () {
         Route::get('/cms_esic', [CMSESICController::class, 'index'])->name('cms.esic');
         Route::get('/cms_esic/create', [CMSESICController::class, 'create'])->name('cms.esic.create');
         Route::post('/cms_esic/create', [CMSESICController::class, 'store']);
-        Route::get('/cms_esic/id/delete', [CMSESICController::class, 'destroy'])->name('cms.esic.delete');
+        Route::get('/cms_esic/{id}/delete', [CMSESICController::class, 'destroy'])->name('cms.esic.delete');
 
         // CMS PF
         Route::get('/cms_pf', [CMSPFController::class, 'index'])->name('cms.pf');
         Route::get('/cms_pf/create', [CMSPFController::class, 'create'])->name('cms.pf.create');
         Route::post('/cms_pf/create', [CMSPFController::class, 'store']);
-        Route::get('/cms_pf/id/delete', [CMSPFController::class, 'destroy'])->name('cms.pf.delete');
+        Route::get('/cms_pf/{id}/delete', [CMSPFController::class, 'destroy'])->name('cms.pf.delete');
 
         // CMS PT
         Route::get('/cms_pt', [CMSPTController::class, 'index'])->name('cms.pt');
         Route::get('/cms_pt/create', [CMSPTController::class, 'create'])->name('cms.pt.create');
         Route::post('/cms_pt/create', [CMSPTController::class, 'store']);
-        Route::get('/cms_pt/id/delete', [CMSPTController::class, 'destroy'])->name('cms.pt.delete');
+        Route::get('/cms_pt/{id}/delete', [CMSPTController::class, 'destroy'])->name('cms.pt.delete');
 
         // CMS LWF
         Route::get('/cms_lwf', [CMSLWFController::class, 'index'])->name('cms.lwf');
         Route::get('/cms_lwf/create', [CMSLWFController::class, 'create'])->name('cms.lwf.create');
         Route::post('/cms_lwf/create', [CMSLWFController::class, 'store']);
-        Route::get('/cms_lwf/id/delete', [CMSLWFController::class, 'destroy'])->name('cms.lwf.delete');
+        Route::get('/cms_lwf/{id}/delete', [CMSLWFController::class, 'destroy'])->name('cms.lwf.delete');
 
         // Form T Register
         Route::get('/cms_formt', [CMSFormTController::class, 'index'])->name('cms.formt');
         Route::get('/cms_formt/create', [CMSFormTController::class, 'create'])->name('cms.formt.create');
         Route::post('/cms_formt/create', [CMSFormTController::class, 'store']);
-        Route::get('/cms_formt/id/delete', [CMSFormTController::class, 'destroy'])->name('cms.formt.delete');
+        Route::get('/cms_formt/{id}/delete', [CMSFormTController::class, 'destroy'])->name('cms.formt.delete');
 
         // Form Labour Notice
         Route::get('/cms/labour/notice', [CMSLabourNoticeController::class, 'index'])->name('cms.labour');
@@ -127,7 +127,7 @@ Route::prefix('admin')->group(function () {
         Route::post('/cms/labour/notice/create', [CMSLabourNoticeController::class, 'store']);
         Route::get('/cms/labour/notice/{id}/edit', [CMSLabourNoticeController::class, 'edit'])->name('cms.labour.edit');
         Route::post('/cms/labour/notice/{id}/edit', [CMSLabourNoticeController::class, 'update']);
-        Route::get('/cms/labour/id/delete', [CMSLabourNoticeController::class, 'destroy'])->name('cms.labour.delete');
+        Route::get('/cms/labour/{id}/delete', [CMSLabourNoticeController::class, 'destroy'])->name('cms.labour.delete');
 
         //cfis
         Route::get('/cfis', [CFISController::class, 'index'])->name('cfis');

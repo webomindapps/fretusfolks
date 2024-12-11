@@ -46,7 +46,7 @@
                         <tbody>
                             <tr>
                                 <td>
-                                    <select name="months[]" id="month">
+                                    <select name="months[]" id="month" required>
                                         <option value="">Select Month</option>
                                         @foreach (range(1, 12) as $month)
                                             <option value="{{ $month }}">
@@ -56,7 +56,7 @@
                                     </select>
                                 </td>
                                 <td>
-                                    <select name="years[]" id="year">
+                                    <select name="years[]" id="year" required>
                                         <option value="">Select Year</option>
                                         @php
                                             $currentYear = now()->year;
@@ -67,7 +67,7 @@
                                     </select>
                                 </td>
                                 <td>
-                                    <input type="file" name="files[]" multiple>
+                                    <input type="file" name="files[]" multiple required>
                                 </td>
                                 <td>
                                     <button type="button" class="btn btn-sm btn-info" onclick="addRow()">+</button>
@@ -93,6 +93,7 @@
                 const monthSelect = document.createElement("select");
                 monthSelect.name = "months[]";
                 monthSelect.id = "month";
+                monthSelect.required = true;
 
                 // Add default option
                 const defaultOptionMonth = document.createElement("option");
@@ -120,6 +121,7 @@
                 const yearSelect = document.createElement("select");
                 yearSelect.name = "years[]";
                 yearSelect.id = "year";
+                yearSelect.required = true;
 
                 // Add default option
                 const defaultOptionYear = document.createElement("option");
@@ -147,6 +149,7 @@
                 fileInput.type = "file";
                 fileInput.name = "files[]";
                 fileInput.multiple = true;
+                fileInput.required = true;
                 fileCell.appendChild(fileInput);
                 newRow.appendChild(fileCell);
 

@@ -1,7 +1,7 @@
 <x-applayout>
     <x-admin.breadcrumb title=" FFI Payslips" />
 
-    <div class="card p-2">
+    <div class="p-2">
         <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item">
                 <a class="nav-link active" id="upload-tab" data-toggle="tab" href="#upload" role="tab"
