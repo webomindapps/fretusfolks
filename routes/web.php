@@ -92,7 +92,7 @@ Route::prefix('admin')->group(function () {
         Route::post('/role/{id}/permissions', [RolePermissionController::class, 'assignPermission']);
 
         // CMS ESIC
-        Route::get('/cms_esic', [CMSESICController::class, 'index'])->name('cms.esic');
+        Route::get('/cms_esic', [CMSESICController::class, 'index'])->name(name: 'cms.esic');
         Route::get('/cms_esic/create', [CMSESICController::class, 'create'])->name('cms.esic.create');
         Route::post('/cms_esic/create', [CMSESICController::class, 'store']);
         Route::get('/cms_esic/id/delete', [CMSESICController::class, 'destroy'])->name('cms.esic.delete');
@@ -253,7 +253,7 @@ Route::prefix('admin')->group(function () {
         Route::get('/ffi_payslips', [FFIPayslipsController::class, 'index'])->name('ffi_payslips');
         Route::post('ffi_payslips/bulk-upload', [FFIPayslipsController::class, 'bulkUpload'])->name('ffi_payslips.bulk.upload');
         Route::post('ffi_payslips/export', [FFIPayslipsController::class, 'export'])->name('ffi_payslips.export');
-        Route::post('ffi_payslips/search-payslip', [FFIPayslipsController::class, 'searchPayslip'])->name('search.ffi_payslips');
+        Route::get('ffi_payslips/search-payslip', [FFIPayslipsController::class, 'searchPayslip'])->name('search.ffi_payslips');
         Route::get('/generate-payslips/{id}', [FFIPayslipsController::class, 'generatePayslipsPdf'])->name('generate.payslips');
         Route::get('/ffi_payslips/delete/{id}', [FFIPayslipsController::class, 'destroy'])->name('ffi_payslips.delete');
 

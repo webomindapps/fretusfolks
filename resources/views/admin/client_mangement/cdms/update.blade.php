@@ -67,10 +67,12 @@
                                     :value="old('communication_address', $client->communication_address)" />
 
                                 <x-forms.input label="Enter Client PAN Number:" type="text" name="pan"
-                                    id="pan" :required="true" size="col-lg-6 mt-2" :value="old('pan', $client->pan)" />
+                                    id="pan" :required="true" size="col-lg-6 mt-2" :value="old('pan', $client->pan)"
+                                    style="text-transform:uppercase" />
 
                                 <x-forms.input label="Enter Client TAN Number:" type="text" name="tan"
-                                    id="tan" :required="true" size="col-lg-6 mt-2" :value="old('tan', $client->tan)" />
+                                    id="tan" :required="true" size="col-lg-6 mt-2" :value="old('tan', $client->tan)"
+                                    style="text-transform:uppercase" />
 
                                 <x-forms.input label="Enter Client website URL: " type="url" name="website_url"
                                     id="website_url" :required="true" size="col-lg-4 mt-2" :value="old('website_url', $client->website_url)" />

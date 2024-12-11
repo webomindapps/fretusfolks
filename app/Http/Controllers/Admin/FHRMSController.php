@@ -71,8 +71,8 @@ class FHRMSController extends Controller
             'gender' => 'required|in:1,2,3',
             'blood_group' => 'required|string',
             'qualification' => 'required|string|max:255',
-            'phone1' => 'required|digits:10|min:10|min:10|max:15',
-            'phone2' => 'nullable|digits:10min:10|min:10|max:15',
+            'phone1' => 'required|digits:10|min:10|max:15',
+            'phone2' => 'nullable|digits:10|min:10|max:15',
             'email' => 'nullable|email|max:255',
             'permanent_address' => 'required|string',
             'present_address' => 'required|string',
@@ -360,7 +360,7 @@ class FHRMSController extends Controller
         $to_date = $request->to_date;
         $query = $this->model()->with('stateRelation');
         if ($from_date && $to_date) {
-            $query->whereBetween('created_at', [$from_date, $to_date]);
+            $query->whereBetween('modified_date', [$from_date, $to_date]);
         }
 
         $employees = $query->get();
@@ -412,8 +412,8 @@ class FHRMSController extends Controller
 
     public function showCodeReport(Request $request)
     {
-        $fromDate = $request->input('from-date');
-        $toDate = $request->input('to-date');
+        $fromDate = $request->input('from_date');
+        $toDate = $request->input('to_date');
         $selectedData = $request->input('data', []);
         $selectedStates = $request->input('state', []);
         $location = $request->input('location');
@@ -467,15 +467,34 @@ class FHRMSController extends Controller
 
     public function exportReport(Request $request)
     {
+        // dd($request->all());
         $fields = explode(',', $request->input('fields'));
+        $fromDate = $request->from_date;
+        $toDate = $request->to_date;
+        $states = $request->state;
+        $location = $request->location;
+        $status = $request->status;
         if (empty($fields)) {
-            dd($fields);
             return redirect()->route('admin.fhrms_report')->with('error', 'No fields selected for export');
         }
+        $query = $this->model()->newQuery();
 
-        $filters = $request->only(['from_date', 'to_date', 'data', 'state', 'location', 'status', 'pending_doc']);
+        if ($fromDate && $toDate) {
+            $query->whereBetween('modified_date', ["{$fromDate} 00:00:00", "{$toDate} 23:59:59"]);
+        }
+        if ($states) {
+            $query->whereIn('state', explode(',', $states));
+        }
 
-        return Excel::download(new FHRMSReportExport($fields, $filters), 'fhrms_report.xlsx');
+        if ($location) {
+            $query->where('location', $location);
+        }
+        if ($status) {
+            $query->where('status', $status);
+        }
+        $data = $query->select($fields)->get();
+        // dd($data);
+        return Excel::download(new FHRMSReportExport($data, $fields), 'fhrms_report.xlsx');
     }
 
     public function storePendingDetails(Request $request)
@@ -501,15 +520,15 @@ class FHRMSController extends Controller
             'permanent_address' => 'nullable|string',
             'present_address' => 'nullable|string',
             'pan_no' => 'nullable|string|max:20',
-            'pan_path' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'pan_path' => 'nullable|max:2048',
             'aadhar_no' => 'nullable|string|max:20',
-            'aadhar_path' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'aadhar_path' => 'nullable|max:2048',
             'driving_license_no' => 'nullable|string|max:20',
-            'driving_license_path' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'driving_license_path' => 'nullable|max:2048',
             'photo' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
-            'resume' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'resume' => 'nullable|max:2048',
             'bank_name' => 'nullable|string|max:255',
-            'bank_document' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'bank_document' => 'nullable|max:2048',
             'bank_account_no' => 'nullable|string|max:20',
             'repeat_acc_no' => 'nullable|string|same:bank_account_no',
             'bank_ifsc_code' => 'nullable|string|max:20',
@@ -534,16 +553,16 @@ class FHRMSController extends Controller
             'employer_esic' => 'nullable|numeric',
             'mediclaim' => 'nullable|numeric',
             'ctc' => 'nullable|numeric',
-            'voter_id' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
-            'emp_form' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
-            'pf_esic_form' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
-            'payslip' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
-            'exp_letter' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'voter_id' => 'nullable|max:2048',
+            'emp_form' => 'nullable|max:2048',
+            'pf_esic_form' => 'nullable|max:2048',
+            'payslip' => 'nullable|max:2048',
+            'exp_letter' => 'nullable|max:2048',
             'education_certificates' => 'nullable|array',
-            'education_certificates.*' => 'file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'education_certificates.*' => 'nullable|max:2048',
             'others' => 'nullable|array',
-            'others.*' => 'file|mimes:jpg,jpeg,png,pdf|max:2048',
-            'password' => 'nullable|string|min:8',
+            'others.*' => 'nullable|max:2048',
+            'password' => 'nullable|string',
             'psd' => 'nullable',
         ]);
 

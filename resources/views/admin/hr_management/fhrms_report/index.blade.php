@@ -4,6 +4,12 @@
             <form id="export-form" action="{{ route('admin.fhrms_report.export') }}" method="POST">
                 @csrf
                 <input type="hidden" name="fields" id="export-fields">
+                <input type="hidden" name="from_date" id="export-from-date">
+                <input type="hidden" name="to_date" id="export-to-date">
+                <input type="hidden" name="state" id="export-states">
+                {{-- <input type="hidden" name="pending_doc" id="export-document"> --}}
+                <input type="hidden" name="location" id="export-location">
+                <input type="hidden" name="status" id="export-status">
                 <button type="submit" class="btn btn-success">Export to Excel</button>
             </form>
         </div>
@@ -16,10 +22,10 @@
                         enctype="multipart/form-data">
                         @csrf
                         <div class="row">
-                            <x-forms.input label="From Date" type="date" name="from-date" id="from-date"
-                                :required="false" size="col-lg-3 mt-2" :value="request()->fromdate" />
-                            <x-forms.input label="To Date" type="date" name="to-date" id="to-date"
-                                :required="false" size="col-lg-3 mt-2" :value="request()->todate" />
+                            <x-forms.input label="From Date" type="date" name="from_date" id="from-date"
+                                :required="false" size="col-lg-3 mt-2" :value="request()->from_date" />
+                            <x-forms.input label="To Date" type="date" name="to_date" id="to-date"
+                                :required="false" size="col-lg-3 mt-2" :value="request()->to_date" />
                             <div class="col-lg-3 mt-2">
                                 <label for="data">Data</label>
                                 <div class="dropdown">
@@ -256,26 +262,21 @@
             document.getElementById('export-form').addEventListener('submit', function(e) {
                 const selectedFields = Array.from(document.querySelectorAll('.data-checkbox:checked'))
                     .map(checkbox => checkbox.value);
-
                 document.getElementById('export-fields').value = selectedFields.join(',');
 
-                const filters = {
-                    from_date: document.getElementById('from-date').value,
-                    to_date: document.getElementById('to-date').value,
-                    state: Array.from(document.querySelectorAll('.state-checkbox:checked')).map(cb => cb.value),
-                    location: document.getElementById('location').value,
-                    status: document.getElementById('status').value,
-                    pending_doc: Array.from(document.querySelectorAll('.document-checkbox:checked')).map(cb => cb
-                        .value),
-                };
+                document.getElementById('export-from-date').value = document.querySelector('#from-date').value;
+                document.getElementById('export-to-date').value = document.querySelector('#to-date').value;
 
-                Object.keys(filters).forEach(key => {
-                    const hiddenInput = document.createElement('input');
-                    hiddenInput.type = 'hidden';
-                    hiddenInput.name = key;
-                    hiddenInput.value = Array.isArray(filters[key]) ? filters[key].join(',') : filters[key];
-                    this.appendChild(hiddenInput);
-                });
+                const selectedStates = Array.from(document.querySelectorAll('.state-checkbox:checked'))
+                    .map(checkbox => checkbox.value);
+                document.getElementById('export-states').value = selectedStates.join(',');
+
+                // const selectedStates = Array.from(document.querySelectorAll('.document-checkbox:checked'))
+                //     .map(checkbox => checkbox.value);
+                // document.getElementById('export-document').value = selectedStates.join(',');
+
+                document.getElementById('export-location').value = document.querySelector('#location').value;
+                document.getElementById('export-status').value = document.querySelector('#status').value;
 
                 if (selectedFields.length === 0) {
                     e.preventDefault();
