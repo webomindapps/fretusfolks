@@ -4,7 +4,7 @@
         <div class="form-card">
             <div class="row mb-2">
                 <div class="col-lg-5 my-auto text-end ms-auto">
-                    <a href="{{ asset('admin/FHRMS_Formate.xlsx') }}" class="btn btn-info text-white ms-3">
+                    <a href="{{ asset('admin/FHRMS_Formate.xlsx') }}" class="btn btn-info text-white me-3">
                         Download Sample
                     </a>
                 </div>

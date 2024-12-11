@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        $roles = ['Admin', 'Finance', 'Hroperations', 'Compliance', 'Recruitment', 'Sales'];
+        $roles = ['Admin', 'Finance', 'HR Operations', 'Compliance', 'Recruitment', 'Sales'];
 
         foreach ($roles as $role) {
             Role::insertOrIgnore([

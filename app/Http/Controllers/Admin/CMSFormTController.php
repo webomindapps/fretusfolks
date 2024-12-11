@@ -67,15 +67,16 @@ class CMSFormTController extends Controller
                     $fileName = time() . '-' . $file->getClientOriginalName();
                     $filePath = $file->storeAs($folder, $fileName, 'public');
                 }
-
-                $this->model()->create([
-                    'client_id' => $request->client_id,
-                    'state_id' => $request->state_id,
-                    'year' => $year,
-                    'status' => 0,
-                    'month' => $request->months[$key],
-                    'path' => $filePath
-                ]);
+                if ($year != "" && $year) {
+                    $this->model()->create([
+                        'client_id' => $request->client_id,
+                        'state_id' => $request->state_id,
+                        'year' => $year,
+                        'status' => 0,
+                        'month' => $request->months[$key],
+                        'path' => $filePath
+                    ]);
+                }
             }
             DB::commit();
             return to_route('admin.cms.formt')->with('success', 'added successfully');

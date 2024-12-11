@@ -138,9 +138,11 @@ class FFIIncrementLetterController extends Controller
             'incrementLetter' => $incrementLetter,
         ];
 
-        $pdf = PDF::loadView('admin.hr_management.ffi.increment_letter.formate_1', $data)
-            ->setPaper('A4', 'portrait')
-            ->setOptions(['margin-top' => 10, 'margin-bottom' => 10, 'margin-left' => 15, 'margin-right' => 15]);
+        $pdf = PDF::setOptions([
+            'isHtml5ParserEnabled' => true,
+            'isRemoteEnabled' => true,
+            'chroot' => public_path()
+        ])->loadView('admin.hr_management.ffi.increment_letter.formate_1', $data);
 
 
         return $pdf->stream('increment_letter_' . $incrementLetter->id . '.pdf');
