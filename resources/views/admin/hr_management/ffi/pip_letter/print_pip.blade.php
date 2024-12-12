@@ -84,26 +84,30 @@
                                     </tbody>
                                 </table>
                                 <div class="content" style="line-height:2; font-size:14px">
-                                    {{ $pipLetter->content }}
+
+                                    {!! $pipLetter->content !!}
+
                                 </div>
                                 <br>
                                 <div class="content" style="line-height:2; font-size:14px">
                                     <p><b>Observations, Previous Discussions or Counseling:</b></p>
-                                    {{ $pipLetter->observation }}
+                                    {!! $pipLetter->observation !!}
                                 </div>
                                 <div class="content" style="line-height:2; font-size:14px">
-                                    <p><b>Improvement Goals:</b></p><br>
-                                    {{ $pipLetter->from_name }}
+                                    <p><b>Improvement Goals:These are the goals related to areas of concern to be
+                                            improved and addressed:</b></p><br>
+                                    {!! $pipLetter->goals !!}
                                 </div>
                                 <br>
                                 <div class="content" style="line-height:2; font-size:14px">
-                                    <p><b>Follow-up Updates:</b></p><br>
-                                    {{ $pipLetter->from_name }}
+                                    <p><b>Follow-up Updates:You will receive feedback on your progress according to the
+                                            following schedule:</b></p><br>
+                                    {!! $pipLetter->updates !!}
                                 </div>
                                 <br>
                                 <div class="content" style="line-height:2; font-size:14px">
                                     <p><b>Timeline for Improvement, Consequences & Expectations:</b></p><br>
-                                    {{ $pipLetter->from_name }}
+                                    {!! $pipLetter->timeline !!}
                                 </div>
                                 <br>
                                 <div class="content" style="line-height:2; font-size:14px">
@@ -124,7 +128,8 @@
                                             <td colspan="3" style="font-size:12px; text-align:left; padding:7px">
                                                 <p>
                                                     <b>For: Fretus Folks India Pvt Ltd.</b> <br>
-                                                    <img src="/public/admin/images/seal.png" width="100"><br>
+                                                    <img class="abc"
+                                                        src="{{ public_path('admin/images/seal.png') }}">
                                                     <b>Authorized Signatory</b>
                                                 </p>
                                             </td>
