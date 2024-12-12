@@ -7,7 +7,7 @@
                 <input type="hidden" name="from_date" id="export-from-date">
                 <input type="hidden" name="to_date" id="export-to-date">
                 <input type="hidden" name="state" id="export-states">
-                {{-- <input type="hidden" name="pending_doc" id="export-document"> --}}
+                <input type="hidden" name="pending_doc" id="export-document">
                 <input type="hidden" name="location" id="export-location">
                 <input type="hidden" name="status" id="export-status">
                 <button type="submit" class="btn btn-success">Export to Excel</button>
@@ -271,9 +271,9 @@
                     .map(checkbox => checkbox.value);
                 document.getElementById('export-states').value = selectedStates.join(',');
 
-                // const selectedStates = Array.from(document.querySelectorAll('.document-checkbox:checked'))
-                //     .map(checkbox => checkbox.value);
-                // document.getElementById('export-document').value = selectedStates.join(',');
+                const selectedDocument = Array.from(document.querySelectorAll('.document-checkbox:checked'))
+                    .map(checkbox => checkbox.value);
+                document.getElementById('export-document').value = selectedDocument.join(',');
 
                 document.getElementById('export-location').value = document.querySelector('#location').value;
                 document.getElementById('export-status').value = document.querySelector('#status').value;

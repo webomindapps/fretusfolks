@@ -104,32 +104,36 @@ class FFIPayslipsController extends Controller
 
     public function searchPayslip(Request $request)
     {
-        $emp_id = request()->emp_id;
-        $month = request()->month;
-        $year = request()->year;
-        $paginate = request()->paginate;
+        $searchColumns = ['id', 'emp_id', 'month', 'year', 'employee_name', 'designation', 'department'];
+        $search = request()->search;
+        $emp_id = $request->input('emp_id');
+        $month = $request->input('month');
+        $year = $request->input('year');
 
-        if (!$emp_id && !$month && !$year) {
-            $pay = new LengthAwarePaginator([], 0, 10);
-        } else {
-            $query = $this->model()->query();
-
-            if ($emp_id) {
-                $query->where('emp_id', $emp_id);
-            }
-            if ($month) {
-                $query->where('month', $month);
-            }
-            if ($year) {
-                $query->where('year', $year);
-            }
-
-            // Assuming you want pagination here
-            $pay = $query->paginate($paginate ?? 10); // Use the paginate value from request or default to 10
+        $query = FFIPayslipsModel::query();
+        if ($search != '') {
+            $query->where(function ($q) use ($search, $searchColumns) {
+                foreach ($searchColumns as $key => $value) {
+                    $key == 0 ? $q->where($value, 'LIKE', '%' . $search . '%') : $q->orWhere($value, 'LIKE', '%' . $search . '%');
+                }
+            });
+        }
+        if (!empty($emp_id)) {
+            $query->where('emp_id', $emp_id);
+        }
+        if (!empty($month)) {
+            $query->where('month', $month);
+        }
+        if (!empty($year)) {
+            $query->where('year', $year);
         }
 
-        return view("admin.hr_management.ffi.payslips.index", compact("pay"));
+        $payslips = $query->orderBy('id', 'ASC')->paginate(20)->withQueryString();
+
+        return view('admin.hr_management.ffi.payslips.index', compact('payslips'));
     }
+
+
 
     public function destroy($id)
     {

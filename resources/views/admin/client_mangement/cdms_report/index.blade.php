@@ -103,14 +103,7 @@
                             <div class="col-lg-4 mt-4">
                                 <x-forms.button type="submit" label="Search" class="btn btn-primary"
                                     size="col-lg-4 mt-2" />
-                                {{-- <a href="{{ route('admin.cdms_report.export', [
-                                    'from_date' => request()->has('from_date') ? request()->from_date : '',
-                                    'to_date' => request()->has('to_date') ? request()->to_date : '',
-                                    'service_state' => request()->has('service_state') ? request()->service_state : [],
-                                    'region' => request()->has('region') ? request()->region : '',
-                                    'status' => request()->has('status') ? request()->status : '',
-                                ]) }}"
-                                    class="btn btn-success">Export to Excel</a> --}}
+                                
                             </div>
                         </div>
                     </form>

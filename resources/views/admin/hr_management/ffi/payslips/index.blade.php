@@ -123,7 +123,7 @@
     <!-- Search Payslips -->
     <div class="row">
         <div class="col-md-12">
-            <form id="my_form" method="GET">
+            <form id="my_form" method="GET" action="{{ route('admin.search.ffi_payslips') }}">
                 @csrf
                 <div class="card">
                     <div class="card-header header-elements-inline">
@@ -133,28 +133,30 @@
                         <div class="row">
                             <div class="col-md-3">
                                 <input type="text" name="emp_id" id="emp_id" class="form-control"
-                                    placeholder="Employee ID" required>
+                                    placeholder="Employee ID" value="{{ request()->emp_id }}">
                             </div>
                             <div class="col-md-3">
-                                <select name="month1" id="month" class="form-control" required>
+                                <select name="month" id="month" class="form-control">
                                     <option value="">Select Month</option>
                                     @foreach (range(1, 12) as $month)
-                                        <option value="{{ $month }}">
-                                            {{ \Carbon\Carbon::create()->month($month)->format('F') }}
-                                        </option>
+                                        <option value="{{ $month }}"
+                                            {{ request('month') == $month ? 'selected' : '' }}>
+                                            {{ \Carbon\Carbon::create()->month($month)->format('F') }}</option>
                                     @endforeach
                                 </select>
                             </div>
                             <div class="col-md-3">
-                                <select name="year1" id="year" class="form-control" required>
+                                <select name="year" id="year" class="form-control">
                                     <option value="">Select Year</option>
                                     @foreach (range(2018, now()->year) as $year)
-                                        <option value="{{ $year }}">{{ $year }}</option>
+                                        <option value="{{ $year }}"
+                                            {{ request('year') == $year ? 'selected' : '' }}>
+                                            {{ $year }}</option>
                                     @endforeach
                                 </select>
                             </div>
                             <div class="col-md-3">
-                                <button type="submit" class="btn btn-primary" id="searchBtn">Search</button>
+                                <button type="submit" class="btn btn-primary">Search</button>
                             </div>
                         </div>
                     </div>
@@ -163,62 +165,58 @@
         </div>
     </div>
 
-    <div class="card" id="payslip_table" style="display:none">
-        <div class="card-header header-elements-inline">
-            <h5 class="card-title">Payslip Details</h5>
-        </div>
+    @if (isset($payslips) && count($payslips) > 0)
+        <div class="card">
+            <div class="card-header header-elements-inline">
+                <h5 class="card-title">Payslip Details</h5>
+            </div>
+            <div class="row mt-4">
+                <div class="col-lg-12">
+                    @php
+                        $columns = [
+                            ['label' => 'Id', 'column' => 'id', 'sort' => true],
+                            ['label' => 'EMP ID', 'column' => 'emp_id', 'sort' => false],
+                            ['label' => 'EMP Name', 'column' => 'employee_name', 'sort' => false],
+                            ['label' => 'Designation', 'column' => 'designation', 'sort' => true],
+                            ['label' => 'Department', 'column' => 'department', 'sort' => true],
+                            ['label' => 'Date', 'column' => 'month,year', 'sort' => true],
+                            ['label' => 'Actions', 'column' => 'action', 'sort' => false],
+                        ];
+                    @endphp
 
-        <div class="row {{ is_countable($payslip) && count($payslip) > 0 ? '' : 'd-none' }}">
-            <div class="col-lg-12">
-                @php
-                    $columns = [
-                        ['label' => 'Id', 'column' => 'id', 'sort' => true],
-                        ['label' => 'EMP ID', 'column' => 'emp_id', 'sort' => false],
-                        ['label' => 'EMP Name', 'column' => 'employee_name', 'sort' => false],
-                        ['label' => 'Designation', 'column' => 'designation', 'sort' => true],
-                        ['label' => 'Department', 'column' => 'department', 'sort' => true],
-                        ['label' => 'Date', 'column' => 'month,year', 'sort' => true],
-                        ['label' => 'Actions', 'column' => 'action', 'sort' => false],
-                    ];
-                @endphp
-
-                <x-table :columns="$columns" :data="$payslip" :checkAll=false :bulk="route('admin.cms.esic')" :route="route('admin.search.ffi_payslips')">
-                    @foreach ($payslip as $key => $item)
-                        <tr>
-                            <td>{{ $item->id }}</td>
-                            <td>{{ $item->client?->emp_id }}</td>
-                            <td>{{ $item->employee_name }}</td>
-                            <td>{{ $item->designation }}</td>
-                            <td>{{ $item->department }}</td>
-                            <td>{{ \DateTime::createFromFormat('!m', $item->month)->format('F') }}-{{ $item->year }}
-                            </td>
-                            <td>
-                                <div class="dropdown pop_Up dropdown_bg">
-                                    <div class="dropdown-toggle" id="dropdownMenuButton-{{ $item->id }}"
-                                        data-bs-toggle="dropdown" aria-expanded="true">
-                                        Action
-                                    </div>
-                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                        <li>
-                                            <a href="{{ route('admin.generate.payslips', ['id' => $item->id]) }}"
-                                                target="_blank" class="dropdown-item">
-                                                <i class="bx bx-link-alt"></i> View Details
-                                            </a>
-                                            <a href="{{ route('admin.ffi_payslips.delete', $item) }}"
-                                                class="dropdown-item"
-                                                onclick="return confirm('Are you sure to delete this?')">
-                                                <i class="bx bx-trash-alt"></i> Delete
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </td>
-                        </tr>
-                    @endforeach
-                </x-table>               
+                    <x-table :columns="$columns" :data="$payslips" :checkAll=false :bulk="route('admin.cms.esic')" :route="route('admin.search.ffi_payslips')">
+                        @foreach ($payslips as $key => $item)
+                            <tr>
+                                <td>{{ $item->id }}</td>
+                                <td>{{ $item->emp_id }}</td>
+                                <td>{{ $item->employee_name }}</td>
+                                <td>{{ $item->designation }}</td>
+                                <td>{{ $item->department }}</td>
+                                <td>{{ \DateTime::createFromFormat('!m', $item->month)->format('F') }}-{{ $item->year }}
+                                </td>
+                                <td>
+                                    <a href="{{ route('admin.generate.payslips', ['id' => $item->id]) }}"
+                                        target="_blank" class="btn btn-sm btn-info">
+                                        View Details
+                                    </a>
+                                    <a href="{{ route('admin.ffi_payslips.delete', $item) }}"
+                                        class="btn btn-sm btn-danger"
+                                        onclick="return confirm('Are you sure to delete this?')">
+                                        Delete
+                                    </a>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </x-table>
+                </div>
             </div>
         </div>
-    </div>
+    @else
+        @if (isset($payslips))
+            <div class="alert alert-warning">No records found</div>
+        @endif
+    @endif
+
     @push('scripts')
         <script>
             document.addEventListener('DOMContentLoaded', function() {

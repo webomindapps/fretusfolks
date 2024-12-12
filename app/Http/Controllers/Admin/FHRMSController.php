@@ -471,31 +471,43 @@ class FHRMSController extends Controller
         $fields = explode(',', $request->input('fields'));
         $fromDate = $request->from_date;
         $toDate = $request->to_date;
-        $states = $request->state;
+        $states = explode(',', $request->input('state', ''));
         $location = $request->location;
+        $pendingDocs = $request->pending_doc;
         $status = $request->status;
+
         if (empty($fields)) {
             return redirect()->route('admin.fhrms_report')->with('error', 'No fields selected for export');
         }
         $query = $this->model()->newQuery();
-
         if ($fromDate && $toDate) {
             $query->whereBetween('modified_date', ["{$fromDate} 00:00:00", "{$toDate} 23:59:59"]);
         }
-        if ($states) {
-            $query->whereIn('state', explode(',', $states));
-        }
 
+
+        if (!empty($states)) {
+            $query->whereIn('state', $states);
+        }
+        if (!empty($pendingDocs)) {
+            $pendingDocsArray = is_array($pendingDocs) ? $pendingDocs : explode(',', $pendingDocs);
+
+            $query->where(function ($query) use ($pendingDocsArray) {
+                foreach ($pendingDocsArray as $doc) {
+                    $query->whereNull($doc)->orWhere($doc, '');
+                }
+            });
+        }
         if ($location) {
             $query->where('location', $location);
         }
-        if ($status) {
+
+        if ($status !== null && $status !== '') {
             $query->where('status', $status);
         }
         $data = $query->select($fields)->get();
-        // dd($data);
         return Excel::download(new FHRMSReportExport($data, $fields), 'fhrms_report.xlsx');
     }
+
 
     public function storePendingDetails(Request $request)
     {
