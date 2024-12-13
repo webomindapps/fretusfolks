@@ -8,6 +8,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use App\Models\FFIPayslipsModel;
 use App\Http\Controllers\Controller;
+use Exception;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Response;
 use Maatwebsite\Excel\Facades\Excel;
@@ -96,7 +97,7 @@ class FFIPayslipsController extends Controller
 
         try {
             Excel::import($import, $file);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return redirect()->route('admin.ffi_payslips')->with('error', 'There was an error during the import process: ' . $e->getMessage());
         }
 
