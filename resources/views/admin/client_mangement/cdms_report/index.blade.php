@@ -4,6 +4,11 @@
             <form id="export-form" action="{{ route('admin.cdms_report.export') }}" method="POST">
                 @csrf
                 <input type="hidden" name="fields" id="export-fields">
+                <input type="hidden" name="from_date" id="export-from-date">
+                <input type="hidden" name="to_date" id="export-to-date">
+                <input type="hidden" name="states" id="export-states">
+                <input type="hidden" name="region" id="export-region">
+                <input type="hidden" name="status" id="export-status">
                 <button type="submit" class="btn btn-success">Export to Excel</button>
 
             </form>
@@ -17,11 +22,11 @@
                         enctype="multipart/form-data">
                         @csrf
                         <div class="row">
-                            <x-forms.input label="From Date" type="date" name="from-date" id="from-date"
-                                :required="false" size="col-lg-4 mt-2" :value="request()->fromdate" />
+                            <x-forms.input label="From Date" type="date" name="from_date" id="from-date"
+                                :required="false" size="col-lg-4 mt-2" :value="request()->from_date" />
 
-                            <x-forms.input label="To Date" type="date" name="to-date" id="to-date"
-                                :required="false" size="col-lg-4 mt-2" :value="request()->todate" />
+                            <x-forms.input label="To Date" type="date" name="to_date" id="to-date"
+                                :required="false" size="col-lg-4 mt-2" :value="request()->to_date" />
                             <div class="col-lg-4 mt-2">
                                 <label for="data">Data</label>
                                 <div class="dropdown">
@@ -98,6 +103,7 @@
                             <div class="col-lg-4 mt-4">
                                 <x-forms.button type="submit" label="Search" class="btn btn-primary"
                                     size="col-lg-4 mt-2" />
+                                
                             </div>
                         </div>
                     </form>
@@ -235,11 +241,22 @@
                             console.error('Error fetching client details:', error);
                         });
                 }
-
                 document.getElementById('export-form').addEventListener('submit', function(e) {
+                    // Get selected fields from checkboxes with class 'data-checkbox'
                     const selectedFields = Array.from(document.querySelectorAll('.data-checkbox:checked'))
                         .map(checkbox => checkbox.value);
                     document.getElementById('export-fields').value = selectedFields.join(',');
+
+                    document.getElementById('export-from-date').value = document.querySelector('#from-date').value;
+                    document.getElementById('export-to-date').value = document.querySelector('#to-date').value;
+
+                    const selectedStates = Array.from(document.querySelectorAll('.state-checkbox:checked'))
+                        .map(checkbox => checkbox.value);
+                    document.getElementById('export-states').value = selectedStates.join(',');
+
+                    document.getElementById('export-region').value = document.querySelector('#region').value;
+                    document.getElementById('export-status').value = document.querySelector('#status').value;
+
                     if (selectedFields.length === 0) {
                         e.preventDefault();
                         alert('Please select at least one field for export.');

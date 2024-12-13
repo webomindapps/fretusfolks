@@ -2,17 +2,21 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
+use Carbon\Carbon;
+use App\Models\CFISModel;
+use App\Models\FHRMSModel;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use App\Models\ClientManagement;
 use Spatie\Permission\Models\Role;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
     public function index()
     {
         $roles = Role::all();
-        return view('admin.auth.login',compact('roles'));
+        return view('admin.auth.login', compact('roles'));
     }
 
     public function authenticate(Request $request)
@@ -33,9 +37,30 @@ class LoginController extends Controller
         }
         return back()->with('danger', 'Invalid credentials.');
     }
-    public function dashboard()
+    public function dashboard(Request $request)
     {
-        return view('admin.dashboard');
+        $today = Carbon::today();
+        $from_date = $request->from_date;
+        $to_date = $request->to_date;
+        if ($from_date && $to_date) {
+            $cdms = ClientManagement::whereBetween('modify_by', [$from_date, $to_date])->count();
+            $fhrms = FHRMSModel::whereBetween('modified_date', [$from_date, $to_date])->count();
+            $cfis = CFISModel::whereBetween('created_at', [$from_date, $to_date])->groupBy('client_id')->get();
+            ;
+
+        } else {
+            $cdms = ClientManagement::all();
+            $fhrms = FHRMSModel::all();
+            $birthdays = FHRMSModel::whereMonth('dob', '>=', $today->month)
+                ->whereYear('dob', '<=', $today->year)
+                ->orderByRaw("MONTH(dob), DAY(dob)")
+                ->limit(5)
+                ->get();
+            $cfis = CFISModel::with('client')
+                ->distinct('client_id')
+                ->get();
+        }
+        return view('admin.dashboard', compact('cdms', 'fhrms', 'cfis', 'birthdays'));
     }
     public function logout()
     {

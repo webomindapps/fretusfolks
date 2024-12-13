@@ -27,8 +27,10 @@ use App\Http\Controllers\Admin\FFIOfferLetterController;
 use App\Http\Controllers\Admin\FFITerminationController;
 use App\Http\Controllers\Admin\CMSLabourNoticeController;
 use App\Http\Controllers\Admin\FFIIncrementLetterController;
+use Illuminate\Support\Facades\Artisan;
 
 Route::get('/', function () {
+    // Artisan::call('migrate');
     return to_route('admin.dashboard');
     return view('welcome');
 });
@@ -92,7 +94,7 @@ Route::prefix('admin')->group(function () {
         Route::post('/role/{id}/permissions', [RolePermissionController::class, 'assignPermission']);
 
         // CMS ESIC
-        Route::get('/cms_esic', [CMSESICController::class, 'index'])->name(name: 'cms.esic');
+        Route::get('/cms_esic', [CMSESICController::class, 'index'])->name('cms.esic');
         Route::get('/cms_esic/create', [CMSESICController::class, 'create'])->name('cms.esic.create');
         Route::post('/cms_esic/create', [CMSESICController::class, 'store']);
         Route::get('/cms_esic/{id}/delete', [CMSESICController::class, 'destroy'])->name('cms.esic.delete');
@@ -162,7 +164,7 @@ Route::prefix('admin')->group(function () {
         Route::post('fhrms/fhrms_report/export', [FHRMSController::class, 'exportReport'])->name('fhrms_report.export');
         Route::post('fhrms/pending-details', [FHRMSController::class, 'storePendingDetails'])->name('fhrms.pending.store');
         Route::get('/fhrms/ffi_birthday', [FHRMSController::class, 'todayBirthday'])->name('fhrms.ffi_birthday');
-        Route::post('/fhrms/pending-update', [FHRMSController::class, 'updatePendingDetails'])->name('fhrms.pending.update');
+
         //FFI-Offer Letter
         Route::get('/ffi_offer_letter', [FFIOfferLetterController::class, 'index'])->name('ffi_offer_letter');
         Route::get('ffi_offer_letter/create', [FFIOfferLetterController::class, 'create'])->name('ffi_offer_letter.create');
@@ -253,7 +255,7 @@ Route::prefix('admin')->group(function () {
         Route::get('/ffi_payslips', [FFIPayslipsController::class, 'index'])->name('ffi_payslips');
         Route::post('ffi_payslips/bulk-upload', [FFIPayslipsController::class, 'bulkUpload'])->name('ffi_payslips.bulk.upload');
         Route::post('ffi_payslips/export', [FFIPayslipsController::class, 'export'])->name('ffi_payslips.export');
-        Route::get('ffi_payslips/search-payslip', [FFIPayslipsController::class, 'searchPayslip'])->name('search.ffi_payslips');
+        Route::post('ffi_payslips/search-payslip', [FFIPayslipsController::class, 'searchPayslip'])->name('search.ffi_payslips');
         Route::get('/generate-payslips/{id}', [FFIPayslipsController::class, 'generatePayslipsPdf'])->name('generate.payslips');
         Route::get('/ffi_payslips/delete/{id}', [FFIPayslipsController::class, 'destroy'])->name('ffi_payslips.delete');
 

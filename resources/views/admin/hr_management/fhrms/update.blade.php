@@ -14,7 +14,8 @@
     @endif
     <div class="col-lg-12 pb-4">
         <div class="form-card px-3">
-            <form action="{{ route('admin.fhrms.edit', $employee->id) }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('admin.fhrms.edit', $employee->id) }}" method="POST" id="pendingDetailsForm"
+                enctype="multipart/form-data">
                 @csrf
                 <div class="card mt-3">
                     <div class="card-header header-elements-inline d-flex justify-content-between align-items-center">
@@ -23,6 +24,7 @@
                     <div class="card-body">
                         <div class="form-contents">
                             <div class="row">
+                                <input type="hidden" name="id" id="employee_id" value="{{ $employee->id ?? '' }}">
                                 <x-forms.input label="Enter FFI Employee ID: " type="text" name="ffi_emp_id"
                                     id="ffi_emp_id" :required="true" size="col-lg-6 mt-2" :value="old('ffi_emp_id', $employee->ffi_emp_id)" />
                                 <x-forms.input label="Enter Employee Name: " type="text" name="emp_name"
@@ -279,4 +281,43 @@
             </div>
         </div>
     </div>
+    @push('scripts')
+        <script>
+            function pending_update() {
+                var formData = new FormData(document.getElementById('pendingDetailsForm'));
+                fetch('{{ route('admin.fhrms.pending.update') }}', {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                            'Accept': 'application/json'
+                        },
+                        body: formData
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! Status: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.success) {
+                            alert('Pending details saved successfully!');
+                            window.location.href = '{{ route('admin.fhrms') }}';
+                        } else if (data.errors) {
+                            let errorMessages = Object.values(data.errors)
+                                .map(errorArray => errorArray.join(', '))
+                                .join('\n');
+                            alert(`Validation Errors:\n${errorMessages}`);
+                        } else {
+                            alert('Something went wrong. Please try again.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert(`Error saving pending details: ${error.message}`);
+                    });
+            }
+        </script>
+    @endpush
+
 </x-applayout>

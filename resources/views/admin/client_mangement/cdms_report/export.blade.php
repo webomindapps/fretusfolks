@@ -25,10 +25,9 @@
                             @break
 
                             @default
-                                {{ $client->$field ?? 'N/A' }}
+                                {{ $client[$field] ?? 'N/A' }}
                         @endswitch
                     </td>
-                    {{-- <td>{{ $client->$field }}</td> --}}
                 @endforeach
             </tr>
         @endforeach

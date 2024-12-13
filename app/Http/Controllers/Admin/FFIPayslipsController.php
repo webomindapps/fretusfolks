@@ -2,19 +2,20 @@
 
 namespace App\Http\Controllers\Admin;
 
+use ZipArchive;
+use Illuminate\Http\Request;
+use RecursiveIteratorIterator;
+use Barryvdh\DomPDF\Facade\Pdf;
+use RecursiveDirectoryIterator;
+use App\Models\FFIPayslipsModel;
 use App\Exports\FFI_PayslipsExport;
 use App\Imports\FFI_PayslipsImport;
-use Barryvdh\DomPDF\Facade\Pdf;
-use Illuminate\Http\Request;
-use App\Models\FFIPayslipsModel;
 use App\Http\Controllers\Controller;
 use Exception;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Response;
 use Maatwebsite\Excel\Facades\Excel;
-use RecursiveDirectoryIterator;
-use RecursiveIteratorIterator;
-use ZipArchive;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class FFIPayslipsController extends Controller
 {
@@ -57,30 +58,7 @@ class FFIPayslipsController extends Controller
 
         return view("admin.hr_management.ffi.payslips.index", compact("payslip"));
     }
-    // public function bulkUpload(Request $request)
-    // {
-    //     $request->validate([
-    //         'month' => 'required',
-    //         'year' => 'required',
-    //         'file' => 'required|file|mimes:xlsx,csv,txt',
-    //     ]);
-    //     $file = $request->file('file');
-    //     $month = $request->input('month');
-    //     $year = $request->input('year');
-    //     $import = new FFI_PayslipsImport($month, $year);
-    //     Excel::import($import, $file);
-    //     $error = '';
-    //     // dd($import);
-    //     foreach ($import->failures() as $failure) {
-    //         $failure->row();
-    //         $failure->attribute();
-    //         $failure->errors();
-    //         $failure->values();
-    //         $error .= 'Row no:-' . $failure->row() . ', Column:-' . $failure->attribute() . ', Error:-' . $failure->errors()[0] . '<br>';
-    //     }
-    //     return redirect()->route('admin.ffi_payslips')->with(['success' => 'Payslip added successfully', 'error_msg' => $error]);
 
-    // }
     public function bulkUpload(Request $request)
     {
         $request->validate([
@@ -127,12 +105,20 @@ class FFIPayslipsController extends Controller
 
     public function searchPayslip(Request $request)
     {
+        $searchColumns = ['id', 'emp_id', 'month', 'year', 'employee_name', 'designation', 'department'];
+        $search = request()->search;
         $emp_id = $request->input('emp_id');
         $month = $request->input('month');
         $year = $request->input('year');
 
         $query = FFIPayslipsModel::query();
-
+        if ($search != '') {
+            $query->where(function ($q) use ($search, $searchColumns) {
+                foreach ($searchColumns as $key => $value) {
+                    $key == 0 ? $q->where($value, 'LIKE', '%' . $search . '%') : $q->orWhere($value, 'LIKE', '%' . $search . '%');
+                }
+            });
+        }
         if (!empty($emp_id)) {
             $query->where('emp_id', $emp_id);
         }
@@ -143,12 +129,13 @@ class FFIPayslipsController extends Controller
             $query->where('year', $year);
         }
 
-        $payslips = $query->orderBy('id', 'ASC')->get();
-        return response()->json([
-            'success' => true,
-            'data' => $payslips
-        ]);
+        $payslips = $query->orderBy('id', 'ASC')->paginate(20)->withQueryString();
+
+        return view('admin.hr_management.ffi.payslips.index', compact('payslips'));
     }
+
+
+
     public function destroy($id)
     {
         $this->model()->destroy($id);

@@ -265,12 +265,40 @@ class CDMSController extends Controller
     }
     public function exportReport(Request $request)
     {
+        // dd($request->all());
         $fields = explode(',', $request->input('fields'));
+        $fromDate = $request->from_date;
+        $toDate = $request->to_date;
+        $states = $request->states;
+        $region = $request->region;
+        $status = $request->status;
+
         if (empty($fields)) {
             return redirect()->route('admin.cdms_report')->with('error', 'No fields selected for export');
         }
+        $query = $this->model()->newQuery();
 
-        return Excel::download(new ClientExport($fields), 'cdmsreport.xlsx');
+        // dd($query = $this->model()->newQuery());
+        if ($fromDate && $toDate) {
+            $query->whereBetween('modify_date', ["{$fromDate} 00:00:00", "{$toDate} 23:59:59"]);
+        }
+        // dd($fromDate, $toDate);
+        if ($states) {
+            $query->whereIn('service_state', explode(',', $states));
+        }
+        // dd($states);
+        if ($region) {
+            $query->where('region', $region);
+        }
+        // dd($region);
+        if ($status) {
+            $query->where('status', $status);
+        }
+        // dd($status);
+        $data = $query->select($fields)->get();
+
+        // dd($data);
+        return Excel::download(new ClientExport($data, $fields), 'cdmsreport.xlsx');
     }
     public function showCodeReport(Request $request)
     {

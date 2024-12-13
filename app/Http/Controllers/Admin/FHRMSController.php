@@ -71,8 +71,8 @@ class FHRMSController extends Controller
             'gender' => 'required|in:1,2,3',
             'blood_group' => 'required|string',
             'qualification' => 'required|string|max:255',
-            'phone1' => 'required|digits:10|min:10|min:10|max:15',
-            'phone2' => 'nullable|digits:10min:10|min:10|max:15',
+            'phone1' => 'required|digits:10|min:10|max:15',
+            'phone2' => 'nullable|digits:10|min:10|max:15',
             'email' => 'nullable|email|max:255',
             'permanent_address' => 'required|string',
             'present_address' => 'required|string',
@@ -360,7 +360,7 @@ class FHRMSController extends Controller
         $to_date = $request->to_date;
         $query = $this->model()->with('stateRelation');
         if ($from_date && $to_date) {
-            $query->whereBetween('created_at', [$from_date, $to_date]);
+            $query->whereBetween('modified_date', [$from_date, $to_date]);
         }
 
         $employees = $query->get();
@@ -412,8 +412,8 @@ class FHRMSController extends Controller
 
     public function showCodeReport(Request $request)
     {
-        $fromDate = $request->input('from-date');
-        $toDate = $request->input('to-date');
+        $fromDate = $request->input('from_date');
+        $toDate = $request->input('to_date');
         $selectedData = $request->input('data', []);
         $selectedStates = $request->input('state', []);
         $location = $request->input('location');
@@ -467,16 +467,47 @@ class FHRMSController extends Controller
 
     public function exportReport(Request $request)
     {
+        // dd($request->all());
         $fields = explode(',', $request->input('fields'));
+        $fromDate = $request->from_date;
+        $toDate = $request->to_date;
+        $states = explode(',', $request->input('state', ''));
+        $location = $request->location;
+        $pendingDocs = $request->pending_doc;
+        $status = $request->status;
+
         if (empty($fields)) {
-            dd($fields);
             return redirect()->route('admin.fhrms_report')->with('error', 'No fields selected for export');
         }
+        $query = $this->model()->newQuery();
+        if ($fromDate && $toDate) {
+            $query->whereBetween('modified_date', ["{$fromDate} 00:00:00", "{$toDate} 23:59:59"]);
+        }
 
-        $filters = $request->only(['from_date', 'to_date', 'data', 'state', 'location', 'status', 'pending_doc']);
 
-        return Excel::download(new FHRMSReportExport($fields, $filters), 'fhrms_report.xlsx');
+        if (!empty($states)) {
+            $query->whereIn('state', $states);
+        }
+        if (!empty($pendingDocs)) {
+            $pendingDocsArray = is_array($pendingDocs) ? $pendingDocs : explode(',', $pendingDocs);
+
+            $query->where(function ($query) use ($pendingDocsArray) {
+                foreach ($pendingDocsArray as $doc) {
+                    $query->whereNull($doc)->orWhere($doc, '');
+                }
+            });
+        }
+        if ($location) {
+            $query->where('location', $location);
+        }
+
+        if ($status !== null && $status !== '') {
+            $query->where('status', $status);
+        }
+        $data = $query->select($fields)->get();
+        return Excel::download(new FHRMSReportExport($data, $fields), 'fhrms_report.xlsx');
     }
+
 
     public function storePendingDetails(Request $request)
     {
@@ -501,15 +532,15 @@ class FHRMSController extends Controller
             'permanent_address' => 'nullable|string',
             'present_address' => 'nullable|string',
             'pan_no' => 'nullable|string|max:20',
-            'pan_path' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'pan_path' => 'nullable|max:2048',
             'aadhar_no' => 'nullable|string|max:20',
-            'aadhar_path' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'aadhar_path' => 'nullable|max:2048',
             'driving_license_no' => 'nullable|string|max:20',
-            'driving_license_path' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'driving_license_path' => 'nullable|max:2048',
             'photo' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
-            'resume' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'resume' => 'nullable|max:2048',
             'bank_name' => 'nullable|string|max:255',
-            'bank_document' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'bank_document' => 'nullable|max:2048',
             'bank_account_no' => 'nullable|string|max:20',
             'repeat_acc_no' => 'nullable|string|same:bank_account_no',
             'bank_ifsc_code' => 'nullable|string|max:20',
@@ -534,16 +565,16 @@ class FHRMSController extends Controller
             'employer_esic' => 'nullable|numeric',
             'mediclaim' => 'nullable|numeric',
             'ctc' => 'nullable|numeric',
-            'voter_id' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
-            'emp_form' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
-            'pf_esic_form' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
-            'payslip' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
-            'exp_letter' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'voter_id' => 'nullable|max:2048',
+            'emp_form' => 'nullable|max:2048',
+            'pf_esic_form' => 'nullable|max:2048',
+            'payslip' => 'nullable|max:2048',
+            'exp_letter' => 'nullable|max:2048',
             'education_certificates' => 'nullable|array',
-            'education_certificates.*' => 'file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'education_certificates.*' => 'nullable|max:2048',
             'others' => 'nullable|array',
-            'others.*' => 'file|mimes:jpg,jpeg,png,pdf|max:2048',
-            'password' => 'nullable|string|min:8',
+            'others.*' => 'nullable|max:2048',
+            'password' => 'nullable|string',
             'psd' => 'nullable',
         ]);
 
@@ -603,7 +634,135 @@ class FHRMSController extends Controller
             dd($e);
         }
     }
-
+    public function updatePendingDetails(Request $request)
+    {
+        $validatedData = $request->validate([
+            'id' => 'required|integer|exists:fhrms,id', 
+            'ffi_emp_id' => 'nullable|string|max:255',
+            'emp_name' => 'nullable|string|max:255',
+            'interview_date' => 'nullable|date',
+            'joining_date' => 'nullable|date',
+            'contract_date' => 'nullable|date',
+            'designation' => 'nullable|string|max:255',
+            'department' => 'nullable|string|max:255',
+            'state' => 'nullable|integer',
+            'location' => 'nullable|string|max:255',
+            'dob' => 'nullable|date',
+            'father_name' => 'nullable|string|max:255',
+            'gender' => 'nullable|in:1,2,3',
+            'blood_group' => 'nullable|string',
+            'qualification' => 'nullable|string|max:255',
+            'phone1' => 'nullable|digits:10',
+            'phone2' => 'nullable|digits:10',
+            'email' => 'nullable|email|max:255',
+            'permanent_address' => 'nullable|string',
+            'present_address' => 'nullable|string',
+            'pan_no' => 'nullable|string|max:20',
+            'pan_path' => 'nullable|max:2048',
+            'aadhar_no' => 'nullable|string|max:20',
+            'aadhar_path' => 'nullable|max:2048',
+            'driving_license_no' => 'nullable|string|max:20',
+            'driving_license_path' => 'nullable|max:2048',
+            'photo' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
+            'resume' => 'nullable|max:2048',
+            'bank_name' => 'nullable|string|max:255',
+            'bank_document' => 'nullable|max:2048',
+            'bank_account_no' => 'nullable|string|max:20',
+            'repeat_acc_no' => 'nullable|string|same:bank_account_no',
+            'bank_ifsc_code' => 'nullable|string|max:20',
+            'uan_generatted' => 'nullable|string|max:255',
+            'uan_type' => 'nullable|string',
+            'uan_no' => 'nullable|string|max:20',
+            'status' => 'nullable|string',
+            'basic_salary' => 'nullable|numeric',
+            'hra' => 'nullable|numeric',
+            'conveyance' => 'nullable|numeric',
+            'medical_reimbursement' => 'nullable|numeric',
+            'special_allowance' => 'nullable|numeric',
+            'other_allowance' => 'nullable|numeric',
+            'st_bonus' => 'nullable|numeric',
+            'gross_salary' => 'nullable|numeric',
+            'emp_pf' => 'nullable|numeric',
+            'emp_esic' => 'nullable|numeric',
+            'pt' => 'nullable|numeric',
+            'total_deduction' => 'nullable|numeric',
+            'take_home' => 'nullable|numeric',
+            'employer_pf' => 'nullable|numeric',
+            'employer_esic' => 'nullable|numeric',
+            'mediclaim' => 'nullable|numeric',
+            'ctc' => 'nullable|numeric',
+            'voter_id' => 'nullable|max:2048',
+            'emp_form' => 'nullable|max:2048',
+            'pf_esic_form' => 'nullable|max:2048',
+            'payslip' => 'nullable|max:2048',
+            'exp_letter' => 'nullable|max:2048',
+            'education_certificates' => 'nullable|array',
+            'education_certificates.*' => 'nullable|max:2048',
+            'others' => 'nullable|array',
+            'others.*' => 'nullable|max:2048',
+            'password' => 'nullable|string',
+            'psd' => 'nullable',
+        ]);
+    
+        $filePaths = [];
+        $fileFields = [
+            'pan_path',
+            'aadhar_path',
+            'driving_license_path',
+            'photo',
+            'resume',
+            'bank_document',
+            'voter_id',
+            'emp_form',
+            'pf_esic_form',
+            'payslip',
+            'exp_letter'
+        ];
+    
+        foreach ($fileFields as $field) {
+            if ($request->hasFile($field)) {
+                $filePaths[$field] = $request->file($field)->store('uploads', 'public');
+            }
+        }
+    
+        DB::beginTransaction();
+        try {
+            $employee = $this->model()->findOrFail($validatedData['id']);
+    
+            $employee->fill($validatedData);
+            $employee->fill($filePaths);
+            $employee->save();
+    
+            if ($request->hasFile('education_certificates')) {
+                foreach ($request->file('education_certificates') as $file) {
+                    $filePath = $file->store('education_certificates', 'public');
+    
+                    FFIEducationModel::updateOrCreate(
+                        ['emp_id' => $employee->id, 'path' => $filePath],
+                        ['path' => $filePath]
+                    );
+                }
+            }
+    
+            if ($request->hasFile('others')) {
+                foreach ($request->file('others') as $file) {
+                    $filePath = $file->store('others', 'public');
+    
+                    FFIOTherModel::updateOrCreate(
+                        ['emp_id' => $employee->id, 'path' => $filePath],
+                        ['path' => $filePath]
+                    );
+                }
+            }
+    
+            DB::commit();
+            return response()->json(['success' => true, 'message' => 'Record updated successfully.']);
+        } catch (Exception $e) {
+            DB::rollBack();
+            return response()->json(['success' => false, 'message' => $e->getMessage()]);
+        }
+    }
+    
     public function todayBirthday(Request $request)
     {
         $query = $this->model()->query();
