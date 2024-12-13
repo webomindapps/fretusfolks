@@ -162,7 +162,7 @@ Route::prefix('admin')->group(function () {
         Route::post('fhrms/fhrms_report/export', [FHRMSController::class, 'exportReport'])->name('fhrms_report.export');
         Route::post('fhrms/pending-details', [FHRMSController::class, 'storePendingDetails'])->name('fhrms.pending.store');
         Route::get('/fhrms/ffi_birthday', [FHRMSController::class, 'todayBirthday'])->name('fhrms.ffi_birthday');
-
+        Route::post('/fhrms/pending-update', [FHRMSController::class, 'updatePendingDetails'])->name('fhrms.pending.update');
         //FFI-Offer Letter
         Route::get('/ffi_offer_letter', [FFIOfferLetterController::class, 'index'])->name('ffi_offer_letter');
         Route::get('ffi_offer_letter/create', [FFIOfferLetterController::class, 'create'])->name('ffi_offer_letter.create');
