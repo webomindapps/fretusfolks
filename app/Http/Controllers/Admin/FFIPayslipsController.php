@@ -11,11 +11,14 @@ use App\Models\FFIPayslipsModel;
 use App\Exports\FFI_PayslipsExport;
 use App\Imports\FFI_PayslipsImport;
 use App\Http\Controllers\Controller;
+use App\Jobs\PayslipCreate;
 use Exception;
 use Illuminate\Support\Facades\File;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Bus\Batchable;
+use Illuminate\Support\Facades\Bus;
 
 class FFIPayslipsController extends Controller
 {
@@ -70,20 +73,51 @@ class FFIPayslipsController extends Controller
         $file = $request->file('file');
         $month = $request->input('month');
         $year = $request->input('year');
-
-        $import = new FFI_PayslipsImport($month, $year);
-
         try {
-            Excel::import($import, $file);
+            if ($request->has('file')) {
+                $fileName = $request->file->getClientOriginalName();
+                $fileWithPath = public_path('uploads') . '/' . $fileName;
+                if (!file_exists($fileWithPath)) {
+                    $request->file->move(public_path('uploads'), $fileName);
+                }
+                $header = null;
+                $datafromCsv = array();
+                $records = array_map('str_getcsv', file($fileWithPath));
+                $batch = Bus::batch([])->dispatch();
+                foreach ($records as $key => $record) {
+                    if (!$header) {
+                        $header = $record;
+                    } else {
+                        $datafromCsv[] = $record;
+                    }
+                }
+                $datafromCsv = array_chunk($datafromCsv, 1000);
+                foreach ($datafromCsv as $index => $dataCsv) {
+                    foreach ($dataCsv as $data) {
+                        $payslipdata[$index][] = array_combine($header, $data);
+                    }
+                    $batch->add(new PayslipCreate($payslipdata[$index], $month, $year));
+                    // PayslipCreate::dispatch($payslipdata[$index], $month, $year);
+                }
+                session()->put('lastBatch',$batch);
+                return back();
+            }
         } catch (Exception $e) {
-            return redirect()->route('admin.ffi_payslips')->with('error', 'There was an error during the import process: ' . $e->getMessage());
+            dd($e);
         }
+        // $import = new FFI_PayslipsImport($month, $year);
 
+        // try {
+        //     Excel::import($import, $file);
+        // } catch (Exception $e) {
+        //     return redirect()->route('admin.ffi_payslips')->with('error', 'There was an error during the import process: ' . $e->getMessage());
+        // }
+
+        // $error = '';
+        // foreach ($import->failures() as $failure) {
+        //     $error .= 'Row no: ' . $failure->row() . ', Column: ' . $failure->attribute() . ', Error: ' . implode(', ', $failure->errors()) . '<br>';
+        // }
         $error = '';
-        foreach ($import->failures() as $failure) {
-            $error .= 'Row no: ' . $failure->row() . ', Column: ' . $failure->attribute() . ', Error: ' . implode(', ', $failure->errors()) . '<br>';
-        }
-
         return redirect()->route('admin.ffi_payslips')->with([
             'success' => 'Payslips added successfully',
             'error_msg' => $error
