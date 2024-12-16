@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use Carbon\Carbon;
 use App\Models\CFISModel;
+use App\Models\CMSLabour;
 use App\Models\FHRMSModel;
 use Illuminate\Http\Request;
 use App\Models\ClientManagement;
@@ -46,7 +47,7 @@ class LoginController extends Controller
             $cdms = ClientManagement::whereBetween('modify_by', [$from_date, $to_date])->count();
             $fhrms = FHRMSModel::whereBetween('modified_date', [$from_date, $to_date])->count();
             $cfis = CFISModel::whereBetween('created_at', [$from_date, $to_date])->groupBy('client_id')->get();
-            ;
+            $labour = CMSLabour::whereBetween('created_at', [$from_date, $to_date])->groupBy('client_id')->get();
 
         } else {
             $cdms = ClientManagement::all();
@@ -59,8 +60,11 @@ class LoginController extends Controller
             $cfis = CFISModel::with('client')
                 ->distinct('client_id')
                 ->get();
+            $labour = CMSLabour::with('client', 'state')
+                ->distinct('client_id')
+                ->get();
         }
-        return view('admin.dashboard', compact('cdms', 'fhrms', 'cfis', 'birthdays'));
+        return view('admin.dashboard', compact('cdms', 'fhrms', 'cfis', 'birthdays', 'labour'));
     }
     public function logout()
     {

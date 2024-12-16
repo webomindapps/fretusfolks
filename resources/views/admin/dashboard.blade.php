@@ -128,9 +128,12 @@
                             @foreach ($cfis->unique('client_id') as $cfi)
                                 <tr>
                                     <td>{{ $cfi->client?->client_name }}</td>
-                                    {{-- <td>{{ $cfi->client->id->count() }}</td>
-                                    <td>{{ $cfi->client->id->where('status', '0')->count() }}</td>
-                                    <td>{{ $cfi->client->id->where('status', '1')->count() }}</td> --}}
+                                    <td>{{ $cfis->where('client_id', $cfi->client_id)->count() }}
+                                    </td>
+                                    <td>{{ $cfis->where('client_id', $cfi->client_id)->where('status', '0')->count() }}
+                                    </td>
+                                    <td>{{ $cfis->where('client_id', $cfi->client_id)->where('status', '1')->count() }}
+                                    </td>
                                 </tr>
                             @endforeach
                         </table>
@@ -299,7 +302,18 @@
                                 </tr>
                             </thead>
                             <tbody>
-
+                                @foreach ($labour as $item)
+                                    <tr>
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ $item->client?->client_name ?? 'N/A' }}</td>
+                                        <td>{{ $item->state?->state_name ?? 'N/A' }}</td>
+                                        <td>{{ $item->notice_received_date ? date('d-m-Y', strtotime($item->notice_received_date)) : 'N/A' }}
+                                        </td>
+                                        <td>{{ $item->closure_date ? date('d-m-Y', strtotime($item->closure_date)) : 'N/A' }}
+                                        </td>
+                                        <td>{{ $item->where('status', '0')->count() }}</td>
+                                    </tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
