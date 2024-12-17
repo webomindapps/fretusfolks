@@ -28,7 +28,7 @@ class CFISController extends Controller
         $orderBy = request()->orderBy;
         $paginate = request()->paginate;
 
-        $query = $this->model()->query();
+        $query = $this->model()->query()->where('data_status', 0);
 
         if ($from_date && $to_date) {
             $query->whereBetween('created_at', [$from_date, $to_date]);
@@ -62,11 +62,11 @@ class CFISController extends Controller
             'designation' => 'required|string|max:255',
             'department' => 'required|string|max:255',
             'interview_date' => 'required|date',
-            'joining_date' => 'required|date|after_or_equal:interview_date',
+            // 'joining_date' => 'required|date|after_or_equal:interview_date',
             'aadhar_no' => 'required|digits:12',
-            'aadhar_path' => 'required|file|mimes:pdf,jpg,jpeg,png|max:2048',
-            'driving_license_no' => 'required|string|max:255',
-            'driving_license_path' => 'required|file|mimes:pdf,jpg,jpeg,png|max:2048',
+            // 'aadhar_path' => 'required|file|mimes:pdf,jpg,jpeg,png|max:2048',
+            'driving_license_no' => 'nullable|string|max:255',
+            // 'driving_license_path' => 'required|file|mimes:pdf,jpg,jpeg,png|max:2048',
             'photo' => 'required|file|mimes:jpg,jpeg,png|max:2048',
             'resume' => 'required|file|max:2048',
         ]);
@@ -74,8 +74,8 @@ class CFISController extends Controller
         $validatedData['status'] = $request->input('status', 1);
         $validatedData['data_status'] = $request->input('data_status', 1);
         $validatedData['active_status'] = $request->input('active_status', 1);
-        $validatedData['aadhar_path'] = $request->file('aadhar_path')->store('uploads/aadhar');
-        $validatedData['driving_license_path'] = $request->file('driving_license_path')->store('uploads/license');
+        // $validatedData['aadhar_path'] = $request->file('aadhar_path')->store('uploads/aadhar');
+        // $validatedData['driving_license_path'] = $request->file('driving_license_path')->store('uploads/license');
         $validatedData['photo'] = $request->file('photo')->store('uploads/photos');
         $validatedData['resume'] = $request->file('resume')->store('uploads/resumes');
 

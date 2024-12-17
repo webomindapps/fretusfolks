@@ -52,24 +52,18 @@
                         <td>
                             <a href="{{ route('admin.cfis.data_status', $item->id) }}">
                                 @if ($item->data_status)
-                                    <i class="fa fa-toggle-on text-success" aria-hidden="true"
-                                        style="font-size: 24px;"></i>
+                                    <span class="badge rounded-pill sactive">Approve</span>
                                 @else
-                                    <i class="fa fa-toggle-off text-danger" aria-hidden="true"
-                                        style="font-size: 24px;"></i>
+                                    <span class="badge rounded-pill deactive">Disapprove</span>
                                 @endif
                             </a>
                         </td>
                         <td>
-                            <a href="{{ route('admin.cfis.status', $item->id) }}">
-                                @if ($item->status)
-                                    <i class="fa fa-toggle-on text-success" aria-hidden="true"
-                                        style="font-size: 24px;"></i>
-                                @else
-                                    <i class="fa fa-toggle-off text-danger" aria-hidden="true"
-                                        style="font-size: 24px;"></i>
-                                @endif
-                            </a>
+                            @if ($item->status)
+                                <span class="badge rounded-pill sactive">Complected</span>
+                            @else
+                                <span class="badge rounded-pill deactive">Pending</span>
+                            @endif
                         </td>
                         <td>
                             <div class="dropdown pop_Up dropdown_bg">
@@ -88,10 +82,10 @@
                                         View Details
                                     </a> --}}
 
-                                    <a class="dropdown-item" href="{{ route('admin.dcs_approval.edit', $item) }}">
-                                        <i class='bx bx-edit-alt'></i>
-                                        Edit
-                                    </a>
+                                        <a class="dropdown-item" href="{{ route('admin.dcs_approval.edit', $item) }}">
+                                            <i class='bx bx-edit-alt'></i>
+                                            Edit
+                                        </a>
                                         <a class="dropdown-item"
                                             onclick="return confirm('Are you sure to delete this ?')"
                                             href="{{ route('admin.dcs_approval.delete', $item) }}">

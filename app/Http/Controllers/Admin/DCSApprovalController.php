@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Models\CFISModel;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Str;
 
 class DCSApprovalController extends Controller
 {
@@ -41,8 +42,19 @@ class DCSApprovalController extends Controller
     }
     public function edit($id)
     {
+        $lastId = $this->model()->where('ffi_emp_id', 'LIKE', 'FFIFC%')
+            ->orderBy('ffi_emp_id', 'desc')
+            ->value('ffi_emp_id');
+
+        if ($lastId) {
+            $number = (int) substr($lastId, 5);
+            $newNumber = str_pad($number + 1, 4, '0', STR_PAD_LEFT);
+        } else {
+            $newNumber = '0001';
+        }
+        $uniqueId = 'FFIFC' . $newNumber;
         $candidate = $this->model()->find($id);
-        return view('admin.adms.dcs_approval.edit', compact('candidate'));
+        return view('admin.adms.dcs_approval.edit', compact('candidate', 'uniqueId'));
 
     }
     public function update(Request $request, $id)

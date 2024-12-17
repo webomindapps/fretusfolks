@@ -80,7 +80,7 @@ class FretusFolks extends Controller
     public function getMarital()
     {
         return [
-            ['label' => 'Single', 'value' => 'Single'],
+            ['label' => 'Un-Married', 'value' => 'Un-Married'],
             ['label' => 'Married', 'value' => 'Married'],
         ];
     }

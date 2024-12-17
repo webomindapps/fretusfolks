@@ -41,18 +41,18 @@
                                     id="department" :required="true" size="col-lg-6 mt-2" :value="old('department')" />
                                 <x-forms.input label="Date of Interview  " type="date" name="interview_date"
                                     id="interview_date" :required="true" size="col-lg-6 mt-2" :value="old('interview_date')" />
-                                <x-forms.input label="Date of Joining: " type="date" name="joining_date"
-                                    id="joining_date" :required="true" size="col-lg-6 mt-2" :value="old('joining_date')" />
+                                {{-- <x-forms.input label="Date of Joining: " type="date" name="joining_date"
+                                    id="joining_date" :required="true" size="col-lg-6 mt-2" :value="old('joining_date')" /> --}}
                                 <x-forms.input label="Enter Adhar Card No:" type="number" name="aadhar_no"
                                     id="aadhar_no" :required="true" size="col-lg-6 mt-2" :value="old('aadhar_no')" />
-                                <x-forms.input label="Attach Adhaar Card:" type="file" name="aadhar_path"
-                                    id="aadhar_path" :required="true" size="col-lg-6 mt-2" :value="old('aadhar_path')" />
+                                {{-- <x-forms.input label="Attach Adhaar Card:" type="file" name="aadhar_path"
+                                    id="aadhar_path" :required="true" size="col-lg-6 mt-2" :value="old('aadhar_path')" /> --}}
                                 <x-forms.input label="Enter Driving License No:" type="text"
-                                    name="driving_license_no" id="driving_license_no" :required="true"
+                                    name="driving_license_no" id="driving_license_no" :required="false"
                                     size="col-lg-6 mt-2" :value="old('driving_license_no')" />
-                                <x-forms.input label="Attach Driving License:" type="file"
+                                {{-- <x-forms.input label="Attach Driving License:" type="file"
                                     name="driving_license_path" id="driving_license_path" :required="true"
-                                    size="col-lg-6 mt-2" :value="old('driving_license_path')" />
+                                    size="col-lg-6 mt-2" :value="old('driving_license_path')" /> --}}
                                 <x-forms.input label="Photo:" type="file" name="photo" id="photo"
                                     :required="true" size="col-lg-6 mt-2" :value="old('photo')" />
                                 <x-forms.input label="Resume:" type="file" name="resume" id="resume"

@@ -52,26 +52,18 @@
                         <td> {{ \Carbon\Carbon::parse($item->joining_date)->format('d-m-Y') }}</td>
                         <td> {{ $item->phone1 }}</td>
                         <td>
-                            <a href="{{ route('admin.cfis.data_status', $item->id) }}">
-                                @if ($item->data_status)
-                                    <i class="fa fa-toggle-on text-success" aria-hidden="true"
-                                        style="font-size: 24px;"></i>
-                                @else
-                                    <i class="fa fa-toggle-off text-danger" aria-hidden="true"
-                                        style="font-size: 24px;"></i>
-                                @endif
-                            </a>
+                            @if ($item->data_status)
+                                <span class="badge rounded-pill sactive">Approve</span>
+                            @else
+                                <span class="badge rounded-pill deactive">Disapprove</span>
+                            @endif
                         </td>
                         <td>
-                            <a href="{{ route('admin.cfis.status', $item->id) }}">
-                                @if ($item->status)
-                                    <i class="fa fa-toggle-on text-success" aria-hidden="true"
-                                        style="font-size: 24px;"></i>
-                                @else
-                                    <i class="fa fa-toggle-off text-danger" aria-hidden="true"
-                                        style="font-size: 24px;"></i>
-                                @endif
-                            </a>
+                            @if ($item->status)
+                                <span class="badge rounded-pill sactive">Complected</span>
+                            @else
+                                <span class="badge rounded-pill deactive">Pending</span>
+                            @endif
                         </td>
                         <td>
                             <div class="dropdown pop_Up dropdown_bg">
