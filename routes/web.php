@@ -30,7 +30,7 @@ use App\Http\Controllers\Admin\FFIIncrementLetterController;
 
 Route::get('/', function () {
     return to_route('admin.dashboard');
-    return view('welcome');
+    // return view('welcome');
 });
 
 Route::prefix('admin')->group(function () {
@@ -137,13 +137,17 @@ Route::prefix('admin')->group(function () {
         Route::get('cfis/{id}/delete', [CFISController::class, 'destroy'])->name('cfis.delete');
         Route::post('cfis/export', [CFISController::class, 'export'])->name('cfis.export');
         Route::get('cfis/status/{id}', [CFISController::class, 'toggleStatus'])->name('cfis.status');
-        Route::get('cfis/data_status/{id}', [CFISController::class, 'toggleData_status'])->name('cfis.data_status');
+        // Route::get('cfis/data_status/{id}', [CFISController::class, 'toggleData_status'])->name('cfis.data_status');
+        Route::get('cfis/data-status/{id}/{newStatus}', [CFISController::class, 'toggleData_status'])->name('cfis.data_status');
+       
 
         //dcs_approval
         Route::get('/dcs_approval', [DCSApprovalController::class, 'index'])->name('dcs_approval');
         Route::get('dcs_approval/{id}/edit', [DCSApprovalController::class, 'edit'])->name('dcs_approval.edit');
         Route::post('dcs_approval/{id}/edit', [DCSApprovalController::class, 'update']);
         Route::get('dcs_approval/{id}/delete', [DCSApprovalController::class, 'destroy'])->name('dcs_approval.delete');
+        Route::get('/dcs_rejected', [DCSApprovalController::class, 'rejected'])->name('dcs_rejected');
+
 
         //fhrms
         Route::get('/fhrms', [FHRMSController::class, 'index'])->name('fhrms');

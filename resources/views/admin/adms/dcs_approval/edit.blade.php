@@ -111,7 +111,7 @@
                                 <x-forms.input label="Emergency Contact Person Relation:" type="text"
                                     name="emer_relation" id="emer_relation" :required="true" size="col-lg-6 mt-2"
                                     :value="old('emer_relation', $candidate->emer_relation)" />
-                                <x-forms.input label="Qualification:" type="number" name="qualification"
+                                <x-forms.input label="Qualification:" type="text" name="qualification"
                                     id="qualification" :required="true" size="col-lg-6 mt-2" :value="old('qualification', $candidate->no_of_qualificationchildrens)" />
                                 <x-forms.input label="Phone 1:" type="number" name="phone1" id="phone1"
                                     :required="true" size="col-lg-6 mt-2" :value="old('phone1', $candidate->phone1)" />
@@ -145,7 +145,7 @@
                                     :required="true" size="col-lg-6 mt-2" :value="old('photo', $candidate->photo)" />
                                 <x-forms.input label="Resume:" type="file" name="resume" id="resume"
                                     :required="true" size="col-lg-6 mt-2" :value="old('resume', $candidate->resume)" />
-                                <x-forms.input label="Enter Bank Name:" type="number" name="bank_name"
+                                <x-forms.input label="Enter Bank Name:" type="text" name="bank_name"
                                     id="bank_name" :required="true" size="col-lg-6 mt-2" :value="old('bank_name', $candidate->bank_name)" />
                                 <x-forms.input label="Attach Bank Document:" type="file" name="bank_document"
                                     id="bank_document" :required="true" size="col-lg-6 mt-2" :value="old('bank_document', $candidate->bank_document)" />

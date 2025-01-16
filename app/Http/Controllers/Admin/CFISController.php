@@ -132,11 +132,22 @@ class CFISController extends Controller
         $candidate->save();
         return redirect()->back()->with('success', 'Status updated successfully.');
     }
-    public function toggleData_status($id)
+    public function toggleData_status($id, $newStatus)
     {
         $candidate = $this->model()->findOrFail($id);
-        $candidate->data_status = !$candidate->data_status;
-        $candidate->save();
-        return redirect()->back()->with('success', 'Data Status updated successfully.');
+
+        if ($candidate) {
+            if (in_array($newStatus, [0, 1, 2])) {
+                $candidate->data_status = $newStatus;
+                $candidate->save();
+
+                return redirect()->back()->with('success', 'Status updated successfully!');
+            }
+
+            return redirect()->back()->with('error', 'Invalid status provided.');
+        }
+
+        return redirect()->back()->with('error', 'Item not found.');
     }
+
 }

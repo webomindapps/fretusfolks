@@ -9,7 +9,7 @@
                     ['label' => 'Employee Name', 'column' => 'emp_name', 'sort' => true],
                     ['label' => 'Phone', 'column' => 'phone1', 'sort' => true],
                     ['label' => 'Approval Status', 'column' => 'data_status', 'sort' => true],
-                    ['label' => 'Status', 'column' => 'status', 'sort' => true],
+                    // ['label' => 'Status', 'column' => 'status', 'sort' => true],
                     ['label' => 'Actions', 'column' => 'action', 'sort' => false],
                 ];
             @endphp
@@ -50,21 +50,32 @@
                         <td> {{ $item->emp_name }}</td>
                         <td> {{ $item->phone1 }}</td>
                         <td>
-                            <a href="{{ route('admin.cfis.data_status', $item->id) }}">
-                                @if ($item->data_status)
-                                    <span class="badge rounded-pill sactive">Approve</span>
-                                @else
-                                    <span class="badge rounded-pill deactive">Disapprove</span>
-                                @endif
-                            </a>
+                            <div class="dropdown">
+                                <button class="btn btn-secondary dropdown-toggle" type="button"
+                                    id="statusDropdown{{ $item->id }}" data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+                                    {{ $item->data_status == 0 ? 'Dis-Approved' : ($item->data_status == 1 ? 'Approved' : 'Rejected') }}
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="statusDropdown{{ $item->id }}">
+                                    <li><a class="dropdown-item"
+                                            href="{{ route('admin.cfis.data_status', ['id' => $item->id, 'newStatus' => 0]) }}">Dis-Approved</a>
+                                    </li>
+                                    <li><a class="dropdown-item"
+                                            href="{{ route('admin.cfis.data_status', ['id' => $item->id, 'newStatus' => 1]) }}">Approved</a>
+                                    </li>
+                                    <li><a class="dropdown-item"
+                                            href="{{ route('admin.cfis.data_status', ['id' => $item->id, 'newStatus' => 2]) }}">Rejected</a>
+                                    </li>
+                                </ul>
+                            </div>
                         </td>
-                        <td>
+                        {{-- <td>
                             @if ($item->status)
                                 <span class="badge rounded-pill sactive">Complected</span>
                             @else
                                 <span class="badge rounded-pill deactive">Pending</span>
                             @endif
-                        </td>
+                        </td> --}}
                         <td>
                             <div class="dropdown pop_Up dropdown_bg">
                                 <div class="dropdown-toggle" id="dropdownMenuButton-{{ $item->id }}"
