@@ -11,7 +11,6 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('education_certificate', function (Blueprint $table) {
-            DB::statement('ALTER TABLE education_certificate ADD PRIMARY KEY (`id`);');
             $table->bigInteger('id')->unsigned()->autoIncrement()->change();
             $table->string('emp_id', 100)->nullable()->change();
             $table->string('path', 100)->nullable()->change();

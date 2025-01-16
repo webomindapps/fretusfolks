@@ -15,6 +15,7 @@ class SideBar extends Component
             'route' => 'admin.dashboard',
             'name' => 'dashboard',
             'isSubMenu' => false,
+            'roles' => ['Admin','Finance','Hroperations','Compliance', 'Recruitment','Sales'],
         ],
         [
             'title' => 'FFI Masters',
@@ -22,6 +23,7 @@ class SideBar extends Component
             'icon' => '  bx bxl-slack',
             'route' => 'admin.ffimasters',
             'isSubMenu' => true,
+            'roles' => ['Admin', 'superadmin'],
             'subMenus' => [
                 [
                     'title' => 'TDS code',
@@ -74,24 +76,28 @@ class SideBar extends Component
             'icon' => '  bx bxl-slack',
             'route' => '',
             'isSubMenu' => true,
+            'roles' => ['Admin', 'Recruitment','Hroperations'],
             'subMenus' => [
                 [
                     'title' => 'Candidate Information ',
                     'icon' => 'bx bx-chevron-right',
                     'route' => 'admin.cfis',
                     'name' => 'cfis',
+                    'roles' => ['Admin', 'Recruitment'],
                 ],
                 [
-                    'title' => 'Candidate Data Approval',
+                    'title' => 'Approved Candidates',
                     'icon' => 'bx bx-chevron-right',
                     'route' => 'admin.dcs_approval',
                     'name' => 'dcs_approval',
+                    'roles' => ['Admin', 'Recruitment'],
                 ],
                 [
                     'title' => 'Rejected Candidates ',
                     'icon' => 'bx bx-chevron-right',
                     'route' => 'admin.dcs_rejected',
                     'name' => 'dcs_rejected',
+                    'roles' => ['Admin', 'Recruitment'],
                 ],
 
 
@@ -104,6 +110,7 @@ class SideBar extends Component
             'icon' => 'bx bxl-slack',
             'route' => '',
             'isSubMenu' => true,
+            'roles' => ['Admin', 'superadmin'],
             'subMenus' => [
                 [
                     'title' => 'FHRMS',
@@ -174,6 +181,7 @@ class SideBar extends Component
             'icon' => 'bx bxl-slack',
             'route' => '',
             'isSubMenu' => true,
+            'roles' => ['Admin', 'superadmin'],
             'subMenus' => [
                 [
                     'title' => 'ESIC Challan',
@@ -219,6 +227,7 @@ class SideBar extends Component
             'icon' => 'bx bxl-slack',
             'route' => '',
             'isSubMenu' => true,
+            'roles' => [],
             'subMenus' => [
                 [
                     'title' => 'CIMS',

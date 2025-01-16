@@ -11,10 +11,10 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('backend_management', function (Blueprint $table) {
-            $table->bigInteger('father_dob')->after('father_name')->nullable();
-            $table->bigInteger('mother_dob')->after('mother_name')->nullable();
-            $table->bigInteger('emer_name')->after('emer_contact_no')->nullable();
-            $table->bigInteger('emer_relation')->after('emer_name')->nullable();
+            $table->date('father_dob')->after('father_name')->nullable();
+            $table->date('mother_dob')->after('mother_name')->nullable();
+            $table->string('emer_name')->after('emer_contact_no')->nullable();
+            $table->string('emer_relation')->after('emer_name')->nullable();
         });
     }
 

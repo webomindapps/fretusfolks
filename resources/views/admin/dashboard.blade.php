@@ -37,8 +37,6 @@
                     <div class="row mt-1">
                         <div class="col-lg-4">
                             <div class="card bg-teal-400" style="zoom: 1;">
-                                {{-- <a
-                                    href="{{ route('admin.cdms') }}?from_date={{ request()->from_date }}&to_date={{ request()->to_date ?? date('Y-m-d') }}"> --}}
                                 <div class="card-body">
                                     <div class="dashboard-card">
                                         <div class="data">
@@ -55,7 +53,6 @@
                                     </div>
 
                                 </div>
-                                {{-- </a> --}}
                             </div>
                         </div>
                         <div class="col-lg-4">
@@ -101,7 +98,7 @@
                 <!-- Marketing campaigns -->
 
 
-                @php
+                {{-- @php
                     $inactiveCount = $cfis
                         ->where('emp_name', '!=', '')
                         ->where('active_status', '0')
@@ -171,7 +168,7 @@
 
                         </table>
                     </div>
-                </div>
+                </div> --}}
             </div>
 
             <div class="col-xl-4">
