@@ -27,6 +27,7 @@ use App\Http\Controllers\Admin\FFIOfferLetterController;
 use App\Http\Controllers\Admin\FFITerminationController;
 use App\Http\Controllers\Admin\CMSLabourNoticeController;
 use App\Http\Controllers\Admin\FFIIncrementLetterController;
+use App\Http\Controllers\Admin\SettingController;
 
 Route::get('/', function () {
     return to_route('admin.dashboard');
@@ -282,5 +283,9 @@ Route::prefix('admin')->group(function () {
         Route::post('ffi_assets/bulk_operation', [FFIAssetController::class, 'bulk'])->name('fcms.ffi_assets.bulk');
         Route::get('ffi_assets/{id}/delete', [FFIAssetController::class, 'destroy'])->name('fcms.ffi_assets.delete');
         Route::get('ffi_assets/export', [FFIAssetController::class, 'export'])->name('fcms.ffi_assets.export');
+
+        // settings
+        Route::get('/settings', [SettingController::class, 'index'])->name('settings');
+        Route::post('/settings', [SettingController::class, 'update']);
     });
 });

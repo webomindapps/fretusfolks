@@ -27,14 +27,14 @@
             </div>
         </div>
 
-        <div class="row">
+        <div class="row g-3 mt-2">
             <div class="col-xl-8">
                 <!-- Dashboard content -->
                 <div class="card" style="padding: 2%;">
                     <div class="card-header header-elements-inline">
                         <h6 class="card-title">CDMS Reports</h6>
                     </div>
-                    <div class="row">
+                    <div class="row mt-1">
                         <div class="col-lg-4">
                             <div class="card bg-teal-400" style="zoom: 1;">
                                 {{-- <a
@@ -99,7 +99,7 @@
                     </div>
                 </div>
                 <!-- Marketing campaigns -->
-                <div class="card" style="height: 360px;">
+                <div class="card mt-2" style="height: 360px;">
                     <div class="card-header header-elements-sm-inline">
                         <h6 class="card-title">Company Details</h6>
                         <div class="header-elements">
@@ -214,7 +214,7 @@
 
             </div>
         </div>
-        <div class="row">
+        <div class="row mt-2 g-3">
             <div class="col-xl-8">
                 <div class="card" style="height: 400px;">
                     <div class="card-header header-elements-sm-inline">
@@ -275,7 +275,7 @@
                 </div>
             </div>
         </div>
-        <div class="row">
+        <div class="row mt-2">
             <div class="col-xl-12">
                 <div class="card" style="height: 400px;">
                     <div class="card-header header-elements-sm-inline">
