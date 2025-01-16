@@ -53,13 +53,13 @@ class SideBar extends Component
             'isSubMenu' => true,
             'subMenus' => [
                 [
-                    'title' => 'CDMS',
+                    'title' => 'Client Database System',
                     'icon' => 'bx bx-chevron-right',
                     'route' => 'admin.cdms',
                     'name' => 'cdms',
                 ],
                 [
-                    'title' => 'CDMS Report',
+                    'title' => 'Client Report',
                     'icon' => 'bx bx-chevron-right',
                     'route' => 'admin.cdms_report',
                     'name' => 'cdms_report',
@@ -76,17 +76,24 @@ class SideBar extends Component
             'isSubMenu' => true,
             'subMenus' => [
                 [
-                    'title' => 'CFIS',
+                    'title' => 'Candidate Information ',
                     'icon' => 'bx bx-chevron-right',
                     'route' => 'admin.cfis',
                     'name' => 'cfis',
                 ],
                 [
-                    'title' => 'DCS Approval',
+                    'title' => 'Candidate Data Approval',
                     'icon' => 'bx bx-chevron-right',
                     'route' => 'admin.dcs_approval',
                     'name' => 'dcs_approval',
                 ],
+                [
+                    'title' => 'Rejected Candidates ',
+                    'icon' => 'bx bx-chevron-right',
+                    'route' => 'admin.dcs_rejected',
+                    'name' => 'dcs_rejected',
+                ],
+
 
             ],
 

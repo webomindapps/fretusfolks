@@ -64,7 +64,7 @@
                                     <div class="d-flex">
                                         <h3 class="font-weight-semibold mb-0">
                                             <div class="data">
-                                                {{ $cdms->where('status', '0')->count() }}
+                                                {{ $cdms->where('active_status', '0')->count() }}
                                             </div>
                                         </h3>
                                         <div class="list-icons ml-auto">
@@ -84,7 +84,7 @@
                                     <div class="d-flex">
                                         <h3 class="font-weight-semibold mb-0">
                                             <div class="data">
-                                                {{ $cdms->where('status', '1')->count() }}
+                                                {{ $cdms->where('active_status', '1')->count() }}
                                             </div>
                                         </h3>
 
@@ -99,13 +99,30 @@
                     </div>
                 </div>
                 <!-- Marketing campaigns -->
-                <div class="card mt-2" style="height: 360px;">
+
+
+                @php
+                    $inactiveCount = $cfis
+                        ->where('emp_name', '!=', '')
+                        ->where('active_status', '0')
+                        ->where('status', '0')
+                        ->where('dcs_approval', '1')
+                        ->count();
+
+                    $activeCount = $cfis
+                        ->where('emp_name', '!=', '')
+                        ->where('active_status', '1')
+                        ->where('dcs_approval', '1')
+                        ->count();
+
+                    $totalCount = $inactiveCount + $activeCount;
+                @endphp
+                <div class="card" style="height: 360px;">
                     <div class="card-header header-elements-sm-inline">
                         <h6 class="card-title">Company Details</h6>
                         <div class="header-elements">
                             <span class="badge bg-success badge-pill">Total Employee :
-                                {{ $cfis->count() }}
-                            </span>
+                                {{ $totalCount }} </span>
                             <div class="list-icons ml-3">
                                 <div class="list-icons-item dropdown">
                                     <a class="list-icons-item" data-action="reload" contenteditable="false"
@@ -128,18 +145,33 @@
                             @foreach ($cfis->unique('client_id') as $cfi)
                                 <tr>
                                     <td>{{ $cfi->client?->client_name }}</td>
-                                    <td>{{ $cfis->where('client_id', $cfi->client_id)->count() }}
-                                    </td>
-                                    <td>{{ $cfis->where('client_id', $cfi->client_id)->where('status', '0')->count() }}
-                                    </td>
-                                    <td>{{ $cfis->where('client_id', $cfi->client_id)->where('status', '1')->count() }}
-                                    </td>
+
+                                    @php
+                                        $active = $cfis
+                                            ->where('client_id', $cfi->client_id)
+                                            ->where('emp_name', '!=', '')
+                                            ->where('active_status', '0')
+                                            ->where('status', '0')
+                                            ->where('dcs_approval', '1')
+                                            ->count();
+
+                                        $inactive = $cfis
+                                            ->where('client_id', $cfi->client_id)
+                                            ->where('active_status', '1')
+                                            ->where('status', '1')
+                                            ->where('dcs_approval', '1')
+                                            ->count();
+                                    @endphp
+
+                                    <td>{{ $inactive + $active }}</td>
+                                    <td>{{ $active }}</td>
+                                    <td>{{ $inactive }}</td>
                                 </tr>
                             @endforeach
+
                         </table>
                     </div>
                 </div>
-                <!-- /marketing campaigns -->
             </div>
 
             <div class="col-xl-4">
@@ -188,7 +220,7 @@
                             <div class="card text-center">
                                 <div class="card-body">
                                     <div class="svg-center position-relative" id="hours-available-progress1">
-                                        <h2 class="pt-1 mt-2 mb-1"> {{ $fhrms->where('status', '0')->count() }}
+                                        <h2 class="pt-1 mt-2 mb-1"> {{ $fhrms->where('active_status', '0')->count() }}
                                         </h2><i class="icon-watch text-pink-400 counter-icon" style="top: 22px"></i>
                                         <div>Active Employee</div>
                                     </div>
@@ -200,7 +232,7 @@
                             <div class="card text-center">
                                 <div class="card-body">
                                     <div class="svg-center position-relative" id="goal-progress1">
-                                        <h2 class="pt-1 mt-2 mb-1"> {{ $fhrms->where('status', '1')->count() }}
+                                        <h2 class="pt-1 mt-2 mb-1"> {{ $fhrms->where('active_status', '1')->count() }}
                                         </h2><i class="icon-trophy3 text-indigo-400 counter-icon"
                                             style="top: 22px"></i>
                                         <div>Inactive Employee</div>
@@ -311,7 +343,7 @@
                                         </td>
                                         <td>{{ $item->closure_date ? date('d-m-Y', strtotime($item->closure_date)) : 'N/A' }}
                                         </td>
-                                        <td>{{ $item->where('status', '0')->count() }}</td>
+                                        <td>{{ $item->status == 1 ? 'Completed' : 'Pending' }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
