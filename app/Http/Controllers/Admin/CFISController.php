@@ -20,7 +20,7 @@ class CFISController extends Controller
     }
     public function index()
     {
-        $searchColumns = ['id', 'client_name', 'emp_name', 'joining_date', 'phone1'];
+        $searchColumns = ['id', 'client_id', 'emp_name', 'joining_date', 'phone1'];
         $search = request()->search;
         $from_date = request()->from_date;
         $to_date = request()->to_date;
@@ -28,7 +28,14 @@ class CFISController extends Controller
         $orderBy = request()->orderBy;
         $paginate = request()->paginate;
 
-        $query = $this->model()->query()->where('data_status', 0);
+        // $query = $this->model()->query()->where('data_status', 0)->where('created_by', auth()->id());
+        if (auth()->user()->hasRole('Admin')) {  
+            $query = $this->model()->query()->where('dcs_approval', 1)->where('data_status', 0);
+        } else {
+            $query = $this->model()->query()->where('dcs_approval', 1)
+                ->where('created_by', auth()->id())
+                ->where('data_status', 0);
+        }
 
         if ($from_date && $to_date) {
             $query->whereBetween('created_at', [$from_date, $to_date]);
@@ -67,17 +74,23 @@ class CFISController extends Controller
             // 'aadhar_path' => 'required|file|mimes:pdf,jpg,jpeg,png|max:2048',
             'driving_license_no' => 'nullable|string|max:255',
             // 'driving_license_path' => 'required|file|mimes:pdf,jpg,jpeg,png|max:2048',
-            'photo' => 'required|file|mimes:jpg,jpeg,png|max:2048',
-            'resume' => 'required|file|max:2048',
+            'photo' => 'required|file|mimes:pdf,jpg,png,doc,docx|max:2048',
+            'resume' => 'required|file|mimes:pdf,doc,docx|max:2048',
         ]);
         $validatedData['created_at'] = $request->input('created_at', now());
+        $validatedData['created_by'] = auth()->id();
         $validatedData['status'] = $request->input('status', 1);
-        $validatedData['data_status'] = $request->input('data_status', 1);
-        $validatedData['active_status'] = $request->input('active_status', 1);
-        // $validatedData['aadhar_path'] = $request->file('aadhar_path')->store('uploads/aadhar');
-        // $validatedData['driving_license_path'] = $request->file('driving_license_path')->store('uploads/license');
-        $validatedData['photo'] = $request->file('photo')->store('uploads/photos');
-        $validatedData['resume'] = $request->file('resume')->store('uploads/resumes');
+        $validatedData['dcs_approval'] = $request->input('dcs_approval', 1);
+        $validatedData['data_status'] = $request->input('data_status', 0);
+
+        $fileFields = ['photo', 'resume'];
+        foreach ($fileFields as $field) {
+            if ($request->hasFile($field)) {
+                $filePath = $request->file($field)->store('uploads/' . $field, 'public');
+                $validatedData[$field] = $filePath;
+            }
+        }
+
 
         DB::beginTransaction();
         try {
@@ -138,7 +151,7 @@ class CFISController extends Controller
 
         if ($candidate) {
             if (in_array($newStatus, [0, 1, 2])) {
-                $candidate->data_status = $newStatus;
+                $candidate->dcs_approval = $newStatus;
                 $candidate->save();
 
                 return redirect()->back()->with('success', 'Status updated successfully!');

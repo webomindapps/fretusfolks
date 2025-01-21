@@ -12,7 +12,7 @@ return new class extends Migration {
     {
         Schema::table('other_certificate', function (Blueprint $table) {
             $table->bigInteger('id')->unsigned()->autoIncrement()->change();
-            $table->string('emp_id', 80)->nullable()->change();
+            $table->string('emp_id', 100)->nullable()->change();
             $table->text('path')->nullable()->change();
             $table->timestamps();
         });

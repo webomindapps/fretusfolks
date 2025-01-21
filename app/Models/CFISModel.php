@@ -130,4 +130,13 @@ class CFISModel extends Model
     {
         return $this->belongsTo(States::class, 'state', 'id');
     }
+    public function educationCertificates()
+    {
+        return $this->hasMany(EducationCertificate::class, 'emp_id', 'id');
+    }
+
+    public function otherCertificates()
+    {
+        return $this->hasMany(OtherCertificate::class, 'emp_id', 'id');
+    }
 }

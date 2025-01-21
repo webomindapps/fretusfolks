@@ -47,16 +47,27 @@
                                     id="aadhar_no" :required="true" size="col-lg-6 mt-2" :value="old('aadhar_no')" />
                                 {{-- <x-forms.input label="Attach Adhaar Card:" type="file" name="aadhar_path"
                                     id="aadhar_path" :required="true" size="col-lg-6 mt-2" :value="old('aadhar_path')" /> --}}
-                                <x-forms.input label="Enter Driving License No:" type="text"
-                                    name="driving_license_no" id="driving_license_no" :required="false"
-                                    size="col-lg-6 mt-2" :value="old('driving_license_no')" />
+                                <div class="form-group col-lg-6 mt-2">
+                                    <label for="driving_license_no">Enter Driving License No: <span
+                                            style="color: red;">*</span></label>
+                                    <input type="text" name="driving_license_no" id="driving_license_no"
+                                        class="form-control" value="{{ old('driving_license_no') }}" required>
+                                </div>
                                 {{-- <x-forms.input label="Attach Driving License:" type="file"
                                     name="driving_license_path" id="driving_license_path" :required="true"
                                     size="col-lg-6 mt-2" :value="old('driving_license_path')" /> --}}
-                                <x-forms.input label="Photo:" type="file" name="photo" id="photo"
-                                    :required="true" size="col-lg-6 mt-2" :value="old('photo')" />
-                                <x-forms.input label="Resume:" type="file" name="resume" id="resume"
-                                    :required="true" size="col-lg-6 mt-2" :value="old('resume')" />
+                                <div class="form-group col-lg-6 mt-2">
+                                    <label for="photo">Photo:<span style="color: red;">*</span></label>
+                                    <input type="file" name="photo" id="photo"
+                                        accept="application/pdf, image/jpg, image/png" required class="form-control">
+                                </div>
+                                <div class="form-group col-lg-6 mt-2">
+                                    <label for="resume">Resume:<s<span style="color: red;">*</span></label>
+                                    <input type="file" name="resume" id="resume"
+                                        accept="application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/pdf"
+                                        required class="form-control">
+                                </div>
+
                             </div>
                             <div class="row">
                                 <div class="col-lg-12 mt-4">

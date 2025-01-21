@@ -21,7 +21,7 @@ class DCSApprovalController extends Controller
     }
     public function index()
     {
-        $searchColumns = ['id', 'client_id', 'emp_name', 'phone1'];
+        $searchColumns = ['id', 'client_name', 'emp_name', 'phone1'];
         $search = request()->search;
         $from_date = request()->from_date;
         $to_date = request()->to_date;
@@ -31,15 +31,13 @@ class DCSApprovalController extends Controller
 
         // $query = $this->model()->query()->where('data_status', 1);
 
-        if (auth()->user()->hasRole('Admin')) { // Replace 'Admin' with the appropriate role name
-            $query = $this->model()->query()
-                ->where('dcs_approval', 0)
-                ->whereIn('data_status', [0]);
+        if (auth()->id() == 1) {
+            $query = $this->model()->query()->where('data_status', 1)
+                ->whereIn('status', [1, 2]);
         } else {
-            $query = $this->model()->query()
-                ->where('dcs_approval', 0)
+            $query = $this->model()->query()->where('data_status', 1)
                 ->where('created_by', auth()->id())
-                ->whereIn('data_status', [0]);
+                ->whereIn('status', [1, 2]);
         }
 
         if ($from_date && $to_date) {
@@ -150,14 +148,14 @@ class DCSApprovalController extends Controller
         ]);
         DB::beginTransaction();
         try {
-            $validatedData['dcs_approval'] = $request->input('dcs_approval', 0);
-            $validatedData['data_status'] = $request->input('data_status', 0);
+            $validatedData['data_status'] = $request->input('data_status', 1);
+            $validatedData['status'] = $request->input('status', 3);
             $candidate->update($validatedData);
 
             $fileFields = ['pan_path', 'aadhar_path', 'driving_license_path', 'photo', 'resume', 'bank_document'];
             foreach ($fileFields as $field) {
                 if ($request->hasFile($field)) {
-                    $filePath = $request->file($field)->store('uploads/' . $field, 'public');
+                    $filePath = $request->file($field)->store('uploads', $fileFields);
                     $candidate->$field = $filePath;
                 }
             }
@@ -166,7 +164,7 @@ class DCSApprovalController extends Controller
                     $file = $request->file('document_file')[$index] ?? null;
 
                     if ($file) {
-                        $filePath = $file->store('documents/' . $type, 'public');
+                        $filePath = $file->store('documents', 'public');
 
                         if ($type === 'education_certificate') {
                             EducationCertificate::create([
@@ -219,7 +217,7 @@ class DCSApprovalController extends Controller
     }
     public function rejected()
     {
-        $searchColumns = ['id', 'client_id', 'emp_name', 'phone1'];
+        $searchColumns = ['id', 'client_name', 'emp_name', 'phone1'];
         $search = request()->search;
         $from_date = request()->from_date;
         $to_date = request()->to_date;
@@ -227,7 +225,7 @@ class DCSApprovalController extends Controller
         $orderBy = request()->orderBy;
         $paginate = request()->paginate;
 
-        $query = $this->model()->query()->where('dcs_approval', 2);
+        $query = $this->model()->query()->where('data_status', 2);
 
         if ($from_date && $to_date) {
             $query->whereBetween('created_at', [$from_date, $to_date]);
@@ -247,7 +245,7 @@ class DCSApprovalController extends Controller
 
     public function hrindex()
     {
-        $searchColumns = ['id', 'client_id', 'emp_name', 'phone1'];
+        $searchColumns = ['id', 'client_name', 'emp_name', 'phone1'];
         $search = request()->search;
         $from_date = request()->from_date;
         $to_date = request()->to_date;
@@ -255,7 +253,7 @@ class DCSApprovalController extends Controller
         $orderBy = request()->orderBy;
         $paginate = request()->paginate;
 
-        $query = $this->model()->query()->whereIn('dcs_approval', [0, 1])->whereIn('data_status', [0, 1]);
+        $query = $this->model()->query()->where('data_status', 1)->whereIn('status', [3, 0]);
 
         if ($from_date && $to_date) {
             $query->whereBetween('created_at', [$from_date, $to_date]);
@@ -289,7 +287,7 @@ class DCSApprovalController extends Controller
         }
 
         $uniqueId = 'FFI' . $newNumber;
-
+ 
         $candidate = $this->model()->with(['educationCertificates', 'otherCertificates'])->findOrFail($id);
         $children = DCSChildren::where('emp_id', $candidate->id)->get();
 
@@ -327,7 +325,7 @@ class DCSApprovalController extends Controller
             'languages' => 'nullable|string|max:255',
             'mother_tongue' => 'nullable|string|max:255',
             'maritial_status' => 'nullable|string|max:255',
-            'emer_contact_no' => 'nullable|string|max:10',
+            'emer_contact_no' => 'nullable|string|max:15',
             'emer_name' => 'nullable|string|max:255',
             'emer_relation' => 'nullable|string|max:255',
             'spouse_name' => 'nullable|string|max:255',
@@ -371,7 +369,7 @@ class DCSApprovalController extends Controller
             'employer_esic' => 'nullable|numeric',
             'mediclaim' => 'nullable|numeric',
             'ctc' => 'nullable|numeric',
-            'data_status' => 'required|numeric',
+            'status' => 'required|numeric',
             'modify_by' => 'nullable|integer',
             'password' => 'nullable|string|max:255',
             'refresh_code' => 'nullable|string|max:255',
@@ -385,7 +383,7 @@ class DCSApprovalController extends Controller
         DB::beginTransaction();
         try {
             $validatedData['data_status'] = $request->input('data_status', 1);
-            $validatedData['dcs_approval'] = $request->input('dcs_approval', 0);
+            $validatedData['status'] = $request->input('status', 0);
             $candidate->update($validatedData);
 
             $fileFields = ['pan_path', 'aadhar_path', 'driving_license_path', 'photo', 'resume', 'bank_document'];
@@ -394,7 +392,7 @@ class DCSApprovalController extends Controller
                     if ($candidate->$field) {
                         Storage::disk('public')->delete($candidate->$field);
                     }
-                    $filePath = $request->file($field)->store('uploads/' . $field, 'public');
+                    $filePath = $request->file($field)->store('uploads', 'public');
                     $candidate->$field = $filePath;
                 }
             }
@@ -403,7 +401,8 @@ class DCSApprovalController extends Controller
                     $file = $request->file('document_file')[$index] ?? null;
 
                     if ($file) {
-                        $filePath = $file->store('documents/' . $type, 'public');
+                        $filePath = $file->store('documents', 'public');
+
                         if ($type === 'education_certificate') {
                             EducationCertificate::create([
                                 'emp_id' => $candidate->id,
@@ -539,15 +538,15 @@ class DCSApprovalController extends Controller
         DB::beginTransaction();
         try {
             $candidate = $this->model()->findOrFail($validatedData['id']);
-            $validatedData['dcs_approval'] = $request->input('data_status', 0);
-            $validatedData['data_status'] = $request->input('status', 0);
+            $validatedData['data_status'] = $request->input('data_status', 1);
+            $validatedData['status'] = $request->input('status', 1);
             $candidate->update($validatedData);
 
 
             $fileFields = ['pan_path', 'aadhar_path', 'driving_license_path', 'photo', 'resume', 'bank_document'];
             foreach ($fileFields as $field) {
                 if ($request->hasFile($field)) {
-                    $filePath = $request->file($field)->store('uploads/', $field);
+                    $filePath = $request->file($field)->store('uploads', $fileFields);
                     $candidate->$field = $filePath;
                 }
             }
@@ -556,7 +555,8 @@ class DCSApprovalController extends Controller
                     $file = $request->file('document_file')[$index] ?? null;
 
                     if ($file) {
-                        $filePath = $file->store('documents/' . $type, 'public');
+                        $filePath = $file->store('documents', 'public');
+
                         if ($type === 'education_certificate') {
                             EducationCertificate::create([
                                 'emp_id' => $candidate->id,

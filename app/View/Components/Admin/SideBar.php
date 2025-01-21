@@ -15,7 +15,7 @@ class SideBar extends Component
             'route' => 'admin.dashboard',
             'name' => 'dashboard',
             'isSubMenu' => false,
-            'roles' => ['Admin','Finance','Hroperations','Compliance', 'Recruitment','Sales'],
+            'roles' => ['Admin', 'Finance', 'Hroperations', 'Compliance', 'Recruitment', 'Sales'],
         ],
         [
             'title' => 'FFI Masters',
@@ -30,18 +30,24 @@ class SideBar extends Component
                     'icon' => 'bx bx-chevron-right',
                     'route' => 'admin.tds_code',
                     'name' => 'tds_code',
+                    'roles' => ['Admin'],
+
                 ],
                 [
                     'title' => 'Letter Content',
                     'icon' => 'bx bx-chevron-right',
                     'route' => 'admin.letter_content',
                     'name' => 'letter_content',
+                    'roles' => ['Admin'],
+
                 ],
                 [
                     'title' => 'User Masters',
                     'icon' => 'bx bx-chevron-right',
                     'route' => 'admin.usermasters',
                     'name' => 'usermasters',
+                    'roles' => ['Admin'],
+
                 ],
 
             ],
@@ -52,6 +58,7 @@ class SideBar extends Component
             'name' => 'cdms',
             'icon' => '  bx bxl-slack',
             'route' => '',
+            'roles' => ['Admin'],
             'isSubMenu' => true,
             'subMenus' => [
                 [
@@ -59,12 +66,14 @@ class SideBar extends Component
                     'icon' => 'bx bx-chevron-right',
                     'route' => 'admin.cdms',
                     'name' => 'cdms',
+                    'roles' => ['Admin'],
                 ],
                 [
                     'title' => 'Client Report',
                     'icon' => 'bx bx-chevron-right',
                     'route' => 'admin.cdms_report',
                     'name' => 'cdms_report',
+                    'roles' => ['Admin'],
                 ],
 
             ],
@@ -76,7 +85,7 @@ class SideBar extends Component
             'icon' => '  bx bxl-slack',
             'route' => '',
             'isSubMenu' => true,
-            'roles' => ['Admin', 'Recruitment','Hroperations'],
+            'roles' => ['Admin', 'Recruitment', 'Hroperations'],
             'subMenus' => [
                 [
                     'title' => 'Candidate Information ',
@@ -99,7 +108,13 @@ class SideBar extends Component
                     'name' => 'dcs_rejected',
                     'roles' => ['Admin', 'Recruitment'],
                 ],
-
+                [
+                    'title' => 'Hr Approved Candidates',
+                    'icon' => 'bx bx-chevron-right',
+                    'route' => 'admin.hrindex',
+                    'name' => 'hrindex',
+                    'roles' => ['Admin', 'Hroperations'],
+                ],
 
             ],
 
@@ -117,60 +132,74 @@ class SideBar extends Component
                     'icon' => 'bx bx-chevron-right',
                     'route' => 'admin.fhrms',
                     'name' => 'fhrms',
+                    'roles' => ['Admin'],
+
                 ],
                 [
                     'title' => 'FHRMS Report',
                     'icon' => 'bx bx-chevron-right',
                     'route' => 'admin.fhrms_report',
                     'name' => 'fhrms_report',
+                    'roles' => ['Admin'],
+
                 ],
                 [
                     'title' => 'FFI Offer Letter',
                     'icon' => 'bx bx-chevron-right',
                     'route' => 'admin.ffi_offer_letter',
                     'name' => 'ffi_offer_letter',
+                    'roles' => ['Admin'],
+
                 ],
                 [
                     'title' => 'FFI Increment Letter',
                     'icon' => 'bx bx-chevron-right',
                     'route' => 'admin.ffi_increment_letter',
                     'name' => 'ffi_increment_letter',
+                    'roles' => ['Admin'],
+
                 ],
                 [
                     'title' => 'FFI Payslips',
                     'icon' => 'bx bx-chevron-right',
                     'route' => 'admin.ffi_payslips',
                     'name' => 'ffi_payslips',
+                    'roles' => ['Admin'],
                 ],
                 [
                     'title' => 'FFI PIP Letter',
                     'icon' => 'bx bx-chevron-right',
                     'route' => 'admin.ffi_pip_letter',
                     'name' => 'ffi_pip_letter',
+                    'roles' => ['Admin'],
                 ],
                 [
                     'title' => 'FFI Termination Letter',
                     'icon' => 'bx bx-chevron-right',
                     'route' => 'admin.ffi_termination',
                     'name' => 'ffi_termination',
+                    'roles' => ['Admin'],
                 ],
                 [
                     'title' => 'FFI Show Cause Letter',
                     'icon' => 'bx bx-chevron-right',
                     'route' => 'admin.ffi_show_cause',
                     'name' => 'ffi_show_cause',
+                    'roles' => ['Admin'],
                 ],
                 [
                     'title' => 'FFI Warning Letter',
                     'icon' => 'bx bx-chevron-right',
                     'route' => 'admin.ffi_warning',
                     'name' => 'ffi_warning',
+                    'roles' => ['Admin'],
                 ],
                 [
                     'title' => 'Birthday Details',
                     'icon' => 'bx bx-chevron-right',
                     'route' => 'admin.fhrms.ffi_birthday',
                     'name' => 'ffi_birthday',
+                    'roles' => ['Admin'],
                 ],
             ],
 
@@ -188,36 +217,42 @@ class SideBar extends Component
                     'icon' => 'bx bx-chevron-right',
                     'route' => 'admin.cms.esic',
                     'name' => 'cfis',
+                    'roles' => ['Admin'],
                 ],
                 [
                     'title' => 'PF Challan',
                     'icon' => 'bx bx-chevron-right',
                     'route' => 'admin.cms.pf',
                     'name' => 'cfis',
+                    'roles' => ['Admin'],
                 ],
                 [
                     'title' => 'PT Challan',
                     'icon' => 'bx bx-chevron-right',
                     'route' => 'admin.cms.pt',
                     'name' => 'cfis',
+                    'roles' => ['Admin'],
                 ],
                 [
                     'title' => 'LWF Challan',
                     'icon' => 'bx bx-chevron-right',
                     'route' => 'admin.cms.lwf',
                     'name' => 'lwf',
+                    'roles' => ['Admin'],
                 ],
                 [
                     'title' => 'Form T Register',
                     'icon' => 'bx bx-chevron-right',
                     'route' => 'admin.cms.formt',
                     'name' => 'formt',
+                    'roles' => ['Admin'],
                 ],
                 [
                     'title' => 'Labour Notice',
                     'icon' => 'bx bx-chevron-right',
                     'route' => 'admin.cms.labour',
                     'name' => 'labour',
+                    'roles' => ['Admin'],
                 ],
             ],
         ],
@@ -227,55 +262,63 @@ class SideBar extends Component
             'icon' => 'bx bxl-slack',
             'route' => '',
             'isSubMenu' => true,
-            'roles' => [],
+            'roles' => ['Admin'],
             'subMenus' => [
                 [
                     'title' => 'CIMS',
                     'icon' => 'bx bx-chevron-right',
                     'route' => 'admin.fcms.cims',
                     'name' => 'cims',
+                    'roles' => ['Admin'],
                 ],
                 [
                     'title' => 'CIMS Reports',
                     'icon' => 'bx bx-chevron-right',
                     'route' => 'admin.fcms.cims.reports',
                     'name' => 'cimsreport',
+                    'roles' => ['Admin'],
                 ],
                 [
                     'title' => 'Receivables',
                     'icon' => 'bx bx-chevron-right',
                     'route' => 'admin.fcms.receivables',
                     'name' => 'receivables',
+                    'roles' => ['Admin'],
                 ],
                 [
                     'title' => 'Receivables Reports',
                     'icon' => 'bx bx-chevron-right',
                     'route' => 'admin.fcms.receivable.reports',
                     'name' => 'receivables_reports',
+                    'roles' => ['Admin'],
                 ],
                 [
                     'title' => 'TDS Reports',
                     'icon' => 'bx bx-chevron-right',
                     'route' => 'admin.fcms.tds_report',
                     'name' => 'tds_report',
+                    'roles' => ['Admin'],
                 ],
                 [
                     'title' => 'FFCM',
                     'icon' => 'bx bx-chevron-right',
                     'route' => 'admin.fcms.ffcm',
                     'name' => 'ffcm',
+                    'roles' => ['Admin'],
                 ],
                 [
                     'title' => 'FFCM Reports',
                     'icon' => 'bx bx-chevron-right',
                     'route' => 'admin.fcms.ffcm_report',
                     'name' => 'ffcm_report',
+                    'roles' => ['Admin'],
                 ],
                 [
                     'title' => 'FFI Assets',
                     'icon' => 'bx bx-chevron-right',
                     'route' => 'admin.fcms.ffi_assets',
                     'name' => 'ffi_assets',
+                    'roles' => ['Admin'],
                 ],
             ]
         ],

@@ -97,8 +97,22 @@
                 </div>
                 <!-- Marketing campaigns -->
 
+                @php
+                    // $active = $cfis
+                    //     ->where('client_id', $cfis->client_id)
+                    //     ->where('emp_name', '!=', '')
+                    //     ->where('active_status', '0')
+                    //     ->where('status', '0')
+                    //     ->where('dcs_approval', '1')
+                    //     ->count();
 
-                {{-- @php
+                    // $inactive = $cfis
+                    //     ->where('client_id', $cfis->client_id)
+                    //     ->where('active_status', '1')
+                    //     ->where('status', '1')
+                    //     ->where('dcs_approval', '1')
+                    //     ->count();
+
                     $inactiveCount = $cfis
                         ->where('emp_name', '!=', '')
                         ->where('active_status', '0')
@@ -142,33 +156,15 @@
                             @foreach ($cfis->unique('client_id') as $cfi)
                                 <tr>
                                     <td>{{ $cfi->client?->client_name }}</td>
-
-                                    @php
-                                        $active = $cfis
-                                            ->where('client_id', $cfi->client_id)
-                                            ->where('emp_name', '!=', '')
-                                            ->where('active_status', '0')
-                                            ->where('status', '0')
-                                            ->where('dcs_approval', '1')
-                                            ->count();
-
-                                        $inactive = $cfis
-                                            ->where('client_id', $cfi->client_id)
-                                            ->where('active_status', '1')
-                                            ->where('status', '1')
-                                            ->where('dcs_approval', '1')
-                                            ->count();
-                                    @endphp
-
-                                    <td>{{ $inactive + $active }}</td>
-                                    <td>{{ $active }}</td>
-                                    <td>{{ $inactive }}</td>
+                                    {{-- <td>{{ $inactive + $active }}</td> --}}
+                                    {{-- <td>{{ $active }}</td>
+                                    <td>{{ $inactive }}</td> --}}
                                 </tr>
                             @endforeach
 
                         </table>
                     </div>
-                </div> --}}
+                </div>
             </div>
 
             <div class="col-xl-4">
