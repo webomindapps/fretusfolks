@@ -304,4 +304,35 @@ class FretusFolks extends Controller
         }
         return $data;
     }
+
+    public function getQualification()
+    {
+        $fields = [
+            '5th ',
+            '6th',
+            '7th',
+            '8th',
+            '9th',
+            '10th',
+            'PUC',
+            'BBA',
+            'BCOM',
+            'BCA',
+            'BE',
+            'MBA',
+            'MCOM',
+            'MCA',
+            'Engineering',
+            'Diploma ',
+            'PHD'
+        ];
+        $data = [];
+        foreach ($fields as $field) {
+            $data[] = [
+                'label' => ucfirst(str_replace('_', ' ', $field)),
+                'value' => $field,
+            ];
+        }
+        return $data;
+    }
 }

@@ -10,6 +10,7 @@ class ClientManagement extends Model
     protected $table = "client_management";
     protected $fillable = [
         'client_code',
+        'client_ffi_id',
         'client_name',
         'land_line',
         'client_email',

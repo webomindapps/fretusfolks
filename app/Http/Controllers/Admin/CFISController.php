@@ -29,7 +29,7 @@ class CFISController extends Controller
         $paginate = request()->paginate;
 
         // $query = $this->model()->query()->where('data_status', 0)->where('created_by', auth()->id());
-        if (auth()->user()->hasRole('Admin')) {  
+        if (auth()->user()->hasRole('Admin')) {
             $query = $this->model()->query()->where('dcs_approval', 1)->where('data_status', 0);
         } else {
             $query = $this->model()->query()->where('dcs_approval', 1)
@@ -59,23 +59,20 @@ class CFISController extends Controller
     }
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
-            'client_id' => 'required|string',
-            'emp_name' => 'required|string',
-            'phone1' => 'required|digits:10',
-            'email' => 'required|email|max:255',
-            'state' => 'required|string',
-            'location' => 'required|string|max:255',
-            'designation' => 'required|string|max:255',
-            'department' => 'required|string|max:255',
-            'interview_date' => 'required|date',
-            // 'joining_date' => 'required|date|after_or_equal:interview_date',
-            'aadhar_no' => 'required|digits:12',
-            // 'aadhar_path' => 'required|file|mimes:pdf,jpg,jpeg,png|max:2048',
-            'driving_license_no' => 'nullable|string|max:255',
-            // 'driving_license_path' => 'required|file|mimes:pdf,jpg,jpeg,png|max:2048',
-            'photo' => 'required|file|mimes:pdf,jpg,png,doc,docx|max:2048',
-            'resume' => 'required|file|mimes:pdf,doc,docx|max:2048',
+        $validatedData = $request->only([
+            'client_id',
+            'emp_name',
+            'phone1',
+            'email',
+            'state',
+            'location',
+            'designation',
+            'department',
+            'interview_date',
+            'aadhar_no',
+            'driving_license_no',
+            'photo',
+            'resume',
         ]);
         $validatedData['created_at'] = $request->input('created_at', now());
         $validatedData['created_by'] = auth()->id();
@@ -105,6 +102,62 @@ class CFISController extends Controller
             dd($e);
         }
     }
+    public function edit($id)
+    {
+        $candidate = $this->model()->find($id);
+        return view('admin.adms.cfis.edit', compact('candidate'));
+    }
+    public function update(Request $request, $id)
+    {
+        $candidate = $this->model()->findOrFail($id);
+
+        $validatedData = $request->only([
+            'client_id',
+            'emp_name',
+            'phone1',
+            'email',
+            'state',
+            'location',
+            'designation',
+            'department',
+            'interview_date',
+            'aadhar_no',
+            'driving_license_no',
+            'photo',
+            'resume',
+        ]);
+
+        // $validatedData['created_by'] = auth()->id();
+        $validatedData['dcs_approval'] = $request->input('dcs_approval', 1);
+        $validatedData['data_status'] = $request->input('data_status', 0);
+
+        $fileFields = ['photo', 'resume'];
+        foreach ($fileFields as $field) {
+            if ($request->hasFile($field)) {
+                $filePath = $request->file($field)->store('uploads/' . $field, 'public');
+                $validatedData[$field] = $filePath;
+            }
+        }
+
+        DB::beginTransaction();
+        try {
+            $candidate->update($validatedData);
+
+            $candidate->entity_name = ClientManagement::where('id', $validatedData['client_id'])->value('client_name');
+            $candidate->save();
+
+            DB::commit();
+
+            return redirect()->route('admin.cfis')->with('success', 'Candidate data updated successfully!');
+        } catch (Exception $e) {
+            DB::rollBack();
+
+
+            return redirect()->back()->with('error', 'Failed to update candidate data. Please try again.');
+        }
+    }
+
+
     public function destroy($id)
     {
         $this->model()->destroy($id);

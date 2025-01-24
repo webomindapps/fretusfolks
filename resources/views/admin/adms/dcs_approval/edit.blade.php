@@ -4,7 +4,7 @@
         .btn-custom {
             background-color: #007bff;
             color: white;
-            padding: 10px 20px;
+            padding: 12px 20px;
             border-radius: 5px;
             text-decoration: none;
         }
@@ -52,21 +52,21 @@
                                 <x-forms.input label="Grade: " type="text" name="grade" id="grade"
                                     :required="false" size="col-lg-6 mt-2" :value="old('grade', $candidate->grade)" />
                                 <x-forms.input label="Enter Employee Name: " type="text" name="emp_name"
-                                    id="emp_name" :required="true" size="col-lg-4 mt-2" :value="old('emp_name', $candidate->emp_name)" />
-                                <x-forms.input label="Middle Name: " type="text" name="middle_name" id="middle_name"
+                                    id="emp_name" :required="true" size="col-lg-6 mt-2" :value="old('emp_name', $candidate->emp_name)" />
+                                {{-- <x-forms.input label="Middle Name: " type="text" name="middle_name" id="middle_name"
                                     :required="false" size="col-lg-4 mt-2" :value="old('middle_name', $candidate->middle_name)" />
                                 <x-forms.input label="Last Name: " type="text" name="last_name" id="last_name"
-                                    :required="false" size="col-lg-4 mt-2" :value="old('last_name', $candidate->last_name)" />
+                                    :required="false" size="col-lg-4 mt-2" :value="old('last_name', $candidate->last_name)" /> --}}
                                 <x-forms.input label="Interview Date:  " type="date" name="interview_date"
-                                    id="interview_date" :required="true" size="col-lg-4 mt-2"
+                                    id="interview_date" :required="true" size="col-lg-6 mt-2"
                                     value="{{ old('interview_date', $candidate->interview_date ? $candidate->interview_date->format('Y-m-d') : '') }}" />
 
                                 <x-forms.input label="Joining Date: " type="date" name="joining_date"
-                                    id="joining_date" :required="true" size="col-lg-4 mt-2"
+                                    id="joining_date" :required="true" size="col-lg-6 mt-2"
                                     value="{{ old('joining_date', $candidate->joining_date ? $candidate->joining_date->format('Y-m-d') : '') }}" />
-                                <x-forms.input label="DOL " type="date" name="contract_date" id="contract_date"
+                                {{-- <x-forms.input label="DOL " type="date" name="contract_date" id="contract_date"
                                     :required="false" size="col-lg-4 mt-2"
-                                    value="{{ old('contract_date', $candidate->contract_date ? $candidate->contract_date->format('Y-m-d') : '') }}" />
+                                    value="{{ old('contract_date', $candidate->contract_date ? $candidate->contract_date->format('Y-m-d') : '') }}" /> --}}
 
                                 <x-forms.input label="Enter Designation: " type="text" name="designation"
                                     id="designation" :required="true" size="col-lg-6 mt-2" :value="old('designation', $candidate->designation)" />
@@ -94,6 +94,12 @@
                                         <x-forms.input label="Spouse Name:" type="text" name="spouse_name"
                                             id="spouse_name" :required="false" size="col-lg-6 mt-2"
                                             :value="old('spouse_name', $candidate->spouse_name)" />
+                                        <x-forms.input label="Spouse's DOB: " type="date" name="spouse_dob"
+                                            id="spouse_dob" :required="false" size="col-lg-6 mt-2"
+                                            :value="old('spouse_dob', $candidate->spouse_dob)" />
+                                        <x-forms.input label="Enter Spouse Adhar Card No:" type="number"
+                                            name="spouse_aadhar_no" id="spouse_aadhar_no" :required="false"
+                                            size="col-lg-6 mt-2" :value="old('spouse_aadhar_no', $candidate->spouse_aadhar_no)" />
                                         <x-forms.input label="No of Children:" type="number" name="no_of_childrens"
                                             id="no_of_childrens" :required="false" size="col-lg-6 mt-2"
                                             :value="old('no_of_childrens', $candidate->no_of_childrens)" />
@@ -112,10 +118,16 @@
                                     id="father_name" :required="true" size="col-lg-6 mt-2" :value="old('father_name', $candidate->father_name)" />
                                 <x-forms.input label="Father's DOB: " type="date" name="father_dob"
                                     id="father_dob" :required="true" size="col-lg-6 mt-2" :value="old('father_dob', $candidate->father_dob)" />
+                                <x-forms.input label="Father's Adhar Card No:" type="number" name="father_aadhar_no"
+                                    id="father_aadhar_no" :required="true" size="col-lg-6 mt-2"
+                                    :value="old('father_aadhar_no', $candidate->father_aadhar_no)" />
                                 <x-forms.input label="Mother Name: " type="text" name="mother_name"
                                     id="mother_name" :required="true" size="col-lg-6 mt-2" :value="old('mother_name', $candidate->mother_name)" />
                                 <x-forms.input label="Mother's DOB: " type="date" name="mother_dob"
                                     id="mother_dob" :required="true" size="col-lg-6 mt-2" :value="old('mother_dob', $candidate->mother_dob)" />
+                                <x-forms.input label="Mother's Adhar Card No:" type="number" name="mother_aadhar_no"
+                                    id="mother_aadhar_no" :required="true" size="col-lg-6 mt-2"
+                                    :value="old('mother_aadhar_no', $candidate->mother_aadhar_no)" />
                                 <x-forms.input label="Religion: " type="text" name="religion" id="religion"
                                     :required="true" size="col-lg-6 mt-2" :value="old('religion', $candidate->religion)" />
                                 <x-forms.input label="Languages: " type="text" name="languages" id="languages"
@@ -133,8 +145,8 @@
                                 <x-forms.input label="Emergency Contact Person Relation:" type="text"
                                     name="emer_relation" id="emer_relation" :required="true" size="col-lg-6 mt-2"
                                     :value="old('emer_relation', $candidate->emer_relation)" />
-                                <x-forms.input label="Qualification:" type="text" name="qualification"
-                                    id="qualification" :required="true" size="col-lg-6 mt-2" :value="old('qualification', $candidate->qualification)" />
+                                <x-forms.select label=" Qualification:" name="qualification" id="qualification"
+                                    :required="true" size="col-lg-6 mt-2" :options="FretusFolks::getQualification()" :value="old('qualification', $candidate->qualification)" />
                                 <x-forms.input label="Phone 1:" type="number" name="phone1" id="phone1"
                                     :required="true" size="col-lg-6 mt-2" :value="old('phone1', $candidate->phone1)" />
                                 {{-- <x-forms.input label="Phone 2:" type="number" name="phone2" id="phone2"
@@ -152,7 +164,7 @@
                                 <x-forms.input label="Enter PAN Card No::" type="text" name="pan_no"
                                     id="pan_no" :required="false" size="col-lg-6 mt-2" :value="old('pan_no', $candidate->pan_no)" />
                                 <div class="form-group col-lg-6 mt-2">
-                                    <label for="pan_path">Attach PAN: <span style="color: red;">*</span></label>
+                                    <label for="pan_path">Attach PAN: </label>
                                     <input type="file" name="pan_path" id="pan_path"
                                         accept="application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/pdf, image/jpg, image/png"
                                         class="form-control" value="{{ old('pan_path', $candidate->pan_path) }}">
@@ -177,20 +189,45 @@
                                         class="form-control"
                                         value="{{ old('driving_license_path', $candidate->driving_license_path) }}">
                                 </div>
-                                <div class="form-group col-lg-6 mt-2">
+                                {{-- <div class="form-group col-lg-6 mt-2">
                                     <label for="photo">Photo: <span style="color: red;">*</span></label>
                                     <input type="file" name="photo" id="photo"
                                         accept="application/pdf, image/jpg, image/png" class="form-control"
                                         value="{{ old('photo', $candidate->photo) }}" required>
+                                </div> --}}
+                                <div class="form-group col-lg-6 mt-2">
+                                    <label for="photo">Photo:</label>
+                                    <input type="file" name="photo" id="photo"
+                                        accept="image/jpg, image/png" class="form-control">
+                                    <div id="image-preview-container" class="d-flex ">
+                                        <img src="{{ asset('storage/' . $candidate->photo) }}" class="img-thumbnail"
+                                            width="100" height="100" alt="Uploaded image">
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-6 mt-2">
+                                    <label for="resume">Resume:</label>
+                                    <input type="file" name="resume" id="resume"
+                                        accept="application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/pdf"
+                                        class="form-control">
+                                    <a href="{{ asset('storage/' . $candidate->resume) }}" target="_blank"
+                                        class="btn btn-custom">
+                                        View Resume
+                                    </a>
+                                </div>
+                                <div class="form-group col-lg-6 mt-2">
+                                    <label for="family_photo">Family Photo: <span style="color: red;">*</span></label>
+                                    <input type="file" name="family_photo" id="family_photo"
+                                        accept="application/pdf, image/jpg, image/png" class="form-control"
+                                        value="{{ old('family_photo', $candidate->family_photo) }}" required>
                                 </div>
 
-                                <div class="form-group col-lg-6 mt-2">
+                                {{-- <div class="form-group col-lg-6 mt-2">
                                     <label for="resume">Resume: <span style="color: red;">*</span></label>
                                     <input type="file" name="resume" id="resume"
                                         accept="application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/pdf"
                                         class="form-control" value="{{ old('resume', $candidate->resume) }}"
                                         required>
-                                </div>
+                                </div> --}}
                                 <x-forms.input label="Enter Bank Name:" type="text" name="bank_name"
                                     id="bank_name" :required="true" size="col-lg-6 mt-2" :value="old('bank_name', $candidate->bank_name)" />
                                 <div class="form-group col-lg-6 mt-2">
@@ -317,8 +354,8 @@
                                                     'pan_path' => 'PAN Document',
                                                     'aadhar_path' => 'Aadhar Document',
                                                     'driving_license_path' => 'Driving License',
-                                                    'photo' => 'Photo',
-                                                    'resume' => 'Resume',
+                                                    // 'photo' => 'Photo',
+                                                    // 'resume' => 'Resume',
                                                     'bank_document' => 'Bank Document',
                                                     'voter_id' => 'Voter ID/ PVC/ UL',
                                                     'emp_form' => 'Employee Form',
@@ -384,8 +421,8 @@
                                 </div>
 
 
-                                <x-forms.input label="Password:" type="text" name="psd" id="psd"
-                                    :required="true" size="col-lg-6 mt-2" :value="old('psd', 'ffemp@123')" />
+                                {{-- <x-forms.input label="Password:" type="text" name="psd" id="psd"
+                                    :required="true" size="col-lg-6 mt-2" :value="old('psd', 'ffemp@123')" /> --}}
                                 {{-- <x-forms.select label="Active Status:" name="active_status" id="active_status"
                                     :required="true" size="col-lg-6 mt-2" :options="FretusFolks::getStatus()" :value="old('active_status', $candidate->active_status)" /> --}}
                             </div>
@@ -402,51 +439,54 @@
             </form>
         </div>
     </div>
-    <script>
-        //maritial_status
-        document.addEventListener('DOMContentLoaded', function() {
-            const maritalStatus = document.getElementById('maritial_status');
-            const marriedFields = document.getElementById('married-fields');
+    @push('scripts')
+        <script>
+            //maritial_status
+            document.addEventListener('DOMContentLoaded', function() {
+                const maritalStatus = document.getElementById('maritial_status');
+                const marriedFields = document.getElementById('married-fields');
 
-            function toggleMarriedFields() {
-                if (maritalStatus.value === 'Married') {
-                    marriedFields.style.display = 'block';
-                } else {
-                    marriedFields.style.display = 'none';
-                    document.getElementById('spouse_name').value = '';
-                    document.getElementById('no_of_childrens').value = '';
+                function toggleMarriedFields() {
+                    if (maritalStatus.value === 'Married') {
+                        marriedFields.style.display = 'block';
+                    } else {
+                        marriedFields.style.display = 'none';
+                        document.getElementById('spouse_name').value = '';
+                        document.getElementById('spouse_dob').value = '';
+                        document.getElementById('spouse_aadhar_no').value = '';
+                        document.getElementById('no_of_childrens').value = '';
+                    }
                 }
-            }
-            toggleMarriedFields();
-            maritalStatus.addEventListener('change', toggleMarriedFields);
-        });
-        //uan
-        document.addEventListener('DOMContentLoaded', function() {
-            const uanStatus = document.getElementById('uan_status');
-            const uanNumberField = document.getElementById('uan-number-field');
-            const uanNumberInput = document.getElementById('uan_no');
+                toggleMarriedFields();
+                maritalStatus.addEventListener('change', toggleMarriedFields);
+            });
+            //uan
+            document.addEventListener('DOMContentLoaded', function() {
+                const uanStatus = document.getElementById('uan_status');
+                const uanNumberField = document.getElementById('uan-number-field');
+                const uanNumberInput = document.getElementById('uan_no');
 
-            function toggleUANField() {
-                if (uanStatus.value === 'Yes') {
-                    uanNumberField.style.display = 'block';
-                    uanNumberInput.required = true;
-                } else {
-                    uanNumberField.style.display = 'none';
-                    uanNumberInput.required = false;
-                    uanNumberInput.value = '';
+                function toggleUANField() {
+                    if (uanStatus.value === 'Yes') {
+                        uanNumberField.style.display = 'block';
+                        uanNumberInput.required = true;
+                    } else {
+                        uanNumberField.style.display = 'none';
+                        uanNumberInput.required = false;
+                        uanNumberInput.value = '';
+                    }
                 }
-            }
-            toggleUANField();
-            uanStatus.addEventListener('change', toggleUANField);
-        });
-        //documents
-        document.addEventListener('DOMContentLoaded', function() {
-            const documentRowsContainer = document.getElementById('document-rows');
-            documentRowsContainer.addEventListener('click', function(event) {
-                if (event.target.classList.contains('add-row')) {
-                    const newRow = document.createElement('div');
-                    newRow.className = 'document-row d-flex align-items-center mb-3';
-                    newRow.innerHTML = `
+                toggleUANField();
+                uanStatus.addEventListener('change', toggleUANField);
+            });
+            //documents
+            document.addEventListener('DOMContentLoaded', function() {
+                const documentRowsContainer = document.getElementById('document-rows');
+                documentRowsContainer.addEventListener('click', function(event) {
+                    if (event.target.classList.contains('add-row')) {
+                        const newRow = document.createElement('div');
+                        newRow.className = 'document-row d-flex align-items-center mb-3';
+                        newRow.innerHTML = `
                     <select name="document_type[]" class="col-lg-5 me-3 " >
                         <option value="">Select Document Type</option>
                         <option value="voter_id">Voter ID/ PVC/ UL</option>
@@ -463,101 +503,103 @@ class="col-lg-5 me-3 " >
                     <button type="button" class="btn btn-success me-2 add-row">+</button>
                     <button type="button" class="btn btn-danger me-2 remove-row">-</button>
                 `;
-                    documentRowsContainer.appendChild(newRow);
-                    document.querySelectorAll('.remove-row').forEach(button => {
-                        button.style.display = 'inline-block';
-                    });
-                }
-            });
-            documentRowsContainer.addEventListener('click', function(event) {
-                if (event.target.classList.contains('remove-row')) {
-                    const row = event.target.closest('.document-row');
-                    row.remove();
-                    if (document.querySelectorAll('.document-row').length === 1) {
-                        document.querySelector('.remove-row').style.display = 'none';
+                        documentRowsContainer.appendChild(newRow);
+                        document.querySelectorAll('.remove-row').forEach(button => {
+                            button.style.display = 'inline-block';
+                        });
                     }
+                });
+                documentRowsContainer.addEventListener('click', function(event) {
+                    if (event.target.classList.contains('remove-row')) {
+                        const row = event.target.closest('.document-row');
+                        row.remove();
+                        if (document.querySelectorAll('.document-row').length === 1) {
+                            document.querySelector('.remove-row').style.display = 'none';
+                        }
+                    }
+                });
+                if (document.querySelectorAll('.document-row').length === 1) {
+                    document.querySelector('.remove-row').style.display = 'none';
                 }
             });
-            if (document.querySelectorAll('.document-row').length === 1) {
-                document.querySelector('.remove-row').style.display = 'none';
-            }
-        });
-        //no of children
-        document.addEventListener('DOMContentLoaded', function() {
-            const maxChildren = 2;
-            let currentChildren = 0;
+            //no of children
+            document.addEventListener('DOMContentLoaded', function() {
+                const maxChildren = 2;
+                let currentChildren = 0;
 
-            const noOfChildrenField = document.getElementById('no_of_childrens');
-            const childrenDetailsContainer = document.getElementById('children-details-container');
-            const childrenDetails = document.getElementById('children-details');
-            const maxChildrenMessage = document.getElementById('max-children-message');
+                const noOfChildrenField = document.getElementById('no_of_childrens');
+                const childrenDetailsContainer = document.getElementById('children-details-container');
+                const childrenDetails = document.getElementById('children-details');
+                const maxChildrenMessage = document.getElementById('max-children-message');
 
-            function updateChildDetails() {
-                const noOfChildren = parseInt(noOfChildrenField.value);
+                function updateChildDetails() {
+                    const noOfChildren = parseInt(noOfChildrenField.value);
 
-                // Clear previous child details
-                childrenDetails.innerHTML = '';
+                    // Clear previous child details
+                    childrenDetails.innerHTML = '';
 
-                if (noOfChildren > 0) {
-                    childrenDetailsContainer.style.display = 'block';
-                    maxChildrenMessage.style.display = 'none';
+                    if (noOfChildren > 0) {
+                        childrenDetailsContainer.style.display = 'block';
+                        maxChildrenMessage.style.display = 'none';
 
-                    for (let i = 1; i <= noOfChildren && i <= maxChildren; i++) {
-                        const childRow = document.createElement('div');
-                        childRow.className = 'row align-items-center mb-2 child-row';
-                        childRow.innerHTML = `
+                        for (let i = 1; i <= noOfChildren && i <= maxChildren; i++) {
+                            const childRow = document.createElement('div');
+                            childRow.className = 'row align-items-center mb-2 child-row';
+                            childRow.innerHTML = `
                     <x-forms.input label="Child ${i} Name:" type="text" name="child_names[]" 
                         id="child_name_${i}" :required="true" size="col-lg-6" />
                     <x-forms.input label="Child ${i} DOB:" type="date" name="child_dobs[]" 
                         id="child_dob_${i}" :required="true" size="col-lg-6" />
                 `;
-                        childrenDetails.appendChild(childRow);
-                    }
+                            childrenDetails.appendChild(childRow);
+                        }
 
-                    if (noOfChildren > maxChildren) {
-                        maxChildrenMessage.style.display = 'block';
-                    }
-                } else {
-                    childrenDetailsContainer.style.display = 'none';
-                }
-            }
-
-            noOfChildrenField.addEventListener('input', updateChildDetails);
-        });
-        //pending update
-        function pending_update() {
-            var formData = new FormData(document.getElementById('pendingDetailsForm'));
-            fetch('{{ route('admin.dcs_approval.pending.update') }}', {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                        'Accept': 'application/json'
-                    },
-                    body: formData
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! Status: ${response.status}`);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.success) {
-                        alert('Pending details saved successfully!');
-                        window.location.href = '{{ route('admin.dcs_approval') }}';
-                    } else if (data.errors) {
-                        let errorMessages = Object.values(data.errors)
-                            .map(errorArray => errorArray.join(', '))
-                            .join('\n');
-                        alert(`Validation Errors:\n${errorMessages}`);
+                        if (noOfChildren > maxChildren) {
+                            maxChildrenMessage.style.display = 'block';
+                        }
                     } else {
-                        alert('Something went wrong. Please try again.');
+                        childrenDetailsContainer.style.display = 'none';
                     }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert(`Error saving pending details: ${error.message}`);
-                });
-        }
-    </script>
+                }
+
+                noOfChildrenField.addEventListener('input', updateChildDetails);
+            });
+            //pending update
+            function pending_update() {
+                var formData = new FormData(document.getElementById('pendingDetailsForm'));
+                fetch('{{ route('admin.dcs_approval.pending.update') }}', {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                            'Accept': 'application/json'
+                        },
+                        body: formData
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! Status: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.success) {
+                            alert('Pending details saved successfully!');
+                            window.location.href = '{{ route('admin.dcs_approval') }}';
+                        } else if (data.errors) {
+                            let errorMessages = Object.values(data.errors)
+                                .map(errorArray => errorArray.join(', '))
+                                .join('\n');
+                            alert(`Validation Errors:\n${errorMessages}`);
+                        } else {
+                            alert('Something went wrong. Please try again.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert(`Error saving pending details: ${error.message}`);
+                    });
+            }
+        </script>
+    @endpush
+
 </x-applayout>

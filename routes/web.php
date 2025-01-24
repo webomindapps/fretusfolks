@@ -134,6 +134,8 @@ Route::prefix('admin')->group(function () {
         Route::get('/cfis', [CFISController::class, 'index'])->name('cfis');
         Route::get('cfis/create', [CFISController::class, 'create'])->name('cfis.create');
         Route::post('cfis/create', [CFISController::class, 'store']);
+        Route::get('cfis/{id}/edit', [CFISController::class, 'edit'])->name('cfis.edit');
+        Route::post('cfis/{id}/edit', [CFISController::class, 'update']);
         Route::post('cfis/bulk_operation', [CFISController::class, 'bulk'])->name('cfis.bulk');
         Route::get('cfis/{id}/delete', [CFISController::class, 'destroy'])->name('cfis.delete');
         Route::post('cfis/export', [CFISController::class, 'export'])->name('cfis.export');

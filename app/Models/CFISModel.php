@@ -34,8 +34,10 @@ class CFISModel extends Model
         'gender',
         'father_name',
         'father_dob',
+        'father_aadhar_no',
         'mother_name',
         'mother_dob',
+        'mother_aadhar_no',
         'religion',
         'languages',
         'mother_tongue',
@@ -44,6 +46,8 @@ class CFISModel extends Model
         'emer_name',
         'emer_relation',
         'spouse_name',
+        'spouse_dob',
+        'spouse_aadhar_no',
         'no_of_childrens',
         'blood_group',
         'qualification',
@@ -60,6 +64,7 @@ class CFISModel extends Model
         'driving_license_no',
         'driving_license_path',
         'photo',
+        'family_photo',
         'resume',
         'bank_document',
         'bank_name',
@@ -100,6 +105,8 @@ class CFISModel extends Model
         'created_by',
         'active_status',
         'dcs_approval',
+        'document_approval',
+        'hr_approval',
     ];
 
     protected $casts = [

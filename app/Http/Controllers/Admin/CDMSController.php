@@ -58,6 +58,7 @@ class CDMSController extends Controller
         // dd($request->all());
         $validatedData = $request->validate([
             'client_code' => 'required|string|max:255',
+            'client_ffi_id' => 'required|string|max:255',
             'client_name' => 'required|string|max:255',
             'land_line' => 'required|string|max:15',
             'client_email' => 'required|email|max:255',
@@ -158,6 +159,7 @@ class CDMSController extends Controller
     {
         $request->validate([
             'client_code' => 'required|string|max:255',
+            'client_ffi_id' => 'required|string|max:255',
             'client_name' => 'required|string|max:255',
             'land_line' => 'required|string|max:15',
             'client_email' => 'required|email|max:255',

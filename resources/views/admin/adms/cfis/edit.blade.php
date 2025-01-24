@@ -14,70 +14,79 @@
     @endif
     <div class="col-lg-12 pb-4">
         <div class="form-card px-3">
-            <form action="{{ route('admin.cfis.create') }}" method="POST" enctype="multipart/form-data" id="cfisform">
+            <form action="{{ route('admin.cfis.edit', $candidate->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="card mt-3">
                     <div class="card-header header-elements-inline d-flex justify-content-between align-items-center">
-                        <h5 class="card-title mb-0">New Candidate Details</h5>
+                        <h5 class="card-title mb-0">Edit Candidate Details</h5>
                     </div>
                     <div class="card-body">
                         <div class="form-contents">
                             <div class="row">
                                 <x-forms.select label="Enter Client Name:" name="client_id" id="client_id"
-                                    :required="true" size="col-lg-6 mt-2" :options="FretusFolks::getClientname()" :value="old('client_id')" />
-                                {{-- <x-forms.input label="Enter Associate Name: " type="text" name="emp_name"
-                                    id="emp_name" :required="true" size="col-lg-6 mt-2" :value="old('emp_name')" /> --}}
+                                    :required="true" size="col-lg-6 mt-2" :options="FretusFolks::getClientname()" :value="old('client_id', $candidate->client_id)" />
+                                {{-- <x-forms.input label="Enter Name: " type="text" name="emp_name" id="emp_name"
+                                    :required="true" size="col-lg-6 mt-2" :value="old('emp_name', $candidate->emp_name)" /> --}}
                                 <div class="form-group col-lg-6 mt-2">
-                                    <label for="emp_name">Enter Employee Name: <span style="color: red">*(Enter Name as
-                                            per aadhar)</span></label>
+                                    <label for="emp_name">Enter Name: <span style="color: red">*(Enter Name as per
+                                            aadhar)</span></label>
                                     <input type="text" name="emp_name" id="emp_name" class="form-control"
-                                        value="{{ old('emp_name') }}" required>
+                                        value="{{ old('emp_name', $candidate->emp_name) }}">
                                 </div>
                                 <x-forms.input label="Employee Mobile: " type="number" name="phone1" id="phone1"
-                                    :required="true" size="col-lg-6 mt-2" :value="old('phone1')" />
+                                    :required="true" size="col-lg-6 mt-2" :value="old('phone1', $candidate->phone1)" />
                                 <x-forms.input label="Employee Email ID: " type="email" name="email" id="email"
-                                    :required="true" size="col-lg-6 mt-2" :value="old('email')" />
+                                    :required="true" size="col-lg-6 mt-2" :value="old('email', $candidate->email)" />
                                 <x-forms.select label="State:" name="state" id="state" :required="true"
-                                    size="col-lg-6 mt-2" :options="FretusFolks::getStates()" :value="old('state')" />
+                                    size="col-lg-6 mt-2" :options="FretusFolks::getStates()" :value="old('state', $candidate->state)" />
                                 <x-forms.input label="Location: " type="text" name="location" id="location"
-                                    :required="true" size="col-lg-6 mt-2" :value="old('location')" />
+                                    :required="true" size="col-lg-6 mt-2" :value="old('location', $candidate->location)" />
                                 <x-forms.input label="Enter Designation: " type="text" name="designation"
-                                    id="designation" :required="true" size="col-lg-6 mt-2" :value="old('designation')" />
+                                    id="designation" :required="true" size="col-lg-6 mt-2" :value="old('designation', $candidate->designation)" />
                                 <x-forms.input label="Enter Department: " type="text" name="department"
-                                    id="department" :required="true" size="col-lg-6 mt-2" :value="old('department')" />
+                                    id="department" :required="true" size="col-lg-6 mt-2" :value="old('department', $candidate->department)" />
                                 <x-forms.input label="Date of Interview  " type="date" name="interview_date"
-                                    id="interview_date" :required="true" size="col-lg-6 mt-2" :value="old('interview_date')" />
+                                    id="interview_date" :required="true" size="col-lg-6 mt-2"
+                                    value="{{ old('interview_date', $candidate->interview_date ? $candidate->interview_date->format('Y-m-d') : '') }}" />
                                 {{-- <x-forms.input label="Date of Joining: " type="date" name="joining_date"
                                     id="joining_date" :required="true" size="col-lg-6 mt-2" :value="old('joining_date')" /> --}}
                                 <x-forms.input label="Enter Adhar Card No:" type="number" name="aadhar_no"
-                                    id="aadhar_no" :required="true" size="col-lg-6 mt-2" :value="old('aadhar_no')" />
+                                    id="aadhar_no" :required="true" size="col-lg-6 mt-2" :value="old('aadhar_no', $candidate->aadhar_no)" />
                                 {{-- <x-forms.input label="Attach Adhaar Card:" type="file" name="aadhar_path"
                                     id="aadhar_path" :required="true" size="col-lg-6 mt-2" :value="old('aadhar_path')" /> --}}
                                 <div class="form-group col-lg-6 mt-2">
                                     <label for="driving_license_no">Enter Driving License No:</label>
                                     <input type="text" name="driving_license_no" id="driving_license_no"
-                                        class="form-control" value="{{ old('driving_license_no') }}">
+                                        class="form-control"
+                                        value="{{ old('driving_license_no', $candidate->driving_license_no) }}">
                                 </div>
                                 {{-- <x-forms.input label="Attach Driving License:" type="file"
                                     name="driving_license_path" id="driving_license_path" :required="true"
                                     size="col-lg-6 mt-2" :value="old('driving_license_path')" /> --}}
                                 <div class="form-group col-lg-6 mt-2">
-                                    <label for="photo">Photo:<span style="color: red;">*</span></label>
+                                    <label for="photo">Photo:</label>
                                     <input type="file" name="photo" id="photo" accept="image/jpg, image/png"
-                                        required class="form-control" value="{{ old('photo') }}">
-
+                                        class="form-control">
+                                    <div id="image-preview-container" class="d-flex ">
+                                        <img src="{{ asset('storage/' . $candidate->photo) }}" class="img-thumbnail"
+                                            width="100" height="100" alt="Uploaded image">
+                                    </div>
                                 </div>
-                                <div class="form-group col-lg-6 mt-2">
-                                    <label for="resume">Resume:<s<span style="color: red;">*</span></label>
+                                <div class="form-group col-lg-6 ">
+                                    <label for="resume">Resume:</label>
                                     <input type="file" name="resume" id="resume"
                                         accept="application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/pdf"
-                                        required class="form-control">
+                                        class="form-control">
+                                    <a href="{{ asset('storage/' . $candidate->resume) }}" target="_blank"
+                                        class="btn btn-custom">
+                                        View Resume
+                                    </a>
                                 </div>
 
                             </div>
                             <div class="row">
                                 <div class="col-lg-12 mt-4">
-                                    <x-forms.button type="submit" label="Save" class="btn btn-primary" />
+                                    <x-forms.button type="submit" label="Update" class="btn btn-primary" />
                                 </div>
                             </div>
                         </div>
@@ -86,15 +95,46 @@
             </form>
         </div>
     </div>
+
     @push('scripts')
         <script>
+            document.getElementById("photo").addEventListener("change", function(event) {
+                const previewContainer = document.getElementById("image-preview-container");
+                previewContainer.innerHTML = ""; // Clear previous preview
+
+                const file = event.target.files[0];
+
+                if (file) {
+                    // Check file type
+                    const validTypes = ["image/jpeg", "image/png"];
+                    if (!validTypes.includes(file.type)) {
+                        alert("Invalid file type. Please select a JPG or PNG image.");
+                        return;
+                    }
+
+
+                    // Create an image element for preview
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const img = document.createElement("img");
+                        img.src = e.target.result;
+                        img.alt = "Image Preview";
+                        img.style.maxWidth = "200px";
+                        img.style.maxHeight = "200px";
+                        img.classList.add("img-thumbnail");
+                        previewContainer.appendChild(img);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+            //validation
             $(document).ready(function() {
                 $("#cfisform").on("submit", function(e) {
                     var isValid = true;
                     $(".error").remove();
 
                     var empName = $("#emp_name").val();
-                    if (empName == '') {
+                    if (!empName) {
                         isValid = false;
                         $("#emp_name").after(
                             "<span class='error' style='color:red; font-size: 13px;'>Employee name is required</span>"

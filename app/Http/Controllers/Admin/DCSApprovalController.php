@@ -88,6 +88,8 @@ class DCSApprovalController extends Controller
             'gender' => 'nullable|string|max:255',
             'father_name' => 'nullable|string|max:255',
             'father_dob' => 'nullable|date',
+            'father_aadhar_no' => 'nullable|string|min:12',
+            'mother_aadhar_no' => 'nullable|string|min:12',
             'mother_name' => 'nullable|string|max:255',
             'mother_dob' => 'nullable|date',
             'religion' => 'nullable|string|max:255',
@@ -98,6 +100,8 @@ class DCSApprovalController extends Controller
             'emer_name' => 'nullable|string|max:255',
             'emer_relation' => 'nullable|string|max:255',
             'spouse_name' => 'nullable|string|max:255',
+            'spouse_dob' => 'nullable|date',
+            'spouse_aadhar_no' => 'nullable|string|min:12',
             'no_of_childrens' => 'nullable|integer',
             'blood_group' => 'nullable|string|max:255',
             'qualification' => 'nullable|string|max:255',
@@ -109,11 +113,12 @@ class DCSApprovalController extends Controller
             'present_address' => 'nullable|string',
             'pan_no' => 'nullable|string|max:255',
             'pan_path' => 'nullable|file|mimes:pdf,jpg,png,doc,docx|max:2048',
-            'aadhar_no' => 'nullable|string|max:255',
+            'aadhar_no' => 'nullable|string|min:12',
             'aadhar_path' => 'nullable|file|mimes:pdf,jpg,png,doc,docx|max:2048',
             'driving_license_no' => 'nullable|string|max:255',
             'driving_license_path' => 'nullable|file|mimes:pdf,jpg,png,doc,docx|max:2048',
-            'photo' => 'nullable|file|mimes:jpg,png,doc,docx,pdf|max:2048',
+            'photo' => 'nullable|file|mimes:jpg,png,pdf|max:2048',
+            'family_photo' => 'nullable|file|mimes:jpg,png,pdf|max:2048',
             'resume' => 'nullable|file|mimes:pdf,doc,docx|max:2048',
             'bank_document' => 'nullable|file|mimes:pdf,doc,docx|max:2048',
             'bank_name' => 'nullable|string|max:255',
@@ -150,11 +155,13 @@ class DCSApprovalController extends Controller
         ]);
         DB::beginTransaction();
         try {
+            $validatedData['password'] = $request->input('dcs_approval', 'ffemp@123');
+            $validatedData['psd'] = $request->input('dcs_approval', 'ffemp@123');
             $validatedData['dcs_approval'] = $request->input('dcs_approval', 0);
             $validatedData['data_status'] = $request->input('data_status', 0);
             $candidate->update($validatedData);
 
-            $fileFields = ['pan_path', 'aadhar_path', 'driving_license_path', 'photo', 'resume', 'bank_document'];
+            $fileFields = ['pan_path', 'aadhar_path', 'driving_license_path', 'photo', 'resume', 'bank_document', 'family_photo'];
             foreach ($fileFields as $field) {
                 if ($request->hasFile($field)) {
                     $filePath = $request->file($field)->store('uploads/' . $field, 'public');
@@ -275,27 +282,39 @@ class DCSApprovalController extends Controller
 
     public function hredit($id)
     {
+        $candidate = $this->model()
+            ->with(['client'])
+            ->with(['educationCertificates', 'otherCertificates'])
+            ->findOrFail($id);
+
+        if (!$candidate->client || !$candidate->client->client_ffi_id) {
+            throw new Exception("Client FFI ID not found for the candidate.");
+        }
+
+        $clientFfiId = $candidate->client->client_ffi_id;
+
         $lastId = $this->model()
-            ->where('ffi_emp_id', 'LIKE', 'FFI%')
+            ->whereHas('client', function ($query) use ($candidate) {
+                $query->where('id', $candidate->client_id);
+            })
+            ->where('ffi_emp_id', 'LIKE', $clientFfiId . '%')
             ->orderBy('ffi_emp_id', 'desc')
             ->value('ffi_emp_id');
 
-        // Generate the new ID
         if ($lastId) {
-            $number = (int) substr($lastId, 3); // Extract the numeric part after 'FFI'
+            $number = (int) substr($lastId, strlen($clientFfiId));
             $newNumber = str_pad($number + 1, 4, '0', STR_PAD_LEFT);
         } else {
-            $newNumber = '0001'; // Start with 0001 if no records exist
+            $newNumber = '0001';
         }
 
-        $uniqueId = 'FFI' . $newNumber;
+        $uniqueId = $clientFfiId . $newNumber;
 
-        $candidate = $this->model()->with(['educationCertificates', 'otherCertificates'])->findOrFail($id);
         $children = DCSChildren::where('emp_id', $candidate->id)->get();
 
         return view('admin.adms.hr.hredit', compact('candidate', 'uniqueId', 'children'));
-
     }
+
     public function hrupdate(Request $request, $id)
     {
         $candidate = $this->model()->find($id);

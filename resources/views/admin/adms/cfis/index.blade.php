@@ -7,15 +7,15 @@
                     ['label' => 'Id', 'column' => 'id', 'sort' => true],
                     ['label' => 'Client Name', 'column' => 'client_id', 'sort' => true],
                     ['label' => 'Employee Name', 'column' => 'emp_name', 'sort' => true],
-                    ['label' => 'Joining date', 'column' => 'joining_date', 'sort' => true],
+                    ['label' => 'Interview date', 'column' => 'interview_date', 'sort' => true],
                     ['label' => 'Phone', 'column' => 'phone1', 'sort' => true],
                     ['label' => 'Approval Status', 'column' => 'dcs_approval', 'sort' => true],
-                    ['label' => 'Status', 'column' => 'data_status', 'sort' => true],
+                    // ['label' => 'Status', 'column' => 'data_status', 'sort' => true],
                     ['label' => 'Actions', 'column' => 'action', 'sort' => false],
                 ];
             @endphp
-            <x-table :columns="$columns" :data="$candidate" :checkAll=true :bulk="route('admin.cfis.bulk')" :route="route('admin.cfis')">
-                <x-slot:filters>
+            <x-table :columns="$columns" :data="$candidate" :checkAll=false :bulk="route('admin.cfis.bulk')" :route="route('admin.cfis')">
+                {{-- <x-slot:filters>
                     <form action="{{ route('admin.cfis.export') }}" method="POST">
                         @csrf
                         <div class="row px-2">
@@ -37,19 +37,19 @@
                             </div>
                         </div>
                     </form>
-                </x-slot:filters>
+                </x-slot:filters> --}}
                 @foreach ($candidate as $key => $item)
                     <tr>
-                        <td>
+                        {{-- <td>
                             <input type="checkbox" name="selected_items[]" class="single-item-check"
                                 value="{{ $item->id }}">
-                        </td>
+                        </td> --}}
                         <td>{{ $item->id }}</td>
                         <td>
                             {{ $item->client?->client_name }}
                         </td>
                         <td> {{ $item->emp_name }}</td>
-                        <td> {{ \Carbon\Carbon::parse($item->joining_date)->format('d-m-Y') }}</td>
+                        <td> {{ \Carbon\Carbon::parse($item->interview_date)->format('d-m-Y') }}</td>
                         <td> {{ $item->phone1 }}</td>
                         <td>
                             <div class="dropdown">
@@ -72,13 +72,13 @@
                             </div>
                         </td>
 
-                        <td>
+                        {{-- <td>
                             @if ($item->data_status == 1)
                                 <span class="badge rounded-pill sactive">Complected</span>
                             @else
                                 <span class="badge rounded-pill deactive">Pending</span>
                             @endif
-                        </td>
+                        </td> --}}
                         <td>
                             <div class="dropdown pop_Up dropdown_bg">
                                 <div class="dropdown-toggle" id="dropdownMenuButton-{{ $item->id }}"
@@ -93,12 +93,12 @@
                                         onclick="showClientDetails({{ $item->id }})">
                                         <i class='bx bx-link-alt'></i>
                                         View Details
-                                    </a>
-
-                                    <a class="dropdown-item" href="{{ route('admin.cdms.edit', $item) }}">
-                                        <i class='bx bx-edit-alt'></i>
-                                        Edit
                                     </a> --}}
+
+                                        <a class="dropdown-item" href="{{ route('admin.cfis.edit', $item) }}">
+                                            <i class='bx bx-edit-alt'></i>
+                                            Edit
+                                        </a>
                                         <a class="dropdown-item"
                                             onclick="return confirm('Are you sure to delete this ?')"
                                             href="{{ route('admin.cfis.delete', $item) }}">

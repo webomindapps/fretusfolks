@@ -28,6 +28,8 @@
 
                                 <x-forms.input label="Enter Client Name:" type="text" name="client_name"
                                     id="client_name" :required="true" size="col-lg-6 mt-2" :value="old('client_name', $client->client_name)" />
+                                <x-forms.input label="Enter Client Id:" type="text" name="client_ffi_id"
+                                    id="client_ffi_id" :required="true" size="col-lg-6 mt-2" :value="old('client_ffi_id', $client->client_ffi_id)" />
 
                                 <x-forms.input label="Enter Office Land-line Number:" type="number" name="land_line"
                                     id="land_line" :required="true" size="col-lg-6 mt-2" :value="old('land_line', $client->land_line)" />
@@ -87,7 +89,8 @@
                                     ['value' => '1', 'label' => 'LOI'],
                                     ['value' => '2', 'label' => 'Agreement'],
                                 ]" id="mode_agreement"
-                                    name="mode_agreement" :required="true" size="col-lg-6 mt-2" :value="old('mode_agreement', $client->mode_agreement)" />
+                                    name="mode_agreement" :required="true" size="col-lg-6 mt-2"
+                                    :value="old('mode_agreement', $client->mode_agreement)" />
 
                                 <x-forms.radio label="Type of Agreement:" :options="[
                                     ['value' => '1', 'label' => 'One Time Sourcing'],

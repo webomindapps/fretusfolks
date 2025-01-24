@@ -27,6 +27,8 @@
                                     id="client_code" :required="true" size="col-lg-6 mt-2" :value="old('client_code')" />
                                 <x-forms.input label="Enter Client Name:" type="text" name="client_name"
                                     id="client_name" :required="true" size="col-lg-6 mt-2" :value="old('client_name')" />
+                                <x-forms.input label="Enter Client Id:" type="text" name="client_ffi_id"
+                                    id="client_ffi_id" :required="true" size="col-lg-6 mt-2" :value="old('client_ffi_id')" />
 
                                 <x-forms.input label="Enter Office Land-line Number:" type="number" name="land_line"
                                     id="land_line" :required="true" size="col-lg-6 mt-2" :value="old('land_line')" />
@@ -66,10 +68,12 @@
                                     :value="old('communication_address')" />
 
                                 <x-forms.input label="Enter Client PAN Number:" type="text" name="pan"
-                                    id="pan" :required="true" size="col-lg-6 mt-2" :value="old('pan')" style="text-transform:uppercase" />
+                                    id="pan" :required="true" size="col-lg-6 mt-2" :value="old('pan')"
+                                    style="text-transform:uppercase" />
 
                                 <x-forms.input label="Enter Client TAN Number:" type="text" name="tan"
-                                    id="tan" :required="true" size="col-lg-6 mt-2" :value="old('tan')" style="text-transform:uppercase" />
+                                    id="tan" :required="true" size="col-lg-6 mt-2" :value="old('tan')"
+                                    style="text-transform:uppercase" />
 
                                 <table class="table table-bordered mt-4" style="border: 1px solid #ddd;">
                                     <thead style="background-color: transparent;">

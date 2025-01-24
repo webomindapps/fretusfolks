@@ -47,10 +47,10 @@
                                     :required="false" size="col-lg-6 mt-2" :value="old('grade', $candidate->grade)" />
                                 <x-forms.input label="Enter Employee Name: " type="text" name="emp_name"
                                     id="emp_name" :required="true" size="col-lg-6 mt-2" :value="old('emp_name', $candidate->emp_name)" />
-                                <x-forms.input label="Middle Name: " type="text" name="middle_name" id="middle_name"
+                                {{-- <x-forms.input label="Middle Name: " type="text" name="middle_name" id="middle_name"
                                     :required="false" size="col-lg-6 mt-2" :value="old('middle_name', $candidate->middle_name)" />
                                 <x-forms.input label="Last Name: " type="text" name="last_name" id="last_name"
-                                    :required="false" size="col-lg-6 mt-2" :value="old('last_name', $candidate->last_name)" />
+                                    :required="false" size="col-lg-6 mt-2" :value="old('last_name', $candidate->last_name)" /> --}}
 
                                 <x-forms.input label="Interview Date:  " type="date" name="interview_date"
                                     id="interview_date" :required="true" size="col-lg-4 mt-2"
@@ -58,9 +58,9 @@
                                 <x-forms.input label="Joining Date: " type="date" name="joining_date"
                                     id="joining_date" :required="true" size="col-lg-4 mt-2"
                                     value="{{ old('joining_date', $candidate->joining_date ? $candidate->joining_date->format('Y-m-d') : '') }}" />
-                                <x-forms.input label="DOL " type="date" name="contract_date" id="contract_date"
+                                {{-- <x-forms.input label="DOL " type="date" name="contract_date" id="contract_date"
                                     :required="false" size="col-lg-4 mt-2"
-                                    value="{{ old('contract_date', $candidate->contract_date ? $candidate->contract_date->format('Y-m-d') : '') }}" />
+                                    value="{{ old('contract_date', $candidate->contract_date ? $candidate->contract_date->format('Y-m-d') : '') }}" /> --}}
 
                                 <x-forms.input label="Enter Designation: " type="text" name="designation"
                                     id="designation" :required="true" size="col-lg-6 mt-2" :value="old('designation', $candidate->designation)" />
@@ -89,6 +89,12 @@
                                         <x-forms.input label="Spouse Name:" type="text" name="spouse_name"
                                             id="spouse_name" :required="false" size="col-lg-6 mt-2"
                                             :value="old('spouse_name', $candidate->spouse_name)" />
+                                        <x-forms.input label="Spouse's DOB: " type="date" name="spouse_dob"
+                                            id="spouse_dob" :required="true" size="col-lg-6 mt-2"
+                                            :value="old('spouse_dob', $candidate->spouse_dob)" />
+                                        <x-forms.input label="Enter Spouse Adhar Card No:" type="number"
+                                            name="spouse_aadhar_no" id="spouse_aadhar_no" :required="true"
+                                            size="col-lg-6 mt-2" :value="old('spouse_aadhar_no', $candidate->spouse_aadhar_no)" />
                                         <x-forms.input label="No of Children:" type="number" name="no_of_childrens"
                                             id="no_of_childrens" :required="false" size="col-lg-6 mt-2"
                                             :value="old('no_of_childrens', $candidate->no_of_childrens)" />
@@ -124,10 +130,16 @@
                                     id="father_name" :required="true" size="col-lg-6 mt-2" :value="old('father_name', $candidate->father_name)" />
                                 <x-forms.input label="Father's DOB: " type="date" name="father_dob"
                                     id="father_dob" :required="true" size="col-lg-6 mt-2" :value="old('father_dob', $candidate->father_dob)" />
+                                <x-forms.input label="Father's Adhar Card No:" type="number" name="father_aadhar_no"
+                                    id="father_aadhar_no" :required="true" size="col-lg-6 mt-2"
+                                    :value="old('father_aadhar_no', $candidate->father_aadhar_no)" />
                                 <x-forms.input label="Mother Name: " type="text" name="mother_name"
                                     id="mother_name" :required="true" size="col-lg-6 mt-2" :value="old('mother_name', $candidate->mother_name)" />
                                 <x-forms.input label="Mother's DOB: " type="date" name="mother_dob"
                                     id="mother_dob" :required="true" size="col-lg-6 mt-2" :value="old('mother_dob', $candidate->mother_dob)" />
+                                <x-forms.input label="Mother's Adhar Card No:" type="number" name="mother_aadhar_no"
+                                    id="mother_aadhar_no" :required="true" size="col-lg-6 mt-2"
+                                    :value="old('mother_aadhar_no', $candidate->mother_aadhar_no)" />
                                 <x-forms.input label="Religion: " type="text" name="religion" id="religion"
                                     :required="true" size="col-lg-4 mt-2" :value="old('religion', $candidate->religion)" />
                                 <x-forms.input label="Languages: " type="text" name="languages" id="languages"
@@ -146,8 +158,8 @@
                                     name="emer_relation" id="emer_relation" :required="true" size="col-lg-6 mt-2"
                                     :value="old('emer_relation', $candidate->emer_relation)" />
 
-                                <x-forms.input label="Qualification:" type="text" name="qualification"
-                                    id="qualification" :required="true" size="col-lg-6 mt-2" :value="old('qualification', $candidate->qualification)" />
+                                <x-forms.select label=" Qualification:" name="qualification" id="qualification"
+                                    :required="true" size="col-lg-6 mt-2" :options="FretusFolks::getQualification()" :value="old('qualification', $candidate->qualification)" />
                                 <x-forms.input label="Phone 1:" type="number" name="phone1" id="phone1"
                                     :required="true" size="col-lg-6 mt-2" :value="old('phone1', $candidate->phone1)" />
                                 <x-forms.input label="Employee Email ID: " type="email" name="email"
@@ -198,7 +210,12 @@
 
                                 <x-forms.input label="Attach New Resume:" type="file" name="resume"
                                     id="resume" :required="false" size="col-lg-6 mt-2" />
-
+                                <div class="form-group col-lg-6 mt-2">
+                                    <label for="family_photo">Family Photo: </label>
+                                    <input type="file" name="family_photo" id="family_photo"
+                                        accept="application/pdf, image/jpg, image/png" class="form-control"
+                                        value="{{ old('family_photo', $candidate->family_photo) }}">
+                                </div>
                                 <x-forms.input label="Enter Bank Name:" type="text" name="bank_name"
                                     id="bank_name" :required="true" size="col-lg-6 mt-2" :value="old('bank_name', $candidate->bank_name)" />
 
@@ -207,9 +224,11 @@
                                 <x-forms.input label="Enter Bank Account No::" type="text" name="bank_account_no"
                                     id="bank_account_no" :required="true" size="col-lg-6 mt-2" :value="old('bank_account_no', $candidate->bank_account_no)" />
                                 <x-forms.input label="Repeat Bank Account No:" type="text" name="bank_account_no"
-                                    id="bank_account_no" :required="false" size="col-lg-6 mt-2" :value="old('bank_account_no', $candidate->bank_account_no)" />
+                                    id="bank_account_no" :required="false" size="col-lg-6 mt-2"
+                                    :value="old('bank_account_no', $candidate->bank_account_no)" />
                                 <x-forms.input label="Enter Bank IFSC CODE:" type="text" name="bank_ifsc_code"
-                                    id="bank_ifsc_code" :required="true" size="col-lg-6 mt-2" :value="old('bank_ifsc_code', $candidate->bank_ifsc_code)" />
+                                    id="bank_ifsc_code" :required="true" size="col-lg-6 mt-2"
+                                    :value="old('bank_ifsc_code', $candidate->bank_ifsc_code)" />
                                 {{-- <x-forms.select label="Do you Have UAN No? " :options="[['value' => 'No', 'label' => 'No'], ['value' => 'Yes', 'label' => 'Yes']]" id="uan_status"
                                     name="uan_status" :required="true" size="col-lg-6 mt-2 mr-2"
                                     :value="old('uan_status')" />
@@ -417,6 +436,8 @@
                 } else {
                     marriedFields.style.display = 'none';
                     document.getElementById('spouse_name').value = '';
+                    document.getElementById('spouse_dob').value = '';
+                    document.getElementById('spouse_aadhar_no').value = '';
                     document.getElementById('no_of_childrens').value = '';
                 }
             }
