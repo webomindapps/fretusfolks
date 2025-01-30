@@ -24,6 +24,12 @@
             </div>
         </div>
     @endif
+    {{-- @if ($certificate->status == 2)
+        <div class="alert alert-danger">
+            <strong>Note:</strong> The document <b>{{ $certificate->name }}</b> has been rejected.
+        </div>
+    @endif --}}
+
     <div class="col-lg-12 pb-4">
         <div class="form-card px-3">
             <form action="{{ route('admin.dcs_approval.docedit', $candidate->id) }}" method="POST"

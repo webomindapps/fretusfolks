@@ -109,7 +109,7 @@ class DCSApprovalController extends Controller
             'no_of_childrens' => 'nullable|integer',
             'blood_group' => 'nullable|string|max:255',
             'qualification' => 'nullable|string|max:255',
-            'phone1' => 'required|string|max:15|unique:backend_management,phone1' . $candidate->id,
+            'phone1' => 'required|string|max:15|unique:backend_management,phone1',
             'phone2' => 'nullable|string|max:15',
             'email' => 'nullable|email|max:255',
             'official_mail_id' => 'nullable|email|max:255',
@@ -117,7 +117,7 @@ class DCSApprovalController extends Controller
             'present_address' => 'nullable|string',
             'pan_no' => 'nullable|string|max:255',
             'pan_path' => 'nullable|file|mimes:pdf,jpg,png,doc,docx|max:2048',
-            'aadhar_no' => 'required|string|min:12|unique:backend_management,aadhar_no' . $candidate->id,
+            'aadhar_no' => 'required|string|min:12|unique:backend_management,aadhar_no',
             'aadhar_path' => 'nullable|file|mimes:pdf,jpg,png,doc,docx|max:2048',
             'driving_license_no' => 'nullable|string|max:255',
             'driving_license_path' => 'nullable|file|mimes:pdf,jpg,png,doc,docx|max:2048',
@@ -171,7 +171,7 @@ class DCSApprovalController extends Controller
 
             $candidate->update($validatedData);
 
-            $fileFields = ['pan_path', 'aadhar_path', 'driving_license_path', 'photo', 'resume', 'bank_document', 'voter_id', 'emp_form', 'pf_esic_form', 'payslip', 'exp_letter'];
+            $fileFields = ['pan_path', 'aadhar_path', 'driving_license_path', 'photo', 'resume', 'bank_document', 'voter_id', 'emp_form', 'pf_esic_form', 'payslip', 'exp_letter', 'family_photo'];
             foreach ($fileFields as $field) {
                 if ($request->hasFile($field)) {
                     if ($candidate->$field) {
@@ -197,17 +197,18 @@ class DCSApprovalController extends Controller
                     $file = $request->file('document_file')[$index] ?? null;
 
                     if ($file) {
-                        $filePath = $file->store('documents/' . $type, 'public');
+                        $fileName = $type . $candidate->id . $file->getClientOriginalExtension();
+                        $filePath = $file->storeAs('documents/' . $type, $fileName, 'public');
                         if ($type === 'education_certificate') {
                             EducationCertificate::create([
                                 'emp_id' => $candidate->id,
-                                'path' => $filePath . '_' . $candidate->id,
+                                'path' => 'storage/' . $filePath,
                                 'status' => 0,
                             ]);
                         } elseif ($type === 'other_certificate') {
                             OtherCertificate::create([
                                 'emp_id' => $candidate->id,
-                                'path' => $filePath . '_' . $candidate->id,
+                                'path' => 'storage/' . $filePath,
                                 'status' => 0,
                             ]);
                         } else {
@@ -357,7 +358,7 @@ class DCSApprovalController extends Controller
 
     public function hrupdate(Request $request, $id)
     {
-        dd('hello');
+        // dd('hello');
         $candidate = $this->model()->find($id);
         $validatedData = $request->validate([
             'client_id' => 'required|integer',
@@ -407,6 +408,7 @@ class DCSApprovalController extends Controller
             'driving_license_no' => 'nullable|string|max:255',
             'driving_license_path' => 'nullable|file|mimes:pdf,jpg,png,doc,docx|max:2048',
             'photo' => 'nullable|file|mimes:jpg,png,doc,docx|max:2048',
+            'family_photo' => 'nullable|file|mimes:jpg,png,pdf|max:2048',
             'resume' => 'nullable|file|mimes:pdf,doc,docx|max:2048',
             'bank_document' => 'nullable|file|mimes:pdf,doc,docx|max:2048',
             'bank_name' => 'nullable|string|max:255',
@@ -448,7 +450,7 @@ class DCSApprovalController extends Controller
             $validatedData['dcs_approval'] = $request->input('dcs_approval', 0);
             $candidate->update($validatedData);
 
-            $fileFields = ['pan_path', 'aadhar_path', 'driving_license_path', 'photo', 'resume', 'bank_document', 'voter_id', 'emp_form', 'pf_esic_form', 'payslip', 'exp_letter'];
+            $fileFields = ['pan_path', 'aadhar_path', 'driving_license_path', 'photo', 'resume', 'bank_document', 'voter_id', 'emp_form', 'pf_esic_form', 'payslip', 'exp_letter', 'family_photo'];
             foreach ($fileFields as $field) {
                 if ($request->hasFile($field)) {
                     if ($candidate->$field) {
@@ -474,19 +476,21 @@ class DCSApprovalController extends Controller
                     $file = $request->file('document_file')[$index] ?? null;
 
                     if ($file) {
-                        $filePath = $file->store('documents/' . $type, 'public');
+                        $fileName = $type . $candidate->id . $file->getClientOriginalExtension();
+                        $filePath = $file->storeAs('documents/' . $type, $fileName, 'public');
                         if ($type === 'education_certificate') {
                             EducationCertificate::create([
                                 'emp_id' => $candidate->id,
-                                'path' => $filePath . '_' . $candidate->id,
+                                'path' => 'storage/' . $filePath,
                                 'status' => 1,
                             ]);
                         } elseif ($type === 'other_certificate') {
                             OtherCertificate::create([
                                 'emp_id' => $candidate->id,
-                                'path' => $filePath . '_' . $candidate->id,
+                                'path' => 'storage/' . $filePath,
                                 'status' => 1,
                             ]);
+
                         } else {
                             if ($candidate->$type) {
                                 Storage::disk('public')->delete($candidate->$type);
@@ -574,6 +578,7 @@ class DCSApprovalController extends Controller
             'driving_license_no' => 'nullable|string|max:255',
             'driving_license_path' => 'nullable|file|mimes:pdf,jpg,png,doc,docx|max:2048',
             'photo' => 'nullable|file|mimes:jpg,png,doc,docx|max:2048',
+            'family_photo' => 'nullable|file|mimes:jpg,png,pdf|max:2048',
             'resume' => 'nullable|file|mimes:pdf,doc,docx,|max:2048',
             'bank_document' => 'nullable|file|mimes:pdf,doc,docx|max:2048',
             'bank_name' => 'nullable|string|max:255',
@@ -617,7 +622,7 @@ class DCSApprovalController extends Controller
             $candidate->update($validatedData);
 
 
-            $fileFields = ['pan_path', 'aadhar_path', 'driving_license_path', 'photo', 'resume', 'bank_document', 'voter_id', 'emp_form', 'pf_esic_form', 'payslip', 'exp_letter'];
+            $fileFields = ['pan_path', 'aadhar_path', 'driving_license_path', 'photo', 'resume', 'bank_document', 'voter_id', 'emp_form', 'pf_esic_form', 'payslip', 'exp_letter', 'family_photo'];
             foreach ($fileFields as $field) {
                 if ($request->hasFile($field)) {
                     if ($candidate->$field) {
@@ -641,17 +646,18 @@ class DCSApprovalController extends Controller
                     $file = $request->file('document_file')[$index] ?? null;
 
                     if ($file) {
-                        $filePath = $file->store('documents/' . $type, 'public');
+                        $fileName = $type . $candidate->id . $file->getClientOriginalExtension();
+                        $filePath = $file->storeAs('documents/' . $type, $fileName, 'public');
                         if ($type === 'education_certificate') {
                             EducationCertificate::create([
                                 'emp_id' => $candidate->id,
-                                'path' => $filePath,
+                                'path' => 'storage/' . $filePath,
                                 'status' => 0,
                             ]);
                         } elseif ($type === 'other_certificate') {
                             OtherCertificate::create([
                                 'emp_id' => $candidate->id,
-                                'path' => $filePath,
+                                'path' => 'storage/' . $filePath,
                                 'status' => 0,
                             ]);
                         } else {
@@ -750,7 +756,7 @@ class DCSApprovalController extends Controller
 
         $children = DCSChildren::where('emp_id', $candidate->id)->get();
 
-        return view('admin.adms.dcs_approval.docedit', compact('candidate', 'children'));
+        return view("admin.adms.dcs_approval.docedit", compact('candidate', 'children'));
     }
     public function docupdate(Request $request, $id)
     {
@@ -803,6 +809,7 @@ class DCSApprovalController extends Controller
             'driving_license_no' => 'nullable|string|max:255',
             'driving_license_path' => 'nullable|file|mimes:pdf,jpg,png,doc,docx|max:2048',
             'photo' => 'nullable|file|mimes:jpg,png,doc,docx|max:2048',
+            'family_photo' => 'nullable|file|mimes:jpg,png,pdf|max:2048',
             'resume' => 'nullable|file|mimes:pdf,doc,docx|max:2048',
             'bank_document' => 'nullable|file|mimes:pdf,doc,docx|max:2048',
             'bank_name' => 'nullable|string|max:255',
@@ -826,7 +833,7 @@ class DCSApprovalController extends Controller
             $validatedData['dcs_approval'] = $request->input('dcs_approval', 0);
             $candidate->update($validatedData);
 
-            $fileFields = ['pan_path', 'aadhar_path', 'driving_license_path', 'photo', 'resume', 'bank_document', 'voter_id', 'emp_form', 'pf_esic_form', 'payslip', 'exp_letter'];
+            $fileFields = ['pan_path', 'aadhar_path', 'driving_license_path', 'photo', 'resume', 'bank_document', 'voter_id', 'emp_form', 'pf_esic_form', 'payslip', 'exp_letter', 'family_photo'];
             foreach ($fileFields as $field) {
                 if ($request->hasFile($field)) {
                     if ($candidate->$field) {
@@ -852,17 +859,18 @@ class DCSApprovalController extends Controller
                     $file = $request->file('document_file')[$index] ?? null;
 
                     if ($file) {
-                        $filePath = $file->store('documents/' . $type, 'public');
+                        $fileName = $type . $candidate->id . $file->getClientOriginalExtension();
+                        $filePath = $file->storeAs('documents/' . $type, $fileName, 'public');
                         if ($type === 'education_certificate') {
                             EducationCertificate::create([
                                 'emp_id' => $candidate->id,
-                                'path' => $filePath . '_' . $candidate->id,
+                                'path' => 'storage/' . $filePath,
                                 'status' => 0,
                             ]);
                         } elseif ($type === 'other_certificate') {
                             OtherCertificate::create([
                                 'emp_id' => $candidate->id,
-                                'path' => $filePath . '_' . $candidate->id,
+                                'path' => 'storage/' . $filePath,
                                 'status' => 0,
                             ]);
                         } else {

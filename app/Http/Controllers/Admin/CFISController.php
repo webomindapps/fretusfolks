@@ -81,28 +81,31 @@ class CFISController extends Controller
         $validatedData['dcs_approval'] = $request->input('dcs_approval', 1);
         $validatedData['data_status'] = $request->input('data_status', 0);
 
-      
-        $fileFields = ['photo', 'resume'];
-        foreach ($fileFields as $field) {
-            if ($request->hasFile($field)) {
 
-                $file = $request->file($field);
-                $filePath = $file->storeAs('uploads/' . $field, $file->getClientOriginalName(), 'public');
 
-                CandidateDocuments::create([
-                    'emp_id' => $validatedData['id'],
-                    'name' => $file->getClientOriginalName(),
-                    'path' => $filePath,
-                    'status' => 1,
-                ]);
-            }
-        }
 
         DB::beginTransaction();
         try {
             $client = $this->model()->create($validatedData);
             $client->entity_name = ClientManagement::where('id', $request->client_id)->value('client_name');
             $client->save();
+            $fileFields = ['photo', 'resume'];
+            foreach ($fileFields as $field) {
+                if ($request->hasFile($field)) {
+
+                    $file = $request->file($field);
+                    $newFileName = $field . '_' . $client->id . '.' . $file->getClientOriginalExtension();
+
+                    $filePath = $file->storeAs('uploads/' . $field, $newFileName, 'public');
+
+                    CandidateDocuments::create([
+                        'emp_id' => $client->id,
+                        'name' => $field,
+                        'path' => $filePath,
+                        'status' => 0,
+                    ]);
+                }
+            }
             DB::commit();
 
             return redirect()->route('admin.cfis')->with('success', 'Candidate data added successfully!');
@@ -140,21 +143,28 @@ class CFISController extends Controller
         $validatedData['dcs_approval'] = $request->input('dcs_approval', 1);
         $validatedData['data_status'] = $request->input('data_status', 0);
 
-        $fileFields = ['photo', 'resume'];
-        foreach ($fileFields as $field) {
-            if ($request->hasFile($field)) {
-                $filePath = $request->file($field)->store('uploads/' . $field, 'public');
-                $validatedData[$field] = $filePath;
-            }
-        }
-
         DB::beginTransaction();
         try {
             $candidate->update($validatedData);
-
             $candidate->entity_name = ClientManagement::where('id', $validatedData['client_id'])->value('client_name');
             $candidate->save();
+            $fileFields = ['photo', 'resume'];
+            foreach ($fileFields as $field) {
+                if ($request->hasFile($field)) {
 
+                    $file = $request->file($field);
+                    $newFileName = $field . '_' . $candidate->id . '.' . $file->getClientOriginalExtension();
+
+                    $filePath = $file->storeAs('uploads/' . $field, $newFileName, 'public');
+
+                    CandidateDocuments::create([
+                        'emp_id' => $candidate->id,
+                        'name' => $field,
+                        'path' => $filePath,
+                        'status' => 0,
+                    ]);
+                }
+            }
             DB::commit();
 
             return redirect()->route('admin.cfis')->with('success', 'Candidate data updated successfully!');

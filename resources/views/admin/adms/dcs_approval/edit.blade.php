@@ -81,6 +81,7 @@
                                 <x-forms.input label="DOB: " type="date" name="dob" id="dob"
                                     :required="true" size="col-lg-6 mt-2"
                                     value="{{ old('dob', $candidate->dob ? $candidate->dob->format('Y-m-d') : '') }}" />
+                                  
                                 <x-forms.radio label="Gender: " :options="[
                                     ['value' => 'Male', 'label' => 'Male'],
                                     ['value' => 'Female', 'label' => 'Female'],

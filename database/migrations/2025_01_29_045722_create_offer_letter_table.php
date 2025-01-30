@@ -11,7 +11,6 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('offer_letter', function (Blueprint $table) {
-            DB::statement('ALTER TABLE offer_letter ADD PRIMARY KEY (`id`);');
             $table->bigInteger('id')->unsigned()->autoIncrement()->change();
             $table->integer('company_id')->nullable()->change();
             $table->string('employee_id', 128)->nullable()->change();
@@ -58,6 +57,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('offer_letter');
+        // Schema::dropIfExists('offer_letter');
     }
 };

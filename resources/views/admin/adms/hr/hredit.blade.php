@@ -90,10 +90,10 @@
                                             id="spouse_name" :required="false" size="col-lg-6 mt-2"
                                             :value="old('spouse_name', $candidate->spouse_name)" />
                                         <x-forms.input label="Spouse's DOB: " type="date" name="spouse_dob"
-                                            id="spouse_dob" :required="true" size="col-lg-6 mt-2"
+                                            id="spouse_dob" :required="false" size="col-lg-6 mt-2"
                                             :value="old('spouse_dob', $candidate->spouse_dob)" />
                                         <x-forms.input label="Enter Spouse Adhar Card No:" type="number"
-                                            name="spouse_aadhar_no" id="spouse_aadhar_no" :required="true"
+                                            name="spouse_aadhar_no" id="spouse_aadhar_no" :required="false"
                                             size="col-lg-6 mt-2" :value="old('spouse_aadhar_no', $candidate->spouse_aadhar_no)" />
                                         <x-forms.input label="No of Children:" type="number" name="no_of_childrens"
                                             id="no_of_childrens" :required="false" size="col-lg-6 mt-2"
