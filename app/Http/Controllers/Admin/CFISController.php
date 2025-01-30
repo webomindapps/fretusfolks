@@ -81,28 +81,26 @@ class CFISController extends Controller
         $validatedData['dcs_approval'] = $request->input('dcs_approval', 1);
         $validatedData['data_status'] = $request->input('data_status', 0);
 
-      
-        $fileFields = ['photo', 'resume'];
-        foreach ($fileFields as $field) {
-            if ($request->hasFile($field)) {
-
-                $file = $request->file($field);
-                $filePath = $file->storeAs('uploads/' . $field, $file->getClientOriginalName(), 'public');
-
-                CandidateDocuments::create([
-                    'emp_id' => $validatedData['id'],
-                    'name' => $file->getClientOriginalName(),
-                    'path' => $filePath,
-                    'status' => 1,
-                ]);
-            }
-        }
-
         DB::beginTransaction();
         try {
             $client = $this->model()->create($validatedData);
             $client->entity_name = ClientManagement::where('id', $request->client_id)->value('client_name');
             $client->save();
+            $fileFields = ['photo', 'resume'];
+            foreach ($fileFields as $field) {
+                if ($request->hasFile($field)) {
+    
+                    $file = $request->file($field);
+                    $filePath = $file->storeAs('uploads/' . $field, $file->getClientOriginalName(), 'public');
+    
+                    CandidateDocuments::create([
+                        'emp_id' => $client->id,
+                        'name' => $file->getClientOriginalName(),
+                        'path' => $filePath,
+                        'status' => 1,
+                    ]);
+                }
+            }
             DB::commit();
 
             return redirect()->route('admin.cfis')->with('success', 'Candidate data added successfully!');
