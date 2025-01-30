@@ -26,7 +26,7 @@
     @endif
     <div class="col-lg-12 pb-4">
         <div class="form-card px-3">
-            <form action="{{ route('admin.hr.hredit', $candidate->id) }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('admin.hr.hredit', $candidate->id) }}" method="POST" id="HRedit" enctype="multipart/form-data">
                 @csrf
                 <div class="card mt-3">
                     <div class="card-header header-elements-inline d-flex justify-content-between align-items-center">
@@ -477,7 +477,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-lg-12 mt-4">
-                                    <button type="submit" id="submitBtn" class="btn btn-primary">Submit</button>
+                                    <button type="button" id="submitBtn" class="btn btn-primary">Submit</button>
                                 </div>
                             </div>
                         </div>
@@ -490,15 +490,16 @@
         document.getElementById('submitBtn').addEventListener('click', function(e) {
             e.preventDefault();
             let status = document.getElementById('hr_approval').value;
+            let form=document.getElementById('HRedit');
             if (status === "1") { // Ensure the status is compared as a string
                 $('#offerLetterModal').modal('show'); // Show the modal by ID
             } else {
-                document.forms[0].submit();
+                form.submit();
             }
         });
 
         function generateOfferLetter(action) {
-            let form = document.forms[0];
+            let form = document.getElementById('HRedit');
             let formData = new FormData(form);
             formData.append('action', action);
 
