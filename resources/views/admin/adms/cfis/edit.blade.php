@@ -1,6 +1,18 @@
 <x-applayout>
     <x-admin.breadcrumb title="Candidate First Information System" />
+    <style>
+        .btn-custom {
+            background-color: #067e1a;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            text-decoration: none;
+        }
 
+        .btn-custom:hover {
+            background-color: #067e1a;
+        }
+    </style>
     @if ($errors->any())
         <div class="col-lg-12 pb-4 px-2">
             <div class="alert alert-danger">

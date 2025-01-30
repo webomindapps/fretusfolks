@@ -249,7 +249,7 @@
                                     :value="old('uan_status')" />
                                 <div id="uan-number-field" style="display: none;" class="mt-3">
                                     <x-forms.input label="Enter UAN No:" type="text" name="uan_no"
-                                        id="uan_no" :required="true" size="col-lg-6" :value="old('uan_no')" />
+                                        id="uan_no" :required="true" size="col-lg-6" :value="old('uan_no', $candidate->uan_no)" />
                                 </div>
                                 {{-- <x-forms.input label="ESIC No:" type="text" name="esic_no" id="esic_no"
                                     :required="false" size="col-lg-6 mt-2" :value="old('esic_no', $candidate->esic_no)" /> --}}

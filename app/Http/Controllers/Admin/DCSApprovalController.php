@@ -3,14 +3,18 @@
 namespace App\Http\Controllers\Admin;
 
 use Exception;
+use Barryvdh\DomPDF\PDF;
 use App\Models\CFISModel;
 use App\Models\DCSChildren;
+use App\Models\OfferLetter;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\OtherCertificate;
+use App\Models\CandidateDocuments;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\EducationCertificate;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 
 class DCSApprovalController extends Controller
@@ -105,7 +109,7 @@ class DCSApprovalController extends Controller
             'no_of_childrens' => 'nullable|integer',
             'blood_group' => 'nullable|string|max:255',
             'qualification' => 'nullable|string|max:255',
-            'phone1' => 'nullable|string|max:15',
+            'phone1' => 'required|string|max:15|unique:backend_management,phone1' . $candidate->id,
             'phone2' => 'nullable|string|max:15',
             'email' => 'nullable|email|max:255',
             'official_mail_id' => 'nullable|email|max:255',
@@ -113,7 +117,7 @@ class DCSApprovalController extends Controller
             'present_address' => 'nullable|string',
             'pan_no' => 'nullable|string|max:255',
             'pan_path' => 'nullable|file|mimes:pdf,jpg,png,doc,docx|max:2048',
-            'aadhar_no' => 'nullable|string|min:12',
+            'aadhar_no' => 'required|string|min:12|unique:backend_management,aadhar_no' . $candidate->id,
             'aadhar_path' => 'nullable|file|mimes:pdf,jpg,png,doc,docx|max:2048',
             'driving_license_no' => 'nullable|string|max:255',
             'driving_license_path' => 'nullable|file|mimes:pdf,jpg,png,doc,docx|max:2048',
@@ -152,40 +156,64 @@ class DCSApprovalController extends Controller
             'document_file.*' => 'nullable|file|mimes:pdf,doc,docx|max:2048',
             'child_names.*' => 'required|string|max:255',
             'child_dobs.*' => 'required|date',
+        ], [
+            'phone1.unique' => 'The phone number has already been taken. Please Check With HR',
+            'aadhar_no.unique' => 'The Aadhar number has already been taken.Please Check With HR.',
+
         ]);
         DB::beginTransaction();
         try {
             $validatedData['password'] = $request->input('dcs_approval', 'ffemp@123');
             $validatedData['psd'] = $request->input('dcs_approval', 'ffemp@123');
             $validatedData['dcs_approval'] = $request->input('dcs_approval', 0);
-            $validatedData['data_status'] = $request->input('data_status', 0);
+            $validatedData['data_status'] = $request->input('data_status', 1);
+            $validatedData['hr_approval'] = $request->input('hr_approval', 0);
+
             $candidate->update($validatedData);
 
-            $fileFields = ['pan_path', 'aadhar_path', 'driving_license_path', 'photo', 'resume', 'bank_document', 'family_photo'];
+            $fileFields = ['pan_path', 'aadhar_path', 'driving_license_path', 'photo', 'resume', 'bank_document', 'voter_id', 'emp_form', 'pf_esic_form', 'payslip', 'exp_letter'];
             foreach ($fileFields as $field) {
                 if ($request->hasFile($field)) {
-                    $filePath = $request->file($field)->store('uploads/' . $field, 'public');
-                    $candidate->$field = $filePath;
+                    if ($candidate->$field) {
+                        Storage::disk('public')->delete($candidate->$field);
+                    }
+
+                    $file = $request->file($field);
+                    $newFileName = $field . '_' . $candidate->id . '.' . $file->getClientOriginalExtension();
+
+                    $filePath = $file->storeAs('uploads/' . $field, $newFileName, 'public');
+
+                    CandidateDocuments::create([
+                        'emp_id' => $candidate->id,
+                        'name' => $field,
+                        'path' => $filePath,
+                        'status' => 0,
+                    ]);
                 }
             }
+
             if ($request->has('document_type') && $request->hasFile('document_file')) {
                 foreach ($request->document_type as $index => $type) {
                     $file = $request->file('document_file')[$index] ?? null;
 
                     if ($file) {
                         $filePath = $file->store('documents/' . $type, 'public');
-
                         if ($type === 'education_certificate') {
                             EducationCertificate::create([
                                 'emp_id' => $candidate->id,
-                                'path' => $filePath,
+                                'path' => $filePath . '_' . $candidate->id,
+                                'status' => 0,
                             ]);
                         } elseif ($type === 'other_certificate') {
                             OtherCertificate::create([
                                 'emp_id' => $candidate->id,
-                                'path' => $filePath,
+                                'path' => $filePath . '_' . $candidate->id,
+                                'status' => 0,
                             ]);
                         } else {
+                            if ($candidate->$type) {
+                                Storage::disk('public')->delete($candidate->$type);
+                            }
                             $candidate->$type = $filePath;
                             $candidate->save();
                         }
@@ -261,30 +289,42 @@ class DCSApprovalController extends Controller
         $order = request()->orderedColumn;
         $orderBy = request()->orderBy;
         $paginate = request()->paginate;
+        $userId = auth()->id();
 
-        $query = $this->model()->query()->whereIn('dcs_approval', [0, 1])->whereIn('data_status', [0, 1]);
+        $query = $this->model()->query()
+            // ->whereIn('data_status', [0, 1])
+            ->whereIn('data_status', [1])
+            ->whereIn('hr_approval', [0, 1])
+            ->whereHas('hrMasters', function ($q) use ($userId) {
+                $q->where('user_id', $userId)
+                    ->whereIn('dcs_approval', [0]);
+            })
+            ->with(['hrMasters.client']);
 
+        $from_date = request()->get('from_date');
+        $to_date = request()->get('to_date');
         if ($from_date && $to_date) {
             $query->whereBetween('created_at', [$from_date, $to_date]);
         }
-        if ($search != '')
-            $query->where(function ($q) use ($search, $searchColumns) {
-                foreach ($searchColumns as $key => $value)
-                    ($key == 0) ? $q->where($value, 'LIKE', '%' . $search . '%') : $q->orWhere($value, 'LIKE', '%' . $search . '%');
-            });
 
-        ($order == '') ? $query->orderByDesc('id') : $query->orderBy($order, $orderBy);
+        $search = request()->get('search');
+        if ($search) {
+            $query->where('emp_name', 'LIKE', "%$search%");
+        }
 
-        $candidate = $paginate ? $query->paginate($paginate)->appends(request()->query()) : $query->paginate(10)->appends(request()->query());
+        $orderBy = request()->get('orderBy', 'desc');
+        $query->orderBy('id', $orderBy);
 
-        return view("admin.adms.hr.hrindex", compact("candidate"));
+        $candidates = $query->paginate(10)->appends(request()->query());
+
+        return view("admin.adms.hr.hrindex", compact("candidates"));
     }
 
     public function hredit($id)
     {
         $candidate = $this->model()
             ->with(['client'])
-            ->with(['educationCertificates', 'otherCertificates'])
+            ->with(['educationCertificates', 'otherCertificates', 'candidateDocuments'])
             ->findOrFail($id);
 
         if (!$candidate->client || !$candidate->client->client_ffi_id) {
@@ -317,6 +357,7 @@ class DCSApprovalController extends Controller
 
     public function hrupdate(Request $request, $id)
     {
+        dd('hello');
         $candidate = $this->model()->find($id);
         $validatedData = $request->validate([
             'client_id' => 'required|integer',
@@ -390,7 +431,7 @@ class DCSApprovalController extends Controller
             'employer_esic' => 'nullable|numeric',
             'mediclaim' => 'nullable|numeric',
             'ctc' => 'nullable|numeric',
-            'data_status' => 'required|numeric',
+            'hr_approval' => 'required|numeric',
             'modify_by' => 'nullable|integer',
             'password' => 'nullable|string|max:255',
             'refresh_code' => 'nullable|string|max:255',
@@ -407,16 +448,27 @@ class DCSApprovalController extends Controller
             $validatedData['dcs_approval'] = $request->input('dcs_approval', 0);
             $candidate->update($validatedData);
 
-            $fileFields = ['pan_path', 'aadhar_path', 'driving_license_path', 'photo', 'resume', 'bank_document'];
+            $fileFields = ['pan_path', 'aadhar_path', 'driving_license_path', 'photo', 'resume', 'bank_document', 'voter_id', 'emp_form', 'pf_esic_form', 'payslip', 'exp_letter'];
             foreach ($fileFields as $field) {
                 if ($request->hasFile($field)) {
                     if ($candidate->$field) {
                         Storage::disk('public')->delete($candidate->$field);
                     }
-                    $filePath = $request->file($field)->store('uploads/' . $field, 'public');
-                    $candidate->$field = $filePath;
+
+                    $file = $request->file($field);
+                    $newFileName = $field . '_' . $candidate->id . '.' . $file->getClientOriginalExtension();
+
+                    $filePath = $file->storeAs('uploads/' . $field, $newFileName, 'public');
+
+                    CandidateDocuments::create([
+                        'emp_id' => $candidate->id,
+                        'name' => $field,
+                        'path' => $filePath,
+                        'status' => 1,
+                    ]);
                 }
             }
+
             if ($request->has('document_type') && $request->hasFile('document_file')) {
                 foreach ($request->document_type as $index => $type) {
                     $file = $request->file('document_file')[$index] ?? null;
@@ -426,12 +478,14 @@ class DCSApprovalController extends Controller
                         if ($type === 'education_certificate') {
                             EducationCertificate::create([
                                 'emp_id' => $candidate->id,
-                                'path' => $filePath,
+                                'path' => $filePath . '_' . $candidate->id,
+                                'status' => 1,
                             ]);
                         } elseif ($type === 'other_certificate') {
                             OtherCertificate::create([
                                 'emp_id' => $candidate->id,
-                                'path' => $filePath,
+                                'path' => $filePath . '_' . $candidate->id,
+                                'status' => 1,
                             ]);
                         } else {
                             if ($candidate->$type) {
@@ -563,13 +617,25 @@ class DCSApprovalController extends Controller
             $candidate->update($validatedData);
 
 
-            $fileFields = ['pan_path', 'aadhar_path', 'driving_license_path', 'photo', 'resume', 'bank_document'];
+            $fileFields = ['pan_path', 'aadhar_path', 'driving_license_path', 'photo', 'resume', 'bank_document', 'voter_id', 'emp_form', 'pf_esic_form', 'payslip', 'exp_letter'];
             foreach ($fileFields as $field) {
                 if ($request->hasFile($field)) {
-                    $filePath = $request->file($field)->store('uploads/', $field);
-                    $candidate->$field = $filePath;
+                    if ($candidate->$field) {
+                        Storage::disk('public')->delete($candidate->$field);
+                    }
+
+                    $file = $request->file($field);
+                    $filePath = $file->storeAs('uploads/' . $field, $file->getClientOriginalName(), 'public');
+
+                    CandidateDocuments::create([
+                        'emp_id' => $candidate->id,
+                        'name' => $file->getClientOriginalName(),
+                        'path' => $filePath,
+                        'status' => 0,
+                    ]);
                 }
             }
+
             if ($request->has('document_type') && $request->hasFile('document_file')) {
                 foreach ($request->document_type as $index => $type) {
                     $file = $request->file('document_file')[$index] ?? null;
@@ -580,13 +646,18 @@ class DCSApprovalController extends Controller
                             EducationCertificate::create([
                                 'emp_id' => $candidate->id,
                                 'path' => $filePath,
+                                'status' => 0,
                             ]);
                         } elseif ($type === 'other_certificate') {
                             OtherCertificate::create([
                                 'emp_id' => $candidate->id,
                                 'path' => $filePath,
+                                'status' => 0,
                             ]);
                         } else {
+                            if ($candidate->$type) {
+                                Storage::disk('public')->delete($candidate->$type);
+                            }
                             $candidate->$type = $filePath;
                             $candidate->save();
                         }
@@ -617,4 +688,299 @@ class DCSApprovalController extends Controller
             return response()->json(['success' => false, 'message' => $e->getMessage()]);
         }
     }
+    public function updateStatus($id, $newStatus)
+    {
+        $candidateDocument = CandidateDocuments::find($id);
+        if ($candidateDocument) {
+            $candidateDocument->status = $newStatus;
+            $candidateDocument->save();
+            return back()->with('status', 'Candidate Document status updated successfully!');
+        }
+
+        $educationCertificate = EducationCertificate::find($id);
+        if ($educationCertificate) {
+            $educationCertificate->status = $newStatus;
+            $educationCertificate->save();
+            return back()->with('status', 'Education Certificate status updated successfully!');
+        }
+
+        $otherCertificate = OtherCertificate::find($id);
+        if ($otherCertificate) {
+            $otherCertificate->status = $newStatus;
+            $otherCertificate->save();
+            return back()->with('status', 'Other Certificate status updated successfully!');
+        }
+
+        return back()->with('error', 'Document not found!');
+    }
+
+    public function docrejected()
+    {
+        $searchColumns = ['id', 'client_id', 'emp_name', 'phone1'];
+        $search = request()->search;
+        $from_date = request()->from_date;
+        $to_date = request()->to_date;
+        $order = request()->orderedColumn;
+        $orderBy = request()->orderBy;
+        $paginate = request()->paginate;
+
+        $query = $this->model()->query()->where('hr_approval', 2);
+
+        if ($from_date && $to_date) {
+            $query->whereBetween('created_at', [$from_date, $to_date]);
+        }
+        if ($search != '')
+            $query->where(function ($q) use ($search, $searchColumns) {
+                foreach ($searchColumns as $key => $value)
+                    ($key == 0) ? $q->where($value, 'LIKE', '%' . $search . '%') : $q->orWhere($value, 'LIKE', '%' . $search . '%');
+            });
+
+        ($order == '') ? $query->orderByDesc('id') : $query->orderBy($order, $orderBy);
+
+        $candidate = $paginate ? $query->paginate($paginate)->appends(request()->query()) : $query->paginate(10)->appends(request()->query());
+
+        return view("admin.adms.dcs_approval.docrejected", compact("candidate"));
+    }
+    public function docedit($id)
+    {
+        $candidate = $this->model()
+            ->with(['client'])
+            ->with(['educationCertificates', 'otherCertificates', 'candidateDocuments'])
+            ->findOrFail($id);
+
+        $children = DCSChildren::where('emp_id', $candidate->id)->get();
+
+        return view('admin.adms.dcs_approval.docedit', compact('candidate', 'children'));
+    }
+    public function docupdate(Request $request, $id)
+    {
+        $candidate = $this->model()->find($id);
+        $validatedData = $request->validate([
+            'client_id' => 'required|integer',
+            'entity_name' => 'nullable|string|max:255',
+            'console_id' => 'nullable|string|max:255',
+            'ffi_emp_id' => 'nullable|string|max:255',
+            'grade' => 'nullable|string|max:255',
+            'client_emp_id' => 'nullable|string|max:255',
+            'emp_name' => 'nullable|string|max:255',
+            'middle_name' => 'nullable|string|max:255',
+            'last_name' => 'nullable|string|max:255',
+            'interview_date' => 'nullable|date',
+            'joining_date' => 'nullable|date',
+            'contract_date' => 'nullable|date',
+            'designation' => 'nullable|string|max:255',
+            'department' => 'nullable|string|max:255',
+            'state' => 'nullable|string|max:255',
+            'location' => 'nullable|string|max:255',
+            'branch' => 'nullable|string|max:255',
+            'dob' => 'nullable|date',
+            'gender' => 'nullable|string|max:255',
+            'father_name' => 'nullable|string|max:255',
+            'father_dob' => 'nullable|date',
+            'mother_name' => 'nullable|string|max:255',
+            'mother_dob' => 'nullable|date',
+            'religion' => 'nullable|string|max:255',
+            'languages' => 'nullable|string|max:255',
+            'mother_tongue' => 'nullable|string|max:255',
+            'maritial_status' => 'nullable|string|max:255',
+            'emer_contact_no' => 'nullable|string|max:10',
+            'emer_name' => 'nullable|string|max:255',
+            'emer_relation' => 'nullable|string|max:255',
+            'spouse_name' => 'nullable|string|max:255',
+            'no_of_childrens' => 'nullable|integer',
+            'blood_group' => 'nullable|string|max:255',
+            'qualification' => 'nullable|string|max:255',
+            'phone1' => 'nullable|string|max:15',
+            'phone2' => 'nullable|string|max:15',
+            'email' => 'nullable|email|max:255',
+            'official_mail_id' => 'nullable|email|max:255',
+            'permanent_address' => 'nullable|string',
+            'present_address' => 'nullable|string',
+            'pan_no' => 'nullable|string|max:255',
+            'pan_path' => 'nullable|file|mimes:pdf,jpg,png,doc,docx|max:2048',
+            'aadhar_no' => 'nullable|string|max:255',
+            'aadhar_path' => 'nullable|file|mimes:pdf,jpg,png,doc,docx|max:2048',
+            'driving_license_no' => 'nullable|string|max:255',
+            'driving_license_path' => 'nullable|file|mimes:pdf,jpg,png,doc,docx|max:2048',
+            'photo' => 'nullable|file|mimes:jpg,png,doc,docx|max:2048',
+            'resume' => 'nullable|file|mimes:pdf,doc,docx|max:2048',
+            'bank_document' => 'nullable|file|mimes:pdf,doc,docx|max:2048',
+            'bank_name' => 'nullable|string|max:255',
+            'bank_account_no' => 'nullable|string|max:255',
+            'bank_ifsc_code' => 'nullable|string|max:255',
+            'uan_no' => 'nullable|string|max:255',
+            'hr_approval' => 'required|numeric',
+            'modify_by' => 'nullable|integer',
+            'password' => 'nullable|string|max:255',
+            'refresh_code' => 'nullable|string|max:255',
+            'psd' => 'nullable|string|max:255',
+            'document_type.*' => 'nullable|string',
+            'document_file.*' => 'nullable|file|mimes:jpg,png,pdf,doc,docx|max:2048',
+            'child_names.*' => 'nullable|string|max:255',
+            'child_dobs.*' => 'nullable|date',
+
+        ]);
+        DB::beginTransaction();
+        try {
+            $validatedData['data_status'] = $request->input('data_status', 1);
+            $validatedData['dcs_approval'] = $request->input('dcs_approval', 0);
+            $candidate->update($validatedData);
+
+            $fileFields = ['pan_path', 'aadhar_path', 'driving_license_path', 'photo', 'resume', 'bank_document', 'voter_id', 'emp_form', 'pf_esic_form', 'payslip', 'exp_letter'];
+            foreach ($fileFields as $field) {
+                if ($request->hasFile($field)) {
+                    if ($candidate->$field) {
+                        Storage::disk('public')->delete($candidate->$field);
+                    }
+
+                    $file = $request->file($field);
+                    $newFileName = $field . '_' . $candidate->id . '.' . $file->getClientOriginalExtension();
+
+                    $filePath = $file->storeAs('uploads/' . $field, $newFileName, 'public');
+
+                    CandidateDocuments::create([
+                        'emp_id' => $candidate->id,
+                        'name' => $field,
+                        'path' => $filePath,
+                        'status' => 0,
+                    ]);
+                }
+            }
+
+            if ($request->has('document_type') && $request->hasFile('document_file')) {
+                foreach ($request->document_type as $index => $type) {
+                    $file = $request->file('document_file')[$index] ?? null;
+
+                    if ($file) {
+                        $filePath = $file->store('documents/' . $type, 'public');
+                        if ($type === 'education_certificate') {
+                            EducationCertificate::create([
+                                'emp_id' => $candidate->id,
+                                'path' => $filePath . '_' . $candidate->id,
+                                'status' => 0,
+                            ]);
+                        } elseif ($type === 'other_certificate') {
+                            OtherCertificate::create([
+                                'emp_id' => $candidate->id,
+                                'path' => $filePath . '_' . $candidate->id,
+                                'status' => 0,
+                            ]);
+                        } else {
+                            if ($candidate->$type) {
+                                Storage::disk('public')->delete($candidate->$type);
+                            }
+                            $candidate->$type = $filePath;
+                            $candidate->save();
+                        }
+                    }
+                }
+            }
+            if ($request->has('child_names') && $request->has('child_dobs')) {
+
+                $childNames = $request->child_names;
+                $childDobs = $request->child_dobs;
+                DCSChildren::where('emp_id', $candidate->id)->delete();
+
+                foreach ($childNames as $index => $name) {
+                    if (!empty($name) && isset($childDobs[$index])) {
+                        DCSChildren::create([
+                            'emp_id' => $candidate->id,
+                            'name' => $name,
+                            'dob' => $childDobs[$index],
+                        ]);
+                    }
+                }
+            }
+            $candidate->save();
+            DB::commit();
+
+            return redirect()->route('admin.doc_rejected')->with('success', 'Candidate updated successfully');
+        } catch (Exception $e) {
+            DB::rollBack();
+            dd($e);
+        }
+    }
+    public function generateOfferLetter(Request $request, $id)
+    {
+        $action = $request->input('action'); // 'save' or 'send'
+
+        $employee = $this->model()->findOrFail($id);
+
+        // Create Offer Letter Entry
+        $offerLetter = OfferLetter::create([
+            'company_id' => $employee->client_id,
+            'employee_id' => $employee->ffi_emp_id,
+            'emp_name' => $employee->emp_name,
+            'phone1' => $employee->phone1,
+            'entity_name' => $employee->entity_name,
+            'joining_date' => $employee->joining_date,
+            'location' => $employee->location,
+            'department' => $employee->department,
+            'father_name' => $employee->father_name,
+            'tenure_month' => now()->format('m'), // Current month
+            'date' => now()->format('Y-m-d'), // Today's date
+            'tenure_date' => now()->format('Y-m-d'), // Today's date
+            'offer_letter_type' => 1,
+            'status' => 1,
+            'basic_salary' => $employee->basic_salary,
+            'hra' => $employee->hra,
+            'conveyance' => $employee->conveyance,
+            'medical_reimbursement' => $employee->medical_reimbursement,
+            'special_allowance' => $employee->special_allowance,
+            'other_allowance' => $employee->other_allowance,
+            'st_bonus' => $employee->st_bonus,
+            'gross_salary' => $employee->gross_salary,
+            'emp_pf' => $employee->emp_pf,
+            'emp_esic' => $employee->emp_esic,
+            'pt' => $employee->pt,
+            'total_deduction' => $employee->total_deduction,
+            'take_home' => $employee->take_home,
+            'employer_pf' => $employee->employer_pf,
+            'employer_esic' => $employee->employer_esic,
+            'mediclaim' => $employee->mediclaim,
+            'ctc' => $employee->ctc,
+            'leave_wage' => $employee->leave_wage ?? 0,
+            'email' => $employee->email,
+            'notice_period' => $employee->notice_period ?? 7,
+            'salary_date' => $employee->salary_date ?? 7,
+            'designation' => $employee->designation,
+            'offer_letter_pdf' => '', // Will be updated after generating the PDF
+        ]);
+
+        // Ensure Directory Exists
+        $directory = storage_path('app/public/offer_letters/');
+        if (!file_exists($directory)) {
+            mkdir($directory, 0777, true);
+        }
+
+        // Generate PDF
+        $pdf = PDF::loadView('admin.adms.offer_letter.formate', compact('offerLetter'))
+            ->setOptions([
+                'isHtml5ParserEnabled' => true,
+                'isRemoteEnabled' => true,
+                'chroot' => public_path()
+            ]);
+
+        // Save PDF to Storage
+        $pdfPath = 'offer_letters/offer_letter_' . $offerLetter->id . '.pdf';
+        Storage::disk('public')->put($pdfPath, $pdf->output());
+
+        // Update Offer Letter with PDF Path
+        $offerLetter->update(['offer_letter_pdf' => $pdfPath]);
+
+        // If action is "send", send email
+        if ($action == 'send') {
+            Mail::send('emails.offer_letter', ['employee' => $employee], function ($message) use ($employee, $pdfPath) {
+                $message->to($employee->email)
+                    ->cc('admin@example.com')
+                    ->subject('Your Offer Letter')
+                    ->attach(storage_path('app/public/' . $pdfPath));
+            });
+
+            return response()->json(['success' => true, 'message' => 'Offer letter generated and sent successfully.']);
+        }
+
+        return response()->json(['success' => true, 'message' => 'Offer letter generated and saved successfully.']);
+    }
+
 }

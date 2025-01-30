@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\States;
+use App\Models\OfferLetter;
 use App\Models\ClientManagement;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -145,5 +146,21 @@ class CFISModel extends Model
     public function otherCertificates()
     {
         return $this->hasMany(OtherCertificate::class, 'emp_id', 'id');
+    }
+    public function candidateDocuments()
+    {
+        return $this->hasMany(CandidateDocuments::class, 'emp_id', 'id');
+    }
+    public function assignedClients()
+    {
+        return $this->hasMany(HRMasters::class, 'user_id');
+    }
+    public function hrMasters()
+    {
+        return $this->hasMany(HRMasters::class, 'client_id', 'client_id');
+    }
+    public function employee()
+    {
+        return $this->hasMany(OfferLetter::class);
     }
 }

@@ -52,11 +52,48 @@
                     <x-forms.input label="Confirm Password" type="password" name="enc_pass" id="enc_pass"
                         :required="true" size="col-lg-6 mt-4" :value="old('enc_pass')" />
                 </div>
+                <div id="assign_clients" class="col-lg-12 mt-4" style="display: none;">
+                    <label>Assign Clients:</label>
+                    <div class="row">
+                        @foreach ($clients as $index => $client)
+                            <div class="col-md-6 customer-item">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" name="clients[]"
+                                        value="{{ $client->id }}"
+                                        {{ in_array($client->id, $assignedClients ?? []) ? 'checked' : '' }}>
+                                    <label class="form-check-label">{{ $client->client_name }}</label>
+                                </div>
+                            </div>
+
+                            @if (($index + 1) % 2 == 0 && !$loop->last)
+                    </div>
+                    <div class="row">
+                        @endif
+                        @endforeach
+                    </div>
+                </div>
+
 
                 <button type="submit" class="submit-btn submitBtn" id="submitButton">Submit</button>
 
             </form>
         </div>
     </div>
+    <script>
+        document.getElementById('user_type').addEventListener('change', function() {
+            const assignClientsDiv = document.getElementById('assign_clients');
+            if (this.value === 'Hroperations') {
+                assignClientsDiv.style.display = 'block';
+            } else {
+                assignClientsDiv.style.display = 'none';
+            }
+        });
 
+        window.addEventListener('load', function() {
+            const userTypeSelect = document.getElementById('user_type');
+            if (userTypeSelect.value === 'Hroperations') {
+                document.getElementById('assign_clients').style.display = 'block';
+            }
+        });
+    </script>
 </x-applayout>

@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\CMSLWFController;
 use App\Http\Controllers\Admin\CMSESICController;
 use App\Http\Controllers\Admin\InvoiceController;
 use App\Http\Controllers\Admin\PaymentController;
+use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\TdsCodeController;
 use App\Http\Controllers\Admin\CMSFormTController;
 use App\Http\Controllers\Admin\FFIAssetController;
@@ -27,7 +28,6 @@ use App\Http\Controllers\Admin\FFIOfferLetterController;
 use App\Http\Controllers\Admin\FFITerminationController;
 use App\Http\Controllers\Admin\CMSLabourNoticeController;
 use App\Http\Controllers\Admin\FFIIncrementLetterController;
-use App\Http\Controllers\Admin\SettingController;
 
 Route::get('/', function () {
     return to_route('admin.dashboard');
@@ -153,6 +153,11 @@ Route::prefix('admin')->group(function () {
         Route::get('/dcs_approval/hr', [DCSApprovalController::class, 'hrindex'])->name('hrindex');
         Route::get('dcs_approval/{id}/hredit', [DCSApprovalController::class, 'hredit'])->name('hr.hredit');
         Route::post('dcs_approval/{id}/hredit', [DCSApprovalController::class, 'hrupdate']);
+        Route::get('dcs_approval/status/{id}/{newStatus}', [DCSApprovalController::class, 'updateStatus'])->name('document.status');
+        Route::get('/document_rejected', [DCSApprovalController::class, 'docrejected'])->name('doc_rejected');
+        Route::get('dcs_approval/{id}/docedit', [DCSApprovalController::class, 'docedit'])->name('dcs_approval.docedit');
+        Route::post('dcs_approval/{id}/docedit', [DCSApprovalController::class, 'docupdate']);
+        Route::post('/offer_letter/generate/{id}', [DCSApprovalController::class, 'generateOfferLetter'])->name('offer_letter.generate');
 
 
         //fhrms
@@ -296,5 +301,7 @@ Route::prefix('admin')->group(function () {
         // settings
         Route::get('/settings', [SettingController::class, 'index'])->name('settings');
         Route::post('/settings', [SettingController::class, 'update']);
+
+
     });
 });

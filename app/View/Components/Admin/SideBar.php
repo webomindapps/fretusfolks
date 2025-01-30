@@ -115,6 +115,13 @@ class SideBar extends Component
                     'name' => 'hrindex',
                     'roles' => ['Admin', 'Hroperations'],
                 ],
+                [
+                    'title' => 'Documents Rejected  ',
+                    'icon' => 'bx bx-chevron-right',
+                    'route' => 'admin.doc_rejected',
+                    'name' => 'doc_rejected',
+                    'roles' => ['Admin', 'Recruitment'],
+                ],
 
             ],
 

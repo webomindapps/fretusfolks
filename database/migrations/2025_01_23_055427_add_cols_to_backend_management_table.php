@@ -17,7 +17,6 @@ return new class extends Migration {
             $table->date('spouse_dob')->after('spouse_aadhar_no')->nullable();
             $table->string('family_photo',256)->after('photo')->nullable();
             $table->integer('hr_approval')->after('dcs_approval')->nullable();
-            $table->integer('document_approval')->after('hr_approval')->nullable();
 
         });
     }
@@ -28,7 +27,7 @@ return new class extends Migration {
     public function down(): void
     {
         Schema::table('backend_management', function (Blueprint $table) {
-            $table->dropcolumn('father_aadhar_no', 'mother_aadhar_no', 'spouse_aadhar_no', 'spouse_dob', 'family_photo', 'hr_approval', 'document_approval');
+            $table->dropcolumn('father_aadhar_no', 'mother_aadhar_no', 'spouse_aadhar_no', 'spouse_dob', 'family_photo', 'hr_approval');
 
         });
     }

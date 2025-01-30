@@ -14,4 +14,13 @@ class MuserMaster extends Authenticatable
     {
         return $this->enc_pass;
     }
+    public function hrMasters()
+    {
+        return $this->hasMany(HRMasters::class, 'user_id', 'id');
+    }
+    public function client()
+    {
+        return $this->belongsTo(ClientManagement::class, 'id');
+    }
+    
 }

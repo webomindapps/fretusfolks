@@ -1,5 +1,5 @@
 <x-applayout>
-    <x-admin.breadcrumb title="HR Back-End Management" />
+    <x-admin.breadcrumb title="Document Rejection" />
     <style>
         .btn-custom {
             background-color: #007bff;
@@ -26,19 +26,19 @@
     @endif
     <div class="col-lg-12 pb-4">
         <div class="form-card px-3">
-            <form action="{{ route('admin.hr.hredit', $candidate->id) }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('admin.dcs_approval.docedit', $candidate->id) }}" method="POST"
+                enctype="multipart/form-data">
                 @csrf
                 <div class="card mt-3">
                     <div class="card-header header-elements-inline d-flex justify-content-between align-items-center">
-                        <h5 class="card-title mb-0">Back end Details</h5>
+                        <h5 class="card-title mb-0">Back End Details</h5>
                     </div>
                     <div class="card-body">
                         <div class="form-contents">
                             <div class="row">
                                 <x-forms.select label="Enter Client Name:" name="client_id" id="client_id"
                                     :required="true" size="col-lg-6 mt-2" :options="FretusFolks::getClientname()" :value="old('client_id', $candidate->client_id)" />
-                                <x-forms.input label="FFI Employee ID:" type="text" name="ffi_emp_id" id="ffi_emp_id"
-                                    :required="true" size="col-lg-6 mt-2" :value="$uniqueId" />
+
                                 <x-forms.input label="Console ID: " type="text" name="console_id" id="console_id"
                                     :required="false" size="col-lg-6 mt-2" :value="old('console_id', $candidate->console_id)" />
                                 <x-forms.input label="Enter Client Employee ID: " type="text" name="client_emp_id"
@@ -47,10 +47,6 @@
                                     :required="false" size="col-lg-6 mt-2" :value="old('grade', $candidate->grade)" />
                                 <x-forms.input label="Enter Employee Name: " type="text" name="emp_name"
                                     id="emp_name" :required="true" size="col-lg-6 mt-2" :value="old('emp_name', $candidate->emp_name)" />
-                                {{-- <x-forms.input label="Middle Name: " type="text" name="middle_name" id="middle_name"
-                                    :required="false" size="col-lg-6 mt-2" :value="old('middle_name', $candidate->middle_name)" />
-                                <x-forms.input label="Last Name: " type="text" name="last_name" id="last_name"
-                                    :required="false" size="col-lg-6 mt-2" :value="old('last_name', $candidate->last_name)" /> --}}
 
                                 <x-forms.input label="Interview Date:  " type="date" name="interview_date"
                                     id="interview_date" :required="true" size="col-lg-4 mt-2"
@@ -58,9 +54,6 @@
                                 <x-forms.input label="Joining Date: " type="date" name="joining_date"
                                     id="joining_date" :required="true" size="col-lg-4 mt-2"
                                     value="{{ old('joining_date', $candidate->joining_date ? $candidate->joining_date->format('Y-m-d') : '') }}" />
-                                {{-- <x-forms.input label="DOL " type="date" name="contract_date" id="contract_date"
-                                    :required="false" size="col-lg-4 mt-2"
-                                    value="{{ old('contract_date', $candidate->contract_date ? $candidate->contract_date->format('Y-m-d') : '') }}" /> --}}
 
                                 <x-forms.input label="Enter Designation: " type="text" name="designation"
                                     id="designation" :required="true" size="col-lg-6 mt-2" :value="old('designation', $candidate->designation)" />
@@ -100,11 +93,11 @@
                                             :value="old('no_of_childrens', $candidate->no_of_childrens)" />
                                     </div>
                                 </div>
-                                <div id="children-details-container" class="mt-3" style="display: none;">
+                                {{-- <div id="children-details-container" class="mt-3" style="display: none;">
                                     <div id="children-details">
                                     </div>
 
-                                </div>
+                                </div> --}}
 
                                 <div id="children-details-form" class="mt-3">
                                     @if (!empty($children) && $children->count() > 0)
@@ -175,30 +168,17 @@
 
                                 <x-forms.input label="Enter PAN Card No::" type="text" name="pan_no"
                                     id="pan_no" :required="false" size="col-lg-6 mt-2" :value="old('pan_no', $candidate->pan_no)" />
-                                {{-- @if (!empty($candidate->pan_path))
-                                    <div class="col-lg-6 mt-2">
-                                        <label for="pan_preview">Current PAN Document:</label>
-
-                                        <a href="{{ asset('storage/' . $candidate->pan_path) }}" target="_blank"
-                                            class="btn btn-link">
-                                            View PAN CARD Document
-                                        </a>
-                                    </div>
-                                @endif --}}
-
                                 <x-forms.input label="Attach New PAN:" type="file" name="pan_path" id="pan_path"
                                     :required="false" size="col-lg-6 mt-2" />
 
                                 <x-forms.input label="Enter Adhar Card No:" type="number" name="aadhar_no"
                                     id="aadhar_no" :required="true" size="col-lg-6 mt-2" :value="old('aadhar_no', $candidate->aadhar_no)" />
-
                                 <x-forms.input label="Attach New Aadhaar Card:" type="file" name="aadhar_path"
                                     id="aadhar_path" :required="false" size="col-lg-6 mt-2" />
 
                                 <x-forms.input label="Enter Driving License No:" type="text"
                                     name="driving_license_no" id="driving_license_no" :required="false"
                                     size="col-lg-6 mt-2" :value="old('driving_license_no', $candidate->driving_license_no)" />
-
                                 <x-forms.input label="Attach New Driving License:" type="file"
                                     name="driving_license_path" id="driving_license_path" :required="false"
                                     size="col-lg-6 mt-2" />
@@ -206,8 +186,6 @@
 
                                 <x-forms.input label="Attach New Photo:" type="file" name="photo"
                                     id="photo" :required="false" size="col-lg-6 mt-2" />
-
-
                                 <x-forms.input label="Attach New Resume:" type="file" name="resume"
                                     id="resume" :required="false" size="col-lg-6 mt-2" />
                                 <div class="form-group col-lg-6 mt-2">
@@ -224,28 +202,20 @@
                                 <x-forms.input label="Enter Bank Account No::" type="text" name="bank_account_no"
                                     id="bank_account_no" :required="true" size="col-lg-6 mt-2" :value="old('bank_account_no', $candidate->bank_account_no)" />
                                 <x-forms.input label="Repeat Bank Account No:" type="text" name="bank_account_no"
-                                    id="bank_account_no" :required="false" size="col-lg-6 mt-2"
-                                    :value="old('bank_account_no', $candidate->bank_account_no)" />
+                                    id="bank_account_no" :required="false" size="col-lg-6 mt-2" :value="old('bank_account_no', $candidate->bank_account_no)" />
                                 <x-forms.input label="Enter Bank IFSC CODE:" type="text" name="bank_ifsc_code"
-                                    id="bank_ifsc_code" :required="true" size="col-lg-6 mt-2"
-                                    :value="old('bank_ifsc_code', $candidate->bank_ifsc_code)" />
-                                {{-- <x-forms.select label="Do you Have UAN No? " :options="[['value' => 'No', 'label' => 'No'], ['value' => 'Yes', 'label' => 'Yes']]" id="uan_status"
-                                    name="uan_status" :required="true" size="col-lg-6 mt-2 mr-2"
-                                    :value="old('uan_status')" />
-                                <div id="uan-number-field" style="display: none;" class="mt-3">
-                                    <x-forms.input label="Enter UAN No:" type="text" name="uan_no"
-                                        id="uan_no" :required="true" size="col-lg-6" :value="old('uan_no')" />
-                                </div> --}}
+                                    id="bank_ifsc_code" :required="true" size="col-lg-6 mt-2" :value="old('bank_ifsc_code', $candidate->bank_ifsc_code)" />
                                 <x-forms.input label="UAN No:" type="text" name="uan_no" id="uan_no"
-                                    :required="true" size="col-lg-6 mt-2" :value="old('uan_no', $candidate->uan_no)" />
+                                    :required="false" size="col-lg-6 mt-2" :value="old('uan_no', $candidate->uan_no)" />
 
-                                <label size="col-lg-6 mt-4"><strong>Current Uploaded Documents</strong></label>
+                                <label class="col-lg-12 mt-4"><strong>Current Uploaded Documents</strong></label>
                                 <div style="border: 1px solid #d6c8c8; padding: 2%; margin-bottom: 1%;">
                                     <table class="table table-bordered">
                                         <thead>
                                             <tr>
                                                 <th>Document Name</th>
                                                 <th>View Document</th>
+                                                <th>Upload Document</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
@@ -280,8 +250,13 @@
                                                             </a>
                                                         </td>
                                                         <td>
+                                                            <input type="file"
+                                                                name="document_file[{{ $certificate->name }}]"
+                                                                class="form-control">
+                                                        </td>
+                                                        <td>
                                                             <div class="dropdown">
-                                                                <button class="btn btn btn-sm dropdown-toggle"
+                                                                <button class="btn btn-sm dropdown-toggle"
                                                                     type="button"
                                                                     id="statusDropdown{{ $certificate->id }}"
                                                                     data-bs-toggle="dropdown" aria-expanded="false">
@@ -295,9 +270,9 @@
                                                                     <li><a class="dropdown-item"
                                                                             href="{{ route('admin.document.status', ['id' => $certificate->id, 'newStatus' => 2]) }}">Rejected</a>
                                                                     </li>
-                                                                    <li><a class="dropdown-item"
+                                                                    {{-- <li><a class="dropdown-item"
                                                                             href="{{ route('admin.document.status', ['id' => $certificate->id, 'newStatus' => 1]) }}">Approved</a>
-                                                                    </li>
+                                                                    </li> --}}
                                                                 </ul>
                                                             </div>
                                                         </td>
@@ -317,8 +292,13 @@
                                                             </a>
                                                         </td>
                                                         <td>
+                                                            <input type="file"
+                                                                name="document_file[education_certificate_{{ $loop->iteration }}]"
+                                                                class="form-control">
+                                                        </td>
+                                                        <td>
                                                             <div class="dropdown">
-                                                                <button class="btn bt btn-sm dropdown-toggle"
+                                                                <button class="btn btn-sm dropdown-toggle"
                                                                     type="button"
                                                                     id="statusDropdown{{ $certificate->id }}"
                                                                     data-bs-toggle="dropdown" aria-expanded="false">
@@ -332,9 +312,9 @@
                                                                     <li><a class="dropdown-item"
                                                                             href="{{ route('admin.document.status', ['id' => $certificate->id, 'newStatus' => 2]) }}">Rejected</a>
                                                                     </li>
-                                                                    <li><a class="dropdown-item"
+                                                                    {{-- <li><a class="dropdown-item"
                                                                             href="{{ route('admin.document.status', ['id' => $certificate->id, 'newStatus' => 1]) }}">Approved</a>
-                                                                    </li>
+                                                                    </li> --}}
                                                                 </ul>
                                                             </div>
                                                         </td>
@@ -354,8 +334,13 @@
                                                             </a>
                                                         </td>
                                                         <td>
+                                                            <input type="file"
+                                                                name="document_file[other_certificate_{{ $loop->iteration }}]"
+                                                                class="form-control">
+                                                        </td>
+                                                        <td>
                                                             <div class="dropdown">
-                                                                <button class="btn btn btn-sm dropdown-toggle"
+                                                                <button class="btn btn-sm dropdown-toggle"
                                                                     type="button"
                                                                     id="statusDropdown{{ $certificate->id }}"
                                                                     data-bs-toggle="dropdown" aria-expanded="false">
@@ -369,9 +354,9 @@
                                                                     <li><a class="dropdown-item"
                                                                             href="{{ route('admin.document.status', ['id' => $certificate->id, 'newStatus' => 2]) }}">Rejected</a>
                                                                     </li>
-                                                                    <li><a class="dropdown-item"
+                                                                    {{-- <li><a class="dropdown-item"
                                                                             href="{{ route('admin.document.status', ['id' => $certificate->id, 'newStatus' => 1]) }}">Approved</a>
-                                                                    </li>
+                                                                    </li> --}}
                                                                 </ul>
                                                             </div>
                                                         </td>
@@ -380,10 +365,10 @@
                                             @endif
                                         </tbody>
                                     </table>
+
                                 </div>
 
-
-                                <label size="col-lg-12 mt-4"><strong>Salary Details</strong></label>
+                                {{-- <label size="col-lg-12 mt-4"><strong>Salary Details</strong></label>
                                 <div
                                     style="border:
                                     1px solid #d6c8c8;padding: 2%;margin-bottom: 1%;">
@@ -437,7 +422,7 @@
                                             id="ctc" :required="false" size="col-lg-3 mt-2"
                                             :value="old('basic_salary', $candidate->ctc)" />
                                     </div>
-                                </div>
+                                </div> --}}
 
                                 <label><strong>Upload Documents</strong></label>
                                 <div style="border: 1px solid #d6c8c8; padding: 2%; margin-bottom: 1%;">
@@ -464,11 +449,8 @@
 
                                     </div>
                                 </div>
-
-                                {{-- <x-forms.input label="Password:" type="text" name="psd" id="psd"
-                                    :required="true" size="col-lg-6 mt-2" :value="old('psd', 'ffemp@123')" /> --}}
                                 <x-forms.select label="Status " :options="[
-                                    ['value' => '1', 'label' => 'Approved'],
+                                    // ['value' => '1', 'label' => 'Approved'],
                                     ['value' => '0', 'label' => 'Pending'],
                                     ['value' => '2', 'label' => 'Rejected'],
                                 ]" id="hr_approval"
@@ -477,7 +459,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-lg-12 mt-4">
-                                    <button type="submit" id="submitBtn" class="btn btn-primary">Submit</button>
+                                    <x-forms.button type="submit" label="Submit" class="btn btn-primary" />
                                 </div>
                             </div>
                         </div>
@@ -486,48 +468,6 @@
             </form>
         </div>
     </div>
-    <script>
-        document.getElementById('submitBtn').addEventListener('click', function(e) {
-            e.preventDefault();
-            let status = document.getElementById('hr_approval').value;
-            if (status === "1") { // Ensure the status is compared as a string
-                $('#offerLetterModal').modal('show'); // Show the modal by ID
-            } else {
-                document.forms[0].submit();
-            }
-        });
-
-        function generateOfferLetter(action) {
-            let form = document.forms[0];
-            let formData = new FormData(form);
-            formData.append('action', action);
-
-            fetch("{{ route('admin.offer_letter.generate', ['id' => $candidate->id]) }}", {
-                    method: "POST",
-                    body: formData,
-                    headers: {
-                        "X-CSRF-TOKEN": "{{ csrf_token() }}"
-                    }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    // Show success or error message in alert
-                    const alert = document.createElement('div');
-                    alert.classList.add('alert', data.success ? 'alert-success' : 'alert-danger');
-                    alert.innerHTML = `<strong>${data.success ? 'Success!' : 'Error!'}</strong> ${data.message}`;
-                    document.body.appendChild(alert);
-
-                    // Close the modal
-                    $('#offerLetterModal').modal('hide');
-
-                    // Remove alert after 5 seconds
-                    setTimeout(() => alert.remove(), 5000);
-                })
-                .catch(error => console.error('Error:', error));
-
-        }
-    </script>
-
     <script>
         //maritial_status
         document.addEventListener('DOMContentLoaded', function() {
@@ -548,25 +488,25 @@
             toggleMarriedFields();
             maritalStatus.addEventListener('change', toggleMarriedFields);
         });
-        // //uan
-        // document.addEventListener('DOMContentLoaded', function() {
-        //     const uanStatus = document.getElementById('uan_status');
-        //     const uanNumberField = document.getElementById('uan-number-field');
-        //     const uanNumberInput = document.getElementById('uan_no');
+        //uan
+        document.addEventListener('DOMContentLoaded', function() {
+            const uanStatus = document.getElementById('uan_status');
+            const uanNumberField = document.getElementById('uan-number-field');
+            const uanNumberInput = document.getElementById('uan_no');
 
-        //     function toggleUANField() {
-        //         if (uanStatus.value === 'Yes') {
-        //             uanNumberField.style.display = 'block';
-        //             uanNumberInput.required = true;
-        //         } else {
-        //             uanNumberField.style.display = 'none';
-        //             uanNumberInput.required = false;
-        //             uanNumberInput.value = '';
-        //         }
-        //     }
-        //     toggleUANField();
-        //     uanStatus.addEventListener('change', toggleUANField);
-        // });
+            function toggleUANField() {
+                if (uanStatus.value === 'Yes') {
+                    uanNumberField.style.display = 'block';
+                    uanNumberInput.required = true;
+                } else {
+                    uanNumberField.style.display = 'none';
+                    uanNumberInput.required = false;
+                    uanNumberInput.value = '';
+                }
+            }
+            toggleUANField();
+            uanStatus.addEventListener('change', toggleUANField);
+        });
         //documents
         document.addEventListener('DOMContentLoaded', function() {
             const documentRowsContainer = document.getElementById('document-rows');
@@ -575,20 +515,20 @@
                     const newRow = document.createElement('div');
                     newRow.className = 'document-row d-flex align-items-center mb-3';
                     newRow.innerHTML = `
-                    <select name="document_type[]" class="col-lg-5 me-3 " >
-                        <option value="">Select Document Type</option>
-                        <option value="voter_id">Voter ID/ PVC/ UL</option>
-                        <option value="emp_form">Attach Employee Form</option>
-                        <option value="education_certificate">Education Certificate</option>
-                        <option value="pf_esic_form">PF Form / ESIC</option>
-                        <option value="other_certificate">Others</option>
-                        <option value="payslip">Payslip/Fitness doc</option>
-                        <option value="exp_letter">Exp Letter</option>
-                    </select>
-                    <input type="file" name="document_file[]" class="col-lg-5 me-3 " >
-                    <button type="button" class="btn btn-success me-2 add-row">+</button>
-                    <button type="button" class="btn btn-danger me-2 remove-row">-</button>
-                `;
+                <select name="document_type[]" class="col-lg-5 me-3 " >
+                    <option value="">Select Document Type</option>
+                    <option value="voter_id">Voter ID/ PVC/ UL</option>
+                    <option value="emp_form">Attach Employee Form</option>
+                    <option value="education_certificate">Education Certificate</option>
+                    <option value="pf_esic_form">PF Form / ESIC</option>
+                    <option value="other_certificate">Others</option>
+                    <option value="payslip">Payslip/Fitness doc</option>
+                    <option value="exp_letter">Exp Letter</option>
+                </select>
+                <input type="file" name="document_file[]" class="col-lg-5 me-3 " >
+                <button type="button" class="btn btn-success me-2 add-row">+</button>
+                <button type="button" class="btn btn-danger me-2 remove-row">-</button>
+            `;
                     documentRowsContainer.appendChild(newRow);
                     document.querySelectorAll('.remove-row').forEach(button => {
                         button.style.display = 'inline-block';
@@ -651,28 +591,4 @@
             noOfChildrenField.addEventListener('input', updateChildDetails);
         });
     </script>
-    <!-- Modal HTML (initially hidden) -->
-    <div class="modal fade" id="offerLetterModal" tabindex="-1" role="dialog"
-        aria-labelledby="offerLetterModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="offerLetterModalLabel">Generate Offer Letter</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <p>Do you want to generate and save the offer letter or generate and send it?</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" onclick="generateOfferLetter('save')">Generate and
-                        Save</button>
-                    <button type="button" class="btn btn-secondary" onclick="generateOfferLetter('send')">Generate
-                        and Send</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
 </x-applayout>

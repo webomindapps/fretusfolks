@@ -1,48 +1,25 @@
 <x-applayout>
-    <x-admin.breadcrumb title="HR Approved Candidates" />
+    <x-admin.breadcrumb title="Documents Rejected  " />
     <div class="row">
         <div class="col-lg-12">
             @php
                 $columns = [
                     ['label' => 'Id', 'column' => 'id', 'sort' => true],
-                    ['label' => 'Client Name', 'column' => 'client_id', 'sort' => true],
+                    ['label' => 'Client Name', 'column' => 'entity_name', 'sort' => true],
                     ['label' => 'Employee Name', 'column' => 'emp_name', 'sort' => true],
                     ['label' => 'Phone', 'column' => 'phone1', 'sort' => true],
-                    // ['label' => 'Approval Status', 'column' => 'data_status', 'sort' => true],
-                    ['label' => 'HR Approval Status', 'column' => 'data_status', 'sort' => false],
+                    // ['label' => ' Status', 'column' => 'status', 'sort' => false],
                     ['label' => 'Actions', 'column' => 'action', 'sort' => false],
                 ];
             @endphp
-            <x-table :columns="$columns" :data="$candidates" :checkAll=false :bulk="route('admin.cfis.bulk')" :route="route('admin.hrindex')">
-                {{-- <x-slot:filters>
-                    <form action="{{ route('admin.dcs_approval.export') }}" method="POST">
-                        @csrf
-                        <div class="row px-2">
-                            <div class="col-lg-3">
-                                <div class="cdate">
-                                    <input type="date" class="form-control" name="from_date" id="from_date">
-                                </div>
-                            </div>
-                            <div class="col-lg-1 text-center my-auto">
-                                <span class="fw-semibold fs-6">To</span>
-                            </div>
-                            <div class="col-lg-3">
-                                <div class="cdate">
-                                    <input type="date" class="form-control" name="to_date" id="to_date">
-                                </div>
-                            </div>
-                            <div class="col-3">
-                                <button type="submit" class="add-btn bg-success text-white">Export</button>
-                            </div>
-                        </div>
-                    </form>
-                </x-slot:filters> --}}
-                @foreach ($candidates as $key => $item)
+            <x-table :columns="$columns" :data="$candidate" :checkAll=true :bulk="route('admin.cfis.bulk')" :route="route('admin.doc_rejected')">
+                
+                @foreach ($candidate as $key => $item)
                     <tr>
-                        {{-- <td>
+                        <td>
                             <input type="checkbox" name="selected_items[]" class="single-item-check"
                                 value="{{ $item->id }}">
-                        </td> --}}
+                        </td>
                         <td>{{ $item->id }}</td>
                         <td>
                             {{ $item->entity_name }}
@@ -54,14 +31,14 @@
                                 <button class="btn btn-secondary dropdown-toggle" type="button"
                                     id="statusDropdown{{ $item->id }}" data-bs-toggle="dropdown"
                                     aria-expanded="false">
-                                    {{ $item->data_status == 0 ? 'Pending' : ($item->data_status == 1 ? 'Approved' : 'Rejected') }}
+                                    {{ $item->dcs_approval == 0 ? 'Approved' : ($item->dcs_approval == 1 ? 'Pending' : 'Rejected') }}
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="statusDropdown{{ $item->id }}">
                                     <li><a class="dropdown-item"
-                                            href="{{ route('admin.cfis.data_status', ['id' => $item->id, 'newStatus' => 0]) }}">Pending</a>
+                                            href="{{ route('admin.cfis.data_status', ['id' => $item->id, 'newStatus' => 0]) }}">Approved</a>
                                     </li>
                                     <li><a class="dropdown-item"
-                                            href="{{ route('admin.cfis.data_status', ['id' => $item->id, 'newStatus' => 1]) }}">Approved</a>
+                                            href="{{ route('admin.cfis.data_status', ['id' => $item->id, 'newStatus' => 1]) }}">Pending</a>
                                     </li>
                                     <li><a class="dropdown-item"
                                             href="{{ route('admin.cfis.data_status', ['id' => $item->id, 'newStatus' => 2]) }}">Rejected</a>
@@ -69,15 +46,11 @@
                                 </ul>
                             </div>
                         </td> --}}
-                        <td>
-                            @if ($item->hr_approval == 1)
-                                <span class="badge rounded-pill sactive">Approved</span>
-                            @elseif ($item->hr_approval == 0)
-                                <span class="badge rounded-pill deactive">Pending</span>
-                            @else
+                        {{-- <td>
+                            @if ($item->status == 2)
                                 <span class="badge rounded-pill deactive">Rejected</span>
                             @endif
-                        </td>
+                        </td> --}}
                         <td>
                             <div class="dropdown pop_Up dropdown_bg">
                                 <div class="dropdown-toggle" id="dropdownMenuButton-{{ $item->id }}"
@@ -95,16 +68,16 @@
                                         View Details
                                     </a> --}}
 
-                                        <a class="dropdown-item" href="{{ route('admin.hr.hredit', $item) }}">
+                                        <a class="dropdown-item" href="{{ route('admin.dcs_approval.docedit', $item) }}">
                                             <i class='bx bx-edit-alt'></i>
                                             Edit
                                         </a>
-                                        {{-- <a class="dropdown-item"
+                                        <a class="dropdown-item"
                                             onclick="return confirm('Are you sure to delete this ?')"
                                             href="{{ route('admin.dcs_approval.delete', $item) }}">
                                             <i class='bx bx-trash-alt'></i>
                                             Delete
-                                        </a> --}}
+                                        </a>
                                     </li>
                                 </ul>
                             </div>

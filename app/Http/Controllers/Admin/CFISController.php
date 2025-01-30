@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\ClientManagement;
 use Exception;
 use App\Models\CFISModel;
 use App\Exports\CDMSExport;
 use App\Exports\CFISExport;
 use Illuminate\Http\Request;
+use App\Models\ClientManagement;
+use App\Models\CandidateDocuments;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Maatwebsite\Excel\Facades\Excel;
@@ -80,14 +81,22 @@ class CFISController extends Controller
         $validatedData['dcs_approval'] = $request->input('dcs_approval', 1);
         $validatedData['data_status'] = $request->input('data_status', 0);
 
+      
         $fileFields = ['photo', 'resume'];
         foreach ($fileFields as $field) {
             if ($request->hasFile($field)) {
-                $filePath = $request->file($field)->store('uploads/' . $field, 'public');
-                $validatedData[$field] = $filePath;
+
+                $file = $request->file($field);
+                $filePath = $file->storeAs('uploads/' . $field, $file->getClientOriginalName(), 'public');
+
+                CandidateDocuments::create([
+                    'emp_id' => $validatedData['id'],
+                    'name' => $file->getClientOriginalName(),
+                    'path' => $filePath,
+                    'status' => 1,
+                ]);
             }
         }
-
 
         DB::beginTransaction();
         try {

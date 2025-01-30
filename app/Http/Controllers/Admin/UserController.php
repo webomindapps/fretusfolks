@@ -2,20 +2,22 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use App\Models\MuserMaster;
 use Exception;
+use App\Models\HRMasters;
+use App\Models\MuserMaster;
 use Illuminate\Http\Request;
+use App\Models\ClientManagement;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
     public function model()
     {
-        return  new MuserMaster;
+        return new MuserMaster;
     }
     public function index()
     {
@@ -34,7 +36,8 @@ class UserController extends Controller
         }
         if ($search != '')
             $query->where(function ($q) use ($search, $searchColumns) {
-                foreach ($searchColumns as $key => $value) ($key == 0) ? $q->where($value, 'LIKE', '%' . $search . '%') : $q->orWhere($value, 'LIKE', '%' . $search . '%');
+                foreach ($searchColumns as $key => $value)
+                    ($key == 0) ? $q->where($value, 'LIKE', '%' . $search . '%') : $q->orWhere($value, 'LIKE', '%' . $search . '%');
             });
 
         // sorting
@@ -47,7 +50,9 @@ class UserController extends Controller
     public function create()
     {
         $roles = Role::all();
-        return view('admin.ffimasters.usermasters.create', compact('roles'));
+        $clients = ClientManagement::all();
+
+        return view('admin.ffimasters.usermasters.create', compact('roles', 'clients'));
     }
 
     public function store(Request $request)
@@ -68,25 +73,40 @@ class UserController extends Controller
             ]
         );
 
+
         DB::beginTransaction();
 
         try {
-            $latestUser = MuserMaster::latest('id')->first();
+            $latestUser = $this->model()->latest('id')->first();
             $newRefNo = 'FFI' . str_pad(($latestUser ? intval(substr($latestUser->ref_no, 2)) + 1 : 1), 3, '0', STR_PAD_LEFT);
 
-            $user = new MuserMaster();
-            $user->user_type = 1;
-            $user->emp_id = $request->emp_id;
-            $user->name = $request->name;
-            $user->username = $request->username;
-            $user->password = Hash::make($request->password);
-            $user->enc_pass = Hash::make($request->enc_pass);
-            $user->email = $request->email;
-            $user->date = now();
-            $user->ref_no = $newRefNo;
-            $user->status = $request->status ?? 0;
-            $user->save();
+            $user = $this->model()->create([
+                'user_type' => 1,
+                'emp_id' => $request->emp_id,
+                'name' => $request->name,
+                'username' => $request->username,
+                'password' => Hash::make($request->password),
+                'enc_pass' => Hash::make($request->enc_pass),
+                'email' => $request->email,
+                'date' => now(),
+                'ref_no' => $newRefNo,
+                'status' => $request->status ?? 0,
+            ]);
             $user->assignRole($request->user_type);
+
+
+            if ($request['user_type'] === 'Hroperations') {
+                $selectedClients = $request->input('clients', []);
+
+                foreach ($selectedClients as $clientId) {
+                    HRMasters::create([
+                        'user_id' => $user->id,
+                        'client_id' => $clientId,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]);
+                }
+            }
             DB::commit();
 
             return redirect()->route('admin.usermasters')->with('success', 'User Masters added successfully');
@@ -103,21 +123,26 @@ class UserController extends Controller
         $status = $request->status;
 
         foreach ($selectedItems as $item) {
-            $category = MuserMaster::find($item);
+            $category = $this->model()->find($item);
             if ($type == 1) {
                 $category->delete();
             } else if ($type == 2) {
                 $category->update(['status' => $status]);
             }
         }
-        return response()->json([ 'success' => 'Bulk operation is completed']);
+        return response()->json(['success' => 'Bulk operation is completed']);
     }
 
     public function edit($id)
     {
         $roles = Role::all();
-        $user = MuserMaster::findorfail($id);
-        return view('admin.ffimasters.usermasters.edit', compact('roles', 'user'));
+        $user = $this->model()->findorfail($id);
+        $clients = ClientManagement::all();
+        $assignedClients = HRMasters::where('user_id', $user->id)
+            ->pluck('client_id')
+            ->toArray();
+
+        return view('admin.ffimasters.usermasters.edit', compact('roles', 'user', 'clients', 'assignedClients'));
     }
     public function update(Request $request, $id)
     {
@@ -127,17 +152,42 @@ class UserController extends Controller
                 'emp_id' => 'required',
                 'name' => 'required',
                 'username' => 'required',
-                'email' => 'required',
-            ],
+                'email' => 'required|email',
+            ]
         );
+
         $user = MuserMaster::findOrFail($id);
-        $user->update($request->all());
+
+        $user->update([
+            'emp_id' => $request->emp_id,
+            'name' => $request->name,
+            'username' => $request->username,
+            'email' => $request->email,
+        ]);
+
         $user->syncRoles($request->role);
+
+        if ($request->role === 'Hroperations') {
+            HRMasters::where('user_id', $user->id)->delete();
+
+            $selectedClients = $request->input('clients', []);
+            foreach ($selectedClients as $clientId) {
+                HRMasters::create([
+                    'user_id' => $user->id,
+                    'client_id' => $clientId,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
+        } else {
+            HRMasters::where('user_id', $user->id)->delete();
+        }
+
         return redirect()->route('admin.usermasters')->with('success', 'User Masters updated successfully');
     }
     public function delete($id)
     {
-        $user = MuserMaster::findOrFail($id);
+        $user = $this->model()->findOrFail($id);
         $user->delete();
         return redirect()->route('admin.usermasters')->with('success', 'User Masters deleted successfully');
     }

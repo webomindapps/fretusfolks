@@ -54,4 +54,12 @@ class ClientManagement extends Model
     {
         return $this->hasMany(CFISModel::class, 'client_id', 'id');
     }
+    public function user()
+    {
+        return $this->hasMany(MuserMaster::class, 'id');
+    }
+    public function hrMasters()
+    {
+        return $this->hasMany(HRMasters::class, 'client_id', 'id');
+    }
 }
