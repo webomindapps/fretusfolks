@@ -160,7 +160,8 @@
                                 <div class="form-group col-lg-6 mt-2">
                                     <label for="phone1">Phone: <span style="color: red">*</span></label>
                                     <input type="text" name="phone1" id="phone1" class="form-control"
-                                    maxlength="10" inputmode="numeric" value="{{ old('phone1', $candidate->phone1) }}" required>
+                                        maxlength="10" inputmode="numeric"
+                                        value="{{ old('phone1', $candidate->phone1) }}" required>
                                 </div>
                                 {{-- <x-forms.input label="Phone 2:" type="number" name="phone2" id="phone2"
                                     :required="false" size="col-lg-4 mt-2" :value="old('phone2', $candidate->phone2)" /> --}}
@@ -347,7 +348,7 @@
                                     <div id="document-rows">
                                         <div class="row ">
                                             <div class="document-row d-flex align-items-center mb-3">
-                                                <select name="document_type[]" class="me-3 col-lg-5 ">
+                                                <select name="document_type[]" id="document_type" class="me-3 col-lg-5 ">
                                                     <option value="">Select Document Type</option>
                                                     <option value="voter_id">Voter ID/ PVC/ UL</option>
                                                     <option value="emp_form">Attach Employee Form</option>
@@ -472,6 +473,7 @@
         </div>
     </div>
     @push('scripts')
+        <script src="{{ asset('admin/js/dcsvalidation.js') }}"></script>
         <script>
             //maritial_status
             document.addEventListener('DOMContentLoaded', function() {
