@@ -45,8 +45,11 @@
                                     <input type="text" name="emp_name" id="emp_name" class="form-control"
                                         value="{{ old('emp_name', $candidate->emp_name) }}">
                                 </div>
-                                <x-forms.input label="Employee Mobile: " type="number" name="phone1" id="phone1"
-                                    :required="true" size="col-lg-6 mt-2" :value="old('phone1', $candidate->phone1)" />
+                                <div class="form-group col-lg-6 mt-2">
+                                    <label for="phone1">Employee Mobile: <span style="color: red">*</span></label>
+                                    <input type="number" name="phone1" id="phone1" class="form-control"
+                                        maxlength="10" value="{{ old('phone1', $candidate->phone1) }}" required>
+                                </div>
                                 <x-forms.input label="Employee Email ID: " type="email" name="email" id="email"
                                     :required="true" size="col-lg-6 mt-2" :value="old('email', $candidate->email)" />
                                 <x-forms.select label="State:" name="state" id="state" :required="true"
@@ -62,8 +65,11 @@
                                     value="{{ old('interview_date', $candidate->interview_date ? $candidate->interview_date->format('Y-m-d') : '') }}" />
                                 {{-- <x-forms.input label="Date of Joining: " type="date" name="joining_date"
                                     id="joining_date" :required="true" size="col-lg-6 mt-2" :value="old('joining_date')" /> --}}
-                                <x-forms.input label="Enter Adhar Card No:" type="number" name="aadhar_no"
-                                    id="aadhar_no" :required="true" size="col-lg-6 mt-2" :value="old('aadhar_no', $candidate->aadhar_no)" />
+                                <div class="form-group col-lg-6 mt-2">
+                                    <label for="aadhar_no">Employee Mobile: <span style="color: red">*</span></label>
+                                    <input type="number" name="aadhar_no" id="aadhar_no" class="form-control"
+                                        maxlength="10" value="{{ old('aadhar_no', $candidate->aadhar_no) }}" required>
+                                </div>
                                 {{-- <x-forms.input label="Attach Adhaar Card:" type="file" name="aadhar_path"
                                     id="aadhar_path" :required="true" size="col-lg-6 mt-2" :value="old('aadhar_path')" /> --}}
                                 <div class="form-group col-lg-6 mt-2">
@@ -79,21 +85,35 @@
                                     <label for="photo">Photo:</label>
                                     <input type="file" name="photo" id="photo" accept="image/jpg, image/png"
                                         class="form-control">
-                                    <div id="image-preview-container" class="d-flex ">
-                                        <img src="{{ asset('storage/' . $candidate->photo) }}" class="img-thumbnail"
-                                            width="100" height="100" alt="Uploaded image">
-                                    </div>
+
+                                    @if ($candidate->candidateDocuments->where('name', 'photo')->isNotEmpty())
+                                        @php
+                                            $photo = $candidate->candidateDocuments->where('name', 'photo')->first();
+                                        @endphp
+                                        <div id="image-preview-container" class="d-flex mt-2">
+                                            <img src="{{ asset($photo->path) }}" class="img-thumbnail" width="100"
+                                                height="100" alt="Uploaded image">
+                                        </div>
+                                    @endif
                                 </div>
-                                <div class="form-group col-lg-6 ">
+
+                                <div class="form-group col-lg-6">
                                     <label for="resume">Resume:</label>
                                     <input type="file" name="resume" id="resume"
                                         accept="application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/pdf"
                                         class="form-control">
-                                    <a href="{{ asset('storage/' . $candidate->resume) }}" target="_blank"
-                                        class="btn btn-custom">
-                                        View Resume
-                                    </a>
+
+                                    @if ($candidate->candidateDocuments->where('name', 'resume')->isNotEmpty())
+                                        @php
+                                            $resume = $candidate->candidateDocuments->where('name', 'resume')->first();
+                                        @endphp
+                                        <a href="{{ asset($resume->path) }}" target="_blank"
+                                            class="btn btn-custom mt-2">
+                                            View Resume
+                                        </a>
+                                    @endif
                                 </div>
+
 
                             </div>
                             <div class="row">

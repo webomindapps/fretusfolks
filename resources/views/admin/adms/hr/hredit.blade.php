@@ -26,7 +26,8 @@
     @endif
     <div class="col-lg-12 pb-4">
         <div class="form-card px-3">
-            <form action="{{ route('admin.hr.hredit', $candidate->id) }}" method="POST" id="HRedit" enctype="multipart/form-data">
+            <form action="{{ route('admin.hr.hredit', $candidate->id) }}" method="POST" id="HRedit"
+                enctype="multipart/form-data">
                 @csrf
                 <div class="card mt-3">
                     <div class="card-header header-elements-inline d-flex justify-content-between align-items-center">
@@ -92,12 +93,16 @@
                                         <x-forms.input label="Spouse's DOB: " type="date" name="spouse_dob"
                                             id="spouse_dob" :required="false" size="col-lg-6 mt-2"
                                             :value="old('spouse_dob', $candidate->spouse_dob)" />
-                                        <x-forms.input label="Enter Spouse Adhar Card No:" type="number"
-                                            name="spouse_aadhar_no" id="spouse_aadhar_no" :required="false"
-                                            size="col-lg-6 mt-2" :value="old('spouse_aadhar_no', $candidate->spouse_aadhar_no)" />
-                                        <x-forms.input label="No of Children:" type="number" name="no_of_childrens"
-                                            id="no_of_childrens" :required="false" size="col-lg-6 mt-2"
-                                            :value="old('no_of_childrens', $candidate->no_of_childrens)" />
+                                        <div class="form-group col-lg-6 mt-2">
+                                            <label for="spouse_aadhar_no">Enter Spouse Adhar Card No: <span
+                                                    style="color: red">*</span></label>
+                                            <input type="number" name="spouse_aadhar_no" id="spouse_aadhar_no"
+                                                class="form-control" maxlength="12"
+                                                value="{{ old('spouse_aadhar_no', $candidate->spouse_aadhar_no) }}"
+                                                required>
+                                        </div> <x-forms.input label="No of Children:" type="number"
+                                            name="no_of_childrens" id="no_of_childrens" :required="false"
+                                            size="col-lg-6 mt-2" :value="old('no_of_childrens', $candidate->no_of_childrens)" />
                                     </div>
                                 </div>
                                 <div id="children-details-container" class="mt-3" style="display: none;">
@@ -130,18 +135,24 @@
                                     id="father_name" :required="true" size="col-lg-6 mt-2" :value="old('father_name', $candidate->father_name)" />
                                 <x-forms.input label="Father's DOB: " type="date" name="father_dob"
                                     id="father_dob" :required="true" size="col-lg-6 mt-2" :value="old('father_dob', $candidate->father_dob)" />
-                                <x-forms.input label="Father's Adhar Card No:" type="number" name="father_aadhar_no"
-                                    id="father_aadhar_no" :required="true" size="col-lg-6 mt-2"
-                                    :value="old('father_aadhar_no', $candidate->father_aadhar_no)" />
-                                <x-forms.input label="Mother Name: " type="text" name="mother_name"
+                                <div class="form-group col-lg-6 mt-2">
+                                    <label for="father_aadhar_no">Father's Adhar Card No: <span
+                                            style="color: red">*</span></label>
+                                    <input type="number" name="father_aadhar_no" id="father_aadhar_no"
+                                        class="form-control" maxlength="12"
+                                        value="{{ old('father_aadhar_no', $candidate->father_aadhar_no) }}" required>
+                                </div> <x-forms.input label="Mother Name: " type="text" name="mother_name"
                                     id="mother_name" :required="true" size="col-lg-6 mt-2" :value="old('mother_name', $candidate->mother_name)" />
                                 <x-forms.input label="Mother's DOB: " type="date" name="mother_dob"
                                     id="mother_dob" :required="true" size="col-lg-6 mt-2" :value="old('mother_dob', $candidate->mother_dob)" />
-                                <x-forms.input label="Mother's Adhar Card No:" type="number" name="mother_aadhar_no"
-                                    id="mother_aadhar_no" :required="true" size="col-lg-6 mt-2"
-                                    :value="old('mother_aadhar_no', $candidate->mother_aadhar_no)" />
-                                <x-forms.input label="Religion: " type="text" name="religion" id="religion"
-                                    :required="true" size="col-lg-4 mt-2" :value="old('religion', $candidate->religion)" />
+                                <div class="form-group col-lg-6 mt-2">
+                                    <label for="mother_aadhar_no">Mother's Adhar Card No: <span
+                                            style="color: red">*</span></label>
+                                    <input type="number" name="mother_aadhar_no" id="mother_aadhar_no"
+                                        class="form-control" maxlength="12"
+                                        value="{{ old('mother_aadhar_no', $candidate->mother_aadhar_no) }}" required>
+                                </div> <x-forms.input label="Religion: " type="text" name="religion"
+                                    id="religion" :required="true" size="col-lg-4 mt-2" :value="old('religion', $candidate->religion)" />
                                 <x-forms.input label="Languages: " type="text" name="languages" id="languages"
                                     :required="true" size="col-lg-4 mt-2" :value="old('languages', $candidate->languages)" />
                                 <x-forms.input label="Mother Tongue: " type="text" name="mother_tongue"
@@ -189,9 +200,13 @@
                                 <x-forms.input label="Attach New PAN:" type="file" name="pan_path" id="pan_path"
                                     :required="false" size="col-lg-6 mt-2" />
 
-                                <x-forms.input label="Enter Adhar Card No:" type="number" name="aadhar_no"
-                                    id="aadhar_no" :required="true" size="col-lg-6 mt-2" :value="old('aadhar_no', $candidate->aadhar_no)" />
-
+                                <div class="form-group col-lg-6 mt-2">
+                                    <label for="aadhar_no">Enter Adhar Card No: <span
+                                            style="color: red">*</span></label>
+                                    <input type="number" name="aadhar_no" id="aadhar_no" class="form-control"
+                                        maxlength="12" value="{{ old('aadhar_no', $candidate->aadhar_no) }}"
+                                        required>
+                                </div>
                                 <x-forms.input label="Attach New Aadhaar Card:" type="file" name="aadhar_path"
                                     id="aadhar_path" :required="false" size="col-lg-6 mt-2" />
 
@@ -224,11 +239,9 @@
                                 <x-forms.input label="Enter Bank Account No::" type="text" name="bank_account_no"
                                     id="bank_account_no" :required="true" size="col-lg-6 mt-2" :value="old('bank_account_no', $candidate->bank_account_no)" />
                                 <x-forms.input label="Repeat Bank Account No:" type="text" name="bank_account_no"
-                                    id="bank_account_no" :required="false" size="col-lg-6 mt-2"
-                                    :value="old('bank_account_no', $candidate->bank_account_no)" />
+                                    id="bank_account_no" :required="false" size="col-lg-6 mt-2" :value="old('bank_account_no', $candidate->bank_account_no)" />
                                 <x-forms.input label="Enter Bank IFSC CODE:" type="text" name="bank_ifsc_code"
-                                    id="bank_ifsc_code" :required="true" size="col-lg-6 mt-2"
-                                    :value="old('bank_ifsc_code', $candidate->bank_ifsc_code)" />
+                                    id="bank_ifsc_code" :required="true" size="col-lg-6 mt-2" :value="old('bank_ifsc_code', $candidate->bank_ifsc_code)" />
                                 {{-- <x-forms.select label="Do you Have UAN No? " :options="[['value' => 'No', 'label' => 'No'], ['value' => 'Yes', 'label' => 'Yes']]" id="uan_status"
                                     name="uan_status" :required="true" size="col-lg-6 mt-2 mr-2"
                                     :value="old('uan_status')" />
@@ -237,7 +250,7 @@
                                         id="uan_no" :required="true" size="col-lg-6" :value="old('uan_no')" />
                                 </div> --}}
                                 <x-forms.input label="UAN No:" type="text" name="uan_no" id="uan_no"
-                                    :required="true" size="col-lg-6 mt-2" :value="old('uan_no', $candidate->uan_no)" />
+                                    :required="false" size="col-lg-6 mt-2" :value="old('uan_no', $candidate->uan_no)" />
 
                                 <label size="col-lg-6 mt-4"><strong>Current Uploaded Documents</strong></label>
                                 <div style="border: 1px solid #d6c8c8; padding: 2%; margin-bottom: 1%;">
@@ -483,6 +496,7 @@
                         </div>
                     </div>
                 </div>
+                <input type="hidden" id="storing_option" name="storing_option" value="store">
             </form>
         </div>
     </div>
@@ -490,7 +504,7 @@
         document.getElementById('submitBtn').addEventListener('click', function(e) {
             e.preventDefault();
             let status = document.getElementById('hr_approval').value;
-            let form=document.getElementById('HRedit');
+            let form = document.getElementById('HRedit');
             if (status === "1") { // Ensure the status is compared as a string
                 $('#offerLetterModal').modal('show'); // Show the modal by ID
             } else {
@@ -499,32 +513,11 @@
         });
 
         function generateOfferLetter(action) {
+            $('#storing_option').val(action);
             let form = document.getElementById('HRedit');
-            let formData = new FormData(form);
-            formData.append('action', action);
+            form.submit();
+            console.log(action);
 
-            fetch("{{ route('admin.offer_letter.generate', ['id' => $candidate->id]) }}", {
-                    method: "POST",
-                    body: formData,
-                    headers: {
-                        "X-CSRF-TOKEN": "{{ csrf_token() }}"
-                    }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    // Show success or error message in alert
-                    const alert = document.createElement('div');
-                    alert.classList.add('alert', data.success ? 'alert-success' : 'alert-danger');
-                    alert.innerHTML = `<strong>${data.success ? 'Success!' : 'Error!'}</strong> ${data.message}`;
-                    document.body.appendChild(alert);
-
-                    // Close the modal
-                    $('#offerLetterModal').modal('hide');
-
-                    // Remove alert after 5 seconds
-                    setTimeout(() => alert.remove(), 5000);
-                })
-                .catch(error => console.error('Error:', error));
 
         }
     </script>
@@ -658,7 +651,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="offerLetterModalLabel">Generate Offer Letter</h5>
+                    <h5 class="modal-title" id="offerLetterModalLabel" style="color:#89bdeb;">Generate Offer Letter</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>

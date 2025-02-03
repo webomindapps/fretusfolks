@@ -122,6 +122,13 @@ class SideBar extends Component
                     'name' => 'doc_rejected',
                     'roles' => ['Admin', 'Recruitment'],
                 ],
+                [
+                    'title' => 'Offer Letter  ',
+                    'icon' => 'bx bx-chevron-right',
+                    'route' => 'admin.offer_letter',
+                    'name' => 'offer_letter',
+                    'roles' => ['Admin', 'Hroperations'],
+                ],
 
             ],
 

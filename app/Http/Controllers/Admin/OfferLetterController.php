@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
-use Barryvdh\DomPDF\PDF;
+// use Barryvdh\DomPDF\PDF;
 use App\Models\CFISModel;
 use App\Models\OfferLetter;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -51,9 +52,32 @@ class OfferLetterController extends Controller
     }
     public function edit($id)
     {
-        $employee = CFISModel::findOrFail($id);
+        $employee = $this->model()->findOrFail($id);
         return view("admin.adms.offer_letter.edit", compact('employee'));
     }
-   
+    public function generateOfferLetterPdf($id)
+    {
+        $offerLetter = $this->model()->with('employee')->findOrFail($id);
 
+        $data = [
+            'offerLetter' => $offerLetter,
+        ];
+
+        $pdf = PDF::setOptions([
+            'isHtml5ParserEnabled' => true,
+            'isRemoteEnabled' => true,
+            'chroot' => public_path()
+        ])->loadView('admin.adms.offer_letter.formate', $data);
+        // ->setPaper('A4', 'portrait')
+        // ->setOptions(['margin-top' => 10, 'margin-bottom' => 10, 'margin-left' => 15, 'margin-right' => 15]);
+
+
+        return $pdf->stream('offer_letter_' . $offerLetter->id . '.pdf');
+    }
+
+    public function destroy($id)
+    {
+        $this->model()->destroy($id);
+        return redirect()->route('admin.offer_letter')->with('success', 'Successfully deleted!');
+    }
 }

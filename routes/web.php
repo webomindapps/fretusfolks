@@ -21,6 +21,7 @@ use App\Http\Controllers\RolePermissionController;
 use App\Http\Controllers\Admin\FFIWarningController;
 use App\Http\Controllers\Admin\DCSApprovalController;
 use App\Http\Controllers\Admin\FFIPayslipsController;
+use App\Http\Controllers\Admin\OfferLetterController;
 use App\Http\Controllers\Admin\FFIPipLetterController;
 use App\Http\Controllers\Admin\FFIShowCauseController;
 use App\Http\Controllers\Admin\LetterContentController;
@@ -157,7 +158,7 @@ Route::prefix('admin')->group(function () {
         Route::get('/document_rejected', [DCSApprovalController::class, 'docrejected'])->name('doc_rejected');
         Route::get('dcs_approval/{id}/docedit', [DCSApprovalController::class, 'docedit'])->name('dcs_approval.docedit');
         Route::post('dcs_approval/{id}/docedit', [DCSApprovalController::class, 'docupdate']);
-        Route::post('/offer_letter/generate/{id}', [DCSApprovalController::class, 'generateOfferLetter'])->name('offer_letter.generate');
+        // Route::post('/offer_letter/generate/{id}', action: [DCSApprovalController::class, 'generateOfferLetter'])->name('offer_letter.generate');
 
 
         //fhrms
@@ -301,6 +302,12 @@ Route::prefix('admin')->group(function () {
         // settings
         Route::get('/settings', [SettingController::class, 'index'])->name('settings');
         Route::post('/settings', [SettingController::class, 'update']);
+
+        //offer_letter
+        Route::get('/offer_letter', [OfferLetterController::class, 'index'])->name('offer_letter');
+        Route::get('/generate-offer-letter/{id}', [OfferLetterController::class, 'generateOfferLetterPdf'])->name('generate.offer.letter');
+        Route::get('offer_letter/{id}/delete', [OfferLetterController::class, 'destroy'])->name('offer_letter.delete');
+
 
 
     });

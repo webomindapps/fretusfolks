@@ -97,12 +97,15 @@
                                         <x-forms.input label="Spouse's DOB: " type="date" name="spouse_dob"
                                             id="spouse_dob" :required="false" size="col-lg-4 mt-2"
                                             :value="old('spouse_dob', $candidate->spouse_dob)" />
-                                        <x-forms.input label="Enter Spouse Adhar Card No:" type="number"
-                                            name="spouse_aadhar_no" id="spouse_aadhar_no" :required="false"
-                                            size="col-lg-4 mt-2" :value="old('spouse_aadhar_no', $candidate->spouse_aadhar_no)" />
-                                        <x-forms.input label="No of Children:" type="number" name="no_of_childrens"
-                                            id="no_of_childrens" :required="false" size="col-lg-6 mt-2"
-                                            :value="old('no_of_childrens', $candidate->no_of_childrens)" />
+                                        <div class="form-group col-lg-4 mt-2">
+                                            <label for="spouse_aadhar_no">Enter Spouse Adhar Card No: <span
+                                                    style="color: red">*</span></label>
+                                            <input type="text" name="spouse_aadhar_no" id="spouse_aadhar_no"
+                                                class="form-control" maxlength="12" inputmode="numeric"
+                                                value="{{ old('spouse_aadhar_no', $candidate->spouse_aadhar_no) }}">
+                                        </div> <x-forms.input label="No of Children:" type="number"
+                                            name="no_of_childrens" id="no_of_childrens" :required="false"
+                                            size="col-lg-6 mt-2" :value="old('no_of_childrens', $candidate->no_of_childrens)" />
                                     </div>
                                 </div>
                                 <div id="children-details-container" class="mt-3" style="display: none;">
@@ -118,18 +121,25 @@
                                     id="father_name" :required="true" size="col-lg-4 mt-2" :value="old('father_name', $candidate->father_name)" />
                                 <x-forms.input label="Father's DOB: " type="date" name="father_dob"
                                     id="father_dob" :required="true" size="col-lg-4 mt-2" :value="old('father_dob', $candidate->father_dob)" />
-                                <x-forms.input label="Father's Adhar Card No:" type="number" name="father_aadhar_no"
-                                    id="father_aadhar_no" :required="true" size="col-lg-4 mt-2"
-                                    :value="old('father_aadhar_no', $candidate->father_aadhar_no)" />
+                                <div class="form-group col-lg-4 mt-2">
+                                    <label for="father_aadhar_no">Father's Adhar Card No: <span
+                                            style="color: red">*</span></label>
+                                    <input type="text" name="father_aadhar_no" id="father_aadhar_no"
+                                        class="form-control" maxlength="12" inputmode="numeric"
+                                        value="{{ old('father_aadhar_no', $candidate->father_aadhar_no) }}" required>
+                                </div>
                                 <x-forms.input label="Mother Name: " type="text" name="mother_name"
                                     id="mother_name" :required="true" size="col-lg-4 mt-2" :value="old('mother_name', $candidate->mother_name)" />
                                 <x-forms.input label="Mother's DOB: " type="date" name="mother_dob"
                                     id="mother_dob" :required="true" size="col-lg-4 mt-2" :value="old('mother_dob', $candidate->mother_dob)" />
-                                <x-forms.input label="Mother's Adhar Card No:" type="number" name="mother_aadhar_no"
-                                    id="mother_aadhar_no" :required="true" size="col-lg-4 mt-2"
-                                    :value="old('mother_aadhar_no', $candidate->mother_aadhar_no)" />
-                                <x-forms.input label="Religion: " type="text" name="religion" id="religion"
-                                    :required="true" size="col-lg-6 mt-2" :value="old('religion', $candidate->religion)" />
+                                <div class="form-group col-lg-4 mt-2">
+                                    <label for="mother_aadhar_no">Mother's Adhar Card No: <span
+                                            style="color: red">*</span></label>
+                                    <input type="text" name="mother_aadhar_no" id="mother_aadhar_no"
+                                        class="form-control" maxlength="12" inputmode="numeric"
+                                        value="{{ old('mother_aadhar_no', $candidate->mother_aadhar_no) }}" required>
+                                </div><x-forms.input label="Religion: " type="text" name="religion"
+                                    id="religion" :required="true" size="col-lg-6 mt-2" :value="old('religion', $candidate->religion)" />
                                 <x-forms.input label="Languages: " type="text" name="languages" id="languages"
                                     placeholder="English,Kannada.." :required="true" size="col-lg-6 mt-2"
                                     :value="old('languages', $candidate->languages)" />
@@ -147,8 +157,11 @@
                                     :value="old('emer_relation', $candidate->emer_relation)" />
                                 <x-forms.select label=" Qualification:" name="qualification" id="qualification"
                                     :required="true" size="col-lg-6 mt-2" :options="FretusFolks::getQualification()" :value="old('qualification', $candidate->qualification)" />
-                                <x-forms.input label="Phone 1:" type="number" name="phone1" id="phone1"
-                                    :required="true" size="col-lg-4 mt-2" :value="old('phone1', $candidate->phone1)" />
+                                <div class="form-group col-lg-6 mt-2">
+                                    <label for="phone1">Phone: <span style="color: red">*</span></label>
+                                    <input type="text" name="phone1" id="phone1" class="form-control"
+                                    maxlength="10" inputmode="numeric" value="{{ old('phone1', $candidate->phone1) }}" required>
+                                </div>
                                 {{-- <x-forms.input label="Phone 2:" type="number" name="phone2" id="phone2"
                                     :required="false" size="col-lg-4 mt-2" :value="old('phone2', $candidate->phone2)" /> --}}
                                 <x-forms.input label="Employee Email ID: " type="email" name="email"
@@ -169,15 +182,20 @@
                                         accept="application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/pdf, image/jpg, image/png"
                                         class="form-control" value="{{ old('pan_path', $candidate->pan_path) }}">
                                 </div>
-                                <x-forms.input label="Enter Adhar Card No:" type="number" name="aadhar_no"
-                                    id="aadhar_no" :required="true" size="col-lg-6 mt-2" :value="old('aadhar_no', $candidate->aadhar_no)" />
+                                <div class="form-group col-lg-6 mt-2">
+                                    <label for="aadhar_no">Enter Adhar Card No: <span
+                                            style="color: red">*</span></label>
+                                    <input type="text" name="aadhar_no" id="aadhar_no" class="form-control"
+                                        maxlength="12" inputmode="numeric"
+                                        value="{{ old('aadhar_no', $candidate->aadhar_no) }}" required>
+                                </div>
                                 <div class="form-group col-lg-6 mt-2">
                                     <label for="aadhar_path">Attach Aadhar Card: <span
                                             style="color: red;">*</span></label>
                                     <input type="file" name="aadhar_path" id="aadhar_path"
                                         accept="application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/pdf, image/jpg, image/png"
-                                        class="form-control" value="{{ old('aadhar_path', $candidate->aadhar_path) }}"
-                                        required>
+                                        class="form-control"
+                                        value="{{ old('aadhar_path', $candidate->aadhar_path) }}" required>
                                 </div>
                                 <x-forms.input label="Enter Driving License No:" type="text"
                                     name="driving_license_no" id="driving_license_no" :required="false"
@@ -199,21 +217,35 @@
                                     <label for="photo">Photo:</label>
                                     <input type="file" name="photo" id="photo"
                                         accept="image/jpg, image/png" class="form-control">
-                                    <div id="image-preview-container" class="d-flex ">
-                                        <img src="{{ asset('storage/' . $candidate->photo) }}" class="img-thumbnail"
-                                            width="100" height="100" alt="Uploaded image">
-                                    </div>
+
+                                    @if ($candidate->candidateDocuments->where('name', 'photo')->isNotEmpty())
+                                        @php
+                                            $photo = $candidate->candidateDocuments->where('name', 'photo')->first();
+                                        @endphp
+                                        <div id="image-preview-container" class="d-flex mt-2">
+                                            <img src="{{ asset('storage/' . $photo->path) }}" class="img-thumbnail"
+                                                width="100" height="100" alt="Uploaded image">
+                                        </div>
+                                    @endif
                                 </div>
+
                                 <div class="form-group col-lg-4 mt-2">
                                     <label for="resume">Resume:</label>
                                     <input type="file" name="resume" id="resume"
                                         accept="application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/pdf"
                                         class="form-control">
-                                    <a href="{{ asset('storage/' . $candidate->resume) }}" target="_blank"
-                                        class="btn btn-custom">
-                                        View Resume
-                                    </a>
+
+                                    @if ($candidate->candidateDocuments->where('name', 'resume')->isNotEmpty())
+                                        @php
+                                            $resume = $candidate->candidateDocuments->where('name', 'resume')->first();
+                                        @endphp
+                                        <a href="{{ asset('storage/' . $resume->path) }}" target="_blank"
+                                            class="btn btn-custom mt-2">
+                                            View Resume
+                                        </a>
+                                    @endif
                                 </div>
+
                                 <div class="form-group col-lg-4 mt-2">
                                     <label for="family_photo">Family Photo: <span style="color: red;">*</span></label>
                                     <input type="file" name="family_photo" id="family_photo"
@@ -465,19 +497,34 @@
                 const uanStatus = document.getElementById('uan_status');
                 const uanNumberField = document.getElementById('uan-number-field');
                 const uanNumberInput = document.getElementById('uan_no');
+                const form = document.querySelector('form'); // Get the form element
 
                 function toggleUANField() {
                     if (uanStatus.value === 'Yes') {
                         uanNumberField.style.display = 'block';
-                        uanNumberInput.required = true;
+                        uanNumberInput.setAttribute('required', 'required');
                     } else {
                         uanNumberField.style.display = 'none';
-                        uanNumberInput.required = false;
+                        uanNumberInput.removeAttribute('required');
                         uanNumberInput.value = '';
                     }
                 }
+
+                // Call function initially to set correct state on page load
                 toggleUANField();
+
+                // Listen for changes in the select field
                 uanStatus.addEventListener('change', toggleUANField);
+
+                // Ensure the field is validated before form submission
+                form.addEventListener('submit', function(event) {
+                    if (uanStatus.value === 'Yes' && uanNumberInput.value.trim() === '') {
+                        alert('UAN number is required if UAN status is Yes.');
+                        event.preventDefault(); // Prevent form submission
+                        uanNumberInput.focus();
+                    }
+                });
+
             });
             //documents
             document.addEventListener('DOMContentLoaded', function() {

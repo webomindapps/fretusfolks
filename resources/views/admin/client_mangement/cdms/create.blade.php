@@ -30,7 +30,7 @@
                                 <x-forms.input label="Enter Client Id:" type="text" name="client_ffi_id"
                                     id="client_ffi_id" :required="true" size="col-lg-6 mt-2" :value="old('client_ffi_id')" />
 
-                                <x-forms.input label="Enter Office Land-line Number:" type="number" name="land_line"
+                                <x-forms.input label="Enter Office Land-line Number:" type="text" name="land_line"
                                     id="land_line" :required="true" size="col-lg-6 mt-2" :value="old('land_line')" />
 
                                 <x-forms.input label="Enter Client Mail ID:" type="email" name="client_email"

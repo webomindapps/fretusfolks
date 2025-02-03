@@ -33,8 +33,12 @@
                                     <input type="text" name="emp_name" id="emp_name" class="form-control"
                                         value="{{ old('emp_name') }}" required>
                                 </div>
-                                <x-forms.input label="Employee Mobile: " type="number" name="phone1" id="phone1"
-                                    :required="true" size="col-lg-6 mt-2" :value="old('phone1')" />
+                                <div class="form-group col-lg-6 mt-2">
+                                    <label for="emp_name">Employee Mobile: <span style="color: red">*</span></label>
+                                    <input type="text" name="phone1" id="phone1" class="form-control"
+                                        maxlength="10" value="{{ old('phone1') }}" required>
+                                </div>
+
                                 <x-forms.input label="Employee Email ID: " type="email" name="email" id="email"
                                     :required="true" size="col-lg-6 mt-2" :value="old('email')" />
                                 <x-forms.select label="State:" name="state" id="state" :required="true"
@@ -49,8 +53,12 @@
                                     id="interview_date" :required="true" size="col-lg-6 mt-2" :value="old('interview_date')" />
                                 {{-- <x-forms.input label="Date of Joining: " type="date" name="joining_date"
                                     id="joining_date" :required="true" size="col-lg-6 mt-2" :value="old('joining_date')" /> --}}
-                                <x-forms.input label="Enter Adhar Card No:" type="number" name="aadhar_no"
-                                    id="aadhar_no" :required="true" size="col-lg-6 mt-2" :value="old('aadhar_no')" />
+                                <div class="form-group col-lg-6 mt-2">
+                                    <label for="emp_name">Enter Adhar Card No: <span style="color: red">*</span></label>
+                                    <input type="text" name="aadhar_no" id="aadhar_no" class="form-control"
+                                        maxlength="12" value="{{ old('aadhar_no') }}" required>
+                                </div>
+
                                 {{-- <x-forms.input label="Attach Adhaar Card:" type="file" name="aadhar_path"
                                     id="aadhar_path" :required="true" size="col-lg-6 mt-2" :value="old('aadhar_path')" /> --}}
                                 <div class="form-group col-lg-6 mt-2">
