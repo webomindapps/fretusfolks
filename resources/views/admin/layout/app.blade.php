@@ -73,6 +73,8 @@
         referrerpolicy="no-referrer"></script>
     <script src="{{ asset('admin/js/main.js') }}"></script>
     <script src="{{ asset('admin/js/table.js') }}"></script>
+    <script src="{{ asset('admin/js/panDeclaration.js') }}"></script>
+
 
     <script>
         $(document).ready(function() {

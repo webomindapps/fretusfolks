@@ -497,30 +497,54 @@
                     </div>
                 </div>
                 <input type="hidden" id="storing_option" name="storing_option" value="store">
+                <input type="hidden" name="cc_emails" id="cc_emails_input">
+
             </form>
         </div>
     </div>
-    <script>
-        document.getElementById('submitBtn').addEventListener('click', function(e) {
-            e.preventDefault();
-            let status = document.getElementById('hr_approval').value;
-            let form = document.getElementById('HRedit');
-            if (status === "1") { // Ensure the status is compared as a string
-                $('#offerLetterModal').modal('show'); // Show the modal by ID
-            } else {
-                form.submit();
+    @push('scripts')
+        <script>
+            document.getElementById('submitBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                let status = document.getElementById('hr_approval').value;
+                let form = document.getElementById('HRedit');
+                if (status === "1") { // Ensure the status is compared as a string
+                    $('#offerLetterModal').modal('show'); // Show the modal by ID
+                } else {
+                    form.submit();
+                }
+            });
+
+            function generateOfferLetter(action) {
+                if (action === 'save') {
+                    $('#storing_option').val(action);
+                    let form = document.getElementById('HRedit');
+                    form.submit();
+                    console.log('Generating and saving the offer letter');
+                }
+                // Handle the "Generate and Send" action
+                else if (action === 'send') {
+                    $('#offerLetterModal').modal('hide');
+                    $('#ccEmailModal').modal('show');
+                }
+
             }
-        });
+            $('#sendBtn').on('click', function() {
+                const ccEmails = document.getElementById('cc_emails').value;
 
-        function generateOfferLetter(action) {
-            $('#storing_option').val(action);
-            let form = document.getElementById('HRedit');
-            form.submit();
-            console.log(action);
+                if (ccEmails) {
+                    document.getElementById('cc_emails_input').value = ccEmails;
 
-
-        }
-    </script>
+                    $('#storing_option').val('send'); // Set action to send
+                    let form = document.getElementById('HRedit');
+                    form.submit(); // Submit the form
+                    console.log('Generating and sending the offer letter to CCs: ', ccEmails);
+                } else {
+                    alert('Please enter at least one CC email address.');
+                }
+            });
+        </script>
+    @endpush
 
     <script>
         //maritial_status
@@ -651,7 +675,8 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="offerLetterModalLabel" style="color:#89bdeb;">Generate Offer Letter</h5>
+                    <h5 class="modal-title" id="offerLetterModalLabel" style="color:#89bdeb;">Generate Offer Letter
+                    </h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -663,6 +688,34 @@
                     <button type="button" class="btn btn-primary" onclick="generateOfferLetter('save')">Generate and
                         Save</button>
                     <button type="button" class="btn btn-secondary" onclick="generateOfferLetter('send')">Generate
+                        and
+                        Send</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="ccEmailModal" tabindex="-1" role="dialog" aria-labelledby="ccEmailModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="ccEmailModalLabel" style="color:#89bdeb;">Enter CC Email Addresses
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="ccForm">
+                        <div class="form-group">
+                            <label for="cc_emails">CC Emails (separate multiple emails with commas):</label>
+                            <input type="text" class="form-control" name="cc_emails" id="cc_emails">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="sendBtn">Generate
                         and Send</button>
                 </div>
             </div>

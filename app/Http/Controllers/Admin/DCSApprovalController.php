@@ -355,7 +355,7 @@ class DCSApprovalController extends Controller
     public function hrupdate(Request $request, $id)
     {
         $action = $request->input('action');
-        // dd('hello');
+        dd($request->cc_emails);
         $candidate = $this->model()->find($id);
         $validatedData = $request->validate([
             'client_id' => 'required|integer',
@@ -573,12 +573,15 @@ class DCSApprovalController extends Controller
 
                 $offerLetter->update(['offer_letter_pdf' => $pdfPath]);
 
-                if ($action == 'send') {
-                    Mail::send('emails.offer_letter', ['employee' => $candidate], function ($message) use ($candidate, $pdfPath) {
+                if ($action === 'send') {
+
+                    $ccEmails = $request->input('cc_emails', []);  
+                   
+                    Mail::send('emails.offer_letter', ['employee' => $candidate], function ($message) use ($candidate, $pdfPath, $ccEmails) {
                         $message->to($candidate->email)
-                            ->cc('suni@webomindapps.com')
+                            ->cc($ccEmails)
                             ->subject('Your Offer Letter')
-                            ->attach(storage_path('app/public/' . $pdfPath));
+                            ->attach(storage_path('app/public/' . $pdfPath)); // Attach the offer letter PDF
                     });
                 }
             }
