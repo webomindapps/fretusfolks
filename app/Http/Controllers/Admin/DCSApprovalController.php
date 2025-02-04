@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Admin;
 
 use Exception;
-use Barryvdh\DomPDF\PDF;
 use App\Models\CFISModel;
 use App\Models\DCSChildren;
 use App\Models\OfferLetter;
@@ -14,6 +13,7 @@ use App\Models\CandidateDocuments;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\EducationCertificate;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 
@@ -954,7 +954,7 @@ class DCSApprovalController extends Controller
         }
 
         // Generate PDF
-        $pdf = PDF::loadView('admin.adms.offer_letter.formate', compact('offerLetter'))
+        $pdf = Pdf::loadView('admin.adms.offer_letter.formate', compact('offerLetter'))
             ->setOptions([
                 'isHtml5ParserEnabled' => true,
                 'isRemoteEnabled' => true,

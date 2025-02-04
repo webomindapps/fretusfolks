@@ -498,35 +498,35 @@
             }
         });
 
-        function generateOfferLetter(action) {
-            let form = document.getElementById('HRedit');
-            let formData = new FormData(form);
-            formData.append('action', action);
+        // function generateOfferLetter(action) {
+        //     let form = document.getElementById('HRedit');
+        //     let formData = new FormData(form);
+        //     formData.append('action', action);
 
-            fetch("{{ route('admin.offer_letter.generate', ['id' => $candidate->id]) }}", {
-                    method: "POST",
-                    body: formData,
-                    headers: {
-                        "X-CSRF-TOKEN": "{{ csrf_token() }}"
-                    }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    // Show success or error message in alert
-                    const alert = document.createElement('div');
-                    alert.classList.add('alert', data.success ? 'alert-success' : 'alert-danger');
-                    alert.innerHTML = `<strong>${data.success ? 'Success!' : 'Error!'}</strong> ${data.message}`;
-                    document.body.appendChild(alert);
+        //     fetch("{{ route('admin.offer_letter.generate', ['id' => $candidate->id]) }}", {
+        //             method: "POST",
+        //             body: formData,
+        //             headers: {
+        //                 "X-CSRF-TOKEN": "{{ csrf_token() }}"
+        //             }
+        //         })
+        //         .then(response => response.json())
+        //         .then(data => {
+        //             // Show success or error message in alert
+        //             const alert = document.createElement('div');
+        //             alert.classList.add('alert', data.success ? 'alert-success' : 'alert-danger');
+        //             alert.innerHTML = `<strong>${data.success ? 'Success!' : 'Error!'}</strong> ${data.message}`;
+        //             document.body.appendChild(alert);
 
-                    // Close the modal
-                    $('#offerLetterModal').modal('hide');
+        //             // Close the modal
+        //             $('#offerLetterModal').modal('hide');
 
-                    // Remove alert after 5 seconds
-                    setTimeout(() => alert.remove(), 5000);
-                })
-                .catch(error => console.error('Error:', error));
+        //             // Remove alert after 5 seconds
+        //             setTimeout(() => alert.remove(), 5000);
+        //         })
+        //         .catch(error => console.error('Error:', error));
 
-        }
+        // }
     </script>
 
     <script>
