@@ -85,7 +85,7 @@ class SideBar extends Component
             'icon' => '  bx bxl-slack',
             'route' => '',
             'isSubMenu' => true,
-            'roles' => ['Admin', 'Recruitment', 'Hroperations'],
+            'roles' => ['Admin', 'Recruitment', 'Hroperations','Compliance'],
             'subMenus' => [
                 [
                     'title' => 'Candidate Information ',
@@ -128,6 +128,13 @@ class SideBar extends Component
                     'route' => 'admin.offer_letter',
                     'name' => 'offer_letter',
                     'roles' => ['Admin', 'Hroperations'],
+                ],
+                [
+                    'title' => 'Candidates Master',
+                    'icon' => 'bx bx-chevron-right',
+                    'route' => 'admin.candidatemaster',
+                    'name' => 'dcs_approval',
+                    'roles' => ['Admin', 'Compliance'],
                 ],
 
             ],

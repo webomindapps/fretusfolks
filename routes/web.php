@@ -28,6 +28,7 @@ use App\Http\Controllers\Admin\LetterContentController;
 use App\Http\Controllers\Admin\FFIOfferLetterController;
 use App\Http\Controllers\Admin\FFITerminationController;
 use App\Http\Controllers\Admin\CMSLabourNoticeController;
+use App\Http\Controllers\Admin\ComplianceController;
 use App\Http\Controllers\Admin\FFIIncrementLetterController;
 
 Route::get('/', function () {
@@ -309,6 +310,9 @@ Route::prefix('admin')->group(function () {
         Route::get('offer_letter/{id}/delete', [OfferLetterController::class, 'destroy'])->name('offer_letter.delete');
 
 
+        //compliance 
+        Route::get('candidate-master',[ComplianceController::class,'index'])->name('candidatemaster');
+        Route::get('candidate-master/view',[ComplianceController::class,'viewdetail'])->name('candidatemaster.view');
 
     });
 });
