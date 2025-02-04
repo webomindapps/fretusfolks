@@ -497,161 +497,187 @@
                     </div>
                 </div>
                 <input type="hidden" id="storing_option" name="storing_option" value="store">
+                <input type="hidden" name="cc_emails" id="cc_emails_input">
+
             </form>
         </div>
     </div>
-    <script>
-        document.getElementById('submitBtn').addEventListener('click', function(e) {
-            e.preventDefault();
-            let status = document.getElementById('hr_approval').value;
-            let form = document.getElementById('HRedit');
-            if (status === "1") { // Ensure the status is compared as a string
-                $('#offerLetterModal').modal('show'); // Show the modal by ID
-            } else {
-                form.submit();
-            }
-        });
-
-        function generateOfferLetter(action) {
-            $('#storing_option').val(action);
-            let form = document.getElementById('HRedit');
-            form.submit();
-            console.log(action);
-
-
-        }
-    </script>
-
-    <script>
-        //maritial_status
-        document.addEventListener('DOMContentLoaded', function() {
-            const maritalStatus = document.getElementById('maritial_status');
-            const marriedFields = document.getElementById('married-fields');
-
-            function toggleMarriedFields() {
-                if (maritalStatus.value === 'Married') {
-                    marriedFields.style.display = 'block';
+    @push('scripts')
+        <script>
+            document.getElementById('submitBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                let status = document.getElementById('hr_approval').value;
+                let form = document.getElementById('HRedit');
+                if (status === "1") { // Ensure the status is compared as a string
+                    $('#offerLetterModal').modal('show'); // Show the modal by ID
                 } else {
-                    marriedFields.style.display = 'none';
-                    document.getElementById('spouse_name').value = '';
-                    document.getElementById('spouse_dob').value = '';
-                    document.getElementById('spouse_aadhar_no').value = '';
-                    document.getElementById('no_of_childrens').value = '';
-                }
-            }
-            toggleMarriedFields();
-            maritalStatus.addEventListener('change', toggleMarriedFields);
-        });
-        // //uan
-        // document.addEventListener('DOMContentLoaded', function() {
-        //     const uanStatus = document.getElementById('uan_status');
-        //     const uanNumberField = document.getElementById('uan-number-field');
-        //     const uanNumberInput = document.getElementById('uan_no');
-
-        //     function toggleUANField() {
-        //         if (uanStatus.value === 'Yes') {
-        //             uanNumberField.style.display = 'block';
-        //             uanNumberInput.required = true;
-        //         } else {
-        //             uanNumberField.style.display = 'none';
-        //             uanNumberInput.required = false;
-        //             uanNumberInput.value = '';
-        //         }
-        //     }
-        //     toggleUANField();
-        //     uanStatus.addEventListener('change', toggleUANField);
-        // });
-        //documents
-        document.addEventListener('DOMContentLoaded', function() {
-            const documentRowsContainer = document.getElementById('document-rows');
-            documentRowsContainer.addEventListener('click', function(event) {
-                if (event.target.classList.contains('add-row')) {
-                    const newRow = document.createElement('div');
-                    newRow.className = 'document-row d-flex align-items-center mb-3';
-                    newRow.innerHTML = `
-                    <select name="document_type[]" class="col-lg-5 me-3 " >
-                        <option value="">Select Document Type</option>
-                        <option value="voter_id">Voter ID/ PVC/ UL</option>
-                        <option value="emp_form">Attach Employee Form</option>
-                        <option value="education_certificate">Education Certificate</option>
-                        <option value="pf_esic_form">PF Form / ESIC</option>
-                        <option value="other_certificate">Others</option>
-                        <option value="payslip">Payslip/Fitness doc</option>
-                        <option value="exp_letter">Exp Letter</option>
-                    </select>
-                    <input type="file" name="document_file[]" class="col-lg-5 me-3 " >
-                    <button type="button" class="btn btn-success me-2 add-row">+</button>
-                    <button type="button" class="btn btn-danger me-2 remove-row">-</button>
-                `;
-                    documentRowsContainer.appendChild(newRow);
-                    document.querySelectorAll('.remove-row').forEach(button => {
-                        button.style.display = 'inline-block';
-                    });
+                    form.submit();
                 }
             });
-            documentRowsContainer.addEventListener('click', function(event) {
-                if (event.target.classList.contains('remove-row')) {
-                    const row = event.target.closest('.document-row');
-                    row.remove();
-                    if (document.querySelectorAll('.document-row').length === 1) {
-                        document.querySelector('.remove-row').style.display = 'none';
-                    }
+
+            function generateOfferLetter(action) {
+                if (action === 'save') {
+                    $('#storing_option').val(action);
+                    let form = document.getElementById('HRedit');
+                    form.submit();
+                    console.log('Generating and saving the offer letter');
+                }
+                // Handle the "Generate and Send" action
+                else if (action === 'send') {
+                    $('#offerLetterModal').modal('hide');
+                    $('#ccEmailModal').modal('show');
+                }
+
+            }
+            $('#sendBtn').on('click', function() {
+                const ccEmails = document.getElementById('cc_emails').value;
+
+                if (ccEmails) {
+                    document.getElementById('cc_emails_input').value = ccEmails;
+
+                    $('#storing_option').val('send'); // Set action to send
+                    let form = document.getElementById('HRedit');
+                    form.submit(); // Submit the form
+                    console.log('Generating and sending the offer letter to CCs: ', ccEmails);
+                } else {
+                    alert('Please enter at least one CC email address.');
                 }
             });
-            if (document.querySelectorAll('.document-row').length === 1) {
-                document.querySelector('.remove-row').style.display = 'none';
-            }
-        });
-        //no of children
-        document.addEventListener('DOMContentLoaded', function() {
-            const maxChildren = 2;
-            let currentChildren = 0;
+        </script>
+        <script>
+            //maritial_status
+            document.addEventListener('DOMContentLoaded', function() {
+                const maritalStatus = document.getElementById('maritial_status');
+                const marriedFields = document.getElementById('married-fields');
 
-            const noOfChildrenField = document.getElementById('no_of_childrens');
-            const childrenDetailsContainer = document.getElementById('children-details-container');
-            const childrenDetails = document.getElementById('children-details');
-            const maxChildrenMessage = document.getElementById('max-children-message');
-
-            function updateChildDetails() {
-                const noOfChildren = parseInt(noOfChildrenField.value);
-
-                // Clear previous child details
-                childrenDetails.innerHTML = '';
-
-                if (noOfChildren > 0) {
-                    childrenDetailsContainer.style.display = 'block';
-                    maxChildrenMessage.style.display = 'none';
-
-                    for (let i = 1; i <= noOfChildren && i <= maxChildren; i++) {
-                        const childRow = document.createElement('div');
-                        childRow.className = 'row align-items-center mb-2 child-row';
-                        childRow.innerHTML = `
-                    <x-forms.input label="Child ${i} Name:" type="text" name="child_names[]" 
-                        id="child_name_${i}" :required="true" size="col-lg-6" />
-                    <x-forms.input label="Child ${i} DOB:" type="date" name="child_dobs[]" 
-                        id="child_dob_${i}" :required="true" size="col-lg-6" />
-                `;
-                        childrenDetails.appendChild(childRow);
+                function toggleMarriedFields() {
+                    if (maritalStatus.value === 'Married') {
+                        marriedFields.style.display = 'block';
+                    } else {
+                        marriedFields.style.display = 'none';
+                        document.getElementById('spouse_name').value = '';
+                        document.getElementById('spouse_dob').value = '';
+                        document.getElementById('spouse_aadhar_no').value = '';
+                        document.getElementById('no_of_childrens').value = '';
                     }
-
-                    if (noOfChildren > maxChildren) {
-                        maxChildrenMessage.style.display = 'block';
-                    }
-                } else {
-                    childrenDetailsContainer.style.display = 'none';
                 }
-            }
+                toggleMarriedFields();
+                maritalStatus.addEventListener('change', toggleMarriedFields);
+            });
+            // //uan
+            // document.addEventListener('DOMContentLoaded', function() {
+            //     const uanStatus = document.getElementById('uan_status');
+            //     const uanNumberField = document.getElementById('uan-number-field');
+            //     const uanNumberInput = document.getElementById('uan_no');
 
-            noOfChildrenField.addEventListener('input', updateChildDetails);
-        });
-    </script>
+            //     function toggleUANField() {
+            //         if (uanStatus.value === 'Yes') {
+            //             uanNumberField.style.display = 'block';
+            //             uanNumberInput.required = true;
+            //         } else {
+            //             uanNumberField.style.display = 'none';
+            //             uanNumberInput.required = false;
+            //             uanNumberInput.value = '';
+            //         }
+            //     }
+            //     toggleUANField();
+            //     uanStatus.addEventListener('change', toggleUANField);
+            // });
+            //documents
+            document.addEventListener('DOMContentLoaded', function() {
+                const documentRowsContainer = document.getElementById('document-rows');
+                documentRowsContainer.addEventListener('click', function(event) {
+                    if (event.target.classList.contains('add-row')) {
+                        const newRow = document.createElement('div');
+                        newRow.className = 'document-row d-flex align-items-center mb-3';
+                        newRow.innerHTML = `
+                        <select name="document_type[]" class="col-lg-5 me-3 " >
+                            <option value="">Select Document Type</option>
+                            <option value="voter_id">Voter ID/ PVC/ UL</option>
+                            <option value="emp_form">Attach Employee Form</option>
+                            <option value="education_certificate">Education Certificate</option>
+                            <option value="pf_esic_form">PF Form / ESIC</option>
+                            <option value="other_certificate">Others</option>
+                            <option value="payslip">Payslip/Fitness doc</option>
+                            <option value="exp_letter">Exp Letter</option>
+                        </select>
+                        <input type="file" name="document_file[]" class="col-lg-5 me-3 " >
+                        <button type="button" class="btn btn-success me-2 add-row">+</button>
+                        <button type="button" class="btn btn-danger me-2 remove-row">-</button>
+                    `;
+                        documentRowsContainer.appendChild(newRow);
+                        document.querySelectorAll('.remove-row').forEach(button => {
+                            button.style.display = 'inline-block';
+                        });
+                    }
+                });
+                documentRowsContainer.addEventListener('click', function(event) {
+                    if (event.target.classList.contains('remove-row')) {
+                        const row = event.target.closest('.document-row');
+                        row.remove();
+                        if (document.querySelectorAll('.document-row').length === 1) {
+                            document.querySelector('.remove-row').style.display = 'none';
+                        }
+                    }
+                });
+                if (document.querySelectorAll('.document-row').length === 1) {
+                    document.querySelector('.remove-row').style.display = 'none';
+                }
+            });
+            //no of children
+            document.addEventListener('DOMContentLoaded', function() {
+                const maxChildren = 2;
+                let currentChildren = 0;
+
+                const noOfChildrenField = document.getElementById('no_of_childrens');
+                const childrenDetailsContainer = document.getElementById('children-details-container');
+                const childrenDetails = document.getElementById('children-details');
+                const maxChildrenMessage = document.getElementById('max-children-message');
+
+                function updateChildDetails() {
+                    const noOfChildren = parseInt(noOfChildrenField.value);
+
+                    // Clear previous child details
+                    childrenDetails.innerHTML = '';
+
+                    if (noOfChildren > 0) {
+                        childrenDetailsContainer.style.display = 'block';
+                        maxChildrenMessage.style.display = 'none';
+
+                        for (let i = 1; i <= noOfChildren && i <= maxChildren; i++) {
+                            const childRow = document.createElement('div');
+                            childRow.className = 'row align-items-center mb-2 child-row';
+                            childRow.innerHTML = `
+                        <x-forms.input label="Child ${i} Name:" type="text" name="child_names[]" 
+                            id="child_name_${i}" :required="true" size="col-lg-6" />
+                        <x-forms.input label="Child ${i} DOB:" type="date" name="child_dobs[]" 
+                            id="child_dob_${i}" :required="true" size="col-lg-6" />
+                    `;
+                            childrenDetails.appendChild(childRow);
+                        }
+
+                        if (noOfChildren > maxChildren) {
+                            maxChildrenMessage.style.display = 'block';
+                        }
+                    } else {
+                        childrenDetailsContainer.style.display = 'none';
+                    }
+                }
+
+                noOfChildrenField.addEventListener('input', updateChildDetails);
+            });
+        </script>
+    @endpush
+
+
     <!-- Modal HTML (initially hidden) -->
     <div class="modal fade" id="offerLetterModal" tabindex="-1" role="dialog"
         aria-labelledby="offerLetterModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="offerLetterModalLabel" style="color:#89bdeb;">Generate Offer Letter</h5>
+                    <h5 class="modal-title" id="offerLetterModalLabel" style="color:#89bdeb;">Generate Offer Letter
+                    </h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -663,6 +689,34 @@
                     <button type="button" class="btn btn-primary" onclick="generateOfferLetter('save')">Generate and
                         Save</button>
                     <button type="button" class="btn btn-secondary" onclick="generateOfferLetter('send')">Generate
+                        and
+                        Send</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="ccEmailModal" tabindex="-1" role="dialog" aria-labelledby="ccEmailModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="ccEmailModalLabel" style="color:#89bdeb;">Enter CC Email Addresses
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="ccForm">
+                        <div class="form-group">
+                            <label for="cc_emails">CC Emails (separate multiple emails with commas):</label>
+                            <input type="text" class="form-control" name="cc_emails" id="cc_emails">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="sendBtn">Generate
                         and Send</button>
                 </div>
             </div>

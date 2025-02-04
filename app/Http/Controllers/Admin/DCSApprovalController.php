@@ -354,8 +354,8 @@ class DCSApprovalController extends Controller
 
     public function hrupdate(Request $request, $id)
     {
+        // dd($request->cc_emails);
         $action = $request->input('action');
-        // dd('hello');
         $candidate = $this->model()->find($id);
         $validatedData = $request->validate([
             'client_id' => 'required|integer',
@@ -568,19 +568,21 @@ class DCSApprovalController extends Controller
                         'chroot' => public_path()
                     ]);
 
-                $pdfPath = 'offer_letters/offer_letter_' . $offerLetter->id . '.pdf';
+                $pdfPath = 'offer_letters/offer_letter_' . $candidate->ffi_emp_id . '.pdf';
                 Storage::disk('public')->put($pdfPath, $pdf->output());
 
                 $offerLetter->update(['offer_letter_pdf' => $pdfPath]);
 
-                if ($action == 'send') {
-                    Mail::send('emails.offer_letter', ['employee' => $candidate], function ($message) use ($candidate, $pdfPath) {
-                        $message->to($candidate->email)
-                            ->cc('suni@webomindapps.com')
-                            ->subject('Your Offer Letter')
-                            ->attach(storage_path('app/public/' . $pdfPath));
-                    });
-                }
+
+                $ccEmails = $request->input('cc_emails', []);
+                Mail::send('mail.offer_letter', ['employee' => $candidate], function ($message) use ($candidate, $pdfPath, $ccEmails) {
+                    $message->to($candidate->email)
+                        ->cc($ccEmails)
+                        ->subject('Your Offer Letter')
+                        ->attach(storage_path('app/public/' . $pdfPath)); // Attach the offer letter PDF
+                });
+
+
             }
             DB::commit();
 
