@@ -123,6 +123,16 @@
                                                         type="date" name="child_dobs[{{ $index }}]"
                                                         id="child_dob_{{ $index }}" :value="$child->dob" />
                                                 </div>
+                                                <div class="col-lg-6">
+                                                    @if (!empty($child->photo))
+                                                        <!-- Check if the child has a photo -->
+                                                        <div id="image-preview-container" class="d-flex mt-2">
+                                                            <img src="{{ asset('storage/' . $child->photo) }}"
+                                                                class="img-thumbnail" width="100" height="100"
+                                                                alt="Child photo">
+                                                        </div>
+                                                    @endif
+                                                </div>
                                             </div>
                                         @endforeach
                                     @endif

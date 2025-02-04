@@ -156,9 +156,10 @@ class DCSApprovalController extends Controller
             'document_file.*' => 'nullable|file|mimes:pdf,doc,docx|max:2048',
             'child_names.*' => 'required|string|max:255',
             'child_dobs.*' => 'required|date',
+            'child_photo.*' => 'required|file|mimes:jpg,png,pdf'
 
-        ],[
-            'document_type.required'=>'Please upload atleast one document'
+        ], [
+            'document_type.required' => 'Please upload atleast one document'
         ]);
         DB::beginTransaction();
         try {
@@ -220,17 +221,26 @@ class DCSApprovalController extends Controller
                     }
                 }
             }
-            if ($request->has('child_names') && $request->has('child_dobs')) {
+            if ($request->has('child_names') && $request->has('child_dobs') && $request->has('child_photo')) {
 
                 $childNames = $request->child_names;
                 $childDobs = $request->child_dobs;
+                $childPhotos = $request->file('child_photo');
 
                 foreach ($childNames as $index => $name) {
                     if (!empty($name) && isset($childDobs[$index])) {
+
+                        $photoPath = null;
+                        if (isset($childPhotos[$index])) {
+                            $photo = $childPhotos[$index];
+                            $photoPath = $photo->store('children_photos', 'public');
+                        }
+
                         DCSChildren::create([
                             'emp_id' => $candidate->id,
                             'name' => $name,
                             'dob' => $childDobs[$index],
+                            'photo' => $photoPath,
                         ]);
                     }
                 }
@@ -441,6 +451,8 @@ class DCSApprovalController extends Controller
             'document_file.*' => 'nullable|file|mimes:pdf,doc,docx|max:2048',
             'child_names.*' => 'nullable|string|max:255',
             'child_dobs.*' => 'nullable|date',
+            'child_photo.*' => 'required|file|mimes:jpg,png,pdf'
+
 
         ]);
         DB::beginTransaction();
@@ -500,18 +512,27 @@ class DCSApprovalController extends Controller
                     }
                 }
             }
-            if ($request->has('child_names') && $request->has('child_dobs')) {
+            if ($request->has('child_names') && $request->has('child_dobs') && $request->has('child_photo')) {
 
                 $childNames = $request->child_names;
                 $childDobs = $request->child_dobs;
+                $childPhotos = $request->file('child_photo');
                 DCSChildren::where('emp_id', $candidate->id)->delete();
 
                 foreach ($childNames as $index => $name) {
                     if (!empty($name) && isset($childDobs[$index])) {
+
+                        $photoPath = null;
+                        if (isset($childPhotos[$index])) {
+                            $photo = $childPhotos[$index];
+                            $photoPath = $photo->store('children_photos', 'public');
+                        }
+
                         DCSChildren::create([
                             'emp_id' => $candidate->id,
                             'name' => $name,
                             'dob' => $childDobs[$index],
+                            'photo' => $photoPath,
                         ]);
                     }
                 }
@@ -688,6 +709,8 @@ class DCSApprovalController extends Controller
             'document_file.*' => 'nullable|file|mimes:pdf,doc,docx|max:2048',
             'child_names.*' => 'nullable|string|max:255',
             'child_dobs.*' => 'nullable|date',
+            'child_photo.*' => 'required|file|mimes:jpg,png,pdf'
+
 
         ]);
         DB::beginTransaction();
@@ -746,21 +769,31 @@ class DCSApprovalController extends Controller
                     }
                 }
             }
-            if ($request->has('child_names') && $request->has('child_dobs')) {
+            if ($request->has('child_names') && $request->has('child_dobs') && $request->has('child_photo')) {
 
                 $childNames = $request->child_names;
                 $childDobs = $request->child_dobs;
+                $childPhotos = $request->file('child_photo');
 
                 foreach ($childNames as $index => $name) {
                     if (!empty($name) && isset($childDobs[$index])) {
+
+                        $photoPath = null;
+                        if (isset($childPhotos[$index])) {
+                            $photo = $childPhotos[$index];
+                            $photoPath = $photo->store('children_photos', 'public');
+                        }
+
                         DCSChildren::create([
                             'emp_id' => $candidate->id,
                             'name' => $name,
                             'dob' => $childDobs[$index],
+                            'photo' => $photoPath,
                         ]);
                     }
                 }
             }
+
 
             $candidate->save();
             DB::commit();
@@ -963,14 +996,23 @@ class DCSApprovalController extends Controller
 
                 $childNames = $request->child_names;
                 $childDobs = $request->child_dobs;
+                $childPhotos = $request->file('child_photo');
                 DCSChildren::where('emp_id', $candidate->id)->delete();
 
                 foreach ($childNames as $index => $name) {
                     if (!empty($name) && isset($childDobs[$index])) {
+
+                        $photoPath = null;
+                        if (isset($childPhotos[$index])) {
+                            $photo = $childPhotos[$index];
+                            $photoPath = $photo->store('children_photos', 'public');
+                        }
+
                         DCSChildren::create([
                             'emp_id' => $candidate->id,
                             'name' => $name,
                             'dob' => $childDobs[$index],
+                            'photo' => $photoPath,
                         ]);
                     }
                 }

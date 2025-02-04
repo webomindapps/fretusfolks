@@ -110,6 +110,8 @@ class CFISModel extends Model
         'active_status',
         'dcs_approval',
         'hr_approval',
+        'pan_status',
+        'note',
     ];
 
     protected $casts = [

@@ -146,6 +146,7 @@
                                                         type="date" name="child_dobs[{{ $index }}]"
                                                         id="child_dob_{{ $index }}" :value="$child->dob" />
                                                 </div>
+
                                             </div>
                                         @endforeach
                                     @endif
@@ -243,6 +244,16 @@
                                                 accept=".doc, .docx, .pdf, .jpg, .png" class="form-control"
                                                 value="{{ old('pan_path', $candidate->pan_path) }}">
                                         </div>
+                                        <div class="col-lg-6">
+                                            @if (!empty($child->photo))
+                                                <!-- Check if the child has a photo -->
+                                                <div id="image-preview-container" class="d-flex mt-2">
+                                                    <img src="{{ asset('storage/' . $child->photo) }}"
+                                                        class="img-thumbnail" width="100" height="100"
+                                                        alt="Child photo">
+                                                </div>
+                                            @endif
+                                        </div>
                                     </div>
                                 </div>
 
@@ -261,7 +272,7 @@
                                                 accept=".pdf" class="form-control">
                                         </div>
                                         <input type="hidden" id="statename"
-                                        value="{{ $candidate->clientstate->state_name ?? 'State' }}">
+                                            value="{{ $candidate->clientstate->state_name ?? 'State' }}">
                                     </div>
                                 </div>
                                 <div class="form-group col-lg-6 mt-2">
@@ -343,7 +354,7 @@
                                                     'mother_photo' => 'Mother Photo',
                                                     'spouse_photo' => 'Spouse_photo',
                                                     'family_photo' => 'Family Photo',
-                                                    'pan_declaration'=>'Pan Declaration'
+                                                    'pan_declaration' => 'Pan Declaration',
                                                 ];
                                             @endphp
 
