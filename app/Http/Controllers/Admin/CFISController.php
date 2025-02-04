@@ -60,26 +60,50 @@ class CFISController extends Controller
     }
     public function store(Request $request)
     {
-        $validatedData = $request->only([
-            'client_id',
-            'emp_name',
-            'phone1',
-            'email',
-            'state',
-            'location',
-            'designation',
-            'department',
-            'interview_date',
-            'aadhar_no',
-            'driving_license_no',
-            'photo',
-            'resume',
+        $validatedData = $request->validate([
+            'client_id' => 'required|integer',
+            'emp_name' => 'required|string|max:255',
+            'phone1' => [
+                'required',
+                'string',
+                'max:15',
+                function ($attribute, $value, $fail) {
+                    $existingRecord = $this->model()->where('phone1', $value)->first();
+                    if ($existingRecord) {
+                        $fail('The phone number has already been taken under Client: ' . $existingRecord->entity_name . '. Please Check With HR.');
+                    }
+                }
+            ],
+            'email' => 'required|email|max:255',
+            'state' => 'nullable|string|max:255',
+            'location' => 'nullable|string|max:255',
+            'designation' => 'required|string|max:255',
+            'department' => 'required|string|max:255',
+            'interview_date' => 'required|date',
+            'aadhar_no' => [
+                'required',
+                'string',
+                'min:12',
+                'max:12',
+                function ($attribute, $value, $fail) {
+                    $existingRecord = $this->model()->where('aadhar_no', $value)->first();
+                    if ($existingRecord) {
+                        $fail('The Aadhar number has already been taken under Client: ' . $existingRecord->entity_name . '. Please Check With HR.');
+                    }
+                }
+            ],
+            'driving_license_no' => 'nullable|string|max:255',
+            'photo' => 'required|file|mimes:jpg,jpeg,png|max:2048',
+            'resume' => 'nullable|file|mimes:pdf,doc,docx|max:2048',
         ]);
         $validatedData['created_at'] = $request->input('created_at', now());
         $validatedData['created_by'] = auth()->id();
         $validatedData['status'] = $request->input('status', 1);
         $validatedData['dcs_approval'] = $request->input('dcs_approval', 1);
         $validatedData['data_status'] = $request->input('data_status', 0);
+
+
+
 
         DB::beginTransaction();
         try {
@@ -89,15 +113,17 @@ class CFISController extends Controller
             $fileFields = ['photo', 'resume'];
             foreach ($fileFields as $field) {
                 if ($request->hasFile($field)) {
-    
+
                     $file = $request->file($field);
-                    $filePath = $file->storeAs('uploads/' . $field, $file->getClientOriginalName(), 'public');
-    
+                    $newFileName = $field . '_' . $client->id . '.' . $file->getClientOriginalExtension();
+
+                    $filePath = $file->storeAs('uploads/' . $field, $newFileName, 'public');
+
                     CandidateDocuments::create([
                         'emp_id' => $client->id,
-                        'name' => $file->getClientOriginalName(),
+                        'name' => $field,
                         'path' => $filePath,
-                        'status' => 1,
+                        'status' => 0,
                     ]);
                 }
             }
@@ -111,7 +137,7 @@ class CFISController extends Controller
     }
     public function edit($id)
     {
-        $candidate = $this->model()->find($id);
+        $candidate = $this->model()->with('candidateDocuments')->find($id);
         return view('admin.adms.cfis.edit', compact('candidate'));
     }
     public function update(Request $request, $id)
@@ -138,21 +164,28 @@ class CFISController extends Controller
         $validatedData['dcs_approval'] = $request->input('dcs_approval', 1);
         $validatedData['data_status'] = $request->input('data_status', 0);
 
-        $fileFields = ['photo', 'resume'];
-        foreach ($fileFields as $field) {
-            if ($request->hasFile($field)) {
-                $filePath = $request->file($field)->store('uploads/' . $field, 'public');
-                $validatedData[$field] = $filePath;
-            }
-        }
-
         DB::beginTransaction();
         try {
             $candidate->update($validatedData);
-
             $candidate->entity_name = ClientManagement::where('id', $validatedData['client_id'])->value('client_name');
             $candidate->save();
+            $fileFields = ['photo', 'resume'];
+            foreach ($fileFields as $field) {
+                if ($request->hasFile($field)) {
 
+                    $file = $request->file($field);
+                    $newFileName = $field . '_' . $candidate->id . '.' . $file->getClientOriginalExtension();
+
+                    $filePath = $file->storeAs('uploads/' . $field, $newFileName, 'public');
+
+                    CandidateDocuments::create([
+                        'emp_id' => $candidate->id,
+                        'name' => $field,
+                        'path' => $filePath,
+                        'status' => 0,
+                    ]);
+                }
+            }
             DB::commit();
 
             return redirect()->route('admin.cfis')->with('success', 'Candidate data updated successfully!');

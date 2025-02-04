@@ -66,6 +66,9 @@ class CFISModel extends Model
         'driving_license_path',
         'photo',
         'family_photo',
+        'mother_photo',
+        'father_photo',
+        'spouse_photo',
         'resume',
         'bank_document',
         'bank_name',
@@ -106,7 +109,6 @@ class CFISModel extends Model
         'created_by',
         'active_status',
         'dcs_approval',
-        'document_approval',
         'hr_approval',
     ];
 

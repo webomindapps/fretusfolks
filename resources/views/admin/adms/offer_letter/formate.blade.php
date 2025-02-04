@@ -435,7 +435,59 @@
                 <b>Signature</b>
                 <br><br>
                 <b>Name: {{ $offerLetter->employee?->emp_name }}</b>
+                <br><br>
+                <b>Designation:
+                    {{ $offerLetter->employee?->designation }}-{{ $offerLetter->employee?->department }}</b>
+
             </span><br>
+        </p>
+    </div>
+    <div
+        style="color: #000;font-family: Tahoma;font-size: 13px;line-height: 1.5;text-align: justify;padding-left: 0%; margin-top:100px;">
+
+        <p>
+        <table style="border-collapse:collapse;width:100%;margin-bottom:20px;">
+            <tbody>
+                <tr>
+                    <td colspan="3" style="font-size:12px;text-align:left;padding:7px">
+                        <p style="line-height:1.8;font-size:14px">
+                            <b>Employee ID : {{ $offerLetter->employee?->ffi_emp_id }}</b> <br>
+                        </p>
+                    </td>
+                    <td style="font-size:12px;text-align:left;padding:7px;width:30%">
+                        <p style="line-height:1.8;font-size:14px">
+                            <b>Date
+                                :{{ \Carbon\Carbon::parse($offerLetter->employee?->joining_date)->format('d-m-Y') }}</b>
+                        </p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        </p>
+        <p style="font-size:12px;line-height:1.5;">
+            <b>To,</b><br>
+            <b>Fretus Folks India Pvt Ltd (FFI).,</b><br>
+            M 20, 3rd Floor, UKS Heights, <br>
+            Sector XI, Jeevan Bhima Nagar <br>
+            Bangalore-560075 <br>
+            <br>
+            <b>Subject :- Acknowledgement and receipt of Offer Letter</b><br>
+            <br><br>
+            Dear Sir,
+            <span style="margin-left:0%;">
+                I have read and understood the above mentioned terms and conditions of the Employment. I voluntarily
+                accept the same. I have received <b>Fretus Folks India Pvt Ltd (FFI).,=</b>Associate Manual and I shall
+                abide to the
+                terms and conditions mentioned therein and any amendments from time to time.
+
+                On receipt of the first salary, all terms & conditions in this fixed term employment would be deemed as
+                acknowledged & accepted.
+            </span>
+            <br><br>
+            <b>Name: {{ $offerLetter->employee?->emp_name }}</b><br>
+            <b>Signature: </b><br>
+            <b>Place: </b><br>
+            <b>Date: </b><br>
         </p>
     </div>
 </body>

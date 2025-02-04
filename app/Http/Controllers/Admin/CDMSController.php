@@ -145,7 +145,7 @@ class CDMSController extends Controller
         $client = $this->model()->findOrFail($id);
         $request->validate([
             'state' => 'exists:states,id',
-            'gstn_no' => '',
+            'gstn_no' => 'required|string',
         ]);
         ClientGstn::create([
             'client_id' => $client->id,
