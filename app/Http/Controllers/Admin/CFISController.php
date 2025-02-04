@@ -63,21 +63,38 @@ class CFISController extends Controller
         $validatedData = $request->validate([
             'client_id' => 'required|integer',
             'emp_name' => 'required|string|max:255',
-            'phone1' => 'required|string|max:15|unique:backend_management,phone1',
+            'phone1' => [
+                'required',
+                'string',
+                'max:15',
+                function ($attribute, $value, $fail) {
+                    $existingRecord = $this->model()->where('phone1', $value)->first();
+                    if ($existingRecord) {
+                        $fail('The phone number has already been taken under Client: ' . $existingRecord->entity_name . '. Please Check With HR.');
+                    }
+                }
+            ],
             'email' => 'required|email|max:255',
             'state' => 'nullable|string|max:255',
             'location' => 'nullable|string|max:255',
             'designation' => 'required|string|max:255',
             'department' => 'required|string|max:255',
             'interview_date' => 'required|date',
-            'aadhar_no' => 'required|string|min:12|max:12|unique:backend_management,aadhar_no',
+            'aadhar_no' => [
+                'required',
+                'string',
+                'min:12',
+                'max:12',
+                function ($attribute, $value, $fail) {
+                    $existingRecord = $this->model()->where('aadhar_no', $value)->first();
+                    if ($existingRecord) {
+                        $fail('The Aadhar number has already been taken under Client: ' . $existingRecord->entity_name . '. Please Check With HR.');
+                    }
+                }
+            ],
             'driving_license_no' => 'nullable|string|max:255',
             'photo' => 'required|file|mimes:jpg,jpeg,png|max:2048',
             'resume' => 'nullable|file|mimes:pdf,doc,docx|max:2048',
-        ], [
-            'phone1.unique' => 'The phone number has already been taken. Please Check With HR.',
-            'aadhar_no.unique' => 'The Aadhar number has already been taken. Please Check With HR.',
-
         ]);
         $validatedData['created_at'] = $request->input('created_at', now());
         $validatedData['created_by'] = auth()->id();

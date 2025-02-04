@@ -11,7 +11,7 @@
                     ['label' => 'Actions', 'column' => 'action', 'sort' => false],
                 ];
             @endphp
-            <x-table :columns="$columns" :data="$candidate" :checkAll=true :bulk="route('admin.cfis.bulk')" :route="route('admin.candidatemaster')">
+            <x-table :columns="$columns" :data="$candidate" :checkAll=false :bulk="route('admin.cfis.bulk')" :route="route('admin.candidatemaster')">
                 <x-slot:filters>
                     <form action="" method="POST">
                         @csrf
@@ -37,10 +37,7 @@
                 </x-slot:filters>
                 @foreach ($candidate as $key => $item)
                     <tr>
-                        <td>
-                            <input type="checkbox" name="selected_items[]" class="single-item-check"
-                                value="{{ $item->id }}">
-                        </td>
+
                         <td>{{ $item->id }}</td>
                         <td>
                             {{ $item->entity_name }}
@@ -68,16 +65,13 @@
                                     style="position: absolute; inset: auto auto 0px 0px; margin: 0px; transform: translate(-95px, -25.4219px);"
                                     data-popper-placement="top-end">
                                     <li>
-                                        {{-- <a href="javascript:void(0);" class="dropdown-item" data-toggle="modal"
-                                        data-target="#client_details"
-                                        onclick="showClientDetails({{ $item->id }})">
-                                        <i class='bx bx-link-alt'></i>
-                                        View Details
-                                    </a> --}}
-
-                                        <a class="dropdown-item" href="">
-                                            <i class='bx bx-detail'></i>                                            View
+                                        <a href="javascript:void(0);" class="dropdown-item" data-toggle="modal"
+                                            data-target="#client_details"
+                                            onclick="showCandidateDetails({{ $item->id }})">
+                                            <i class='bx bx-link-alt'></i>
+                                            View Details
                                         </a>
+
                                         <a class="dropdown-item"
                                             onclick="return confirm('Are you sure to delete this ?')" href="">
                                             <i class='bx bxs-download'></i>
@@ -92,4 +86,30 @@
             </x-table>
         </div>
     </div>
+    <x-model1 />
+    @push('scripts')
+        <script>
+            function showCandidateDetails(employeeId) {
+                fetch(`/admin/candidatemaster/view/${employeeId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.html_content) {
+                            document.querySelector('#client_details').innerHTML = data.html_content;
+                            $('#client_details').modal('show');
+                            const closeButton = document.querySelector('#closeModalButton');
+                            if (closeButton) {
+                                closeButton.addEventListener('click', function() {
+                                    $('#client_details').modal('hide');
+                                });
+                            }
+                        } else {
+                            console.error('No HTML content found in the response');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching client details:', error);
+                    });
+            }
+        </script>
+    @endpush
 </x-applayout>

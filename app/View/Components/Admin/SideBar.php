@@ -133,7 +133,7 @@ class SideBar extends Component
                     'title' => 'Candidates Master',
                     'icon' => 'bx bx-chevron-right',
                     'route' => 'admin.candidatemaster',
-                    'name' => 'dcs_approval',
+                    'name' => 'candidatemaster',
                     'roles' => ['Admin', 'Compliance'],
                 ],
 

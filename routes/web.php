@@ -311,8 +311,8 @@ Route::prefix('admin')->group(function () {
 
 
         //compliance 
-        Route::get('candidate-master',[ComplianceController::class,'index'])->name('candidatemaster');
-        Route::get('candidate-master/view',[ComplianceController::class,'viewdetail'])->name('candidatemaster.view');
+        Route::get('candidatemaster',[ComplianceController::class,'index'])->name('candidatemaster');
+        Route::get('candidatemaster/view/{id}',[ComplianceController::class,'viewdetail'])->name('candidatemaster.view');
 
     });
 });

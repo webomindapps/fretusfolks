@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function generatePANDeclaration() {
         const name = document.getElementById('emp_name')?.value || 'Your Name';
-        const address = document.getElementById('permanent_address')?.value || 'Your Address';
+        const address = document.getElementById('address')?.value || 'Your Address';
         const city = document.getElementById('location')?.value || 'City';
         const state = document.getElementById('statename')?.value || 'State';
         const zip = document.getElementById('candidate_zip')?.value || 'ZIP Code';

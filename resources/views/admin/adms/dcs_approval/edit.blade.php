@@ -230,9 +230,22 @@
                                                 style="cursor: pointer;width: 30%;display: block;">Download</a>
                                         </div>
                                         <div class="form-group col-lg-6 mt-2">
-                                            <label for="declaration_upload">Upload Signed Document:</label>
-                                            <input type="file" name="declaration_upload" id="declaration_upload"
+                                            <label for="pan_declaration">Upload Signed Document:</label>
+                                            <input type="file" name="pan_declaration" id="pan_declaration"
                                                 accept=".pdf" class="form-control">
+
+                                            @if ($candidate->candidateDocuments->where('name', 'pan_declaration')->isNotEmpty())
+                                                @php
+                                                    $pan_declaration = $candidate->candidateDocuments
+                                                        ->where('name', 'pan_declaration')
+                                                        ->first();
+                                                @endphp
+                                                <div id="image-preview-container" class="d-flex mt-2">
+                                                    <img src="{{ asset('storage/' . $pan_declaration->path) }}"
+                                                        class="img-thumbnail" width="100" height="100"
+                                                        alt="Uploaded image">
+                                                </div>
+                                            @endif
                                         </div>
                                     </div>
 
@@ -407,7 +420,8 @@
                                     <div id="document-rows">
                                         <div class="row ">
                                             <div class="document-row d-flex align-items-center mb-3">
-                                                <select name="document_type[]" id="document_type" class="me-3 col-lg-5 ">
+                                                <select name="document_type[]" id="document_type"
+                                                    class="me-3 col-lg-5 ">
                                                     <option value="">Select Document Type</option>
                                                     <option value="voter_id">Voter ID/ PVC/ UL</option>
                                                     <option value="emp_form">Attach Employee Form</option>
@@ -417,6 +431,8 @@
                                                     <option value="other_certificate">Others</option>
                                                     <option value="payslip">Payslip/Fitness doc</option>
                                                     <option value="exp_letter">Exp Letter</option>
+
+
                                                 </select>
 
                                                 <input type="file"
@@ -454,6 +470,9 @@
                                                     'pf_esic_form' => 'PF Form / ESIC',
                                                     'payslip' => 'Payslip/Fitness Document',
                                                     'exp_letter' => 'Experience Letter',
+                                                    'father_photo' => 'Father Photo',
+                                                    'mother_photo' => 'Mother Photo',
+                                                    'spouse_photo' => 'Spouse_photo',
                                                 ];
                                             @endphp
 

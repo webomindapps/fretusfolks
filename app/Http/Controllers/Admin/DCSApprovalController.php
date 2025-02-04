@@ -157,6 +157,8 @@ class DCSApprovalController extends Controller
             'child_names.*' => 'required|string|max:255',
             'child_dobs.*' => 'required|date',
 
+        ],[
+            'document_type.required'=>'Please upload atleast one document'
         ]);
         DB::beginTransaction();
         try {
@@ -168,7 +170,7 @@ class DCSApprovalController extends Controller
 
             $candidate->update($validatedData);
 
-            $fileFields = ['pan_path', 'aadhar_path', 'driving_license_path', 'photo', 'resume', 'bank_document', 'voter_id', 'emp_form', 'pf_esic_form', 'payslip', 'exp_letter', 'family_photo'];
+            $fileFields = ['pan_path', 'aadhar_path', 'driving_license_path', 'photo', 'resume', 'bank_document', 'voter_id', 'emp_form', 'pf_esic_form', 'payslip', 'exp_letter', 'family_photo', 'father_photo', 'mother_photo', 'spouse_photo', 'pan_declaration'];
             foreach ($fileFields as $field) {
                 if ($request->hasFile($field)) {
                     if ($candidate->$field) {
@@ -447,7 +449,7 @@ class DCSApprovalController extends Controller
             $validatedData['dcs_approval'] = $request->input('dcs_approval', 0);
             $candidate->update($validatedData);
 
-            $fileFields = ['pan_path', 'aadhar_path', 'driving_license_path', 'photo', 'resume', 'bank_document', 'voter_id', 'emp_form', 'pf_esic_form', 'payslip', 'exp_letter', 'family_photo'];
+            $fileFields = ['pan_path', 'aadhar_path', 'driving_license_path', 'photo', 'resume', 'bank_document', 'voter_id', 'emp_form', 'pf_esic_form', 'payslip', 'exp_letter', 'family_photo', 'father_photo', 'mother_photo', 'spouse_photo', 'pan_declaration'];
             foreach ($fileFields as $field) {
                 if ($request->hasFile($field)) {
                     if ($candidate->$field) {
@@ -516,6 +518,12 @@ class DCSApprovalController extends Controller
             }
             $candidate->save();
             if ($candidate->hr_approval == 1) {
+                $existingOfferLetter = OfferLetter::where('employee_id', $candidate->ffi_emp_id)->first();
+
+                if ($existingOfferLetter) {
+                    $existingOfferLetter->delete();
+                }
+
                 $offerLetter = OfferLetter::create([
                     'company_id' => $candidate->client_id,
                     'employee_id' => $candidate->ffi_emp_id,
@@ -690,7 +698,7 @@ class DCSApprovalController extends Controller
             $candidate->update($validatedData);
 
 
-            $fileFields = ['pan_path', 'aadhar_path', 'driving_license_path', 'photo', 'resume', 'bank_document', 'voter_id', 'emp_form', 'pf_esic_form', 'payslip', 'exp_letter', 'family_photo'];
+            $fileFields = ['pan_path', 'aadhar_path', 'driving_license_path', 'photo', 'resume', 'bank_document', 'voter_id', 'emp_form', 'pf_esic_form', 'payslip', 'exp_letter', 'family_photo', 'father_photo', 'mother_photo', 'spouse_photo', 'pan_declaration'];
             foreach ($fileFields as $field) {
                 if ($request->hasFile($field)) {
                     if ($candidate->$field) {
@@ -901,7 +909,7 @@ class DCSApprovalController extends Controller
             $validatedData['dcs_approval'] = $request->input('dcs_approval', 0);
             $candidate->update($validatedData);
 
-            $fileFields = ['pan_path', 'aadhar_path', 'driving_license_path', 'photo', 'resume', 'bank_document', 'voter_id', 'emp_form', 'pf_esic_form', 'payslip', 'exp_letter', 'family_photo'];
+            $fileFields = ['pan_path', 'aadhar_path', 'driving_license_path', 'photo', 'resume', 'bank_document', 'voter_id', 'emp_form', 'pf_esic_form', 'payslip', 'exp_letter', 'family_photo', 'father_photo', 'mother_photo', 'spouse_photo', 'pan_declaration'];
             foreach ($fileFields as $field) {
                 if ($request->hasFile($field)) {
                     if ($candidate->$field) {

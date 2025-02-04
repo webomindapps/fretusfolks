@@ -72,10 +72,11 @@
                                     id="emp_name" :required="true" size="col-lg-6 mt-2" :value="old('emp_name', $candidate->emp_name)" />
 
                                 <x-forms.input label="Interview Date:  " type="date" name="interview_date"
-                                    id="interview_date" :required="true" size="col-lg-4 mt-2"
+                                    id="interview_date" :required="true" size="col-lg-6 mt-2"
                                     value="{{ old('interview_date', $candidate->interview_date ? $candidate->interview_date->format('Y-m-d') : '') }}" />
+
                                 <x-forms.input label="Joining Date: " type="date" name="joining_date"
-                                    id="joining_date" :required="true" size="col-lg-4 mt-2"
+                                    id="joining_date" :required="true" size="col-lg-6 mt-2"
                                     value="{{ old('joining_date', $candidate->joining_date ? $candidate->joining_date->format('Y-m-d') : '') }}" />
 
                                 <x-forms.input label="Enter Designation: " type="text" name="designation"
@@ -88,33 +89,37 @@
                                     :required="true" size="col-lg-6 mt-2" :value="old('location', $candidate->location)" />
                                 <x-forms.input label="Branch: " type="text" name="branch" id="branch"
                                     :required="false" size="col-lg-6 mt-2" :value="old('branch', $candidate->branch)" />
-
-                                <x-forms.input label="DOB: " type="date" name="dob" id="dob"
-                                    :required="true" size="col-lg-6 mt-2"
-                                    value="{{ old('dob', $candidate->dob ? $candidate->dob->format('Y-m-d') : '') }}" />
                                 <x-forms.radio label="Gender: " :options="[
                                     ['value' => 'Male', 'label' => 'Male'],
                                     ['value' => 'Female', 'label' => 'Female'],
                                     ['value' => 'Other', 'label' => 'Other'],
                                 ]" id="gender" name="gender"
-                                    :required="true" size="col-lg-6 mt-2" :value="old('gender', $candidate->gender)" />
+                                    :required="true" size="col-lg-12 mt-2" :value="old('gender', $candidate->gender)" />
+                                <x-forms.input label="DOB: " type="date" name="dob" id="dob"
+                                    :required="true" size="col-lg-6 mt-2"
+                                    value="{{ old('dob', $candidate->dob ? $candidate->dob->format('Y-m-d') : '') }}" />
                                 <x-forms.select label="Marital Status:" name="maritial_status" id="maritial_status"
                                     :required="true" size="col-lg-6 mt-2" :options="FretusFolks::getMarital()" :value="old('maritial_status', $candidate->maritial_status)" />
                                 <div id="married-fields" style="display: none;" class="col-12">
                                     <div class="row">
                                         <x-forms.input label="Spouse Name:" type="text" name="spouse_name"
-                                            id="spouse_name" :required="false" size="col-lg-6 mt-2"
+                                            id="spouse_name" :required="false" size="col-lg-3 mt-2"
                                             :value="old('spouse_name', $candidate->spouse_name)" />
                                         <x-forms.input label="Spouse's DOB: " type="date" name="spouse_dob"
-                                            id="spouse_dob" :required="false" size="col-lg-6 mt-2"
+                                            id="spouse_dob" :required="false" size="col-lg-3 mt-2"
                                             :value="old('spouse_dob', $candidate->spouse_dob)" />
-                                        <div class="form-group col-lg-4 mt-2">
+                                        <div class="form-group col-lg-3 mt-2">
                                             <label for="spouse_aadhar_no">Enter Spouse Adhar Card No: <span
                                                     style="color: red">*</span></label>
-                                            <input type="number" name="spouse_aadhar_no" id="spouse_aadhar_no"
-                                                class="form-control" maxlength="12"
-                                                value="{{ old('spouse_aadhar_no', $candidate->spouse_aadhar_no) }}"
-                                                required>
+                                            <input type="text" name="spouse_aadhar_no" id="spouse_aadhar_no"
+                                                class="form-control" maxlength="12" inputmode="numeric"
+                                                value="{{ old('spouse_aadhar_no', $candidate->spouse_aadhar_no) }}">
+                                        </div>
+                                        <div class="form-group col-lg-3 mt-2">
+                                            <label for="spouse_photo">Spouse Photo: </label>
+                                            <input type="file" name="spouse_photo" id="spouse_photo"
+                                                accept="application/pdf, image/jpg, image/png" class="form-control"
+                                                value="{{ old('spouse_photo', $candidate->spouse_photo) }}">
                                         </div>
                                         <x-forms.input label="No of Children:" type="number" name="no_of_childrens"
                                             id="no_of_childrens" :required="false" size="col-lg-6 mt-2"
@@ -148,60 +153,68 @@
 
 
                                 <x-forms.input label="Father Name:  " type="text" name="father_name"
-                                    id="father_name" :required="true" size="col-lg-6 mt-2" :value="old('father_name', $candidate->father_name)" />
+                                    id="father_name" :required="true" size="col-lg-3 mt-2" :value="old('father_name', $candidate->father_name)" />
                                 <x-forms.input label="Father's DOB: " type="date" name="father_dob"
-                                    id="father_dob" :required="true" size="col-lg-6 mt-2" :value="old('father_dob', $candidate->father_dob)" />
-                                <div class="form-group col-lg-6 mt-2">
+                                    id="father_dob" :required="true" size="col-lg-3 mt-2" :value="old('father_dob', $candidate->father_dob)" />
+                                <div class="form-group col-lg-3 mt-2">
                                     <label for="father_aadhar_no">Father's Adhar Card No: <span
                                             style="color: red">*</span></label>
-                                    <input type="number" name="father_aadhar_no" id="father_aadhar_no"
-                                        class="form-control" maxlength="12"
+                                    <input type="text" name="father_aadhar_no" id="father_aadhar_no"
+                                        class="form-control" maxlength="12" inputmode="numeric"
                                         value="{{ old('father_aadhar_no', $candidate->father_aadhar_no) }}" required>
                                 </div>
+                                <div class="form-group col-lg-3 mt-2">
+                                    <label for="father_photo">Father Photo: </label>
+                                    <input type="file" name="father_photo" id="father_photo"
+                                        accept="application/pdf, image/jpg, image/png" class="form-control"
+                                        value="{{ old('father_photo', $candidate->father_photo) }}">
+                                </div>
                                 <x-forms.input label="Mother Name: " type="text" name="mother_name"
-                                    id="mother_name" :required="true" size="col-lg-6 mt-2" :value="old('mother_name', $candidate->mother_name)" />
+                                    id="mother_name" :required="true" size="col-lg-3 mt-2" :value="old('mother_name', $candidate->mother_name)" />
                                 <x-forms.input label="Mother's DOB: " type="date" name="mother_dob"
-                                    id="mother_dob" :required="true" size="col-lg-6 mt-2" :value="old('mother_dob', $candidate->mother_dob)" />
-                                <div class="form-group col-lg-6 mt-2">
+                                    id="mother_dob" :required="true" size="col-lg-3 mt-2" :value="old('mother_dob', $candidate->mother_dob)" />
+                                <div class="form-group col-lg-3 mt-2">
                                     <label for="mother_aadhar_no">Mother's Adhar Card No: <span
                                             style="color: red">*</span></label>
-                                    <input type="number" name="mother_aadhar_no" id="mother_aadhar_no"
-                                        class="form-control" maxlength="12"
+                                    <input type="text" name="mother_aadhar_no" id="mother_aadhar_no"
+                                        class="form-control" maxlength="12" inputmode="numeric"
                                         value="{{ old('mother_aadhar_no', $candidate->mother_aadhar_no) }}" required>
                                 </div>
+                                <div class="form-group col-lg-3 mt-2">
+                                    <label for="mother_photo">Mother Photo: </label>
+                                    <input type="file" name="mother_photo" id="mother_photo"
+                                        accept="application/pdf, image/jpg, image/png" class="form-control"
+                                        value="{{ old('mother_photo', $candidate->mother_photo) }}">
+                                </div>
                                 <x-forms.input label="Religion: " type="text" name="religion" id="religion"
-                                    :required="true" size="col-lg-4 mt-2" :value="old('religion', $candidate->religion)" />
+                                    :required="true" size="col-lg-6 mt-2" :value="old('religion', $candidate->religion)" />
                                 <x-forms.input label="Languages: " type="text" name="languages" id="languages"
-                                    :required="true" size="col-lg-4 mt-2" :value="old('languages', $candidate->languages)" />
+                                    placeholder="English,Kannada.." :required="true" size="col-lg-6 mt-2"
+                                    :value="old('languages', $candidate->languages)" />
                                 <x-forms.input label="Mother Tongue: " type="text" name="mother_tongue"
-                                    id="mother_tongue" :required="true" size="col-lg-4 mt-2" :value="old('mother_tongue', $candidate->mother_tongue)" />
+                                    id="mother_tongue" :required="true" size="col-lg-6 mt-2" :value="old('mother_tongue', $candidate->mother_tongue)" />
                                 <x-forms.select label="Blood Group:" name="blood_group" id="blood_group"
                                     :required="true" size="col-lg-6 mt-2" :options="FretusFolks::getBlood()" :value="old('blood_group', $candidate->blood_group)" />
-
-                                <div class="form-group col-lg-6 mt-2">
-                                    <label for="emer_contact_no">Emergency Contact Person Number :: <span
-                                            style="color: red">*</span></label>
-                                    <input type="number" name="emer_contact_no" id="emer_contact_no"
-                                        class="form-control" maxlength="10"
-                                        value="{{ old('emer_contact_no', $candidate->emer_contact_no) }}" required>
-                                </div>
+                                <x-forms.input label="Emergency Contact Person Number :" type="number"
+                                    name="emer_contact_no" id="emer_contact_no" :required="true"
+                                    size="col-lg-6 mt-2" :value="old('emer_contact_no', $candidate->emer_contact_no)" />
                                 <x-forms.input label="Emergency Contact Person Name:" type="text" name="emer_name"
                                     id="emer_name" :required="true" size="col-lg-6 mt-2" :value="old('emer_name', $candidate->emer_name)" />
                                 <x-forms.input label="Emergency Contact Person Relation:" type="text"
                                     name="emer_relation" id="emer_relation" :required="true" size="col-lg-6 mt-2"
                                     :value="old('emer_relation', $candidate->emer_relation)" />
-
                                 <x-forms.select label=" Qualification:" name="qualification" id="qualification"
                                     :required="true" size="col-lg-6 mt-2" :options="FretusFolks::getQualification()" :value="old('qualification', $candidate->qualification)" />
-                                <div class="form-group col-lg-6 mt-2">
+                                <div class="form-group col-lg-4 mt-2">
                                     <label for="phone1">Phone: <span style="color: red">*</span></label>
-                                    <input type="number" name="phone1" id="phone1" class="form-control"
-                                        maxlength="10" value="{{ old('phone1', $candidate->phone1) }}" required>
+                                    <input type="text" name="phone1" id="phone1" class="form-control"
+                                        maxlength="10" inputmode="numeric"
+                                        value="{{ old('phone1', $candidate->phone1) }}" required>
                                 </div>
                                 <x-forms.input label="Employee Email ID: " type="email" name="email"
-                                    id="email" :required="true" size="col-lg-6 mt-2" :value="old('email', $candidate->email)" />
+                                    id="email" :required="true" size="col-lg-4 mt-2" :value="old('email', $candidate->email)" />
                                 <x-forms.input label="Official Email ID: " type="email" name="official_mail_id"
-                                    id="official_mail_id" :required="false" size="col-lg-6 mt-2"
+                                    id="official_mail_id" :required="false" size="col-lg-4 mt-2"
                                     :value="old('official_mail_id', $candidate->official_mail_id)" />
                                 <x-forms.textarea label="Enter Permanent Address:" name="permanent_address"
                                     id="permanent_address" :required="true" size="col-lg-6 mt-2"
@@ -209,28 +222,73 @@
                                 <x-forms.textarea label="Enter Present Address:" name="present_address"
                                     id="present_address" :required="true" size="col-lg-6 mt-2" :value="old('present_address', $candidate->present_address)" />
 
-                                <x-forms.input label="Enter PAN Card No::" type="text" name="pan_no"
-                                    id="pan_no" :required="false" size="col-lg-6 mt-2" :value="old('pan_no', $candidate->pan_no)" />
-                                <x-forms.input label="Attach New PAN:" type="file" name="pan_path" id="pan_path"
-                                    :required="false" size="col-lg-6 mt-2" />
+                                <div class="form-group col-lg-6 mt-2">
+                                    <label for="pan_status">Do you have a PAN Card? <span
+                                            style="color: red">*</span></label>
+                                    <select name="pan_status" id="pan_status" class="form-control">
+                                        <option value="Yes">Yes</option>
+                                        <option value="No">No</option>
+                                    </select>
+                                </div>
 
+                                <!-- PAN Card Input Fields (Initially Hidden) -->
+                                <div id="panFields" style="display: none;">
+                                    <div class="row">
+                                        <x-forms.input label="Enter PAN Card No:" type="text" name="pan_no"
+                                            id="pan_no" :required="false" size="col-lg-6 mt-2"
+                                            :value="old('pan_no', $candidate->pan_no)" />
+                                        <div class="form-group col-lg-6 mt-2">
+                                            <label for="pan_path">Attach PAN: </label>
+                                            <input type="file" name="pan_path" id="pan_path"
+                                                accept=".doc, .docx, .pdf, .jpg, .png" class="form-control"
+                                                value="{{ old('pan_path', $candidate->pan_path) }}">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Document Download & Upload Section (Initially Hidden) -->
+                                <div id="documentSection" style="display: none;">
+                                    <div class="row">
+                                        <div class="form-group col-lg-6 mt-2">
+                                            <label>Download PAN Declaration Document:</label>
+                                            <a id="downloadLink" class="btn btn-primary"
+                                                download="PAN_Declaration.pdf"
+                                                style="cursor: pointer;width: 30%;display: block;">Download</a>
+                                        </div>
+                                        <div class="form-group col-lg-6 mt-2">
+                                            <label for="pan_declaration">Upload Signed Document:</label>
+                                            <input type="file" name="pan_declaration" id="pan_declaration"
+                                                accept=".pdf" class="form-control">
+                                        </div>
+                                        <input type="hidden" id="statename"
+                                        value="{{ $candidate->clientstate->state_name ?? 'State' }}">
+                                    </div>
+                                </div>
                                 <div class="form-group col-lg-6 mt-2">
                                     <label for="aadhar_no">Enter Adhar Card No: <span
                                             style="color: red">*</span></label>
-                                    <input type="number" name="aadhar_no" id="aadhar_no" class="form-control"
-                                        maxlength="12" value="{{ old('aadhar_no', $candidate->aadhar_no) }}"
-                                        required>
+                                    <input type="text" name="aadhar_no" id="aadhar_no" class="form-control"
+                                        maxlength="12" inputmode="numeric"
+                                        value="{{ old('aadhar_no', $candidate->aadhar_no) }}" required>
                                 </div>
-                                <x-forms.input label="Attach New Aadhaar Card:" type="file" name="aadhar_path"
-                                    id="aadhar_path" :required="false" size="col-lg-6 mt-2" />
-
+                                <div class="form-group col-lg-6 mt-2">
+                                    <label for="aadhar_path">Attach Aadhar Card: <span
+                                            style="color: red;">*</span></label>
+                                    <input type="file" name="aadhar_path" id="aadhar_path"
+                                        accept="application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/pdf, image/jpg, image/png"
+                                        class="form-control"a
+                                        value="{{ old('aadhar_path', $candidate->aadhar_path) }}" required>
+                                </div>
                                 <x-forms.input label="Enter Driving License No:" type="text"
                                     name="driving_license_no" id="driving_license_no" :required="false"
                                     size="col-lg-6 mt-2" :value="old('driving_license_no', $candidate->driving_license_no)" />
-                                <x-forms.input label="Attach New Driving License:" type="file"
-                                    name="driving_license_path" id="driving_license_path" :required="false"
-                                    size="col-lg-6 mt-2" />
-
+                                <div class="form-group col-lg-6 mt-2">
+                                    <label for="driving_license_path">Attach Driving License:</label>
+                                    <input type="file" name="driving_license_path" id="driving_license_path"
+                                        accept="application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/pdf, image/jpg, image/png"
+                                        class="form-control"
+                                        value="{{ old('driving_license_path', $candidate->driving_license_path) }}">
+                                </div>
 
                                 <x-forms.input label="Attach New Photo:" type="file" name="photo"
                                     id="photo" :required="false" size="col-lg-6 mt-2" />
@@ -281,6 +339,11 @@
                                                     'pf_esic_form' => 'PF Form / ESIC',
                                                     'payslip' => 'Payslip/Fitness Document',
                                                     'exp_letter' => 'Experience Letter',
+                                                    'father_photo' => 'Father Photo',
+                                                    'mother_photo' => 'Mother Photo',
+                                                    'spouse_photo' => 'Spouse_photo',
+                                                    'family_photo' => 'Family Photo',
+                                                    'pan_declaration'=>'Pan Declaration'
                                                 ];
                                             @endphp
 
