@@ -337,8 +337,9 @@ class DCSApprovalController extends Controller
             ->findOrFail($id);
 
         if (!$candidate->client || !$candidate->client->client_ffi_id) {
-            throw new Exception("Client FFI ID not found for the candidate.");
+            return redirect()->back()->with('error', 'Client FFI ID not found Contact Admin');
         }
+
 
         $clientFfiId = $candidate->client->client_ffi_id;
 
@@ -366,8 +367,9 @@ class DCSApprovalController extends Controller
 
     public function hrupdate(Request $request, $id)
     {
-        // dd($request->cc_emails);
-        $action = $request->input('action');
+        $action = $request->input('storing_option');
+        // dd($request->storing_option);
+
         $candidate = $this->model()->find($id);
         $validatedData = $request->validate([
             'client_id' => 'required|integer',
@@ -602,16 +604,18 @@ class DCSApprovalController extends Controller
 
                 $offerLetter->update(['offer_letter_pdf' => $pdfPath]);
 
+                if ($action == 'send') {
+                    // dd($request->cc_emails);
 
-                $ccEmails = $request->input('cc_emails', []);
-                Mail::send('mail.offer_letter', ['employee' => $candidate], function ($message) use ($candidate, $pdfPath, $ccEmails) {
-                    $message->to($candidate->email)
-                        ->cc($ccEmails)
-                        ->subject('Your Offer Letter')
-                        ->attach(storage_path('app/public/' . $pdfPath)); // Attach the offer letter PDF
-                });
+                    $ccEmails = $request->input('cc_emails', []);
+                    Mail::send('mail.offer_letter', ['employee' => $candidate], function ($message) use ($candidate, $pdfPath, $ccEmails) {
+                        $message->to($candidate->email)
+                            ->cc($ccEmails)
+                            ->subject('Your Offer Letter')
+                            ->attach(storage_path('app/public/' . $pdfPath)); // Attach the offer letter PDF
+                    });
 
-
+                }
             }
             DB::commit();
 
@@ -750,7 +754,7 @@ class DCSApprovalController extends Controller
                         if ($type === 'education_certificate') {
                             EducationCertificate::create([
                                 'emp_id' => $candidate->id,
-                                'path' => 'storage/' . $filePath,
+                                'path' =>  $filePath,
                                 'status' => 0,
                             ]);
                         } elseif ($type === 'other_certificate') {

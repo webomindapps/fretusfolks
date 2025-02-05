@@ -91,7 +91,7 @@
                                             $photo = $candidate->candidateDocuments->where('name', 'photo')->first();
                                         @endphp
                                         <div id="image-preview-container" class="d-flex mt-2">
-                                            <img src="{{ asset($photo->path) }}" class="img-thumbnail" width="100"
+                                            <img src="{{ asset('storage/' .$photo->path) }}" class="img-thumbnail" width="100"
                                                 height="100" alt="Uploaded image">
                                         </div>
                                     @endif
@@ -107,7 +107,7 @@
                                         @php
                                             $resume = $candidate->candidateDocuments->where('name', 'resume')->first();
                                         @endphp
-                                        <a href="{{ asset($resume->path) }}" target="_blank"
+                                        <a href="{{ asset('storage/' .$resume->path) }}" target="_blank"
                                             class="btn btn-custom mt-2">
                                             View Resume
                                         </a>

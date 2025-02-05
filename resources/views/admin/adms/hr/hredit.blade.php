@@ -38,7 +38,8 @@
                             <div class="row">
                                 <x-forms.select label="Enter Client Name:" name="client_id" id="client_id"
                                     :required="true" size="col-lg-6 mt-2" :options="FretusFolks::getClientname()" :value="old('client_id', $candidate->client_id)" />
-
+                                <x-forms.input label="FFI Employee ID:" type="text" name="ffi_emp_id" id="ffi_emp_id"
+                                    :required="true" size="col-lg-6 mt-2" :value="$uniqueId" />
                                 <x-forms.input label="Console ID: " type="text" name="console_id" id="console_id"
                                     :required="false" size="col-lg-6 mt-2" :value="old('console_id', $candidate->console_id)" />
                                 <x-forms.input label="Enter Client Employee ID: " type="text" name="client_emp_id"
