@@ -55,9 +55,10 @@ $(document).ready(function () {
         var selectedValue = $('#document_type').val();
         if (!selectedValue) {
             isValid = false;
-            $('#document_type').after(
-                "<span class='error' style='color:red; font-size: 13px;'>Please select a document type.</span>"
+            $('#document_type').closest('div').after(
+                "<span class='error' style='color:red; font-size: 13px; display: block; margin-top: 5px;'>Please select a document type.</span>"
             );
+
         }
 
         // Validate File Upload
@@ -86,7 +87,7 @@ $(document).ready(function () {
 
 
 
-    
+
     $('#interview_date, #joining_date').on('blur input', function () {
         $(this).next('.error').remove();
         validateForm();

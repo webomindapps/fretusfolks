@@ -313,6 +313,9 @@ Route::prefix('admin')->group(function () {
         //compliance 
         Route::get('candidatemaster',[ComplianceController::class,'index'])->name('candidatemaster');
         Route::get('candidatemaster/view/{id}',[ComplianceController::class,'viewdetail'])->name('candidatemaster.view');
+        Route::get('candidatemaster/download/{id}',[ComplianceController::class,'downloadpdf'])->name('candidatemaster.download');
+        Route::post('candidatemaster/export',[ComplianceController::class,'export'])->name('candidatemaster.export');
+
 
     });
 });
