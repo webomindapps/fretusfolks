@@ -1,5 +1,5 @@
 <x-applayout>
-    <x-admin.breadcrumb title=" Hr Approved Candidates" />
+    <x-admin.breadcrumb title="Candidate Master" />
     <div class="row">
         <div class="col-lg-12">
             @php
@@ -13,7 +13,7 @@
             @endphp
             <x-table :columns="$columns" :data="$candidate" :checkAll=false :bulk="route('admin.cfis.bulk')" :route="route('admin.candidatemaster')">
                 <x-slot:filters>
-                    <form action="" method="POST">
+                    <form action="{{route('admin.candidatemaster.export')}}" method="POST">
                         @csrf
                         <div class="row px-2">
                             <div class="col-lg-3">
@@ -73,7 +73,7 @@
                                         </a>
 
                                         <a class="dropdown-item"
-                                            onclick="return confirm('Are you sure to delete this ?')" href="">
+                                            href="{{ route('admin.candidatemaster.download', $item->id) }}">
                                             <i class='bx bxs-download'></i>
                                             Download pdf
                                         </a>
