@@ -93,7 +93,7 @@
             <div class="col-md-4 mt-2"><b>Location:</b> <span>{{ $candidate->location }}</span></div>
             <div class="col-md-4 mt-2"><b>State:</b> <span>{{ $candidate?->clientstate->state_name }}</span></div>
             <div class="col-md-4 mt-2"><b>Religion:</b> <span>{{ $candidate->religion }}</span></div>
-            <div class="col-md-4 mt-2"><b>Religion:</b> <span>{{ $candidate->religion }}</span></div>
+            {{-- <div class="col-md-4 mt-2"><b>Religion:</b> <span>{{ $candidate->religion }}</span></div> --}}
             <div class="col-md-4 mt-2"><b>Mother Tounge:</b> <span>{{ $candidate->mother_tongue }}</span></div>
             <div class="col-md-4 mt-2"><b>Blood Group:</b> <span>{{ $candidate->blood_group }}</span></div>
             <div class="col-md-4 mt-2"><b>Qualification:</b> <span>{{ $candidate->qualification }}</span></div>

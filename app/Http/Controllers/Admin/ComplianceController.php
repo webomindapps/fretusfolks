@@ -58,8 +58,7 @@ class ComplianceController extends Controller
         // $education = FFIEducationModel::where('emp_id', $id)->get();
         $children = DCSChildren::where('emp_id', $id)->get();
         $candidate = $this->model()
-            ->with(['client'])
-            ->with(['educationCertificates', 'otherCertificates', 'candidateDocuments'])
+            ->with(['client','educationCertificates', 'otherCertificates', 'candidateDocuments'])
             ->findOrFail($id);
         $htmlContent = view('admin.adms.compliance.view', compact('candidate', 'children'))->render();
         return response()->json(['html_content' => $htmlContent]);
@@ -72,7 +71,7 @@ class ComplianceController extends Controller
     {
         $children = DCSChildren::where('emp_id', $id)->get();
         $candidate = $this->model()
-            ->with(['client', 'candidateDocuments'])
+            ->with(['client', 'candidateDocuments','educationCertificates', 'otherCertificates'])
             ->findOrFail($id);
 
         $tempDir = storage_path("app/temp");
@@ -93,7 +92,10 @@ class ComplianceController extends Controller
             $zip->addFile($pdfPath, "candidate_details.pdf");
 
          
+            $this->addDocumentsToZip($zip, $candidate->educationCertificates, 'Education_Documents');
+            $this->addDocumentsToZip($zip, $candidate->otherCertificates, 'Other_Documents');
             $this->addDocumentsToZip($zip, $candidate->candidateDocuments, 'Candidate_Documents');
+
 
             $zip->close();
         } else {
