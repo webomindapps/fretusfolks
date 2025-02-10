@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\States;
 use App\Models\OfferLetter;
+use App\Models\IncrementLetter;
 use App\Models\ClientManagement;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -166,5 +167,9 @@ class CFISModel extends Model
     public function employee()
     {
         return $this->hasMany(OfferLetter::class);
+    }
+    public function incrementletters()
+    {
+        return $this->hasMany(IncrementLetter::class, 'employee_id', 'ffi_emp_id');
     }
 }

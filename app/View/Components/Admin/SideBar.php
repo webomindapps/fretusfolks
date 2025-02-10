@@ -85,7 +85,7 @@ class SideBar extends Component
             'icon' => '  bx bxl-slack',
             'route' => '',
             'isSubMenu' => true,
-            'roles' => ['Admin', 'Recruitment', 'Hroperations','Compliance'],
+            'roles' => ['Admin', 'Recruitment', 'Hroperations', 'Compliance'],
             'subMenus' => [
                 [
                     'title' => 'Candidate Information ',
@@ -143,7 +143,13 @@ class SideBar extends Component
                     'name' => 'candidatemaster',
                     'roles' => ['Admin', 'Compliance'],
                 ],
-
+                [
+                    'title' => 'Candidates Lifecycle',
+                    'icon' => 'bx bx-chevron-right',
+                    'route' => 'admin.candidatelifecycle',
+                    'name' => 'candidatelifecycle',
+                    'roles' => ['Admin', 'Hroperations'],
+                ],
             ],
 
         ],
