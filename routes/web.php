@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Admin\AdmsIncrementLetterController;
 use App\Http\Controllers\Admin\EmployeeLifecycleController;
+use App\Http\Controllers\Admin\AdmsShowcauseLetterController;
+use App\Http\Controllers\Admin\AdmsWarningLetterController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\CDMSController;
 use App\Http\Controllers\Admin\CFISController;
@@ -32,6 +34,7 @@ use App\Http\Controllers\Admin\FFITerminationController;
 use App\Http\Controllers\Admin\CMSLabourNoticeController;
 use App\Http\Controllers\Admin\ComplianceController;
 use App\Http\Controllers\Admin\FFIIncrementLetterController;
+use App\Http\Controllers\AdmsShowcaseLetterController;
 
 Route::get('/', function () {
     return to_route('admin.dashboard');
@@ -312,12 +315,33 @@ Route::prefix('admin')->group(function () {
         Route::get('offer_letter/{id}/delete', [OfferLetterController::class, 'destroy'])->name('offer_letter.delete');
 
         //increment_letter
-        Route::get('/increment_letter',[AdmsIncrementLetterController::class,'index'])->name('increment_letter');
+        Route::get('/increment_letter', [AdmsIncrementLetterController::class, 'index'])->name('increment_letter');
         Route::get('/increment_letter/create', [AdmsIncrementLetterController::class, 'create'])->name('increment_letter.create');
-        Route::post('/increment_letter/create',[AdmsIncrementLetterController::class,'store'])->name('increment_letter.store');
+        Route::post('/increment_letter/create', [AdmsIncrementLetterController::class, 'store'])->name('increment_letter.store');
         Route::get('increment_letter/{ffi_emp_id}/details', [AdmsIncrementLetterController::class, 'details'])->name('increment_letter.details');
-        Route::get('increment_letter/{ffi_emp_id}/view',[AdmsIncrementLetterController::class,'viewpdf'])->name('increment_letter.viewpdf');
-        Route::get('increment_letter/{ffi_emp_id}/delete',[AdmsIncrementLetterController::class,'destroy'])->name('increment_letter.delete');
+        Route::get('increment_letter/{ffi_emp_id}/view', [AdmsIncrementLetterController::class, 'viewpdf'])->name('increment_letter.viewpdf');
+        Route::get('increment_letter/{ffi_emp_id}/delete', [AdmsIncrementLetterController::class, 'destroy'])->name('increment_letter.delete');
+
+        //warning Letter
+        Route::get('/warning_letter', [AdmsWarningLetterController::class, 'index'])->name('warning_letter');
+        Route::get('/warning_letter/create', [AdmsWarningLetterController::class, 'create'])->name('warning_letter.create');
+        Route::get('/warning_letter/{emp_id}/details', [AdmsWarningLetterController::class, 'details'])->name('warning_letter.details');
+        Route::post('/warning_letter/create', [AdmsWarningLetterController::class, 'store']);
+        Route::get('warning_letter/{id}/view', [AdmsWarningLetterController::class, 'viewpdf'])->name('warning_letter.viewpdf');
+        Route::get('warning_letter/{id}/edit', [AdmsWarningLetterController::class, 'edit'])->name('warning_letter.edit');
+        Route::post('warning_letter/{id}/edit', [AdmsWarningLetterController::class, 'update']);
+        Route::get('warning_letter/{id}/delete', [AdmsWarningLetterController::class, 'delete'])->name('warning_letter.delete');
+
+        //showcase Letter
+        Route::get('/showcause_letter', [AdmsShowcauseLetterController::class, 'index'])->name('showcause_letter');
+        Route::get('/showcause_letter/create',[AdmsShowcauseLetterController::class,'create'])->name('showcause_letter.create');
+        Route::get('/showcause_letter/{emp_id}/details', [AdmsShowcauseLetterController::class, 'details'])->name('showcause_letter.details');
+        Route::post('/showcause_letter/create', [AdmsShowcauseLetterController::class, 'store']);
+        Route::get('showcause_letter/{id}/view', [AdmsShowcauseLetterController::class, 'viewpdf'])->name('showcause_letter.viewpdf');
+        Route::get('showcause_letter/{id}/edit', [AdmsShowcauseLetterController::class, 'edit'])->name('showcause_letter.edit');
+        Route::post('showcause_letter/{id}/edit', [AdmsShowcauseLetterController::class, 'update']);
+        Route::get('showcause_letter/{id}/delete', [AdmsShowcauseLetterController::class, 'delete'])->name('showcause_letter.delete');
+
         //compliance 
         Route::get('candidatemaster', [ComplianceController::class, 'index'])->name('candidatemaster');
         Route::get('candidatemaster/view/{id}', [ComplianceController::class, 'viewdetail'])->name('candidatemaster.view');
