@@ -1,6 +1,23 @@
 <x-applayout>
     <x-admin.breadcrumb title="Candidate Master" />
     <div class="row">
+        <div class="d-flex justify-content-end align-items-center">
+            <div class="d-flex gap-3">
+                <a href="{{ asset('admin/CandidateFormate.xlsx') }}" class="btn btn-primary text-white">
+                    <i class='bx bxs-download'></i> Download
+                </a>
+
+                <form action="{{ route('admin.candidatemaster.import') }}" method="POST" enctype="multipart/form-data"
+                    class="d-flex align-items-center">
+                    @csrf
+                    <input type="file" class="form-control form-control-sm me-2" name="file" required>
+                    <button type="submit" class="add-btn bg-success text-white">Import</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
         <div class="col-lg-12">
             @php
                 $columns = [
@@ -12,28 +29,27 @@
                 ];
             @endphp
             <x-table :columns="$columns" :data="$candidate" :checkAll=false :bulk="route('admin.cfis.bulk')" :route="route('admin.candidatemaster')">
+
                 <x-slot:filters>
-                    <form action="{{route('admin.candidatemaster.export')}}" method="POST">
+
+                    <form action="{{ route('admin.candidatemaster.export') }}" method="POST">
                         @csrf
-                        <div class="row px-2">
+                        <div class="row">
                             <div class="col-lg-3">
-                                <div class="cdate">
-                                    <input type="date" class="form-control" name="from_date" id="from_date">
-                                </div>
+                                <input type="date" class="form-control" name="from_date" id="from_date">
                             </div>
                             <div class="col-lg-1 text-center my-auto">
                                 <span class="fw-semibold fs-6">To</span>
                             </div>
                             <div class="col-lg-3">
-                                <div class="cdate">
-                                    <input type="date" class="form-control" name="to_date" id="to_date">
-                                </div>
+                                <input type="date" class="form-control" name="to_date" id="to_date">
                             </div>
                             <div class="col-3">
                                 <button type="submit" class="add-btn bg-success text-white">Export</button>
                             </div>
                         </div>
                     </form>
+
                 </x-slot:filters>
                 @foreach ($candidate as $key => $item)
                     <tr>
@@ -45,16 +61,6 @@
                         <td> {{ $item->emp_name }}</td>
                         <td> {{ $item->phone1 }}</td>
 
-                        {{-- <td>
-                            @if ($item->status == 1)
-                                <span class="badge rounded-pill deactive">Pending</span>
-                            @elseif ($item->status == 0)
-                                <span class="badge rounded-pill sactive">Completed</span>
-                            @else
-                                <span class="badge rounded-pill deactive">Rejected</span>
-                            @endif
-                        </td> --}}
-
                         <td>
                             <div class="dropdown pop_Up dropdown_bg">
                                 <div class="dropdown-toggle" id="dropdownMenuButton-{{ $item->id }}"
@@ -65,6 +71,11 @@
                                     style="position: absolute; inset: auto auto 0px 0px; margin: 0px; transform: translate(-95px, -25.4219px);"
                                     data-popper-placement="top-end">
                                     <li>
+                                        <a class="dropdown-item"
+                                            href="{{ route('admin.candidatemaster.edit', $item) }}">
+                                            <i class='bx bx-edit-alt'></i>
+                                            Edit
+                                        </a>
                                         <a href="javascript:void(0);" class="dropdown-item" data-toggle="modal"
                                             data-target="#client_details"
                                             onclick="showCandidateDetails({{ $item->id }})">

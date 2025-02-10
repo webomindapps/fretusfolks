@@ -680,11 +680,31 @@
                 function toggleMarriedFields() {
                     if (maritalStatus.value === 'Married') {
                         marriedFields.style.display = 'block';
+                        $('#spouse_aadhar_no').on('blur input', function() {
+                            $(this).next('.error').remove();
+                            var aadharPattern = /^\d{12}$/;
+                            $(' #spouse_aadhar_no').each(function() {
+                                var aadharNumber = $(this).val();
+                                if (!aadharNumber) {
+                                    isValid = false;
+                                    $(this).after(
+                                        "<span class='error' style='color:red; font-size: 13px;'>Please enter the Aadhar number.</span>"
+                                    );
+                                } else if (!aadharPattern.test(aadharNumber)) {
+                                    isValid = false;
+                                    $(this).after(
+                                        "<span class='error' style='color:red; font-size: 13px;'>Aadhar number must be a 12-digit numeric value.</span>"
+                                    );
+                                }
+                            });
+                        });
+
                     } else {
                         marriedFields.style.display = 'none';
                         document.getElementById('spouse_name').value = '';
                         document.getElementById('spouse_dob').value = '';
                         document.getElementById('spouse_aadhar_no').value = '';
+                        document.getElementById('spouse_photo').value = '';
                         document.getElementById('no_of_childrens').value = '';
                     }
                 }

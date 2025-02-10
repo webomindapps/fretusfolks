@@ -147,6 +147,8 @@
         <!-- Salary Details Section -->
         <h2 class="bg-light p-2">Salary Details</h2>
         <div class="row">
+            <div class="col-md-4"><b>UAN NO:</b> <span>{{ $candidate->uan_no }}</span></div>
+            <div class="col-md-4"><b>ESIC No:</b> <span>{{ $candidate->esic_no }}</span></div>
             <div class="col-md-4 mt-2"><b>Basic Salary:</b> <span>{{ $candidate->basic_salary }}</span></div>
             <div class="col-md-4 mt-2"><b>HRA:</b> <span>{{ $candidate->hra }}</span></div>
             <div class="col-md-4 mt-2"><b>Conveyance:</b> <span>{{ $candidate->conveyance }}</span></div>
