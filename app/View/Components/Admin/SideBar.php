@@ -137,6 +137,20 @@ class SideBar extends Component
                     'roles' => ['Admin', 'Hroperations'],
                 ],
                 [
+                    'title' => 'Show Cause Letter  ',
+                    'icon' => 'bx bx-chevron-right',
+                    'route' => 'admin.showcause_letter',
+                    'name' => 'showcause_letter',
+                    'roles' => ['Admin', 'Hroperations'],
+                ],
+                [
+                    'title' => 'Warning Letter  ',
+                    'icon' => 'bx bx-chevron-right',
+                    'route' => 'admin.warning_letter',
+                    'name' => 'warning_letter',
+                    'roles' => ['Admin', 'Hroperations'],
+                ],
+                [
                     'title' => 'Candidates Master',
                     'icon' => 'bx bx-chevron-right',
                     'route' => 'admin.candidatemaster',

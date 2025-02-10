@@ -45,6 +45,7 @@ class OfferLetter extends Model
         'notice_period',
         'salary_date',
         'designation',
+        'offer_letter_path',
     ];
     public function employee()
     {
