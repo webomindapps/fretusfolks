@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AdmsIncrementLetterController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\CDMSController;
 use App\Http\Controllers\Admin\CFISController;
@@ -309,7 +310,13 @@ Route::prefix('admin')->group(function () {
         Route::get('/generate-offer-letter/{id}', [OfferLetterController::class, 'generateOfferLetterPdf'])->name('generate.offer.letter');
         Route::get('offer_letter/{id}/delete', [OfferLetterController::class, 'destroy'])->name('offer_letter.delete');
 
-
+        //increment_letter
+        Route::get('/increment_letter',[AdmsIncrementLetterController::class,'index'])->name('increment_letter');
+        Route::get('/increment_letter/create', [AdmsIncrementLetterController::class, 'create'])->name('increment_letter.create');
+        Route::post('/increment_letter/create',[AdmsIncrementLetterController::class,'store'])->name('increment_letter.store');
+        Route::get('increment_letter/{ffi_emp_id}/details', [AdmsIncrementLetterController::class, 'details'])->name('increment_letter.details');
+        Route::get('increment_letter/{ffi_emp_id}/view',[AdmsIncrementLetterController::class,'viewpdf'])->name('increment_letter.viewpdf');
+        Route::get('increment_letter/{ffi_emp_id}/delete',[AdmsIncrementLetterController::class,'destroy'])->name('increment_letter.delete');
         //compliance 
         Route::get('candidatemaster', [ComplianceController::class, 'index'])->name('candidatemaster');
         Route::get('candidatemaster/view/{id}', [ComplianceController::class, 'viewdetail'])->name('candidatemaster.view');

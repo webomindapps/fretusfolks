@@ -130,6 +130,13 @@ class SideBar extends Component
                     'roles' => ['Admin', 'Hroperations'],
                 ],
                 [
+                    'title' => 'Increment Letter  ',
+                    'icon' => 'bx bx-chevron-right',
+                    'route' => 'admin.increment_letter',
+                    'name' => 'increment_letter',
+                    'roles' => ['Admin', 'Hroperations'],
+                ],
+                [
                     'title' => 'Candidates Master',
                     'icon' => 'bx bx-chevron-right',
                     'route' => 'admin.candidatemaster',
