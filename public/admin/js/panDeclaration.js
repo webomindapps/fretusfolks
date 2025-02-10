@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const downloadLink = document.getElementById('downloadLink');
 
     function toggleFields() {
-        if (panStatus.value === 'Yes') {
+        if (panStatus.value === '1') {
             panFields.style.display = 'block';
             documentSection.style.display = 'none';
         } else {

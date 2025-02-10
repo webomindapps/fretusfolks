@@ -38,7 +38,8 @@
                             <div class="row">
                                 <x-forms.select label="Enter Client Name:" name="client_id" id="client_id"
                                     :required="true" size="col-lg-6 mt-2" :options="FretusFolks::getClientname()" :value="old('client_id', $candidate->client_id)" />
-
+                                <x-forms.input label="FFI Employee ID:" type="text" name="ffi_emp_id" id="ffi_emp_id"
+                                    :required="true" size="col-lg-6 mt-2" :value="$uniqueId" />
                                 <x-forms.input label="Console ID: " type="text" name="console_id" id="console_id"
                                     :required="false" size="col-lg-6 mt-2" :value="old('console_id', $candidate->console_id)" />
                                 <x-forms.input label="Enter Client Employee ID: " type="text" name="client_emp_id"
@@ -523,7 +524,9 @@
                                                     <option value="exp_letter">Exp Letter</option>
                                                 </select>
 
-                                                <input type="file" name="document_file[]" class=" col-lg-5 me-3">
+                                                <input type="file"
+                                                    accept="application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/pdf"
+                                                    name="document_file[]" class=" col-lg-5 me-3">
 
                                                 <button type="button" class="btn btn-success me-2 add-row">+</button>
                                             </div>
@@ -534,13 +537,24 @@
 
                                 {{-- <x-forms.input label="Password:" type="text" name="psd" id="psd"
                                     :required="true" size="col-lg-6 mt-2" :value="old('psd', 'ffemp@123')" /> --}}
-                                <x-forms.select label="Status " :options="[
-                                    ['value' => '1', 'label' => 'Approved'],
-                                    ['value' => '0', 'label' => 'Pending'],
-                                    ['value' => '2', 'label' => 'Rejected'],
-                                ]" id="hr_approval"
-                                    name="hr_approval" :required="true" size="col-lg-6 mt-2 mr-2"
-                                    :value="old('hr_approval')" />
+                                <div class="form-group col-lg-6 mt-2 mr-2">
+                                    <label for="hr_approval">Status</label>
+                                    <select id="hr_approval" name="hr_approval" class="form-control" required
+                                        onchange="toggleNotesField(this.value)">
+                                        <option value="">Select Status</option>
+                                        <option value="1" {{ old('hr_approval') == '1' ? 'selected' : '' }}>
+                                            Approved</option>
+                                        <option value="0" {{ old('hr_approval') == '0' ? 'selected' : '' }}>
+                                            Pending</option>
+                                        <option value="2" {{ old('hr_approval') == '2' ? 'selected' : '' }}>
+                                            Rejected</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-lg-12 mt-2" id="notesField"
+                                    style="display: none; margin-top: 10px;">
+                                    <label for="note">Mention Rejected Field Names:</label>
+                                    <textarea name="note" id="note" class="form-control"></textarea>
+                                </div>
                             </div>
                             <div class="row">
                                 <div class="col-lg-12 mt-4">
@@ -649,6 +663,15 @@
             });
         </script>
         <script>
+            //notes
+            function toggleNotesField(value) {
+                if (value == '2') { // Show the field when "Rejected" is selected
+                    document.getElementById('notesField').style.display = 'block';
+                } else {
+                    document.getElementById('notesField').style.display = 'none';
+                    document.getElementById('notes').value = ''; // Clear the notes field
+                }
+            }
             //maritial_status
             document.addEventListener('DOMContentLoaded', function() {
                 const maritalStatus = document.getElementById('maritial_status');
