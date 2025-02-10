@@ -2,17 +2,21 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Exports\CandidateMasterExport;
+use Exception;
+use ZipArchive;
 use App\Models\CFISModel;
 use App\Models\DCSChildren;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Illuminate\Support\Facades\File;
+use App\Exports\CandidatesExport;
+use App\Imports\CandidatesImport;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\File;
 use Maatwebsite\Excel\Facades\Excel;
-use ZipArchive;
+use App\Exports\CandidateMasterExport;
+use Illuminate\Support\Facades\Storage;
 
 class ComplianceController extends Controller
 {
@@ -22,7 +26,7 @@ class ComplianceController extends Controller
     }
     public function index()
     {
-        $searchColumns = ['id', 'client_id', 'emp_name', 'phone1'];
+        $searchColumns = ['id', 'entity_name', 'emp_name', 'phone1'];
         $search = request()->search;
         $from_date = request()->from_date;
         $to_date = request()->to_date;
@@ -43,7 +47,8 @@ class ComplianceController extends Controller
         }
         if ($search != '')
             $query->where(function ($q) use ($search, $searchColumns) {
-                foreach ($searchColumns as $key => $value) ($key == 0) ? $q->where($value, 'LIKE', '%' . $search . '%') : $q->orWhere($value, 'LIKE', '%' . $search . '%');
+                foreach ($searchColumns as $key => $value)
+                    ($key == 0) ? $q->where($value, 'LIKE', '%' . $search . '%') : $q->orWhere($value, 'LIKE', '%' . $search . '%');
             });
 
         ($order == '') ? $query->orderByDesc('id') : $query->orderBy($order, $orderBy);
@@ -58,20 +63,17 @@ class ComplianceController extends Controller
         // $education = FFIEducationModel::where('emp_id', $id)->get();
         $children = DCSChildren::where('emp_id', $id)->get();
         $candidate = $this->model()
-            ->with(['client','educationCertificates', 'otherCertificates', 'candidateDocuments'])
+            ->with(['client', 'educationCertificates', 'otherCertificates', 'candidateDocuments'])
             ->findOrFail($id);
         $htmlContent = view('admin.adms.compliance.view', compact('candidate', 'children'))->render();
         return response()->json(['html_content' => $htmlContent]);
     }
 
-
-
-
     public function downloadpdf($id)
     {
         $children = DCSChildren::where('emp_id', $id)->get();
         $candidate = $this->model()
-            ->with(['client', 'candidateDocuments','educationCertificates', 'otherCertificates'])
+            ->with(['client', 'candidateDocuments', 'educationCertificates', 'otherCertificates'])
             ->findOrFail($id);
 
         $tempDir = storage_path("app/temp");
@@ -91,7 +93,7 @@ class ComplianceController extends Controller
 
             $zip->addFile($pdfPath, "candidate_details.pdf");
 
-         
+
             $this->addDocumentsToZip($zip, $candidate->educationCertificates, 'Education_Documents');
             $this->addDocumentsToZip($zip, $candidate->otherCertificates, 'Other_Documents');
             $this->addDocumentsToZip($zip, $candidate->candidateDocuments, 'Candidate_Documents');
@@ -119,7 +121,7 @@ class ComplianceController extends Controller
      */
     private function addDocumentsToZip(ZipArchive $zip, $documents, $folderName)
     {
-     
+
         foreach ($documents as $document) {
             $docPath = $document->path;
 
@@ -168,4 +170,51 @@ class ComplianceController extends Controller
 
         return Excel::download(new CandidateMasterExport($candidates), 'candidates.xlsx');
     }
+    public function edit($id)
+    {
+        $candidate = $this->model()->find($id);
+        return view('admin.adms.compliance.edit', compact('candidate'));
+    }
+    public function update(Request $request, $id)
+    {
+        $candidate = $this->model()->findOrFail($id);
+
+        $validatedData = $request->only([
+            'client_id',
+            'ffi_emp_id',
+            'emp_name',
+            'phone1',
+            'email',
+            'uan_no',
+            'esic_no'
+        ]);
+
+        DB::beginTransaction();
+        try {
+            $candidate->update($validatedData);
+            $candidate->save();
+
+            DB::commit();
+
+            return redirect()->route('admin.candidatemaster')->with('success', 'Candidate data updated successfully!');
+        } catch (Exception $e) {
+            DB::rollBack();
+
+
+            return redirect()->back()->with('error', 'Failed to update candidate data. Please try again.');
+        }
+    }
+    
+    // Import from Excel
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,csv'
+        ]);
+
+        Excel::import(new CandidatesImport, $request->file('file'));
+
+        return back()->with('success', 'Candidates Imported Successfully');
+    }
+
 }

@@ -12,6 +12,7 @@ class DCSChildren extends Model
         'emp_id',
         'name',
         'dob',
-        'photo'
+        'photo',
+        'aadhar_no'
     ];
 }
