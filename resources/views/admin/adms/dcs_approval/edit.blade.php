@@ -98,8 +98,7 @@
                                             id="spouse_dob" :required="false" size="col-lg-3 mt-2"
                                             :value="old('spouse_dob', $candidate->spouse_dob)" />
                                         <div class="form-group col-lg-3 mt-2">
-                                            <label for="spouse_aadhar_no">Enter Spouse Adhar Card No: <span
-                                                    style="color: red">*</span></label>
+                                            <label for="spouse_aadhar_no">Enter Spouse Adhar Card No: </label>
                                             <input type="text" name="spouse_aadhar_no" id="spouse_aadhar_no"
                                                 class="form-control" maxlength="12" inputmode="numeric"
                                                 value="{{ old('spouse_aadhar_no', $candidate->spouse_aadhar_no) }}">
@@ -200,8 +199,8 @@
                                     <label for="pan_status">Do you have a PAN Card? <span
                                             style="color: red">*</span></label>
                                     <select name="pan_status" id="pan_status" class="form-control">
-                                        <option value="Yes">Yes</option>
-                                        <option value="No">No</option>
+                                        <option value="1">Yes</option>
+                                        <option value="0">No</option>
                                     </select>
                                 </div>
 
@@ -456,14 +455,13 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {{-- Direct File Fields --}}
                                             @php
-                                                $directFileFields = [
+                                                $candidateDocuments = [
                                                     'pan_path' => 'PAN Document',
                                                     'aadhar_path' => 'Aadhar Document',
                                                     'driving_license_path' => 'Driving License',
-                                                    // 'photo' => 'Photo',
-                                                    // 'resume' => 'Resume',
+                                                    'photo' => 'Photo',
+                                                    'resume' => 'Resume',
                                                     'bank_document' => 'Bank Document',
                                                     'voter_id' => 'Voter ID/ PVC/ UL',
                                                     'emp_form' => 'Employee Form',
@@ -473,24 +471,27 @@
                                                     'father_photo' => 'Father Photo',
                                                     'mother_photo' => 'Mother Photo',
                                                     'spouse_photo' => 'Spouse_photo',
+                                                    'family_photo' => 'Family Photo',
+                                                    'pan_declaration' => 'Pan Declaration',
                                                 ];
                                             @endphp
 
-                                            @foreach ($directFileFields as $field => $label)
-                                                @if (!empty($candidate->$field))
+                                            @if ($candidate->candidateDocuments->isNotEmpty())
+                                                @foreach ($candidate->candidateDocuments as $certificate)
                                                     <tr>
-                                                        <td>{{ $label }}</td>
                                                         <td>
-                                                            <a href="{{ asset('storage/' . $candidate->$field) }}"
+                                                            {{ $candidateDocuments[$certificate->name] ?? $certificate->name }}
+                                                        </td>
+                                                        <td>
+                                                            <a href="{{ asset('storage/' . $certificate->path) }}"
                                                                 target="_blank" class="btn btn-custom">
-                                                                View {{ $label }}
+                                                                View
                                                             </a>
-
                                                         </td>
 
                                                     </tr>
-                                                @endif
-                                            @endforeach
+                                                @endforeach
+                                            @endif
 
                                             {{-- Education Certificates --}}
                                             @if ($candidate->educationCertificates->isNotEmpty())
@@ -500,12 +501,10 @@
                                                         <td>
                                                             <a href="{{ asset('storage/' . $certificate->path) }}"
                                                                 target="_blank" class="btn btn-custom">
-                                                                View Education Certificate {{ $loop->iteration }}
+                                                                View
                                                             </a>
                                                         </td>
-                                                        <td>
 
-                                                        </td>
                                                     </tr>
                                                 @endforeach
                                             @endif
@@ -518,12 +517,10 @@
                                                         <td>
                                                             <a href="{{ asset('storage/' . $certificate->path) }}"
                                                                 target="_blank" class="btn btn-custom">
-                                                                View Other Certificate {{ $loop->iteration }}
+                                                                View
                                                             </a>
                                                         </td>
-                                                        <td>
 
-                                                        </td>
                                                     </tr>
                                                 @endforeach
                                             @endif
@@ -561,6 +558,25 @@
                 function toggleMarriedFields() {
                     if (maritalStatus.value === 'Married') {
                         marriedFields.style.display = 'block';
+                        $('#spouse_aadhar_no').on('blur input', function() {
+                            $(this).next('.error').remove();
+                            var aadharPattern = /^\d{12}$/;
+                            $(' #spouse_aadhar_no').each(function() {
+                                var aadharNumber = $(this).val();
+                                if (!aadharNumber) {
+                                    isValid = false;
+                                    $(this).after(
+                                        "<span class='error' style='color:red; font-size: 13px;'>Please enter the Aadhar number.</span>"
+                                    );
+                                } else if (!aadharPattern.test(aadharNumber)) {
+                                    isValid = false;
+                                    $(this).after(
+                                        "<span class='error' style='color:red; font-size: 13px;'>Aadhar number must be a 12-digit numeric value.</span>"
+                                    );
+                                }
+                            });
+                        });
+
                     } else {
                         marriedFields.style.display = 'none';
                         document.getElementById('spouse_name').value = '';
@@ -650,17 +666,22 @@ class="col-lg-5 me-3 " >
             //no of children
             document.addEventListener('DOMContentLoaded', function() {
                 const maxChildren = 2;
-                let currentChildren = 0;
-
                 const noOfChildrenField = document.getElementById('no_of_childrens');
                 const childrenDetailsContainer = document.getElementById('children-details-container');
                 const childrenDetails = document.getElementById('children-details');
                 const maxChildrenMessage = document.getElementById('max-children-message');
 
-                function updateChildDetails() {
-                    const noOfChildren = parseInt(noOfChildrenField.value);
+                // Function to calculate age in months
+                function calculateAge(dob) {
+                    if (!dob) return 0;
+                    const birthDate = new Date(dob);
+                    const today = new Date();
+                    return (today.getFullYear() - birthDate.getFullYear()) * 12 + (today.getMonth() - birthDate
+                        .getMonth());
+                }
 
-                    // Clear previous child details
+                function updateChildDetails(existingChildren = []) {
+                    const noOfChildren = parseInt(noOfChildrenField.value) || 0;
                     childrenDetails.innerHTML = '';
 
                     if (noOfChildren > 0) {
@@ -668,17 +689,44 @@ class="col-lg-5 me-3 " >
                         maxChildrenMessage.style.display = 'none';
 
                         for (let i = 1; i <= noOfChildren && i <= maxChildren; i++) {
+                            let childData = existingChildren[i - 1] || {}; // Get existing data if available
+
                             const childRow = document.createElement('div');
                             childRow.className = 'row align-items-center mb-2 child-row';
                             childRow.innerHTML = `
-                    <x-forms.input label="Child ${i} Name:" type="text" name="child_names[]" 
-                        id="child_name_${i}" :required="true" size="col-lg-4" />
-                    <x-forms.input label="Child ${i} DOB:" type="date" name="child_dobs[]" 
-                        id="child_dob_${i}" :required="true" size="col-lg-4" />
-                        <x-forms.input label="Child ${i} Photo:" type="file" name="child_photo[]" 
-                        id="child_photo_${i}" :required="true" size="col-lg-4" />
-                `;
+                        <div class="form-group col-lg-3">
+                            <label for="child_name_${i}">Child ${i} Name:<span style="color: red;">*</span></label>
+                            <input type="text" name="child_names[]" id="child_name_${i}" class="form-control" 
+                                   value="${childData.name || ''}" required>
+                        </div>
+                        <div class="form-group col-lg-3">
+                            <label for="child_dob_${i}">Child ${i} DOB:<span style="color: red;">*</span></label>
+                            <input type="date" name="child_dobs[]" id="child_dob_${i}" class="form-control"
+                                   value="${childData.dob || ''}" required>
+                        </div>
+                        <div class="form-group col-lg-3">
+                            <label for="child_photo_${i}">Child ${i} Photo:</label>
+                            <input type="file" name="child_photo[]" id="child_photo_${i}" accept="application/pdf, image/jpg, image/png" 
+                                   class="form-control">
+                        </div>
+                        <div class="form-group col-lg-3 child-aadhar" id="child_aadhar_field_${i}" style="display: none;">
+                            <label for="child_aadhar_${i}">Child ${i} Aadhar No:<span style="color: red;">*</span></label>
+                            <input type="text" name="child_aadhar[]" id="child_aadhar_${i}" class="form-control" 
+                                   value="${childData.aadhar || ''}" maxlength="12" inputmode="numeric">
+                        </div>
+                    `;
                             childrenDetails.appendChild(childRow);
+
+                            // Attach event listener to check age when DOB is changed
+                            let dobField = document.getElementById(`child_dob_${i}`);
+                            dobField.addEventListener('input', function() {
+                                checkChildAge(i);
+                            });
+
+                            // Pre-check Aadhar visibility for existing data
+                            if (childData.dob) {
+                                checkChildAge(i);
+                            }
                         }
 
                         if (noOfChildren > maxChildren) {
@@ -689,7 +737,33 @@ class="col-lg-5 me-3 " >
                     }
                 }
 
-                noOfChildrenField.addEventListener('input', updateChildDetails);
+                function checkChildAge(index) {
+                    const dobField = document.getElementById(`child_dob_${index}`);
+                    const aadharField = document.getElementById(`child_aadhar_field_${index}`);
+                    const aadharInput = document.getElementById(`child_aadhar_${index}`);
+
+                    if (dobField.value) {
+                        const ageInMonths = calculateAge(dobField.value);
+                        if (ageInMonths > 6) {
+                            aadharField.style.display = 'block';
+                            aadharInput.setAttribute('required', 'required');
+                        } else {
+                            aadharField.style.display = 'none';
+                            aadharInput.removeAttribute('required');
+                        }
+                    }
+                }
+
+                noOfChildrenField.addEventListener('input', function() {
+                    updateChildDetails();
+                });
+
+                // Fetch existing children data from the server
+                let existingChildren = {!! json_encode($children ?? []) !!}; // Laravel blade syntax to pass PHP array
+                if (existingChildren.length > 0) {
+                    noOfChildrenField.value = existingChildren.length;
+                    updateChildDetails(existingChildren);
+                }
             });
             //pending update
             function pending_update() {

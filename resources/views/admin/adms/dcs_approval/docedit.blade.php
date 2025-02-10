@@ -45,7 +45,11 @@
             </div>
         @endif
     @endforeach
-
+    @if (old('note', $candidate->note))
+        <div class="alert alert-danger text-danger font-weight-bold">
+            <strong>Rejected Field:</strong> {{ old('note', $candidate->note) }}
+        </div>
+    @endif
 
     <div class="col-lg-12 pb-4">
         <div class="form-card px-3">
@@ -269,7 +273,7 @@
                                         <div class="form-group col-lg-6 mt-2">
                                             <label for="pan_declaration">Upload Signed Document:</label>
                                             <input type="file" name="pan_declaration" id="pan_declaration"
-                                                accept=".pdf" class="form-control">
+                                                accept=".doc, .docx, .pdf, .jpg, .png" class="form-control">
                                         </div>
                                         <input type="hidden" id="statename"
                                             value="{{ $candidate->clientstate->state_name ?? 'State' }}">
@@ -283,12 +287,11 @@
                                         value="{{ old('aadhar_no', $candidate->aadhar_no) }}" required>
                                 </div>
                                 <div class="form-group col-lg-6 mt-2">
-                                    <label for="aadhar_path">Attach Aadhar Card: <span
-                                            style="color: red;">*</span></label>
+                                    <label for="aadhar_path">Attach Aadhar Card: </label>
                                     <input type="file" name="aadhar_path" id="aadhar_path"
                                         accept="application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/pdf, image/jpg, image/png"
                                         class="form-control"a
-                                        value="{{ old('aadhar_path', $candidate->aadhar_path) }}" required>
+                                        value="{{ old('aadhar_path', $candidate->aadhar_path) }}">
                                 </div>
                                 <x-forms.input label="Enter Driving License No:" type="text"
                                     name="driving_license_no" id="driving_license_no" :required="false"
@@ -373,6 +376,7 @@
                                                         </td>
                                                         <td>
                                                             <input type="file"
+                                                                accept="application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/pdf"
                                                                 name="document_file[{{ $certificate->name }}]"
                                                                 class="form-control">
                                                         </td>
@@ -415,6 +419,7 @@
                                                         </td>
                                                         <td>
                                                             <input type="file"
+                                                                accept="application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/pdf"
                                                                 name="document_file[education_certificate_{{ $loop->iteration }}]"
                                                                 class="form-control">
                                                         </td>
@@ -457,6 +462,7 @@
                                                         </td>
                                                         <td>
                                                             <input type="file"
+                                                                accept="application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/pdf"
                                                                 name="document_file[other_certificate_{{ $loop->iteration }}]"
                                                                 class="form-control">
                                                         </td>
@@ -563,7 +569,9 @@
                                                     <option value="exp_letter">Exp Letter</option>
                                                 </select>
 
-                                                <input type="file" name="document_file[]" class=" col-lg-5 me-3">
+                                                <input type="file"
+                                                    accept="application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/pdf"
+                                                    name="document_file[]" class=" col-lg-5 me-3">
 
                                                 <button type="button" class="btn btn-success me-2 add-row">+</button>
                                             </div>
@@ -599,14 +607,36 @@
             function toggleMarriedFields() {
                 if (maritalStatus.value === 'Married') {
                     marriedFields.style.display = 'block';
+                    $('#spouse_aadhar_no').on('blur input', function() {
+                        $(this).next('.error').remove();
+                        var aadharPattern = /^\d{12}$/;
+                        $(' #spouse_aadhar_no').each(function() {
+                            var aadharNumber = $(this).val();
+                            if (!aadharNumber) {
+                                isValid = false;
+                                $(this).after(
+                                    "<span class='error' style='color:red; font-size: 13px;'>Please enter the Aadhar number.</span>"
+                                );
+                            } else if (!aadharPattern.test(aadharNumber)) {
+                                isValid = false;
+                                $(this).after(
+                                    "<span class='error' style='color:red; font-size: 13px;'>Aadhar number must be a 12-digit numeric value.</span>"
+                                );
+                            }
+                        });
+                    });
+
                 } else {
                     marriedFields.style.display = 'none';
                     document.getElementById('spouse_name').value = '';
                     document.getElementById('spouse_dob').value = '';
                     document.getElementById('spouse_aadhar_no').value = '';
+                    document.getElementById('spouse_photo').value = '';
                     document.getElementById('no_of_childrens').value = '';
                 }
             }
+
+
             toggleMarriedFields();
             maritalStatus.addEventListener('change', toggleMarriedFields);
         });
@@ -647,7 +677,8 @@
                     <option value="payslip">Payslip/Fitness doc</option>
                     <option value="exp_letter">Exp Letter</option>
                 </select>
-                <input type="file" name="document_file[]" class="col-lg-5 me-3 " >
+                <input type="file" accept="application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/pdf"
+                name="document_file[]" class="col-lg-5 me-3 " >
                 <button type="button" class="btn btn-success me-2 add-row">+</button>
                 <button type="button" class="btn btn-danger me-2 remove-row">-</button>
             `;

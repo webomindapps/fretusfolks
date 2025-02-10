@@ -57,9 +57,11 @@
                     </div>
                 @endif
                 @if (session('error'))
-                    <script>
-                        toastr.error('{{ session('error') }}')
-                    </script>
+                    <div class="col-lg-12 mt-2 session-success" id="session-success">
+                        <div class="alert alert-danger">
+                            {{ session('error') }}
+                        </div>
+                    </div>
                 @endif
             </div>
             {{ $slot }}

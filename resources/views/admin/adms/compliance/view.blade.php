@@ -80,6 +80,9 @@
             <!-- Salary Details Section -->
             <h5 class="bg-light p-2">Salary Details</h5>
             <div class="row">
+                <div class="col-md-4"><b>UAN NO:</b> <span>{{ $candidate->uan_no }}</span></div>
+                <div class="col-md-4"><b>ESIC No:</b> <span>{{ $candidate->esic_no }}</span></div>
+
                 <div class="col-md-4"><b>Basic Salary:</b> <span>{{ $candidate->basic_salary }}</span></div>
                 <div class="col-md-4"><b>HRA:</b> <span>{{ $candidate->hra }}</span></div>
                 <div class="col-md-4"><b>Conveyance:</b> <span>{{ $candidate->conveyance }}</span></div>
@@ -131,6 +134,9 @@
                                 'payslip' => 'Payslip/Fitness Document',
                                 'exp_letter' => 'Experience Letter',
                                 'family_photo' => 'Family Photo',
+                                'mother_photo' => 'Mother Photo',
+                                'father_photo' => 'Father Photo',
+                                'spouse_photo' => 'Spouse Photo',
                             ];
                         @endphp
 
@@ -139,7 +145,7 @@
                                 <tr>
                                     <td>{{ $candidateDocuments[$certificate->name] ?? $certificate->name }}</td>
                                     <td>
-                                        <a href="{{ asset('storage/' . $certificate->path) }}" target="_blank"
+                                        <a href="{{ asset($certificate->path) }}" target="_blank"
                                             class="btn btn-primary btn-sm">
                                             <i class="fas fa-eye"></i> View
                                         </a>
@@ -153,7 +159,7 @@
                                 <tr>
                                     <td>Education Certificate {{ $loop->iteration }}</td>
                                     <td>
-                                        <a href="{{ asset('storage/' . $certificate->path) }}" target="_blank"
+                                        <a href="{{ asset($certificate->path) }}" target="_blank"
                                             class="btn btn-primary btn-sm">
                                             <i class="fas fa-eye"></i> View
                                         </a>
@@ -167,7 +173,7 @@
                                 <tr>
                                     <td>Other Certificate {{ $loop->iteration }}</td>
                                     <td>
-                                        <a href="{{ asset('storage/' . $certificate->path) }}" target="_blank"
+                                        <a href="{{ asset($certificate->path) }}" target="_blank"
                                             class="btn btn-primary btn-sm">
                                             <i class="fas fa-eye"></i> View
                                         </a>
