@@ -167,4 +167,12 @@ class CFISModel extends Model
     {
         return $this->hasMany(OfferLetter::class);
     }
+    public function warningletter()
+    {
+        return $this->hasMany(WarningLetter::class);
+    }
+    public function showcauseletter()
+    {
+        return $this->hasMany(ShowcauseLetter::class);
+    }
 }

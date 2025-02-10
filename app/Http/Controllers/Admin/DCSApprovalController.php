@@ -610,35 +610,29 @@ class DCSApprovalController extends Controller
                     'notice_period' => $candidate->notice_period ?? 7,
                     'salary_date' => $candidate->salary_date ?? 7,
                     'designation' => $candidate->designation,
-                    'offer_letter_pdf' => '',
                 ]);
+                    $pdf = Pdf::loadView('admin.adms.offer_letter.formate', ['offerLetter' => $offerLetter]);
 
-                $directory = storage_path('app/public/offer_letters/');
-                if (!file_exists($directory)) {
-                    mkdir($directory, 0777, true);
-                }
-
-                $pdf = PDF::loadView('admin.adms.offer_letter.formate', compact('offerLetter'))
-                    ->setOptions([
-                        'isHtml5ParserEnabled' => true,
-                        'isRemoteEnabled' => true,
-                        'chroot' => public_path()
+                    $fileName = 'offer_letter' .$candidate->ffi_emp_id. '.pdf';
+                    $filePath = 'offer_letters/' . $fileName;
+        
+                    Storage::disk('public')->put($filePath, $pdf->output());
+        
+                    $offerLetter->update([
+                        'offer_letter_path' => $filePath
                     ]);
-
-                $pdfPath = 'offer_letters/offer_letter_' . $candidate->ffi_emp_id . '.pdf';
-                Storage::disk('public')->put($pdfPath, $pdf->output());
-
-                $offerLetter->update(['offer_letter_pdf' => $pdfPath]);
+        
+               
 
                 if ($action == 'send') {
                     // dd($request->cc_emails);
 
                     $ccEmails = $request->input('cc_emails', []);
-                    Mail::send('mail.offer_letter', ['employee' => $candidate], function ($message) use ($candidate, $pdfPath, $ccEmails) {
+                    Mail::send('mail.offer_letter', ['employee' => $candidate], function ($message) use ($candidate, $filePath, $ccEmails) {
                         $message->to($candidate->email)
                             ->cc($ccEmails)
                             ->subject('Your Offer Letter')
-                            ->attach(storage_path('app/public/' . $pdfPath)); // Attach the offer letter PDF
+                            ->attach(storage_path('app/public/' . $filePath)); // Attach the offer letter PDF
                     });
 
                 }
