@@ -32,7 +32,6 @@ use App\Http\Controllers\Admin\FFIPayslipsController;
 use App\Http\Controllers\Admin\OfferLetterController;
 use App\Http\Controllers\Admin\FFIPipLetterController;
 use App\Http\Controllers\Admin\FFIShowCauseController;
-use App\Http\Controllers\AdmsShowcaseLetterController;
 use App\Http\Controllers\Admin\LetterContentController;
 use App\Http\Controllers\Admin\FFIOfferLetterController;
 use App\Http\Controllers\Admin\FFITerminationController;
@@ -378,6 +377,14 @@ Route::prefix('admin')->group(function () {
         Route::get('candidatelifecycle', [EmployeeLifecycleController::class, 'index'])->name('candidatelifecycle');
         Route::get('candidatelifecycle/view/{id}', [EmployeeLifecycleController::class, 'viewdetail'])->name('candidatelifecycle.view');
         Route::get('/export-candidate-report', [EmployeeLifecycleController::class, 'exportFilteredReport'])->name('exportFilteredReport');
+
+        //payslips
+        Route::get('/payslips', [ADMSPayslipController::class, 'index'])->name('payslips');
+        Route::post('payslips/bulk-upload', [ADMSPayslipController::class, 'bulkUpload'])->name('payslips.bulk.upload');
+        Route::post('payslips/export', [ADMSPayslipController::class, 'export'])->name('payslips.export');
+        Route::get('payslips/search-payslip', [ADMSPayslipController::class, 'searchPayslip'])->name('search.payslips');
+        Route::get('/generate-payslips/{id}', [ADMSPayslipController::class, 'generatePayslipsPdf'])->name('generate.payslips');
+        Route::get('/payslips/delete/{id}', [ADMSPayslipController::class, 'destroy'])->name('payslips.delete');
 
     });
 });
