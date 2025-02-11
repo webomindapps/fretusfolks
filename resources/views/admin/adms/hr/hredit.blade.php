@@ -125,6 +125,11 @@
                                                         id="child_dob_{{ $index }}" :value="$child->dob" />
                                                 </div>
                                                 <div class="col-lg-6">
+                                                    <x-forms.input label="Child {{ $index + 1 }} Aadhar:"
+                                                        type="numeric" name="child_aadhar[{{ $index }}]"
+                                                        id="child_aadhar_{{ $index }}" :value="$child->aadhar_no" />
+                                                </div>
+                                                <div class="col-lg-6">
                                                     @if (!empty($child->photo))
                                                         <!-- Check if the child has a photo -->
                                                         <div id="image-preview-container" class="d-flex mt-2">

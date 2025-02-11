@@ -21,6 +21,8 @@ class EmployeeLifecycleController extends Controller
     }
     public function index(Request $request)
     {
+        $order = request()->orderedColumn;
+        $orderBy = request()->orderBy;
         $fromDate = $request->input('from_date');
         $toDate = $request->input('to_date');
         $selectedData = $request->input('data', []);  // Get selected client IDs
@@ -30,6 +32,12 @@ class EmployeeLifecycleController extends Controller
 
         if ($fromDate && $toDate) {
             $filteredResults->whereBetween('created_at', ["{$fromDate} 00:00:00", "{$toDate} 23:59:59"]);
+        }
+
+        if ($order == '') {
+            $filteredResults->orderByDesc('id');
+        } else {
+            $filteredResults->orderBy($order, $orderBy);
         }
 
         if (!empty($search_query)) {
@@ -63,7 +71,7 @@ class EmployeeLifecycleController extends Controller
         $children = DCSChildren::where('emp_id', $id)->get();
 
         $candidate = $this->model()
-            ->with(['client', 'educationCertificates', 'otherCertificates', 'candidateDocuments', 'offerletters', 'incrementletters', 'showcauseletters', 'warningletters'])
+            ->with(['client', 'educationCertificates', 'otherCertificates', 'candidateDocuments', 'offerletters', 'incrementletters', 'showcauseletters', 'warningletters', 'pipletter', 'terminationletter'])
             ->findOrFail($id);
         // dd($candidate->showcauseletters);
         $htmlContent = view('admin.adms.employee_lifecycle.view', compact('candidate', 'children'))->render();

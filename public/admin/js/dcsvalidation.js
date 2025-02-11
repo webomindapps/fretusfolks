@@ -12,11 +12,11 @@ $(document).ready(function () {
             $('#interview_date').after(
                 "<span class='error' style='color:red; font-size: 13px;'>Please select an interview date.</span>"
             );
-        } else if (new Date(interviewDate) < new Date(currentDate)) {
-            isValid = false;
-            $('#interview_date').after(
-                "<span class='error' style='color:red; font-size: 13px;'>Interview date cannot be in the past.</span>"
-            );
+        // } else if (new Date(interviewDate) < new Date(currentDate)) {
+        //     isValid = false;
+        //     $('#interview_date').after(
+        //         "<span class='error' style='color:red; font-size: 13px;'>Interview date cannot be in the past.</span>"
+        //     );
         }
 
         // Validate Joining Date
@@ -27,11 +27,11 @@ $(document).ready(function () {
             $('#joining_date').after(
                 "<span class='error' style='color:red; font-size: 13px;'>Please select a joining date.</span>"
             );
-        } else if (new Date(joiningDate) < new Date(currentDate)) {
-            isValid = false;
-            $('#joining_date').after(
-                "<span class='error' style='color:red; font-size: 13px;'>Joining date cannot be in the past.</span>"
-            );
+        // } else if (new Date(joiningDate) < new Date(currentDate)) {
+        //     isValid = false;
+        //     $('#joining_date').after(
+        //         "<span class='error' style='color:red; font-size: 13px;'>Joining date cannot be in the past.</span>"
+        //     );
         }
 
         // Validate Aadhar Number
@@ -52,14 +52,14 @@ $(document).ready(function () {
         });
 
         // Validate Document Type
-        var selectedValue = $('#document_type').val();
-        if (!selectedValue) {
-            isValid = false;
-            $('#document_type').closest('div').after(
-                "<span class='error' style='color:red; font-size: 13px; display: block; margin-top: 5px;'>Please select a document type.</span>"
-            );
+        // var selectedValue = $('#document_type').val();
+        // if (!selectedValue) {
+        //     isValid = false;
+        //     $('#document_type').closest('div').after(
+        //         "<span class='error' style='color:red; font-size: 13px; display: block; margin-top: 5px;'>Please select a document type.</span>"
+        //     );
 
-        }
+        // }
 
         // Validate File Upload
         var file = $('#pan_path')[0].files[0];
@@ -88,20 +88,20 @@ $(document).ready(function () {
 
 
 
-    $('#interview_date, #joining_date').on('blur input', function () {
-        $(this).next('.error').remove();
-        validateForm();
-    });
+    // $('#interview_date, #joining_date').on('blur input', function () {
+    //     $(this).next('.error').remove();
+    //     validateForm();
+    // });
 
-    $(' #father_aadhar_no, #mother_aadhar_no, #aadhar_no').on('blur input', function () {
-        $(this).next('.error').remove();
-        validateForm();
-    });
+    // $(' #father_aadhar_no, #mother_aadhar_no, #aadhar_no').on('blur input', function () {
+    //     $(this).next('.error').remove();
+    //     validateForm();
+    // });
 
-    $('#document_type').on('change', function () {
-        $(this).next('.error').remove();
-        validateForm();
-    });
+    // $('#document_type').on('change', function () {
+    //     $(this).next('.error').remove();
+    //     validateForm();
+    // });
 
     $('#pan_path').on('change', function () {
         $(this).next('.error').remove();

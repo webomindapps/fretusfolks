@@ -117,15 +117,15 @@ class DCSApprovalController extends Controller
             'permanent_address' => 'nullable|string',
             'present_address' => 'nullable|string',
             'pan_no' => 'nullable|string|max:255',
-            'pan_path' => 'nullable|file|mimes:pdf,jpg,png,doc,docx|max:2048',
+            'pan_path' => 'nullable|file|',
             'aadhar_no' => 'required|string|min:12',
-            'aadhar_path' => 'nullable|file|mimes:pdf,jpg,png,doc,docx|max:2048',
+            'aadhar_path' => 'nullable|file|',
             'driving_license_no' => 'nullable|string|max:255',
-            'driving_license_path' => 'nullable|file|mimes:pdf,jpg,png,doc,docx|max:2048',
-            'photo' => 'nullable|file|mimes:jpg,png,pdf|max:2048',
-            'family_photo' => 'nullable|file|mimes:jpg,png,pdf|max:2048',
-            'resume' => 'nullable|file|mimes:pdf,doc,docx|max:2048',
-            'bank_document' => 'nullable|file|mimes:pdf,doc,docx|max:2048',
+            'driving_license_path' => 'nullable|file|',
+            'photo' => 'nullable|file|mimes:jpg,png,pdf|',
+            'family_photo' => 'nullable|file|mimes:jpg,png,pdf',
+            'resume' => 'nullable|file',
+            'bank_document' => 'nullable|file',
             'bank_name' => 'nullable|string|max:255',
             'bank_account_no' => 'nullable|string|max:255',
             'bank_ifsc_code' => 'nullable|string|max:255',
@@ -154,7 +154,7 @@ class DCSApprovalController extends Controller
             'refresh_code' => 'nullable|string|max:255',
             'psd' => 'nullable|string|max:255',
             'document_type.*' => 'nullable|string',
-            'document_file.*' => 'nullable|file|mimes:pdf,doc,docx|max:2048',
+            'document_file.*' => 'nullable|file',
             'child_names.*' => 'required|string|max:255',
             'child_dobs.*' => 'required|date',
             'child_photo.*' => 'required|file|mimes:jpg,png,pdf',
@@ -426,15 +426,15 @@ class DCSApprovalController extends Controller
             'permanent_address' => 'nullable|string',
             'present_address' => 'nullable|string',
             'pan_no' => 'nullable|string|max:255',
-            'pan_path' => 'nullable|file|mimes:pdf,jpg,png,doc,docx|max:2048',
+            'pan_path' => 'nullable|file',
             'aadhar_no' => 'nullable|string|max:255',
-            'aadhar_path' => 'nullable|file|mimes:pdf,jpg,png,doc,docx|max:2048',
+            'aadhar_path' => 'nullable|file',
             'driving_license_no' => 'nullable|string|max:255',
-            'driving_license_path' => 'nullable|file|mimes:pdf,jpg,png,doc,docx|max:2048',
-            'photo' => 'nullable|file|mimes:jpg,png,doc,docx|max:2048',
-            'family_photo' => 'nullable|file|mimes:jpg,png,pdf|max:2048',
-            'resume' => 'nullable|file|mimes:pdf,doc,docx|max:2048',
-            'bank_document' => 'nullable|file|mimes:pdf,doc,docx|max:2048',
+            'driving_license_path' => 'nullable|file',
+            'photo' => 'nullable|file',
+            'family_photo' => 'nullable|file|mimes:jpg,png,pdf',
+            'resume' => 'nullable|file',
+            'bank_document' => 'nullable|file',
             'bank_name' => 'nullable|string|max:255',
             'bank_account_no' => 'nullable|string|max:255',
             'bank_ifsc_code' => 'nullable|string|max:255',
@@ -463,7 +463,7 @@ class DCSApprovalController extends Controller
             'refresh_code' => 'nullable|string|max:255',
             'psd' => 'nullable|string|max:255',
             'document_type.*' => 'nullable|string',
-            'document_file.*' => 'nullable|file|max:2048',
+            'document_file.*' => 'nullable|file',
             'child_names.*' => 'nullable|string|max:255',
             'child_dobs.*' => 'nullable|date',
             'child_photo.*' => 'required|file|mimes:jpg,png,pdf',
@@ -611,22 +611,20 @@ class DCSApprovalController extends Controller
                     'salary_date' => $candidate->salary_date ?? 7,
                     'designation' => $candidate->designation,
                 ]);
-                    $pdf = Pdf::loadView('admin.adms.offer_letter.formate', ['offerLetter' => $offerLetter]);
+                $pdf = Pdf::loadView('admin.adms.offer_letter.formate', ['offerLetter' => $offerLetter]);
 
-                    $fileName = 'offer_letter' .$candidate->ffi_emp_id. '.pdf';
-                    $filePath = 'offer_letters/' . $fileName;
-        
-                    Storage::disk('public')->put($filePath, $pdf->output());
-        
-                    $offerLetter->update([
-                        'offer_letter_path' => $filePath
-                    ]);
-        
-               
+                $fileName = 'offer_letter' . $candidate->ffi_emp_id . '.pdf';
+                $filePath = 'offer_letters/' . $fileName;
+
+                Storage::disk('public')->put($filePath, $pdf->output());
+
+                $offerLetter->update([
+                    'offer_letter_path' => $filePath
+                ]);
+
+
 
                 if ($action == 'send') {
-                    // dd($request->cc_emails);
-
                     $ccEmails = $request->input('cc_emails', []);
                     Mail::send('mail.offer_letter', ['employee' => $candidate], function ($message) use ($candidate, $filePath, $ccEmails) {
                         $message->to($candidate->email)
@@ -693,15 +691,15 @@ class DCSApprovalController extends Controller
             'permanent_address' => 'nullable|string',
             'present_address' => 'nullable|string',
             'pan_no' => 'nullable|string|max:255',
-            'pan_path' => 'nullable|file|mimes:pdf,jpg,png,doc,docx|max:2048',
+            'pan_path' => 'nullable|file',
             'aadhar_no' => 'nullable|string|max:255',
-            'aadhar_path' => 'nullable|file|mimes:pdf,jpg,png,doc,docx|max:2048',
+            'aadhar_path' => 'nullable|file',
             'driving_license_no' => 'nullable|string|max:255',
-            'driving_license_path' => 'nullable|file|mimes:pdf,jpg,png,doc,docx|max:2048',
-            'photo' => 'nullable|file|mimes:jpg,png,doc,docx|max:2048',
-            'family_photo' => 'nullable|file|mimes:jpg,png,pdf|max:2048',
-            'resume' => 'nullable|file|mimes:pdf,doc,docx,|max:2048',
-            'bank_document' => 'nullable|file|mimes:pdf,doc,docx|max:2048',
+            'driving_license_path' => 'nullable|file',
+            'photo' => 'nullable|file',
+            'family_photo' => 'nullable|file|mimes:jpg,png,pdf',
+            'resume' => 'nullable|file',
+            'bank_document' => 'nullable|file',
             'bank_name' => 'nullable|string|max:255',
             'bank_account_no' => 'nullable|string|max:255',
             'bank_ifsc_code' => 'nullable|string|max:255',
@@ -730,7 +728,7 @@ class DCSApprovalController extends Controller
             'refresh_code' => 'nullable|string|max:255',
             'psd' => 'nullable|string|max:255',
             'document_type.*' => 'nullable|string',
-            'document_file.*' => 'nullable|file|mimes:pdf,doc,docx|max:2048',
+            'document_file.*' => 'nullable|file',
             'child_names.*' => 'nullable|string|max:255',
             'child_dobs.*' => 'nullable|date',
             'child_photo.*' => 'required|file|mimes:jpg,png,pdf'
@@ -943,15 +941,15 @@ class DCSApprovalController extends Controller
             'permanent_address' => 'nullable|string',
             'present_address' => 'nullable|string',
             'pan_no' => 'nullable|string|max:255',
-            'pan_path' => 'nullable|file|mimes:pdf,jpg,png,doc,docx|max:2048',
+            'pan_path' => 'nullable|file',
             'aadhar_no' => 'nullable|string|max:255',
-            'aadhar_path' => 'nullable|file|mimes:pdf,jpg,png,doc,docx|max:2048',
+            'aadhar_path' => 'nullable|file',
             'driving_license_no' => 'nullable|string|max:255',
-            'driving_license_path' => 'nullable|file|mimes:pdf,jpg,png,doc,docx|max:2048',
-            'photo' => 'nullable|file|mimes:jpg,png,doc,docx|max:2048',
-            'family_photo' => 'nullable|file|mimes:jpg,png,pdf|max:2048',
-            'resume' => 'nullable|file|mimes:pdf,doc,docx|max:2048',
-            'bank_document' => 'nullable|file|mimes:pdf,doc,docx|max:2048',
+            'driving_license_path' => 'nullable|file',
+            'photo' => 'nullable|file',
+            'family_photo' => 'nullable|file|mimes:jpg,png,pdf',
+            'resume' => 'nullable|file',
+            'bank_document' => 'nullable|file',
             'bank_name' => 'nullable|string|max:255',
             'bank_account_no' => 'nullable|string|max:255',
             'bank_ifsc_code' => 'nullable|string|max:255',
@@ -962,7 +960,7 @@ class DCSApprovalController extends Controller
             'refresh_code' => 'nullable|string|max:255',
             'psd' => 'nullable|string|max:255',
             'document_type.*' => 'nullable|string',
-            'document_file.*' => 'nullable|file|mimes:jpg,png,pdf,doc,docx|max:2048',
+            'document_file.*' => 'nullable|file',
             'child_names.*' => 'nullable|string|max:255',
             'child_dobs.*' => 'nullable|date',
 

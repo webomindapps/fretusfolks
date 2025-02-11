@@ -415,6 +415,30 @@
                                           </td>
                                       </tr>
                                   @endforeach
+                                  @foreach ($candidate->terminationletter as $term)
+                                      <tr>
+                                          <td>Show Cause Letter</td>
+                                          <td>{{ \Carbon\Carbon::parse($term->date)->format('d-m-Y') }}</td>
+                                          <td>
+                                              <a href="{{ asset('storage/' . $term->termination_letter_path) }}"
+                                                  target="_blank" class="btn btn-primary btn-sm">
+                                                  <i class="fas fa-eye"></i> View
+                                              </a>
+                                          </td>
+                                      </tr>
+                                  @endforeach
+                                  @foreach ($candidate->pipletter as $pip)
+                                      <tr>
+                                          <td>Show Cause Letter</td>
+                                          <td>{{ \Carbon\Carbon::parse($pip->date)->format('d-m-Y') }}</td>
+                                          <td>
+                                              <a href="{{ asset('storage/' . $pip->pip_letter_path) }}"
+                                                  target="_blank" class="btn btn-primary btn-sm">
+                                                  <i class="fas fa-eye"></i> View
+                                              </a>
+                                          </td>
+                                      </tr>
+                                  @endforeach
                               </tbody>
                           </table>
                       </div>
