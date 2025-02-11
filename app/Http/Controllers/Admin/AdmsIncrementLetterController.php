@@ -30,7 +30,7 @@ class AdmsIncrementLetterController extends Controller
         $orderBy = request()->orderBy;
         $paginate = request()->paginate;
 
-        $query = $this->model()->with('incrementletters');
+        $query = $this->model()->with('incrementdata');
 
         if ($from_date && $to_date) {
             $query->whereBetween('created_at', [$from_date, $to_date]);
@@ -219,7 +219,7 @@ class AdmsIncrementLetterController extends Controller
 
     public function viewpdf($id)
     {
-        $increment = IncrementLetter::findOrFail($id);
+        $increment = $this->model()->findOrFail($id);
 
         if (!$increment->increment_path) {
             abort(404, 'PDF not found');
@@ -229,8 +229,9 @@ class AdmsIncrementLetterController extends Controller
 
         return response()->file(storage_path('app/public/' . $filePath));
     }
-    public function destroy($id){
-        $increment = IncrementLetter::find($id);
+    public function destroy($id)
+    {
+        $increment = $this->model()->find($id);
         $increment->delete();
         return redirect()->route('admin.increment_letter')->with('success', 'Increment Letter has been deleted');
     }

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\States;
 use App\Models\OfferLetter;
+use App\Models\IncrementLetter;
 use App\Models\ClientManagement;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -167,13 +168,21 @@ class CFISModel extends Model
     {
         return $this->hasMany(OfferLetter::class);
     }
-    public function warningletter()
+    public function incrementletters()
     {
-        return $this->hasMany(WarningLetter::class);
+        return $this->hasMany(IncrementLetter::class, 'employee_id', 'ffi_emp_id');
     }
-    public function showcauseletter()
+    public function offerletters()
     {
-        return $this->hasMany(ShowcauseLetter::class);
+        return $this->hasMany(OfferLetter::class, 'employee_id', 'ffi_emp_id');
+    }
+    public function warningletters()
+    {
+        return $this->hasMany(WarningLetter::class, 'emp_id', 'ffi_emp_id');
+    }
+    public function showcauseletters()
+    {
+        return $this->hasMany(ShowcauseLetter::class, 'emp_id', 'ffi_emp_id');
     }
     public function terminationletter()
     {

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AdmsIncrementLetterController;
 use App\Http\Controllers\Admin\AdmsPipLetterController;
+use App\Http\Controllers\Admin\EmployeeLifecycleController;
 use App\Http\Controllers\Admin\AdmsShowcauseLetterController;
 use App\Http\Controllers\Admin\AdmsTerminationLetterController;
 use App\Http\Controllers\Admin\AdmsWarningLetterController;
@@ -371,5 +372,11 @@ Route::prefix('admin')->group(function () {
         Route::get('candidatemaster/{id}/edit', [ComplianceController::class, 'edit'])->name('candidatemaster.edit');
         Route::post('candidatemaster/{id}/edit', [ComplianceController::class, 'update']);
         Route::post('/candidatemaster/import', [ComplianceController::class, 'import'])->name('candidatemaster.import');
+
+        //Employee Lifecycle
+        Route::get('candidatelifecycle', [EmployeeLifecycleController::class, 'index'])->name('candidatelifecycle');
+        Route::get('candidatelifecycle/view/{id}', [EmployeeLifecycleController::class, 'viewdetail'])->name('candidatelifecycle.view');
+        Route::get('/export-candidate-report', [EmployeeLifecycleController::class, 'exportFilteredReport'])->name('exportFilteredReport');
+
     });
 });

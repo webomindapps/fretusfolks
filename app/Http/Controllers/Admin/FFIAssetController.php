@@ -10,7 +10,7 @@ use App\Exports\FFIAssetExport;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Maatwebsite\Excel\Facades\Excel;
-
+ 
 class FFIAssetController extends Controller
 {
     public function model()

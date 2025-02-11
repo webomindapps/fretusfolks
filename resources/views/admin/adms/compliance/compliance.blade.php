@@ -1,6 +1,6 @@
 <x-applayout>
-    <x-admin.breadcrumb title="Candidate Master" />
-    <div class="row">
+    <x-admin.breadcrumb title="Candidate Master">
+
         <div class="d-flex justify-content-end align-items-center">
             <div class="d-flex gap-3">
                 <a href="{{ asset('admin/CandidateFormate.xlsx') }}" class="btn btn-primary text-white">
@@ -15,8 +15,8 @@
                 </form>
             </div>
         </div>
-    </div>
 
+    </x-admin.breadcrumb>
     <div class="row">
         <div class="col-lg-12">
             @php
