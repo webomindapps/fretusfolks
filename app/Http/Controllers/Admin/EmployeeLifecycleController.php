@@ -63,8 +63,9 @@ class EmployeeLifecycleController extends Controller
         $children = DCSChildren::where('emp_id', $id)->get();
 
         $candidate = $this->model()
-            ->with(['client', 'educationCertificates', 'otherCertificates', 'candidateDocuments', 'incrementletters'])
+            ->with(['client', 'educationCertificates', 'otherCertificates', 'candidateDocuments', 'offerletters', 'incrementletters', 'showcauseletters', 'warningletters'])
             ->findOrFail($id);
+        // dd($candidate->showcauseletters);
         $htmlContent = view('admin.adms.employee_lifecycle.view', compact('candidate', 'children'))->render();
         return response()->json(['html_content' => $htmlContent]);
     }

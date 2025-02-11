@@ -367,12 +367,48 @@
                                   </tr>
                               </thead>
                               <tbody>
+                                  @foreach ($candidate->offerletters as $offer)
+                                      <tr>
+                                          <td>Offer Letter</td>
+                                          <td>{{ \Carbon\Carbon::parse($offer->date)->format('d-m-Y') }}</td>
+                                          <td>
+                                              <a href="{{ asset('storage/' . $offer->offer_letter_path) }}"
+                                                  target="_blank" class="btn btn-primary btn-sm">
+                                                  <i class="fas fa-eye"></i> View
+                                              </a>
+                                          </td>
+                                      </tr>
+                                  @endforeach
                                   @foreach ($candidate->incrementletters as $incrementletter)
                                       <tr>
                                           <td>Increment Letter</td>
                                           <td>{{ \Carbon\Carbon::parse($incrementletter->date)->format('d-m-Y') }}</td>
                                           <td>
                                               <a href="{{ asset('storage/' . $incrementletter->increment_path) }}"
+                                                  target="_blank" class="btn btn-primary btn-sm">
+                                                  <i class="fas fa-eye"></i> View
+                                              </a>
+                                          </td>
+                                      </tr>
+                                  @endforeach
+                                  @foreach ($candidate->warningletters as $warning)
+                                      <tr>
+                                          <td>Warning Letter</td>
+                                          <td>{{ \Carbon\Carbon::parse($warning->date)->format('d-m-Y') }}</td>
+                                          <td>
+                                              <a href="{{ asset('storage/' . $warning->warning_letter_path) }}"
+                                                  target="_blank" class="btn btn-primary btn-sm">
+                                                  <i class="fas fa-eye"></i> View
+                                              </a>
+                                          </td>
+                                      </tr>
+                                  @endforeach
+                                  @foreach ($candidate->showcauseletters as $show)
+                                      <tr>
+                                          <td>Show Cause Letter</td>
+                                          <td>{{ \Carbon\Carbon::parse($show->date)->format('d-m-Y') }}</td>
+                                          <td>
+                                              <a href="{{ asset('storage/' . $show->showcause_letter_path) }}"
                                                   target="_blank" class="btn btn-primary btn-sm">
                                                   <i class="fas fa-eye"></i> View
                                               </a>

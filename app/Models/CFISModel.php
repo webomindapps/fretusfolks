@@ -172,13 +172,16 @@ class CFISModel extends Model
     {
         return $this->hasMany(IncrementLetter::class, 'employee_id', 'ffi_emp_id');
     }
-
-    public function warningletter()
+    public function offerletters()
     {
-        return $this->hasMany(WarningLetter::class);
+        return $this->hasMany(OfferLetter::class, 'employee_id', 'ffi_emp_id');
     }
-    public function showcauseletter()
+    public function warningletters()
     {
-        return $this->hasMany(ShowcauseLetter::class);
+        return $this->hasMany(WarningLetter::class, 'emp_id', 'ffi_emp_id');
+    }
+    public function showcauseletters()
+    {
+        return $this->hasMany(ShowcauseLetter::class, 'emp_id', 'ffi_emp_id');
     }
 }
