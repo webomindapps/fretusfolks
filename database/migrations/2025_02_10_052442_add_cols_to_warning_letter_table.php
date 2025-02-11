@@ -12,7 +12,7 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('warning_letter', function (Blueprint $table) {
-            DB::statement('ALTER TABLE warning_letter ADD PRIMARY KEY (`id`);');
+            // DB::statement('ALTER TABLE warning_letter ADD PRIMARY KEY (`id`);');
             $table->bigInteger('id')->unsigned()->autoIncrement()->change();
             $table->string('warning_letter_path')->after('date_of_update')->nullable();
             $table->string('content')->nullable()->change();
