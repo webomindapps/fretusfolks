@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\Admin\AdmsIncrementLetterController;
+use App\Http\Controllers\Admin\AdmsPipLetterController;
 use App\Http\Controllers\Admin\AdmsShowcauseLetterController;
+use App\Http\Controllers\Admin\AdmsTerminationLetterController;
 use App\Http\Controllers\Admin\AdmsWarningLetterController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\CDMSController;
@@ -333,13 +335,33 @@ Route::prefix('admin')->group(function () {
 
         //showcase Letter
         Route::get('/showcause_letter', [AdmsShowcauseLetterController::class, 'index'])->name('showcause_letter');
-        Route::get('/showcause_letter/create',[AdmsShowcauseLetterController::class,'create'])->name('showcause_letter.create');
+        Route::get('/showcause_letter/create', [AdmsShowcauseLetterController::class, 'create'])->name('showcause_letter.create');
         Route::get('/showcause_letter/{emp_id}/details', [AdmsShowcauseLetterController::class, 'details'])->name('showcause_letter.details');
         Route::post('/showcause_letter/create', [AdmsShowcauseLetterController::class, 'store']);
         Route::get('showcause_letter/{id}/view', [AdmsShowcauseLetterController::class, 'viewpdf'])->name('showcause_letter.viewpdf');
         Route::get('showcause_letter/{id}/edit', [AdmsShowcauseLetterController::class, 'edit'])->name('showcause_letter.edit');
         Route::post('showcause_letter/{id}/edit', [AdmsShowcauseLetterController::class, 'update']);
         Route::get('showcause_letter/{id}/delete', [AdmsShowcauseLetterController::class, 'delete'])->name('showcause_letter.delete');
+
+        //Termination Letter
+        Route::get('/termination_letter', [AdmsTerminationLetterController::class, 'index'])->name('termination_letter');
+        Route::get('/termination_letter/create', [AdmsTerminationLetterController::class, 'create'])->name('termination_letter.create');
+        Route::get('/termination_letter/{emp_id}/details', [AdmsTerminationLetterController::class, 'details'])->name('termination_letter.details');
+        Route::post('/termination_letter/create', [AdmsTerminationLetterController::class, 'store']);
+        Route::get('termination_letter/{id}/view', [AdmsTerminationLetterController::class, 'viewpdf'])->name('termination_letter.viewpdf');
+        Route::get('termination_letter/{id}/edit', [AdmsTerminationLetterController::class, 'edit'])->name('termination_letter.edit');
+        Route::post('termination_letter/{id}/edit', [AdmsTerminationLetterController::class, 'update']);
+        Route::get('termination_letter/{id}/delete', [AdmsTerminationLetterController::class, 'delete'])->name('termination_letter.delete');
+
+        //PIP Letter
+        Route::get('pip_letter', [AdmsPipLetterController::class, 'index'])->name('pip_letter');
+        Route::get('/pip_letter/create', [AdmsPipLetterController::class, 'create'])->name('pip_letter.create');
+        Route::post('/pip_letter/create', [AdmsPipLetterController::class, 'store']);
+        Route::get('/pip_letter/details', [AdmsPipLetterController::class, 'details'])->name('pip_letter.details');
+        Route::get('pip_letter/{id}/view', [AdmsPipLetterController::class, 'viewpdf'])->name('pip_letter.viewpdf');
+        Route::get('pip_letter/{id}/edit', [AdmsPipLetterController::class, 'edit'])->name('pip_letter.edit');
+        Route::post('pip_letter/{id}/edit', [AdmsPipLetterController::class, 'update']);
+        Route::get('pip_letter/{id}/delete', [AdmsPipLetterController::class, 'delete'])->name('pip_letter.delete');
 
         //compliance 
         Route::get('candidatemaster', [ComplianceController::class, 'index'])->name('candidatemaster');
@@ -349,6 +371,5 @@ Route::prefix('admin')->group(function () {
         Route::get('candidatemaster/{id}/edit', [ComplianceController::class, 'edit'])->name('candidatemaster.edit');
         Route::post('candidatemaster/{id}/edit', [ComplianceController::class, 'update']);
         Route::post('/candidatemaster/import', [ComplianceController::class, 'import'])->name('candidatemaster.import');
-
     });
 });

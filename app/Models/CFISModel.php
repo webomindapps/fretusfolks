@@ -175,4 +175,12 @@ class CFISModel extends Model
     {
         return $this->hasMany(ShowcauseLetter::class);
     }
+    public function terminationletter()
+    {
+        return $this->hasMany(TerminationLetter::class);
+    }
+    public function pipletter()
+    {
+        return $this->hasMany(Pipletter::class);
+    }
 }
