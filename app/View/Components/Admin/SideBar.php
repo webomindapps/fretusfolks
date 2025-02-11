@@ -137,6 +137,13 @@ class SideBar extends Component
                     'roles' => ['Admin', 'Hroperations'],
                 ],
                 [
+                    'title' => 'PIP Letter  ',
+                    'icon' => 'bx bx-chevron-right',
+                    'route' => 'admin.pip_letter',
+                    'name' => 'pip_letter',
+                    'roles' => ['Admin', 'Hroperations'],
+                ],
+                [
                     'title' => 'Show Cause Letter  ',
                     'icon' => 'bx bx-chevron-right',
                     'route' => 'admin.showcause_letter',
@@ -148,6 +155,13 @@ class SideBar extends Component
                     'icon' => 'bx bx-chevron-right',
                     'route' => 'admin.warning_letter',
                     'name' => 'warning_letter',
+                    'roles' => ['Admin', 'Hroperations'],
+                ],
+                [
+                    'title' => 'Termination Letter',
+                    'icon' => 'bx bx-chevron-right',
+                    'route' => 'admin.termination_letter',
+                    'name' => 'termination_letter',
                     'roles' => ['Admin', 'Hroperations'],
                 ],
                 [

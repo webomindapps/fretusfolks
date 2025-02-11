@@ -1,5 +1,11 @@
 <?php
 
+use App\Http\Controllers\Admin\AdmsIncrementLetterController;
+use App\Http\Controllers\Admin\AdmsPipLetterController;
+use App\Http\Controllers\Admin\EmployeeLifecycleController;
+use App\Http\Controllers\Admin\AdmsShowcauseLetterController;
+use App\Http\Controllers\Admin\AdmsTerminationLetterController;
+use App\Http\Controllers\Admin\AdmsWarningLetterController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\CDMSController;
 use App\Http\Controllers\Admin\CFISController;
@@ -31,11 +37,7 @@ use App\Http\Controllers\Admin\LetterContentController;
 use App\Http\Controllers\Admin\FFIOfferLetterController;
 use App\Http\Controllers\Admin\FFITerminationController;
 use App\Http\Controllers\Admin\CMSLabourNoticeController;
-use App\Http\Controllers\Admin\AdmsWarningLetterController;
-use App\Http\Controllers\Admin\EmployeeLifecycleController;
 use App\Http\Controllers\Admin\FFIIncrementLetterController;
-use App\Http\Controllers\Admin\AdmsIncrementLetterController;
-use App\Http\Controllers\Admin\AdmsShowcauseLetterController;
 
 Route::get('/', function () {
     return to_route('admin.dashboard');
@@ -343,13 +345,25 @@ Route::prefix('admin')->group(function () {
         Route::post('showcause_letter/{id}/edit', [AdmsShowcauseLetterController::class, 'update']);
         Route::get('showcause_letter/{id}/delete', [AdmsShowcauseLetterController::class, 'delete'])->name('showcause_letter.delete');
 
-        //payslips
-        Route::get('/payslips', [ADMSPayslipController::class, 'index'])->name('payslips');
-        Route::post('payslips/bulk-upload', [ADMSPayslipController::class, 'bulkUpload'])->name('payslips.bulk.upload');
-        Route::post('payslips/export', [ADMSPayslipController::class, 'export'])->name('payslips.export');
-        Route::get('payslips/search-payslip', [ADMSPayslipController::class, 'searchPayslip'])->name('search.payslips');
-        Route::get('/generate-payslips/{id}', [ADMSPayslipController::class, 'generatePayslipsPdf'])->name('generate.payslips');
-        Route::get('/payslips/delete/{id}', [ADMSPayslipController::class, 'destroy'])->name('payslips.delete');
+        //Termination Letter
+        Route::get('/termination_letter', [AdmsTerminationLetterController::class, 'index'])->name('termination_letter');
+        Route::get('/termination_letter/create', [AdmsTerminationLetterController::class, 'create'])->name('termination_letter.create');
+        Route::get('/termination_letter/{emp_id}/details', [AdmsTerminationLetterController::class, 'details'])->name('termination_letter.details');
+        Route::post('/termination_letter/create', [AdmsTerminationLetterController::class, 'store']);
+        Route::get('termination_letter/{id}/view', [AdmsTerminationLetterController::class, 'viewpdf'])->name('termination_letter.viewpdf');
+        Route::get('termination_letter/{id}/edit', [AdmsTerminationLetterController::class, 'edit'])->name('termination_letter.edit');
+        Route::post('termination_letter/{id}/edit', [AdmsTerminationLetterController::class, 'update']);
+        Route::get('termination_letter/{id}/delete', [AdmsTerminationLetterController::class, 'delete'])->name('termination_letter.delete');
+
+        //PIP Letter
+        Route::get('pip_letter', [AdmsPipLetterController::class, 'index'])->name('pip_letter');
+        Route::get('/pip_letter/create', [AdmsPipLetterController::class, 'create'])->name('pip_letter.create');
+        Route::post('/pip_letter/create', [AdmsPipLetterController::class, 'store']);
+        Route::get('/pip_letter/details', [AdmsPipLetterController::class, 'details'])->name('pip_letter.details');
+        Route::get('pip_letter/{id}/view', [AdmsPipLetterController::class, 'viewpdf'])->name('pip_letter.viewpdf');
+        Route::get('pip_letter/{id}/edit', [AdmsPipLetterController::class, 'edit'])->name('pip_letter.edit');
+        Route::post('pip_letter/{id}/edit', [AdmsPipLetterController::class, 'update']);
+        Route::get('pip_letter/{id}/delete', [AdmsPipLetterController::class, 'delete'])->name('pip_letter.delete');
 
         //compliance 
         Route::get('candidatemaster', [ComplianceController::class, 'index'])->name('candidatemaster');

@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
@@ -11,6 +12,7 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('payslips', function (Blueprint $table) {
+            DB::statement("UPDATE payslips SET date_upload = NULL WHERE date_upload = '0000-00-00'");
             // DB::statement('ALTER TABLE payslips ADD PRIMARY KEY (`id`);');
             // $table->bigInteger('id')->unsigned()->autoIncrement()->change();
             DB::statement("UPDATE payslips SET date_upload = NULL WHERE date_upload = '0000-00-00'");
