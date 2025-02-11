@@ -76,7 +76,6 @@ class AdmsWarningLetterController extends Controller
         $request->validate([
             'emp_id' => 'required',
             'status' => 'nullable|string',
-            'emp_id' => 'nullable',
             'date' => 'required|date',
             'content' => 'required|string',
         ]);
@@ -110,7 +109,7 @@ class AdmsWarningLetterController extends Controller
     }
     public function viewpdf($id)
     {
-        $warning = WarningLetter::findOrFail($id);
+        $warning = $this->model()->findOrFail($id);
 
         if (!$warning->warning_letter_path) {
             abort(404, 'PDF not found');
@@ -122,7 +121,7 @@ class AdmsWarningLetterController extends Controller
     }
     public function edit($id)
     {
-        $warning = WarningLetter::findOrFail($id);
+        $warning = $this->model()->findOrFail($id);
         return view('admin.adms.warning_letter.update', compact('warning'));
     }
 

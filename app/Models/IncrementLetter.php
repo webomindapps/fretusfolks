@@ -39,8 +39,8 @@ class IncrementLetter extends Model
         'emp_name',
         'increment_path',
     ];
-    public function incrementletters()
+    public function incrementdata()
     {
-        return $this->belongsTo(FHRMSModel::class, 'employee_id', 'ffi_emp_id');
+        return $this->belongsTo(CFISModel::class, 'ffi_emp_id', 'employee_id');
     }
 }

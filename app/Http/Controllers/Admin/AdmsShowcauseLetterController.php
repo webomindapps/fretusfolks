@@ -73,7 +73,6 @@ class AdmsShowcauseLetterController extends Controller
         $request->validate([
             'emp_id' => 'required',
             'status' => 'nullable|string',
-            'emp_id' => 'nullable',
             'date' => 'required|date',
             'content' => 'required|string',
         ]);
@@ -107,7 +106,7 @@ class AdmsShowcauseLetterController extends Controller
     }
     public function viewpdf($id)
     {
-        $showcause = ShowcauseLetter::findOrFail($id);
+        $showcause = $this->model()->findOrFail($id);
 
         if (!$showcause->showcause_letter_path) {
             abort(404, 'PDF not found');
@@ -120,7 +119,7 @@ class AdmsShowcauseLetterController extends Controller
 
     public function edit($id)
     {
-        $showcause = ShowcauseLetter::findOrFail($id);
+        $showcause = $this->model()->findOrFail($id);
         return view('admin.adms.showcause_letter.update', compact('showcause'));
     }
     public function update(Request $request, $id)
@@ -134,7 +133,7 @@ class AdmsShowcauseLetterController extends Controller
 
         DB::beginTransaction();
         try {
-            $showLetter  = $this->model()->findOrFail($id);
+            $showLetter = $this->model()->findOrFail($id);
 
             if ($showLetter->showcause_letter_path && Storage::disk('public')->exists($showLetter->showcause_letter_path)) {
                 Storage::disk('public')->delete($showLetter->showcause_letter_path);
@@ -166,8 +165,9 @@ class AdmsShowcauseLetterController extends Controller
         }
     }
 
-    public function delete($id){
-        $showcause = ShowcauseLetter::findOrFail($id);
+    public function delete($id)
+    {
+        $showcause = $this->model()->findOrFail($id);
         $showcause->delete();
         return redirect()->route('admin.showcause_letter')->with('success', 'ShowCause Letter has Been Deleted');
     }
