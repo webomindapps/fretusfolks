@@ -12,7 +12,7 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('show_cause', function (Blueprint $table) {
-            DB::statement('ALTER TABLE show_cause ADD PRIMARY KEY (`id`);');
+            // DB::statement('ALTER TABLE show_cause ADD PRIMARY KEY (`id`);');
             $table->bigInteger('id')->unsigned()->autoIncrement()->change();
             $table->string('showcause_letter_path')->after('date_of_update')->nullable();
             $table->timestamps();

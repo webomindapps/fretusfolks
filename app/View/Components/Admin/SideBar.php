@@ -151,6 +151,13 @@ class SideBar extends Component
                     'roles' => ['Admin', 'Hroperations'],
                 ],
                 [
+                    'title' => 'Payslips  ',
+                    'icon' => 'bx bx-chevron-right',
+                    'route' => 'admin.payslips',
+                    'name' => 'payslips',
+                    'roles' => ['Admin', 'Hroperations'],
+                ],
+                [
                     'title' => 'Candidates Master',
                     'icon' => 'bx bx-chevron-right',
                     'route' => 'admin.candidatemaster',

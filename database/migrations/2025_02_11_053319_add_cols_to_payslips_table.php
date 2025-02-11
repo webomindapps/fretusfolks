@@ -13,6 +13,8 @@ return new class extends Migration {
         Schema::table('payslips', function (Blueprint $table) {
             // DB::statement('ALTER TABLE payslips ADD PRIMARY KEY (`id`);');
             // $table->bigInteger('id')->unsigned()->autoIncrement()->change();
+            DB::statement("UPDATE payslips SET date_upload = NULL WHERE date_upload = '0000-00-00'");
+            DB::statement("UPDATE payslips SET doj = NULL WHERE doj = '0000-00-00'");
             $table->string('payslips_letter_path')->after('modify_on')->nullable();
             $table->timestamps();
         });

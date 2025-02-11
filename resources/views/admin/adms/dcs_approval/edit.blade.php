@@ -231,7 +231,7 @@
                                         <div class="form-group col-lg-6 mt-2">
                                             <label for="pan_declaration">Upload Signed Document:</label>
                                             <input type="file" name="pan_declaration" id="pan_declaration"
-                                                accept=".pdf" class="form-control">
+                                            accept=".doc, .docx, .pdf, .jpg, .png" class="form-control">
 
                                             @if ($candidate->candidateDocuments->where('name', 'pan_declaration')->isNotEmpty())
                                                 @php

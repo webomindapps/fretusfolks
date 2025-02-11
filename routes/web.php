@@ -1,9 +1,5 @@
 <?php
 
-use App\Http\Controllers\Admin\AdmsIncrementLetterController;
-use App\Http\Controllers\Admin\EmployeeLifecycleController;
-use App\Http\Controllers\Admin\AdmsShowcauseLetterController;
-use App\Http\Controllers\Admin\AdmsWarningLetterController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\CDMSController;
 use App\Http\Controllers\Admin\CFISController;
@@ -22,19 +18,24 @@ use App\Http\Controllers\Admin\TdsCodeController;
 use App\Http\Controllers\Admin\CMSFormTController;
 use App\Http\Controllers\Admin\FFIAssetController;
 use App\Http\Controllers\RolePermissionController;
+use App\Http\Controllers\Admin\ComplianceController;
 use App\Http\Controllers\Admin\FFIWarningController;
+use App\Http\Controllers\Admin\ADMSPayslipController;
 use App\Http\Controllers\Admin\DCSApprovalController;
 use App\Http\Controllers\Admin\FFIPayslipsController;
 use App\Http\Controllers\Admin\OfferLetterController;
 use App\Http\Controllers\Admin\FFIPipLetterController;
 use App\Http\Controllers\Admin\FFIShowCauseController;
+use App\Http\Controllers\AdmsShowcaseLetterController;
 use App\Http\Controllers\Admin\LetterContentController;
 use App\Http\Controllers\Admin\FFIOfferLetterController;
 use App\Http\Controllers\Admin\FFITerminationController;
 use App\Http\Controllers\Admin\CMSLabourNoticeController;
-use App\Http\Controllers\Admin\ComplianceController;
+use App\Http\Controllers\Admin\AdmsWarningLetterController;
+use App\Http\Controllers\Admin\EmployeeLifecycleController;
 use App\Http\Controllers\Admin\FFIIncrementLetterController;
-use App\Http\Controllers\AdmsShowcaseLetterController;
+use App\Http\Controllers\Admin\AdmsIncrementLetterController;
+use App\Http\Controllers\Admin\AdmsShowcauseLetterController;
 
 Route::get('/', function () {
     return to_route('admin.dashboard');
@@ -334,13 +335,21 @@ Route::prefix('admin')->group(function () {
 
         //showcase Letter
         Route::get('/showcause_letter', [AdmsShowcauseLetterController::class, 'index'])->name('showcause_letter');
-        Route::get('/showcause_letter/create',[AdmsShowcauseLetterController::class,'create'])->name('showcause_letter.create');
+        Route::get('/showcause_letter/create', [AdmsShowcauseLetterController::class, 'create'])->name('showcause_letter.create');
         Route::get('/showcause_letter/{emp_id}/details', [AdmsShowcauseLetterController::class, 'details'])->name('showcause_letter.details');
         Route::post('/showcause_letter/create', [AdmsShowcauseLetterController::class, 'store']);
         Route::get('showcause_letter/{id}/view', [AdmsShowcauseLetterController::class, 'viewpdf'])->name('showcause_letter.viewpdf');
         Route::get('showcause_letter/{id}/edit', [AdmsShowcauseLetterController::class, 'edit'])->name('showcause_letter.edit');
         Route::post('showcause_letter/{id}/edit', [AdmsShowcauseLetterController::class, 'update']);
         Route::get('showcause_letter/{id}/delete', [AdmsShowcauseLetterController::class, 'delete'])->name('showcause_letter.delete');
+
+        //payslips
+        Route::get('/payslips', [ADMSPayslipController::class, 'index'])->name('payslips');
+        Route::post('payslips/bulk-upload', [ADMSPayslipController::class, 'bulkUpload'])->name('payslips.bulk.upload');
+        Route::post('payslips/export', [ADMSPayslipController::class, 'export'])->name('payslips.export');
+        Route::get('payslips/search-payslip', [ADMSPayslipController::class, 'searchPayslip'])->name('search.payslips');
+        Route::get('/generate-payslips/{id}', [ADMSPayslipController::class, 'generatePayslipsPdf'])->name('generate.payslips');
+        Route::get('/payslips/delete/{id}', [ADMSPayslipController::class, 'destroy'])->name('payslips.delete');
 
         //compliance 
         Route::get('candidatemaster', [ComplianceController::class, 'index'])->name('candidatemaster');
