@@ -91,14 +91,25 @@
                                     :required="true" size="col-lg-6 mt-2" :options="FretusFolks::getMarital()" :value="old('maritial_status', $candidate->maritial_status)" />
                                 <div id="married-fields" style="display: none;" class="col-12">
                                     <div class="row">
-                                        <x-forms.input label="Spouse Name:" type="text" name="spouse_name"
-                                            id="spouse_name" :required="false" size="col-lg-3 mt-2"
-                                            :value="old('spouse_name', $candidate->spouse_name)" />
-                                        <x-forms.input label="Spouse's DOB: " type="date" name="spouse_dob"
-                                            id="spouse_dob" :required="false" size="col-lg-3 mt-2"
-                                            :value="old('spouse_dob', $candidate->spouse_dob)" />
                                         <div class="form-group col-lg-3 mt-2">
-                                            <label for="spouse_aadhar_no">Enter Spouse Adhar Card No: </label>
+                                            <label for="spouse_name">Spouse Name:<span
+                                                    style="color: red">*</span></label>
+                                            <input type="text" name="spouse_name" id="spouse_name"
+                                                class="form-control"
+                                                value="{{ old('spouse_name', $candidate->spouse_name) }}">
+                                        </div>
+
+                                        <div class="form-group col-lg-3 mt-2">
+                                            <label for="spouse_dob">Spouse's DOB:<span
+                                                    style="color: red">*</span></label>
+                                            <input type="date" name="spouse_dob" id="spouse_dob"
+                                                class="form-control"
+                                                value="{{ old('spouse_dob', $candidate->spouse_dob) }}">
+                                        </div>
+
+                                        <div class="form-group col-lg-3 mt-2">
+                                            <label for="spouse_aadhar_no">Enter Spouse Adhar Card No: <span
+                                                    style="color: red">*</span></label>
                                             <input type="text" name="spouse_aadhar_no" id="spouse_aadhar_no"
                                                 class="form-control" maxlength="12" inputmode="numeric"
                                                 value="{{ old('spouse_aadhar_no', $candidate->spouse_aadhar_no) }}">
@@ -113,16 +124,17 @@
                                             id="no_of_childrens" :required="false" size="col-lg-6 mt-2"
                                             :value="old('no_of_childrens', $candidate->no_of_childrens)" />
                                     </div>
-                                </div>
-                                <div id="children-details-container" class="mt-3" style="display: none;">
-                                    <div id="children-details">
+                                    <div id="children-details-container" class="mt-3" style="display: none;">
+                                        <div id="children-details">
+                                        </div>
+                                        <div id="max-children-message"
+                                            style="display: none; color: red; margin-top: 10px;">
+                                            You can only add details for up to 2 children.
+                                        </div>
                                     </div>
-                                    <div id="max-children-message"
-                                        style="display: none; color: red; margin-top: 10px;">
-                                        You can only add details for up to 2 children.
-                                    </div>
                                 </div>
-                                <div id="children-details-form" class="mt-3">
+
+                                {{-- <div id="children-details-form" class="mt-3">
                                     @if (!empty($children) && $children->count() > 0)
                                         @foreach ($children as $index => $child)
                                             <div class="row mb-3">
@@ -141,10 +153,20 @@
                                                         type="numeric" name="child_aadhar[{{ $index }}]"
                                                         id="child_aadhar_{{ $index }}" :value="$child->aadhar_no" />
                                                 </div>
+                                                <div class="col-lg-6">
+                                                    @if (!empty($child->photo))
+                                                        <!-- Check if the child has a photo -->
+                                                        <div id="image-preview-container" class="d-flex mt-2">
+                                                            <img src="{{ asset('storage/' . $child->photo) }}"
+                                                                class="img-thumbnail" width="100" height="100"
+                                                                alt="Child photo">
+                                                        </div>
+                                                    @endif
+                                                </div>
                                             </div>
                                         @endforeach
                                     @endif
-                                </div>
+                                </div> --}}
 
                                 <x-forms.input label="Father Name:  " type="text" name="father_name"
                                     id="father_name" :required="true" size="col-lg-3 mt-2" :value="old('father_name', $candidate->father_name)" />
@@ -216,11 +238,17 @@
                                 <x-forms.input label="Official Email ID: " type="email" name="official_mail_id"
                                     id="official_mail_id" :required="false" size="col-lg-4 mt-2"
                                     :value="old('official_mail_id', $candidate->official_mail_id)" />
-                                <x-forms.textarea label="Enter Permanent Address:" name="permanent_address"
-                                    id="permanent_address" :required="true" size="col-lg-6 mt-2"
-                                    :value="old('permanent_address', $candidate->permanent_address)" />
-                                <x-forms.textarea label="Enter Present Address:" name="present_address"
-                                    id="present_address" :required="true" size="col-lg-6 mt-2" :value="old('present_address', $candidate->present_address)" />
+                                <div class="form-group col-lg-6 mt-2">
+                                    <label for="permanent_address">Enter Permanent Address:<span
+                                            style="color: red">*</span></label>
+                                    <textarea name="permanent_address" id="permanent_address" class="form-control" required>{{ old('permanent_address', $candidate->permanent_address) }}</textarea>
+                                </div>
+
+                                <div class="form-group col-lg-6 mt-2">
+                                    <label for="present_address">Enter Present Address:<span
+                                            style="color: red">*</span></label>
+                                    <textarea name="present_address" id="present_address" class="form-control" required>{{ old('present_address', $candidate->present_address) }}</textarea>
+                                </div>
 
                                 <div class="form-group col-lg-6 mt-2">
                                     <label for="pan_status">Do you have a PAN Card? <span
@@ -292,7 +320,7 @@
                                             style="color: red;">*</span></label>
                                     <input type="file" name="aadhar_path" id="aadhar_path"
                                         accept="application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/pdf, image/jpg, image/png"
-                                        class="form-control"a
+                                        class="form-control"
                                         value="{{ old('aadhar_path', $candidate->aadhar_path) }}" required>
                                 </div>
 
@@ -482,13 +510,12 @@
                                             </tr>
                                         </thead>
                                         <tbody>
+
                                             @php
-                                                $directFileFields = [
+                                                $candidateDocuments = [
                                                     'pan_path' => 'PAN Document',
                                                     'aadhar_path' => 'Aadhar Document',
                                                     'driving_license_path' => 'Driving License',
-                                                    // 'photo' => 'Photo',
-                                                    // 'resume' => 'Resume',
                                                     'bank_document' => 'Bank Document',
                                                     'voter_id' => 'Voter ID/ PVC/ UL',
                                                     'emp_form' => 'Employee Form',
@@ -497,26 +524,31 @@
                                                     'exp_letter' => 'Experience Letter',
                                                     'father_photo' => 'Father Photo',
                                                     'mother_photo' => 'Mother Photo',
-                                                    'spouse_photo' => 'Spouse_photo',
+                                                    'spouse_photo' => 'Spouse Photo',
+                                                    'family_photo' => 'Family Photo',
                                                     'pan_declaration' => 'Pan Declaration',
                                                 ];
                                             @endphp
 
-                                            @foreach ($directFileFields as $field => $label)
-                                                @if (!empty($candidate->$field))
-                                                    <tr>
-                                                        <td>{{ $label }}</td>
-                                                        <td>
-                                                            <a href="{{ asset('storage/' . $candidate->$field) }}"
-                                                                target="_blank" class="btn btn-custom">
-                                                                View
-                                                            </a>
+                                            @if ($candidate->candidateDocuments->isNotEmpty())
+                                                @php
+                                                    $documents = $candidate->candidateDocuments->keyBy('name'); // Optimized lookup
+                                                @endphp
 
-                                                        </td>
-
-                                                    </tr>
-                                                @endif
-                                            @endforeach
+                                                @foreach ($candidateDocuments as $key => $label)
+                                                    @if (isset($documents[$key]))
+                                                        <tr>
+                                                            <td>{{ $label }}</td>
+                                                            <td>
+                                                                <a href="{{ asset('storage/' . $documents[$key]->path) }}"
+                                                                    target="_blank" class="btn btn-custom">
+                                                                    View
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+                                                    @endif
+                                                @endforeach
+                                            @endif
 
                                             {{-- Education Certificates --}}
                                             @if ($candidate->educationCertificates->isNotEmpty())
@@ -696,7 +728,6 @@ class="col-lg-5 me-3 " >
                 const childrenDetails = document.getElementById('children-details');
                 const maxChildrenMessage = document.getElementById('max-children-message');
 
-                // Function to calculate age in months
                 function calculateAge(dob) {
                     if (!dob) return 0;
                     const birthDate = new Date(dob);
@@ -714,7 +745,7 @@ class="col-lg-5 me-3 " >
                         maxChildrenMessage.style.display = 'none';
 
                         for (let i = 1; i <= noOfChildren && i <= maxChildren; i++) {
-                            let childData = existingChildren[i - 1] || {}; // Get existing data if available
+                            let childData = existingChildren[i - 1] || {};
 
                             const childRow = document.createElement('div');
                             childRow.className = 'row align-items-center mb-2 child-row';
@@ -729,27 +760,24 @@ class="col-lg-5 me-3 " >
                             <input type="date" name="child_dobs[]" id="child_dob_${i}" class="form-control"
                                    value="${childData.dob || ''}" required>
                         </div>
-                          <div class="form-group col-lg-3 child-aadhar" id="child_aadhar_field_${i}" style="display: none;">
+                        <div class="form-group col-lg-3 child-aadhar" id="child_aadhar_field_${i}" style="display: none;">
                             <label for="child_aadhar_${i}">Child ${i} Aadhar No:<span style="color: red;">*</span></label>
                             <input type="text" name="child_aadhar[]" id="child_aadhar_${i}" class="form-control" 
-                                   value="${childData.aadhar || ''}" maxlength="12" inputmode="numeric">
+                                   value="${childData.aadhar_no || ''}" maxlength="12" inputmode="numeric">
                         </div>
                         <div class="form-group col-lg-3">
                             <label for="child_photo_${i}">Child ${i} Photo:</label>
                             <input type="file" name="child_photo[]" id="child_photo_${i}" accept="application/pdf, image/jpg, image/png" 
                                    class="form-control">
                         </div>
-                      
                     `;
                             childrenDetails.appendChild(childRow);
 
-                            // Attach event listener to check age when DOB is changed
                             let dobField = document.getElementById(`child_dob_${i}`);
                             dobField.addEventListener('input', function() {
                                 checkChildAge(i);
                             });
 
-                            // Pre-check Aadhar visibility for existing data
                             if (childData.dob) {
                                 checkChildAge(i);
                             }
@@ -784,13 +812,24 @@ class="col-lg-5 me-3 " >
                     updateChildDetails();
                 });
 
-                // Fetch existing children data from the server
-                let existingChildren = {!! json_encode($children ?? []) !!}; // Laravel blade syntax to pass PHP array
+                let existingChildren = {!! json_encode(
+                    old('child_names')
+                        ? collect(old('child_names'))->map(function ($name, $index) {
+                            return [
+                                'name' => $name,
+                                'dob' => old('child_dobs')[$index] ?? '',
+                                'aadhar_no' => old('child_aadhar')[$index] ?? '',
+                            ];
+                        })
+                        : $children ?? [],
+                ) !!};
+
                 if (existingChildren.length > 0) {
                     noOfChildrenField.value = existingChildren.length;
                     updateChildDetails(existingChildren);
                 }
             });
+
             //pending update
             function pending_update() {
                 var formData = new FormData(document.getElementById('pendingDetailsForm'));

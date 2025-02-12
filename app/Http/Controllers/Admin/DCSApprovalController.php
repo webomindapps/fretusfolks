@@ -63,9 +63,10 @@ class DCSApprovalController extends Controller
     }
     public function edit($id)
     {
-        $candidate = $this->model()->with('candidateDocuments')->find($id);
+        $candidate = $this->model()->with('candidateDocuments', 'educationCertificates', 'otherCertificates')->find($id);
         $children = DCSChildren::where('emp_id', $candidate->id)->get(['name', 'dob', 'aadhar_no']);
-        return view('admin.adms.dcs_approval.edit', compact('candidate'));
+        // dd($children);
+        return view('admin.adms.dcs_approval.edit', compact('candidate', 'children'));
 
     }
     public function update(Request $request, $id)
@@ -157,12 +158,15 @@ class DCSApprovalController extends Controller
             'document_file.*' => 'nullable|file',
             'child_names.*' => 'required|string|max:255',
             'child_dobs.*' => 'required|date',
-            'child_photo.*' => 'required|file|mimes:jpg,png,pdf',
+            'child_photo.*' => 'nullable|file|mimes:jpg,png,pdf',
             'child_aadhar_no.*' => 'required|string|min:12',
 
         ], [
             'document_type.required' => 'Please upload atleast one document'
         ]);
+        // $validatedData = $request->all();
+        // dd($request->all());
+
         DB::beginTransaction();
         try {
             $validatedData['password'] = $request->input('dcs_approval', 'ffemp@123');
@@ -172,8 +176,8 @@ class DCSApprovalController extends Controller
             $validatedData['hr_approval'] = $request->input('hr_approval', 0);
 
             $candidate->update($validatedData);
-
-            $fileFields = ['pan_path', 'aadhar_path', 'driving_license_path', 'photo', 'resume', 'bank_document', 'voter_id', 'emp_form', 'pf_esic_form', 'payslip', 'exp_letter', 'family_photo', 'father_photo', 'mother_photo', 'spouse_photo', 'pan_declaration'];
+            // dd($request->all());
+            $fileFields = ['pan_path', 'aadhar_path', 'driving_license_path', 'photo', 'resume', 'bank_document', 'family_photo', 'father_photo', 'mother_photo', 'spouse_photo', 'pan_declaration'];
             foreach ($fileFields as $field) {
                 if ($request->hasFile($field)) {
                     $file = $request->file($field);
@@ -219,27 +223,36 @@ class DCSApprovalController extends Controller
                                 'status' => 0,
                             ]);
                         } else {
-                            if ($candidate->$type) {
-                                Storage::disk('public')->delete($candidate->$type);
-                            }
-                            $candidate->$type = $filePath;
+                            CandidateDocuments::create([
+                                'emp_id' => $candidate->id,
+                                'name' => $type,
+                                'path' => $filePath,
+                                'status' => 0,
+                            ]);
                             $candidate->save();
                         }
                     }
                 }
             }
-            if ($request->has(['child_names', 'child_dobs', 'child_photo'])) {
+            if ($request->has(['child_names', 'child_dobs'])) {
                 $childNames = $request->child_names;
                 $childDobs = $request->child_dobs;
-                $childPhotos = $request->file('child_photo');
+                $childPhotos = $request->file('child_photo') ?? [];
                 $childAadhar = $request->child_aadhar ?? [];
 
+                if (!isset($candidate) || empty($candidate->id)) {
+                    return back()->with('error', 'Candidate not found.');
+                }
+
+                DCSChildren::where('emp_id', $candidate->id)->delete();
+
+                $childrenData = [];
 
                 foreach ($childNames as $index => $name) {
                     if (!empty($name) && isset($childDobs[$index])) {
 
                         $photoPath = null;
-                        if (isset($childPhotos[$index])) {
+                        if (!empty($childPhotos) && isset($childPhotos[$index])) {
                             $photo = $childPhotos[$index];
                             $photoPath = $photo->store('children_photos', 'public');
                         }
@@ -249,15 +262,20 @@ class DCSApprovalController extends Controller
                             'name' => $name,
                             'dob' => $childDobs[$index],
                             'photo' => $photoPath,
+                            'aadhar_no' => isset($childAadhar[$index]) ? $childAadhar[$index] : null,
+                            'created_at' => now(),
+                            'updated_at' => now()
                         ];
 
-                        if (isset($childAadhar[$index]) && !empty($childAadhar[$index])) {
-                            $childData['aadhar_no'] = $childAadhar[$index];
-                        }
-                        DCSChildren::create($childData);
+                        $childrenData[] = $childData;
                     }
                 }
+
+                if (!empty($childrenData)) {
+                    DCSChildren::insert($childrenData);
+                }
             }
+
             $candidate->save();
 
             DB::commit();
@@ -345,8 +363,7 @@ class DCSApprovalController extends Controller
     public function hredit($id)
     {
         $candidate = $this->model()
-            ->with(['client'])
-            ->with(['educationCertificates', 'otherCertificates', 'candidateDocuments'])
+            ->with(['client', 'educationCertificates', 'otherCertificates', 'candidateDocuments'])
             ->findOrFail($id);
 
         if (!$candidate->client || !$candidate->client->client_ffi_id) {
@@ -384,7 +401,7 @@ class DCSApprovalController extends Controller
         // dd($request->storing_option);
 
         $candidate = $this->model()->find($id);
-        $validatedData = $request->validate([
+        $request->validate([
             'client_id' => 'required|integer',
             'entity_name' => 'nullable|string|max:255',
             'console_id' => 'nullable|string|max:255',
@@ -470,13 +487,14 @@ class DCSApprovalController extends Controller
             'note' => 'nullable|string'
 
         ]);
+        $validatedData = $request->all();
         DB::beginTransaction();
         try {
             $validatedData['data_status'] = $request->input('data_status', 1);
             $validatedData['dcs_approval'] = $request->input('dcs_approval', 0);
             $candidate->update($validatedData);
 
-            $fileFields = ['pan_path', 'aadhar_path', 'driving_license_path', 'photo', 'resume', 'bank_document', 'voter_id', 'emp_form', 'pf_esic_form', 'payslip', 'exp_letter', 'family_photo', 'father_photo', 'mother_photo', 'spouse_photo', 'pan_declaration'];
+            $fileFields = ['pan_path', 'aadhar_path', 'driving_license_path', 'photo', 'resume', 'bank_document', 'family_photo', 'father_photo', 'mother_photo', 'spouse_photo', 'pan_declaration'];
             foreach ($fileFields as $field) {
                 if ($request->hasFile($field)) {
                     $file = $request->file($field);
@@ -523,40 +541,59 @@ class DCSApprovalController extends Controller
                             ]);
 
                         } else {
-                            if ($candidate->$type) {
-                                Storage::disk('public')->delete($candidate->$type);
-                            }
-                            $candidate->$type = $filePath;
+                            CandidateDocuments::create([
+                                'emp_id' => $candidate->id,
+                                'name' => $type,
+                                'path' => $filePath,
+                                'status' => 0,
+                            ]);
                             $candidate->save();
                         }
                     }
                 }
             }
-            if ($request->has('child_names') && $request->has('child_dobs') && $request->has('child_photo')) {
-
+            if ($request->has(['child_names', 'child_dobs'])) {
                 $childNames = $request->child_names;
                 $childDobs = $request->child_dobs;
-                $childPhotos = $request->file('child_photo');
+                $childPhotos = $request->file('child_photo') ?? [];
+                $childAadhar = $request->child_aadhar ?? [];
+
+                if (!isset($candidate) || empty($candidate->id)) {
+                    return back()->with('error', 'Candidate not found.');
+                }
+
                 DCSChildren::where('emp_id', $candidate->id)->delete();
+
+                $childrenData = [];
 
                 foreach ($childNames as $index => $name) {
                     if (!empty($name) && isset($childDobs[$index])) {
 
                         $photoPath = null;
-                        if (isset($childPhotos[$index])) {
+                        if (!empty($childPhotos) && isset($childPhotos[$index])) {
                             $photo = $childPhotos[$index];
                             $photoPath = $photo->store('children_photos', 'public');
                         }
 
-                        DCSChildren::create([
+                        $childData = [
                             'emp_id' => $candidate->id,
                             'name' => $name,
                             'dob' => $childDobs[$index],
                             'photo' => $photoPath,
-                        ]);
+                            'aadhar_no' => isset($childAadhar[$index]) ? $childAadhar[$index] : null,
+                            'created_at' => now(),
+                            'updated_at' => now()
+                        ];
+
+                        $childrenData[] = $childData;
                     }
                 }
+
+                if (!empty($childrenData)) {
+                    DCSChildren::insert($childrenData);
+                }
             }
+
             $candidate->hr_approval = $request->hr_approval;
 
             if ($request->hr_approval == '2') {
@@ -648,8 +685,7 @@ class DCSApprovalController extends Controller
 
     public function updatePendingDetails(Request $request)
     {
-        $validatedData = $request->validate([
-            'id' => 'required|integer|exists:backend_management,id',
+        $request->validate([
             'client_id' => 'required|integer',
             'entity_name' => 'nullable|string|max:255',
             'console_id' => 'nullable|string|max:255',
@@ -671,6 +707,8 @@ class DCSApprovalController extends Controller
             'gender' => 'nullable|string|max:255',
             'father_name' => 'nullable|string|max:255',
             'father_dob' => 'nullable|date',
+            'father_aadhar_no' => 'nullable|string|min:12',
+            'mother_aadhar_no' => 'nullable|string|min:12',
             'mother_name' => 'nullable|string|max:255',
             'mother_dob' => 'nullable|date',
             'religion' => 'nullable|string|max:255',
@@ -681,6 +719,8 @@ class DCSApprovalController extends Controller
             'emer_name' => 'nullable|string|max:255',
             'emer_relation' => 'nullable|string|max:255',
             'spouse_name' => 'nullable|string|max:255',
+            'spouse_dob' => 'nullable|date',
+            'spouse_aadhar_no' => 'nullable|string|min:12',
             'no_of_childrens' => 'nullable|integer',
             'blood_group' => 'nullable|string|max:255',
             'qualification' => 'nullable|string|max:255',
@@ -691,12 +731,12 @@ class DCSApprovalController extends Controller
             'permanent_address' => 'nullable|string',
             'present_address' => 'nullable|string',
             'pan_no' => 'nullable|string|max:255',
-            'pan_path' => 'nullable|file',
-            'aadhar_no' => 'nullable|string|max:255',
-            'aadhar_path' => 'nullable|file',
+            'pan_path' => 'nullable|file|',
+            'aadhar_no' => 'nullable|string|min:12',
+            'aadhar_path' => 'nullable|file|',
             'driving_license_no' => 'nullable|string|max:255',
-            'driving_license_path' => 'nullable|file',
-            'photo' => 'nullable|file',
+            'driving_license_path' => 'nullable|file|',
+            'photo' => 'nullable|file|mimes:jpg,png,pdf|',
             'family_photo' => 'nullable|file|mimes:jpg,png,pdf',
             'resume' => 'nullable|file',
             'bank_document' => 'nullable|file',
@@ -722,7 +762,7 @@ class DCSApprovalController extends Controller
             'employer_esic' => 'nullable|numeric',
             'mediclaim' => 'nullable|numeric',
             'ctc' => 'nullable|numeric',
-            'status' => 'nullable|numeric',
+            'status' => 'nullable|boolean',
             'modify_by' => 'nullable|integer',
             'password' => 'nullable|string|max:255',
             'refresh_code' => 'nullable|string|max:255',
@@ -731,19 +771,20 @@ class DCSApprovalController extends Controller
             'document_file.*' => 'nullable|file',
             'child_names.*' => 'nullable|string|max:255',
             'child_dobs.*' => 'nullable|date',
-            'child_photo.*' => 'required|file|mimes:jpg,png,pdf'
-
-
+            'child_photo.*' => 'nullable|file|mimes:jpg,png,pdf',
+            'child_aadhar_no.*' => 'nullable|string|min:12',
         ]);
+        $validatedData = $request->all();
         DB::beginTransaction();
         try {
             $candidate = $this->model()->findOrFail($validatedData['id']);
             $validatedData['dcs_approval'] = $request->input('data_status', 0);
             $validatedData['data_status'] = $request->input('status', 0);
             $candidate->update($validatedData);
+            // dd($request->all());
 
+            $fileFields = ['pan_path', 'aadhar_path', 'driving_license_path', 'photo', 'resume', 'bank_document', 'family_photo', 'father_photo', 'mother_photo', 'spouse_photo', 'pan_declaration'];
 
-            $fileFields = ['pan_path', 'aadhar_path', 'driving_license_path', 'photo', 'resume', 'bank_document', 'voter_id', 'emp_form', 'pf_esic_form', 'payslip', 'exp_letter', 'family_photo', 'father_photo', 'mother_photo', 'spouse_photo', 'pan_declaration'];
             foreach ($fileFields as $field) {
                 if ($request->hasFile($field)) {
                     $file = $request->file($field);
@@ -789,37 +830,58 @@ class DCSApprovalController extends Controller
                                 'status' => 0,
                             ]);
                         } else {
-                            if ($candidate->$type) {
-                                Storage::disk('public')->delete($candidate->$type);
-                            }
-                            $candidate->$type = $filePath;
+                            CandidateDocuments::create([
+                                'emp_id' => $candidate->id,
+                                'name' => $type,
+                                'path' => $filePath,
+                                'status' => 0,
+                            ]);
+
                             $candidate->save();
                         }
                     }
                 }
             }
-            if ($request->has('child_names') && $request->has('child_dobs') && $request->has('child_photo')) {
-
+            // dd($request->all());
+            if ($request->has(['child_names', 'child_dobs'])) {
                 $childNames = $request->child_names;
                 $childDobs = $request->child_dobs;
-                $childPhotos = $request->file('child_photo');
+                $childPhotos = $request->file('child_photo') ?? [];
+                $childAadhar = $request->child_aadhar ?? [];
+
+                if (!isset($candidate) || empty($candidate->id)) {
+                    return back()->with('error', 'Candidate not found.');
+                }
+
+                DCSChildren::where('emp_id', $candidate->id)->delete();
+
+                $childrenData = [];
 
                 foreach ($childNames as $index => $name) {
                     if (!empty($name) && isset($childDobs[$index])) {
 
                         $photoPath = null;
-                        if (isset($childPhotos[$index])) {
+                        if (!empty($childPhotos) && isset($childPhotos[$index])) {
                             $photo = $childPhotos[$index];
                             $photoPath = $photo->store('children_photos', 'public');
                         }
 
-                        DCSChildren::create([
+                        $childData = [
                             'emp_id' => $candidate->id,
                             'name' => $name,
                             'dob' => $childDobs[$index],
                             'photo' => $photoPath,
-                        ]);
+                            'aadhar_no' => isset($childAadhar[$index]) ? $childAadhar[$index] : null,
+                            'created_at' => now(),
+                            'updated_at' => now()
+                        ];
+
+                        $childrenData[] = $childData;
                     }
+                }
+
+                if (!empty($childrenData)) {
+                    DCSChildren::insert($childrenData);
                 }
             }
 
@@ -899,7 +961,7 @@ class DCSApprovalController extends Controller
     public function docupdate(Request $request, $id)
     {
         $candidate = $this->model()->find($id);
-        $validatedData = $request->validate([
+        $request->validate([
             'client_id' => 'required|integer',
             'entity_name' => 'nullable|string|max:255',
             'console_id' => 'nullable|string|max:255',
@@ -921,16 +983,20 @@ class DCSApprovalController extends Controller
             'gender' => 'nullable|string|max:255',
             'father_name' => 'nullable|string|max:255',
             'father_dob' => 'nullable|date',
+            'father_aadhar_no' => 'nullable|string|min:12',
+            'mother_aadhar_no' => 'nullable|string|min:12',
             'mother_name' => 'nullable|string|max:255',
             'mother_dob' => 'nullable|date',
             'religion' => 'nullable|string|max:255',
             'languages' => 'nullable|string|max:255',
             'mother_tongue' => 'nullable|string|max:255',
             'maritial_status' => 'nullable|string|max:255',
-            'emer_contact_no' => 'nullable|string|max:10',
+            'emer_contact_no' => 'nullable|string|max:15',
             'emer_name' => 'nullable|string|max:255',
             'emer_relation' => 'nullable|string|max:255',
             'spouse_name' => 'nullable|string|max:255',
+            'spouse_dob' => 'nullable|date',
+            'spouse_aadhar_no' => 'nullable|string|min:12',
             'no_of_childrens' => 'nullable|integer',
             'blood_group' => 'nullable|string|max:255',
             'qualification' => 'nullable|string|max:255',
@@ -941,12 +1007,12 @@ class DCSApprovalController extends Controller
             'permanent_address' => 'nullable|string',
             'present_address' => 'nullable|string',
             'pan_no' => 'nullable|string|max:255',
-            'pan_path' => 'nullable|file',
-            'aadhar_no' => 'nullable|string|max:255',
-            'aadhar_path' => 'nullable|file',
+            'pan_path' => 'nullable|file|',
+            'aadhar_no' => 'nullable|string|min:12',
+            'aadhar_path' => 'nullable|file|',
             'driving_license_no' => 'nullable|string|max:255',
-            'driving_license_path' => 'nullable|file',
-            'photo' => 'nullable|file',
+            'driving_license_path' => 'nullable|file|',
+            'photo' => 'nullable|file|mimes:jpg,png,pdf|',
             'family_photo' => 'nullable|file|mimes:jpg,png,pdf',
             'resume' => 'nullable|file',
             'bank_document' => 'nullable|file',
@@ -954,7 +1020,25 @@ class DCSApprovalController extends Controller
             'bank_account_no' => 'nullable|string|max:255',
             'bank_ifsc_code' => 'nullable|string|max:255',
             'uan_no' => 'nullable|string|max:255',
-            'hr_approval' => 'required|numeric',
+            'esic_no' => 'nullable|string|max:255',
+            'basic_salary' => 'nullable|numeric',
+            'hra' => 'nullable|numeric',
+            'conveyance' => 'nullable|numeric',
+            'medical_reimbursement' => 'nullable|numeric',
+            'special_allowance' => 'nullable|numeric',
+            'other_allowance' => 'nullable|numeric',
+            'st_bonus' => 'nullable|numeric',
+            'gross_salary' => 'nullable|numeric',
+            'emp_pf' => 'nullable|numeric',
+            'emp_esic' => 'nullable|numeric',
+            'pt' => 'nullable|numeric',
+            'total_deduction' => 'nullable|numeric',
+            'take_home' => 'nullable|numeric',
+            'employer_pf' => 'nullable|numeric',
+            'employer_esic' => 'nullable|numeric',
+            'mediclaim' => 'nullable|numeric',
+            'ctc' => 'nullable|numeric',
+            'status' => 'nullable|boolean',
             'modify_by' => 'nullable|integer',
             'password' => 'nullable|string|max:255',
             'refresh_code' => 'nullable|string|max:255',
@@ -963,15 +1047,18 @@ class DCSApprovalController extends Controller
             'document_file.*' => 'nullable|file',
             'child_names.*' => 'nullable|string|max:255',
             'child_dobs.*' => 'nullable|date',
+            'child_photo.*' => 'nullable|file|mimes:jpg,png,pdf',
+            'child_aadhar_no.*' => 'nullable|string|min:12',
 
         ]);
+        $validatedData = $request->all();
         DB::beginTransaction();
         try {
             $validatedData['data_status'] = $request->input('data_status', 1);
             $validatedData['dcs_approval'] = $request->input('dcs_approval', 0);
             $candidate->update($validatedData);
 
-            $fileFields = ['pan_path', 'aadhar_path', 'driving_license_path', 'photo', 'resume', 'bank_document', 'voter_id', 'emp_form', 'pf_esic_form', 'payslip', 'exp_letter', 'family_photo', 'father_photo', 'mother_photo', 'spouse_photo', 'pan_declaration'];
+            $fileFields = ['pan_path', 'aadhar_path', 'driving_license_path', 'photo', 'resume', 'bank_document', 'family_photo', 'father_photo', 'mother_photo', 'spouse_photo', 'pan_declaration'];
             foreach ($fileFields as $field) {
                 if ($request->hasFile($field)) {
                     $file = $request->file($field);
@@ -1017,40 +1104,59 @@ class DCSApprovalController extends Controller
                                 'status' => 0,
                             ]);
                         } else {
-                            if ($candidate->$type) {
-                                Storage::disk('public')->delete($candidate->$type);
-                            }
-                            $candidate->$type = $filePath;
+                            CandidateDocuments::create([
+                                'emp_id' => $candidate->id,
+                                'name' => $type,
+                                'path' => $filePath,
+                                'status' => 0,
+                            ]);
                             $candidate->save();
                         }
                     }
                 }
             }
-            if ($request->has('child_names') && $request->has('child_dobs')) {
-
+            if ($request->has(['child_names', 'child_dobs'])) {
                 $childNames = $request->child_names;
                 $childDobs = $request->child_dobs;
-                $childPhotos = $request->file('child_photo');
+                $childPhotos = $request->file('child_photo') ?? [];
+                $childAadhar = $request->child_aadhar ?? [];
+
+                if (!isset($candidate) || empty($candidate->id)) {
+                    return back()->with('error', 'Candidate not found.');
+                }
+
                 DCSChildren::where('emp_id', $candidate->id)->delete();
+
+                $childrenData = [];
 
                 foreach ($childNames as $index => $name) {
                     if (!empty($name) && isset($childDobs[$index])) {
 
                         $photoPath = null;
-                        if (isset($childPhotos[$index])) {
+                        if (!empty($childPhotos) && isset($childPhotos[$index])) {
                             $photo = $childPhotos[$index];
                             $photoPath = $photo->store('children_photos', 'public');
                         }
 
-                        DCSChildren::create([
+                        $childData = [
                             'emp_id' => $candidate->id,
                             'name' => $name,
                             'dob' => $childDobs[$index],
                             'photo' => $photoPath,
-                        ]);
+                            'aadhar_no' => isset($childAadhar[$index]) ? $childAadhar[$index] : null,
+                            'created_at' => now(),
+                            'updated_at' => now()
+                        ];
+
+                        $childrenData[] = $childData;
                     }
                 }
+
+                if (!empty($childrenData)) {
+                    DCSChildren::insert($childrenData);
+                }
             }
+
             $candidate->save();
             DB::commit();
 

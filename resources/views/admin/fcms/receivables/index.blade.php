@@ -11,11 +11,11 @@
                     ['label' => 'Received Data', 'column' => 'payment_received_date', 'sort' => true],
                     ['label' => 'Received Amount', 'column' => 'amount_received', 'sort' => true],
                     ['label' => 'Balance Amount', 'column' => 'balance_amount', 'sort' => true],
-                    ['label' => 'Month', 'column' => 'year', 'sort' => true],
+                    ['label' => 'Month', 'column' => 'month', 'sort' => true],
                     ['label' => 'Actions', 'column' => 'action', 'sort' => false],
                 ];
             @endphp
-            <x-table :columns="$columns" :data="$recipts" :checkAll=false :bulk="route('admin.cms.esic')" :route="route('admin.cms.esic')">
+            <x-table :columns="$columns" :data="$recipts" :checkAll=false :bulk="route('admin.cms.esic')" :route="route('admin.fcms.receivables')">
                 @foreach ($recipts as $key => $item)
                     <tr>
                         <td>{{ $loop->iteration }}</td>

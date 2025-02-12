@@ -6,15 +6,15 @@
                 $columns = [
                     ['label' => 'Id', 'column' => 'id', 'sort' => true],
                     ['label' => 'Client Name', 'column' => 'client_name', 'sort' => false],
-                    ['label' => 'Invoice No', 'column' => 'contact_person', 'sort' => false],
-                    ['label' => 'Location', 'column' => 'month', 'sort' => true],
-                    ['label' => 'GST No', 'column' => 'year', 'sort' => true],
-                    ['label' => 'Grand Total', 'column' => 'year', 'sort' => true],
-                    ['label' => 'Invoice Date', 'column' => 'year', 'sort' => true],
+                    ['label' => 'Invoice No', 'column' => 'invoice_no', 'sort' => false],
+                    ['label' => 'Location', 'column' => 'month', 'sort' => false],
+                    ['label' => 'GST No', 'column' => 'gst_no', 'sort' => true],
+                    ['label' => 'Grand Total', 'column' => 'grand_total', 'sort' => true],
+                    ['label' => 'Invoice Date', 'column' => 'date', 'sort' => true],
                     ['label' => 'Actions', 'column' => 'action', 'sort' => false],
                 ];
             @endphp
-            <x-table :columns="$columns" :data="$invoices" :checkAll=false :bulk="route('admin.cms.esic')" :route="route('admin.cms.esic')">
+            <x-table :columns="$columns" :data="$invoices" :checkAll=false :bulk="route('admin.cms.esic')" :route="route('admin.fcms.cims')">
                 @foreach ($invoices as $key => $item)
                     <tr>
                         <td>{{ $item->id }}</td>

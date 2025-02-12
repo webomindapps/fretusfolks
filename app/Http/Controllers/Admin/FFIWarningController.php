@@ -19,7 +19,7 @@ class FFIWarningController extends Controller
     }
     public function index()
     {
-        $searchColumns = ['id','emp_id'];
+        $searchColumns = ['id', 'date', 'emp_id'];
         $search = request()->search;
         $from_date = request()->from_date;
         $to_date = request()->to_date;

@@ -4,7 +4,7 @@
             <div class="modal-title">
                 <h5 class="" id="paymentDetailsLabel">{{ $payment->client?->client_name }}</h5>
             </div>
-            <button type="button" class="close" id="closeModalButton">×</button>
+            <button type="button" class="close" >×</button>
         </div>
         <div class="modal-body">
             <div class="row">
