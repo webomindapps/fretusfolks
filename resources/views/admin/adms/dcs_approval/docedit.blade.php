@@ -7,10 +7,14 @@
             padding: 10px 20px;
             border-radius: 5px;
             text-decoration: none;
+            min-width: 220px;
         }
 
         .btn-custom:hover {
             background-color: #0056b3;
+        }
+        .rejected{
+            background-color: #f8d7da;
         }
     </style>
     @if ($errors->any())
@@ -24,32 +28,34 @@
             </div>
         </div>
     @endif
-    @foreach ($candidate->candidateDocuments as $doc)
-        @if ($doc->status == 2)
-            <div class="alert alert-danger">
-                <strong>Note:</strong> The document <b>{{ $doc->name }}</b> has been rejected.
+    <div class="col-lg-12 px-3 mt-2">
+        @foreach ($candidate->candidateDocuments as $doc)
+            @if ($doc->status == 2)
+                <div class="alert alert-danger">
+                    <strong>Note:</strong> The <b>{{ $doc->name }}</b> has been rejected.
+                </div>
+            @endif
+        @endforeach
+        @foreach ($candidate->otherCertificates as $doc)
+            @if ($doc->status == 2)
+                <div class="alert alert-danger">
+                    <strong>Note:</strong> One odf the Other Certificate has been rejected.
+                </div>
+            @endif
+        @endforeach
+        @foreach ($candidate->educationCertificates as $doc)
+            @if ($doc->status == 2)
+                <div class="alert alert-danger">
+                    <strong>Note:</strong> One odf the Education Certificate has been rejected.
+                </div>
+            @endif
+        @endforeach
+        @if (old('note', $candidate->note))
+            <div class="alert alert-danger text-danger font-weight-bold">
+                <strong>Rejected Field:</strong> {{ old('note', $candidate->note) }}
             </div>
         @endif
-    @endforeach
-    @foreach ($candidate->otherCertificates as $doc)
-        @if ($doc->status == 2)
-            <div class="alert alert-danger">
-                <strong>Note:</strong> One odf the Other Certificate has been rejected.
-            </div>
-        @endif
-    @endforeach
-    @foreach ($candidate->educationCertificates as $doc)
-        @if ($doc->status == 2)
-            <div class="alert alert-danger">
-                <strong>Note:</strong> One odf the Education Certificate has been rejected.
-            </div>
-        @endif
-    @endforeach
-    @if (old('note', $candidate->note))
-        <div class="alert alert-danger text-danger font-weight-bold">
-            <strong>Rejected Field:</strong> {{ old('note', $candidate->note) }}
-        </div>
-    @endif
+    </div>
 
     <div class="col-lg-12 pb-4">
         <div class="form-card px-3">
@@ -366,7 +372,7 @@
 
                                             @if ($candidate->candidateDocuments->isNotEmpty())
                                                 @foreach ($candidate->candidateDocuments as $certificate)
-                                                    <tr>
+                                                    <tr class="{{$certificate->status==2?'rejected':''}}">
                                                         <td>
                                                             {{ $candidateDocuments[$certificate->name] ?? $certificate->name }}
                                                         </td>

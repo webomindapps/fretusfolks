@@ -794,6 +794,8 @@ class="col-lg-5 me-3 " >
             //pending update
             function pending_update() {
                 var formData = new FormData(document.getElementById('pendingDetailsForm'));
+                console.log(formData);
+                
                 fetch('{{ route('admin.dcs_approval.pending.update') }}', {
                         method: 'POST',
                         headers: {

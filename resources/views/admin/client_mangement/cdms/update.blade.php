@@ -83,7 +83,7 @@
                                     :required="true" size="col-lg-4 mt-2" :options="FretusFolks::getRegion()" :value="old('region', $client->region)" />
 
                                 <x-forms.select label="State:" name="service_state" id="service_state"
-                                    :required="true" size="col-lg-4 mt-2" :options="FretusFolks::getStates()" :value="old('service_state', $client->state?->service_state)" />
+                                    :required="true" size="col-lg-4 mt-2" :options="FretusFolks::getStates()" :value="old('service_state', $client->service_state)" />
 
                                 <x-forms.radio label="Mode of Agreement:" :options="[
                                     ['value' => '1', 'label' => 'LOI'],

@@ -4,9 +4,10 @@
         .btn-custom {
             background-color: #007bff;
             color: white;
-            padding: 10px 20px;
+            padding: 8px 20px;
             border-radius: 5px;
             text-decoration: none;
+            min-width: 220px;
         }
 
         .btn-custom:hover {
