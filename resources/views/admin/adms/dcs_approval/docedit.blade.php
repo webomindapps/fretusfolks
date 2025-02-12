@@ -7,10 +7,14 @@
             padding: 10px 20px;
             border-radius: 5px;
             text-decoration: none;
+            min-width: 220px;
         }
 
         .btn-custom:hover {
             background-color: #0056b3;
+        }
+        .rejected{
+            background-color: #f8d7da;
         }
     </style>
     @if ($errors->any())
@@ -24,32 +28,34 @@
             </div>
         </div>
     @endif
-    @foreach ($candidate->candidateDocuments as $doc)
-        @if ($doc->status == 2)
-            <div class="alert alert-danger">
-                <strong>Note:</strong> The document <b>{{ $doc->name }}</b> has been rejected.
+    <div class="col-lg-12 px-3 mt-2">
+        @foreach ($candidate->candidateDocuments as $doc)
+            @if ($doc->status == 2)
+                <div class="alert alert-danger">
+                    <strong>Note:</strong> The <b>{{ $doc->name }}</b> has been rejected.
+                </div>
+            @endif
+        @endforeach
+        @foreach ($candidate->otherCertificates as $doc)
+            @if ($doc->status == 2)
+                <div class="alert alert-danger">
+                    <strong>Note:</strong> One odf the Other Certificate has been rejected.
+                </div>
+            @endif
+        @endforeach
+        @foreach ($candidate->educationCertificates as $doc)
+            @if ($doc->status == 2)
+                <div class="alert alert-danger">
+                    <strong>Note:</strong> One odf the Education Certificate has been rejected.
+                </div>
+            @endif
+        @endforeach
+        @if (old('note', $candidate->note))
+            <div class="alert alert-danger text-danger font-weight-bold">
+                <strong>Rejected Field:</strong> {{ old('note', $candidate->note) }}
             </div>
         @endif
-    @endforeach
-    @foreach ($candidate->otherCertificates as $doc)
-        @if ($doc->status == 2)
-            <div class="alert alert-danger">
-                <strong>Note:</strong> One odf the Other Certificate has been rejected.
-            </div>
-        @endif
-    @endforeach
-    @foreach ($candidate->educationCertificates as $doc)
-        @if ($doc->status == 2)
-            <div class="alert alert-danger">
-                <strong>Note:</strong> One odf the Education Certificate has been rejected.
-            </div>
-        @endif
-    @endforeach
-    @if (old('note', $candidate->note))
-        <div class="alert alert-danger text-danger font-weight-bold">
-            <strong>Rejected Field:</strong> {{ old('note', $candidate->note) }}
-        </div>
-    @endif
+    </div>
 
     <div class="col-lg-12 pb-4">
         <div class="form-card px-3">
@@ -200,11 +206,15 @@
                                     id="mother_tongue" :required="true" size="col-lg-6 mt-2" :value="old('mother_tongue', $candidate->mother_tongue)" />
                                 <x-forms.select label="Blood Group:" name="blood_group" id="blood_group"
                                     :required="true" size="col-lg-6 mt-2" :options="FretusFolks::getBlood()" :value="old('blood_group', $candidate->blood_group)" />
-                                <x-forms.input label="Emergency Contact Person Number :" type="number"
-                                    name="emer_contact_no" id="emer_contact_no" :required="true"
-                                    size="col-lg-6 mt-2" :value="old('emer_contact_no', $candidate->emer_contact_no)" />
-                                <x-forms.input label="Emergency Contact Person Name:" type="text" name="emer_name"
-                                    id="emer_name" :required="true" size="col-lg-6 mt-2" :value="old('emer_name', $candidate->emer_name)" />
+                                <div class="form-group col-lg-6 mt-2">
+                                    <label for="emer_contact_no">Emergency Contact Person Number: <span
+                                            style="color: red">*</span></label>
+                                    <input type="text" name="emer_contact_no" id="emer_contact_no"
+                                        class="form-control" maxlength="10" inputmode="numeric"
+                                        value="{{ old('emer_contact_no', $candidate->emer_contact_no) }}" required>
+                                </div><x-forms.input label="Emergency Contact Person Name:" type="text"
+                                    name="emer_name" id="emer_name" :required="true" size="col-lg-6 mt-2"
+                                    :value="old('emer_name', $candidate->emer_name)" />
                                 <x-forms.input label="Emergency Contact Person Relation:" type="text"
                                     name="emer_relation" id="emer_relation" :required="true" size="col-lg-6 mt-2"
                                     :value="old('emer_relation', $candidate->emer_relation)" />
@@ -280,11 +290,10 @@
                                     </div>
                                 </div>
                                 <div class="form-group col-lg-6 mt-2">
-                                    <label for="aadhar_no">Enter Adhar Card No: <span
-                                            style="color: red">*</span></label>
+                                    <label for="aadhar_no">Enter Adhar Card No: </label>
                                     <input type="text" name="aadhar_no" id="aadhar_no" class="form-control"
                                         maxlength="12" inputmode="numeric"
-                                        value="{{ old('aadhar_no', $candidate->aadhar_no) }}" required>
+                                        value="{{ old('aadhar_no', $candidate->aadhar_no) }}">
                                 </div>
                                 <div class="form-group col-lg-6 mt-2">
                                     <label for="aadhar_path">Attach Aadhar Card: </label>
@@ -363,7 +372,7 @@
 
                                             @if ($candidate->candidateDocuments->isNotEmpty())
                                                 @foreach ($candidate->candidateDocuments as $certificate)
-                                                    <tr>
+                                                    <tr class="{{$certificate->status==2?'rejected':''}}">
                                                         <td>
                                                             {{ $candidateDocuments[$certificate->name] ?? $certificate->name }}
                                                         </td>

@@ -122,6 +122,29 @@
                                         You can only add details for up to 2 children.
                                     </div>
                                 </div>
+                                <div id="children-details-form" class="mt-3">
+                                    @if (!empty($children) && $children->count() > 0)
+                                        @foreach ($children as $index => $child)
+                                            <div class="row mb-3">
+                                                <div class="col-lg-6">
+                                                    <x-forms.input label="Child {{ $index + 1 }} Name:"
+                                                        type="text" name="child_names[{{ $index }}]"
+                                                        id="child_name_{{ $index }}" :value="$child->name" />
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <x-forms.input label="Child {{ $index + 1 }} DOB:"
+                                                        type="date" name="child_dobs[{{ $index }}]"
+                                                        id="child_dob_{{ $index }}" :value="$child->dob" />
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <x-forms.input label="Child {{ $index + 1 }} Aadhar:"
+                                                        type="numeric" name="child_aadhar[{{ $index }}]"
+                                                        id="child_aadhar_{{ $index }}" :value="$child->aadhar_no" />
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    @endif
+                                </div>
 
                                 <x-forms.input label="Father Name:  " type="text" name="father_name"
                                     id="father_name" :required="true" size="col-lg-3 mt-2" :value="old('father_name', $candidate->father_name)" />
@@ -166,11 +189,15 @@
                                     id="mother_tongue" :required="true" size="col-lg-6 mt-2" :value="old('mother_tongue', $candidate->mother_tongue)" />
                                 <x-forms.select label="Blood Group:" name="blood_group" id="blood_group"
                                     :required="true" size="col-lg-6 mt-2" :options="FretusFolks::getBlood()" :value="old('blood_group', $candidate->blood_group)" />
-                                <x-forms.input label="Emergency Contact Person Number :" type="number"
-                                    name="emer_contact_no" id="emer_contact_no" :required="true"
-                                    size="col-lg-6 mt-2" :value="old('emer_contact_no', $candidate->emer_contact_no)" />
-                                <x-forms.input label="Emergency Contact Person Name:" type="text" name="emer_name"
-                                    id="emer_name" :required="true" size="col-lg-6 mt-2" :value="old('emer_name', $candidate->emer_name)" />
+                                <div class="form-group col-lg-6 mt-2">
+                                    <label for="emer_contact_no">Emergency Contact Person Number: <span
+                                            style="color: red">*</span></label>
+                                    <input type="text" name="emer_contact_no" id="emer_contact_no"
+                                        class="form-control" maxlength="10" inputmode="numeric"
+                                        value="{{ old('emer_contact_no', $candidate->emer_contact_no) }}" required>
+                                </div><x-forms.input label="Emergency Contact Person Name:" type="text"
+                                    name="emer_name" id="emer_name" :required="true" size="col-lg-6 mt-2"
+                                    :value="old('emer_name', $candidate->emer_name)" />
                                 <x-forms.input label="Emergency Contact Person Relation:" type="text"
                                     name="emer_relation" id="emer_relation" :required="true" size="col-lg-6 mt-2"
                                     :value="old('emer_relation', $candidate->emer_relation)" />
@@ -231,7 +258,7 @@
                                         <div class="form-group col-lg-6 mt-2">
                                             <label for="pan_declaration">Upload Signed Document:</label>
                                             <input type="file" name="pan_declaration" id="pan_declaration"
-                                            accept=".doc, .docx, .pdf, .jpg, .png" class="form-control">
+                                                accept=".doc, .docx, .pdf, .jpg, .png" class="form-control">
 
                                             @if ($candidate->candidateDocuments->where('name', 'pan_declaration')->isNotEmpty())
                                                 @php
@@ -456,12 +483,12 @@
                                         </thead>
                                         <tbody>
                                             @php
-                                                $candidateDocuments = [
+                                                $directFileFields = [
                                                     'pan_path' => 'PAN Document',
                                                     'aadhar_path' => 'Aadhar Document',
                                                     'driving_license_path' => 'Driving License',
-                                                    'photo' => 'Photo',
-                                                    'resume' => 'Resume',
+                                                    // 'photo' => 'Photo',
+                                                    // 'resume' => 'Resume',
                                                     'bank_document' => 'Bank Document',
                                                     'voter_id' => 'Voter ID/ PVC/ UL',
                                                     'emp_form' => 'Employee Form',
@@ -471,27 +498,25 @@
                                                     'father_photo' => 'Father Photo',
                                                     'mother_photo' => 'Mother Photo',
                                                     'spouse_photo' => 'Spouse_photo',
-                                                    'family_photo' => 'Family Photo',
                                                     'pan_declaration' => 'Pan Declaration',
                                                 ];
                                             @endphp
 
-                                            @if ($candidate->candidateDocuments->isNotEmpty())
-                                                @foreach ($candidate->candidateDocuments as $certificate)
+                                            @foreach ($directFileFields as $field => $label)
+                                                @if (!empty($candidate->$field))
                                                     <tr>
+                                                        <td>{{ $label }}</td>
                                                         <td>
-                                                            {{ $candidateDocuments[$certificate->name] ?? $certificate->name }}
-                                                        </td>
-                                                        <td>
-                                                            <a href="{{ asset('storage/' . $certificate->path) }}"
+                                                            <a href="{{ asset('storage/' . $candidate->$field) }}"
                                                                 target="_blank" class="btn btn-custom">
                                                                 View
                                                             </a>
+
                                                         </td>
 
                                                     </tr>
-                                                @endforeach
-                                            @endif
+                                                @endif
+                                            @endforeach
 
                                             {{-- Education Certificates --}}
                                             @if ($candidate->educationCertificates->isNotEmpty())
@@ -704,16 +729,17 @@ class="col-lg-5 me-3 " >
                             <input type="date" name="child_dobs[]" id="child_dob_${i}" class="form-control"
                                    value="${childData.dob || ''}" required>
                         </div>
+                          <div class="form-group col-lg-3 child-aadhar" id="child_aadhar_field_${i}" style="display: none;">
+                            <label for="child_aadhar_${i}">Child ${i} Aadhar No:<span style="color: red;">*</span></label>
+                            <input type="text" name="child_aadhar[]" id="child_aadhar_${i}" class="form-control" 
+                                   value="${childData.aadhar || ''}" maxlength="12" inputmode="numeric">
+                        </div>
                         <div class="form-group col-lg-3">
                             <label for="child_photo_${i}">Child ${i} Photo:</label>
                             <input type="file" name="child_photo[]" id="child_photo_${i}" accept="application/pdf, image/jpg, image/png" 
                                    class="form-control">
                         </div>
-                        <div class="form-group col-lg-3 child-aadhar" id="child_aadhar_field_${i}" style="display: none;">
-                            <label for="child_aadhar_${i}">Child ${i} Aadhar No:<span style="color: red;">*</span></label>
-                            <input type="text" name="child_aadhar[]" id="child_aadhar_${i}" class="form-control" 
-                                   value="${childData.aadhar || ''}" maxlength="12" inputmode="numeric">
-                        </div>
+                      
                     `;
                             childrenDetails.appendChild(childRow);
 
@@ -768,6 +794,8 @@ class="col-lg-5 me-3 " >
             //pending update
             function pending_update() {
                 var formData = new FormData(document.getElementById('pendingDetailsForm'));
+                console.log(formData);
+                
                 fetch('{{ route('admin.dcs_approval.pending.update') }}', {
                         method: 'POST',
                         headers: {

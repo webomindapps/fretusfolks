@@ -4,9 +4,10 @@
         .btn-custom {
             background-color: #007bff;
             color: white;
-            padding: 10px 20px;
+            padding: 8px 20px;
             border-radius: 5px;
             text-decoration: none;
+            min-width: 220px;
         }
 
         .btn-custom:hover {
@@ -123,6 +124,11 @@
                                                     <x-forms.input label="Child {{ $index + 1 }} DOB:"
                                                         type="date" name="child_dobs[{{ $index }}]"
                                                         id="child_dob_{{ $index }}" :value="$child->dob" />
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <x-forms.input label="Child {{ $index + 1 }} Aadhar:"
+                                                        type="numeric" name="child_aadhar[{{ $index }}]"
+                                                        id="child_aadhar_{{ $index }}" :value="$child->aadhar_no" />
                                                 </div>
                                                 <div class="col-lg-6">
                                                     @if (!empty($child->photo))
