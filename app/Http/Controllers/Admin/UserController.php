@@ -95,7 +95,7 @@ class UserController extends Controller
             $user->assignRole($request->user_type);
 
 
-            if ($request['user_type'] === 'Hroperations') {
+            if ($request['user_type'] === 'HR Operations') {
                 $selectedClients = $request->input('clients', []);
 
                 foreach ($selectedClients as $clientId) {
@@ -167,7 +167,7 @@ class UserController extends Controller
 
         $user->syncRoles($request->role);
 
-        if ($request->role === 'Hroperations') {
+        if ($request->role === 'HR Operations') {
             HRMasters::where('user_id', $user->id)->delete();
 
             $selectedClients = $request->input('clients', []);

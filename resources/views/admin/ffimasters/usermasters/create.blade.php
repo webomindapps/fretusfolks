@@ -82,7 +82,7 @@
     <script>
         document.getElementById('user_type').addEventListener('change', function() {
             const assignClientsDiv = document.getElementById('assign_clients');
-            if (this.value === 'Hroperations') {
+            if (this.value === 'HR Operations') {
                 assignClientsDiv.style.display = 'block';
             } else {
                 assignClientsDiv.style.display = 'none';
@@ -91,7 +91,7 @@
 
         window.addEventListener('load', function() {
             const userTypeSelect = document.getElementById('user_type');
-            if (userTypeSelect.value === 'Hroperations') {
+            if (userTypeSelect.value === 'HR Operations') {
                 document.getElementById('assign_clients').style.display = 'block';
             }
         });
