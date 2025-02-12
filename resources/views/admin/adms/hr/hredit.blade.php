@@ -47,7 +47,7 @@
                                 <x-forms.input label="Grade: " type="text" name="grade" id="grade"
                                     :required="false" size="col-lg-6 mt-2" :value="old('grade', $candidate->grade)" />
                                 <x-forms.input label="Enter Employee Name: " type="text" name="emp_name"
-                                    id="emp_name" :required="true" size="col-lg-6 mt-2" :value="old('emp_name', $candidate->emp_name)" />
+                                    id="emp_name" size="col-lg-6 mt-2" :value="old('emp_name', $candidate->emp_name)" required />
 
                                 <x-forms.input label="Interview Date:  " type="date" name="interview_date"
                                     id="interview_date" :required="true" size="col-lg-6 mt-2"
@@ -63,8 +63,8 @@
                                     id="department" :required="false" size="col-lg-6 mt-2" :value="old('department', $candidate->department)" />
                                 <x-forms.select label="State:" name="state" id="state" :required="true"
                                     size="col-lg-6 mt-2" :options="FretusFolks::getStates()" :value="old('state', $candidate->state)" />
-                                <x-forms.input label="Location: " type="text" name="location" id="location"
-                                    :required="true" size="col-lg-6 mt-2" :value="old('location', $candidate->location)" />
+                                <x-forms.input label="Location: " :required="true" type="text" name="location"
+                                    id="location" size="col-lg-6 mt-2" :value="old('location', $candidate->location)" />
                                 <x-forms.input label="Branch: " type="text" name="branch" id="branch"
                                     :required="false" size="col-lg-6 mt-2" :value="old('branch', $candidate->branch)" />
                                 <x-forms.radio label="Gender: " :options="[
@@ -538,7 +538,7 @@
                                 {{-- <x-forms.input label="Password:" type="text" name="psd" id="psd"
                                     :required="true" size="col-lg-6 mt-2" :value="old('psd', 'ffemp@123')" /> --}}
                                 <div class="form-group col-lg-6 mt-2 mr-2">
-                                    <label for="hr_approval">Status</label>
+                                    <label for="hr_approval">Status <span style="color: red">*</span></label>
                                     <select id="hr_approval" name="hr_approval" class="form-control" required
                                         onchange="toggleNotesField(this.value)">
                                         <option value="">Select Status</option>
@@ -624,14 +624,153 @@
         <script>
             document.getElementById('submitBtn').addEventListener('click', function(e) {
                 e.preventDefault();
-                let status = document.getElementById('hr_approval').value;
-                let form = document.getElementById('HRedit');
-                if (status === "1") {
-                    $('#offerLetterModal').modal('show');
-                } else {
-                    form.submit();
+
+                function validateForm() {
+                    let isValid = true;
+                    $(".error").remove(); // Remove previous error messages
+
+                    // Validate required fields
+                    $("input[required], select[required], textarea[required]").each(function() {
+                        let field = $(this);
+                        let fieldValue = field.val().trim();
+
+                        if (!fieldValue) {
+                            isValid = false;
+                            field.after(
+                                `<span class='error' style='color:red; font-size: 13px;'>${getErrorMessage(field.attr('id'))}</span>`
+                                );
+                        }
+                    });
+
+                    // Validate Aadhar Number
+                    var aadharPattern = /^\d{12}$/;
+                    $('#father_aadhar_no, #mother_aadhar_no, #aadhar_no').each(function() {
+                        let aadharNumber = $(this).val().trim();
+                        if (!aadharNumber) {
+                            isValid = false;
+                            $(this).after(
+                                "<span class='error' style='color:red; font-size: 13px;'>Aadhar number is required.</span>"
+                                );
+                        } else if (!aadharPattern.test(aadharNumber)) {
+                            isValid = false;
+                            $(this).after(
+                                "<span class='error' style='color:red; font-size: 13px;'>Aadhar number must be a 12-digit numeric value.</span>"
+                                );
+                        }
+                    });
+
+                    // Validate Phone Number
+                    var phonePattern = /^\d{10}$/;
+                    $('#phone1').each(function() {
+                        let phoneNumber = $(this).val().trim();
+                        if (!phoneNumber) {
+                            isValid = false;
+                            $(this).after(
+                                "<span class='error' style='color:red; font-size: 13px;'>Phone number is required.</span>"
+                                );
+                        } else if (!phonePattern.test(phoneNumber)) {
+                            isValid = false;
+                            $(this).after(
+                                "<span class='error' style='color:red; font-size: 13px;'>Phone number must be a 10-digit numeric value.</span>"
+                                );
+                        }
+                    });
+
+                    return isValid;
+                }
+
+                function getErrorMessage(fieldId) {
+                    let errorMessages = {
+                        'emp_name': 'Please Enter Employee Name',
+                        'location': 'Please Enter Location',
+                        'interview_date': 'Please select an interview date',
+                        'joining_date': 'Please select a joining date',
+                        'dob': 'Please Enter Date Of Birth',
+                        'father_name': 'Please Enter Father Name',
+                        'mother_name': 'Please Enter Mother Name',
+                        'mother_dob': 'Please Enter Mother DOB',
+                        'father_dob': 'Please Enter Father DOB',
+                        'religion': 'Please Enter Religion',
+                        'languages': 'Please Enter Languages Known'
+                    };
+
+                    return errorMessages[fieldId] || "This field is required.";
+                }
+
+                if (validateForm()) {
+                    let status = document.getElementById('hr_approval').value;
+                    let form = document.getElementById('HRedit');
+
+                    if (status === "1") {
+                        $('#offerLetterModal').modal('show');
+                    } else {
+                        form.submit();
+                    }
                 }
             });
+
+            $("input[required], select[required], textarea[required]").on('blur input', function() {
+                $(this).next('.error').remove();
+                let fieldValue = $(this).val().trim();
+                if (!fieldValue) {
+                    $(this).after(
+                        `<span class='error' style='color:red; font-size: 13px;'>${getErrorMessage($(this).attr('id'))}</span>`
+                        );
+                }
+            });
+
+            // **Real-time validation for Aadhar & Phone**
+            $('#father_aadhar_no, #mother_aadhar_no, #aadhar_no').on('blur input', function() {
+                $(this).next('.error').remove();
+                let aadharPattern = /^\d{12}$/;
+                let aadharNumber = $(this).val().trim();
+
+                if (!aadharNumber) {
+                    $(this).after(
+                        "<span class='error' style='color:red; font-size: 13px;'>Aadhar number is required.</span>");
+                } else if (!aadharPattern.test(aadharNumber)) {
+                    $(this).after(
+                        "<span class='error' style='color:red; font-size: 13px;'>Aadhar number must be a 12-digit numeric value.</span>"
+                        );
+                }
+            });
+
+            $('#phone1').on('blur input', function() {
+                $(this).next('.error').remove();
+                let phonePattern = /^\d{10}$/;
+                let phoneNumber = $(this).val().trim();
+
+                if (!phoneNumber) {
+                    $(this).after(
+                        "<span class='error' style='color:red; font-size: 13px;'>Phone number is required.</span>");
+                } else if (!phonePattern.test(phoneNumber)) {
+                    $(this).after(
+                        "<span class='error' style='color:red; font-size: 13px;'>Phone number must be a 10-digit numeric value.</span>"
+                        );
+                }
+            });
+
+
+
+            function getErrorMessage(fieldId) {
+                let messages = {
+                    'emp_name': 'Please Enter Employee Name',
+                    'location': 'Please Enter Location',
+                    'interview_date': 'Please select an interview date.',
+                    'joining_date': 'Please select a joining date.',
+                    'dob': 'Please Enter Date Of Birth',
+                    'father_name': 'Please Enter Father Name',
+                    'mother_name': 'Please Enter Mother Name',
+                    'mother_dob': 'Please Enter Mother DOB',
+                    'father_dob': 'Please Enter Father DOB',
+                    'languages': 'Please Enter Languages Known',
+                    'father_aadhar_no': 'Please enter the Aadhar number.',
+                    'mother_aadhar_no': 'Please enter the Aadhar number.',
+                    'aadhar_no': 'Please enter the Aadhar number.',
+                    'religion': 'Please Enter Religion',
+                };
+                return messages[fieldId] || 'This field is required.';
+            }
 
             function generateOfferLetter(action) {
                 if (action === 'save') {
@@ -653,9 +792,9 @@
                 if (ccEmails) {
                     document.getElementById('cc_emails_input').value = ccEmails;
 
-                    $('#storing_option').val('send'); // Set action to send
+                    $('#storing_option').val('send');
                     let form = document.getElementById('HRedit');
-                    form.submit(); // Submit the form
+                    form.submit();
                     console.log('Generating and sending the offer letter to CCs: ', ccEmails);
                 } else {
                     alert('Please enter at least one CC email address.');
@@ -870,5 +1009,4 @@
             </div>
         </div>
     </div>
-
 </x-applayout>
