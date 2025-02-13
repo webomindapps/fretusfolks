@@ -358,7 +358,7 @@ Route::prefix('admin')->group(function () {
         Route::get('pip_letter', [AdmsPipLetterController::class, 'index'])->name('pip_letter');
         Route::get('/pip_letter/create', [AdmsPipLetterController::class, 'create'])->name('pip_letter.create');
         Route::post('/pip_letter/create', [AdmsPipLetterController::class, 'store']);
-        Route::get('/pip_letter/details', [AdmsPipLetterController::class, 'details'])->name('pip_letter.details');
+        Route::get('/pip_letter/{emp_id}/details', [AdmsPipLetterController::class, 'details'])->name('pip_letter.details');
         Route::get('pip_letter/{id}/view', [AdmsPipLetterController::class, 'viewpdf'])->name('pip_letter.viewpdf');
         Route::get('pip_letter/{id}/edit', [AdmsPipLetterController::class, 'edit'])->name('pip_letter.edit');
         Route::post('pip_letter/{id}/edit', [AdmsPipLetterController::class, 'update']);

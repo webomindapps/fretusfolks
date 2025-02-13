@@ -21,7 +21,7 @@ class PipLetter extends Model
         'date_of_update',
         'pip_letter_path'
     ];
-    public function pip_letter()
+    public function pip_letters()
     {
         return $this->belongsTo(CFISModel::class, 'emp_id', 'ffi_emp_id');
     }

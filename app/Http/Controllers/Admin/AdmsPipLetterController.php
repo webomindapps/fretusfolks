@@ -28,7 +28,7 @@ class AdmsPipLetterController extends Controller
         $orderBy = request()->orderBy;
         $paginate = request()->paginate;
 
-        $query = $this->model()->with('pip_letter');
+        $query = $this->model()->with('pip_letters');
 
         if ($from_date && $to_date) {
             $query->whereBetween('created_at', [$from_date, $to_date]);
@@ -74,7 +74,7 @@ class AdmsPipLetterController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'ffi_emp_id' => 'required',
+            // 'ffi_emp_id' => 'required',
             'status' => 'nullable|string',
             'emp_id' => 'nullable',
             'date' => 'required|date',
@@ -88,7 +88,7 @@ class AdmsPipLetterController extends Controller
         try {
             $pipLetter = $this->model()->create([
                 'from_name' => $request->from_name,
-                'emp_id' => $request->ffi_emp_id,
+                'emp_id' => $request->emp_id,
                 'status' => '1',
                 'date' => $request->date,
                 'content' => $request->content,
@@ -139,7 +139,7 @@ class AdmsPipLetterController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'ffi_emp_id' => 'required',
+            'emp_id' => 'required',
             'status' => 'nullable|string',
             'date' => 'required|date',
         ]);
@@ -154,7 +154,7 @@ class AdmsPipLetterController extends Controller
 
             $pipLetter->update([
                 'from_name' => $request->from_name,
-                'emp_id' => $request->ffi_emp_id,
+                'emp_id' => $request->emp_id,
                 'status' => '1',
                 'date' => $request->date,
                 'content' => $request->content,

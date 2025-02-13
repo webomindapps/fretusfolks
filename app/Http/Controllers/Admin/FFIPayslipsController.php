@@ -2,23 +2,24 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Exception;
 use ZipArchive;
+use App\Models\Payslips;
+use App\Jobs\PayslipCreate;
 use Illuminate\Http\Request;
+use Illuminate\Bus\Batchable;
 use RecursiveIteratorIterator;
 use Barryvdh\DomPDF\Facade\Pdf;
 use RecursiveDirectoryIterator;
 use App\Models\FFIPayslipsModel;
 use App\Exports\FFI_PayslipsExport;
 use App\Imports\FFI_PayslipsImport;
+use Illuminate\Support\Facades\Bus;
 use App\Http\Controllers\Controller;
-use App\Jobs\PayslipCreate;
-use Exception;
 use Illuminate\Support\Facades\File;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Bus\Batchable;
-use Illuminate\Support\Facades\Bus;
 
 class FFIPayslipsController extends Controller
 {
@@ -83,7 +84,6 @@ class FFIPayslipsController extends Controller
                 $header = null;
                 $datafromCsv = array();
                 $records = array_map('str_getcsv', file($fileWithPath));
-                $batch = Bus::batch([])->dispatch();
                 foreach ($records as $key => $record) {
                     if (!$header) {
                         $header = $record;
@@ -93,14 +93,16 @@ class FFIPayslipsController extends Controller
                 }
                 $datafromCsv = array_chunk($datafromCsv, 1000);
                 foreach ($datafromCsv as $index => $dataCsv) {
+
                     foreach ($dataCsv as $data) {
+                        // dd($header, $data);
+
                         $payslipdata[$index][] = array_combine($header, $data);
                     }
-                    $batch->add(new PayslipCreate($payslipdata[$index], $month, $year));
-                    // PayslipCreate::dispatch($payslipdata[$index], $month, $year);
+                    // dd($payslipdata[$index], $month, $year);
+                    $payslips = PayslipCreate::dispatch($payslipdata[$index], $month, $year);
+                    // dd($payslips);
                 }
-                session()->put('lastBatch',$batch);
-                return back();
             }
         } catch (Exception $e) {
             dd($e);
