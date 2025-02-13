@@ -70,7 +70,7 @@
                                 <tr>
                                     <td colspan="3" style="font-size:10px; text-align:left; padding:7px">
                                         <p style="line-height:1.8; font-size:14px">
-                                            <b>To: {{ $pipLetter->pip_letter->emp_name }}</b> <br>
+                                            <b>To: {{ $pipLetter->pip_letters->emp_name }}</b> <br>
                                             <b>From: {{ $pipLetter->from_name }}</b> <br>
                                             <b>Date: {{ \Carbon\Carbon::parse($pipLetter->date)->format('d-m-Y') }}</b>
                                         </p>
@@ -112,7 +112,7 @@
                         <br>
                         <div class="content" style="line-height:2; font-size:12px">
                             <p><b>Signatures:</b></p>
-                            <p>Employee Name: {{ $pipLetter->pip_letter->emp_name }}</p>
+                            <p>Employee Name: {{ $pipLetter->pip_letters->emp_name }}</p>
                             <p>Employee Signature: __________________</p>
                             <p>Date: {{ \Carbon\Carbon::parse($pipLetter->date)->format('d-m-Y') }}</p>
                         </div>

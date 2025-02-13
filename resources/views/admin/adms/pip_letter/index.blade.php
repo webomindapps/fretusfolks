@@ -21,10 +21,10 @@
                         <td>{{ $item->id }}</td>
                         <td>{{ $item->from_name }}</td>
                         <td>{{ $item->emp_id }}</td>
-                        <td>{{ $item->pip_letter ? $item->pip_letter->emp_name : 'N/A' }}</td>
+                        <td>{{ $item->pip_letters ? $item->pip_letters->emp_name : 'N/A' }}</td>
                         <td>{{ \Carbon\Carbon::parse($item->date)->format('d-m-Y') }}</td>
-                        <td>{{ $item->pip_letter ? $item->pip_letter->phone1 : 'N/A' }}</td>
-                        <td>{{ $item->pip_letter ? $item->pip_letter->designation : 'N/A' }}</td>
+                        <td>{{ $item->pip_letters ? $item->pip_letters->phone1 : 'N/A' }}</td>
+                        <td>{{ $item->pip_letters ? $item->pip_letters->designation : 'N/A' }}</td>
                         <td>
                             <div class="dropdown pop_Up dropdown_bg">
                                 <div class="dropdown-toggle" id="dropdownMenuButton-{{ $item->id }}"

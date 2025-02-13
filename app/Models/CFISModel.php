@@ -186,10 +186,10 @@ class CFISModel extends Model
     }
     public function terminationletter()
     {
-        return $this->hasMany(TerminationLetter::class);
+        return $this->hasMany(TerminationLetter::class, 'emp_id', 'ffi_emp_id');
     }
     public function pipletter()
     {
-        return $this->hasMany(Pipletter::class);
+        return $this->hasMany(Pipletter::class, 'emp_id', 'ffi_emp_id');
     }
 }

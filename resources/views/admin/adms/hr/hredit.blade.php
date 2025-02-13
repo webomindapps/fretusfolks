@@ -244,11 +244,10 @@
                                     </div>
                                 </div>
                                 <div class="form-group col-lg-6 mt-2">
-                                    <label for="aadhar_no">Enter Adhar Card No: <span
-                                            style="color: red">*</span></label>
+                                    <label for="aadhar_no">Enter Adhar Card No:</label>
                                     <input type="text" name="aadhar_no" id="aadhar_no" class="form-control"
                                         maxlength="12" inputmode="numeric"
-                                        value="{{ old('aadhar_no', $candidate->aadhar_no) }}" required>
+                                        value="{{ old('aadhar_no', $candidate->aadhar_no) }}" >
                                 </div>
                                 <div class="form-group col-lg-6 mt-2">
                                     <label for="aadhar_path">Attach Aadhar Card: <span
@@ -669,23 +668,7 @@
                     return isValid;
                 }
 
-                function getErrorMessage(fieldId) {
-                    let errorMessages = {
-                        'emp_name': 'Please Enter Employee Name',
-                        'location': 'Please Enter Location',
-                        'interview_date': 'Please select an interview date',
-                        'joining_date': 'Please select a joining date',
-                        'dob': 'Please Enter Date Of Birth',
-                        'father_name': 'Please Enter Father Name',
-                        'mother_name': 'Please Enter Mother Name',
-                        'mother_dob': 'Please Enter Mother DOB',
-                        'father_dob': 'Please Enter Father DOB',
-                        'religion': 'Please Enter Religion',
-                        'languages': 'Please Enter Languages Known'
-                    };
-
-                    return errorMessages[fieldId] || "This field is required.";
-                }
+               
 
                 if (validateForm()) {
                     let status = document.getElementById('hr_approval').value;

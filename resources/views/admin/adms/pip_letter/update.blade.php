@@ -28,16 +28,16 @@
                                     :required="true" size="col-lg-6 mt-2" :value="old('from_name', $pip->from_name)" />
                                 <div class="col-lg-6 mt-2">
                                     <label for="ffi_emp_id">Employee ID:</label>
-                                    <input type="text" id="ffi_emp_id" name="ffi_emp_id"
+                                    <input type="text" id="emp_id" name="emp_id"
                                         onchange="return fetchEmployeeDetails()" value="{{ $pip->emp_id }}" required>
                                     <input type="hidden" id="fetchEmployeeRoute"
-                                        data-url="{{ route('admin.pip_letter.details', ['ffi_emp_id' => ':ffi_emp_id']) }}">
+                                        data-url="{{ route('admin.pip_letter.details', ['emp_id' => ':emp_id']) }}">
                                 </div>
                                 <x-forms.input label="Enter Employee Name: " type="text" name="emp_name"
                                     id="emp_name" :required="true" size="col-lg-6 mt-2"
-                                    value="{{ $pip->pip_letter->emp_name }}" readonly />
+                                    value="{{ $pip->pip_letters->emp_name }}" readonly />
                                 <x-forms.input label="Designation: " type="text" name="designation" id="designation"
-                                    :required="true" size="col-lg-6 mt-2"   value="{{ $pip->pip_letter->designation }}" readonly />
+                                    :required="true" size="col-lg-6 mt-2"   value="{{ $pip->pip_letters->designation }}" readonly />
                                 <x-forms.input label="Date: " type="date" name="date" id="date"
                                     :required="false" size="col-lg-6 mt-2" :value="old('date',$pip->date)" />
                                 <x-forms.textarea label="Content: " name="content" id="content" :required="true"
@@ -94,14 +94,14 @@
     @push('scripts')
         <script>
             function fetchEmployeeDetails() {
-                const ffi_emp_id = $('#ffi_emp_id').val();
+                const ffi_emp_id = $('#emp_id').val();
 
                 if (!ffi_emp_id) {
                     alert('Employee ID is required. Please enter a valid Employee ID.');
                     clearFields();
                     return;
                 }
-                const routeUrl = $('#fetchEmployeeRoute').data('url').replace(':ffi_emp_id', ffi_emp_id);
+                const routeUrl = $('#fetchEmployeeRoute').data('url').replace(':emp_id', ffi_emp_id);
 
                 $.ajax({
                     url: routeUrl,
