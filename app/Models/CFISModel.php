@@ -192,4 +192,8 @@ class CFISModel extends Model
     {
         return $this->hasMany(Pipletter::class, 'emp_id', 'ffi_emp_id');
     }
+    public function payslipletter()
+    {
+        return $this->hasMany(Payslips::class, 'emp_id', 'ffi_emp_id');
+    }
 }
