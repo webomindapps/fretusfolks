@@ -12,6 +12,7 @@ use App\Exports\FFI_PayslipsExport;
 use App\Imports\FFI_PayslipsImport;
 use App\Http\Controllers\Controller;
 use App\Jobs\PayslipCreate;
+use App\Models\Payslips;
 use Exception;
 use Illuminate\Support\Facades\File;
 use Maatwebsite\Excel\Facades\Excel;
@@ -83,7 +84,6 @@ class FFIPayslipsController extends Controller
                 $header = null;
                 $datafromCsv = array();
                 $records = array_map('str_getcsv', file($fileWithPath));
-                $batch = Bus::batch([])->dispatch();
                 foreach ($records as $key => $record) {
                     if (!$header) {
                         $header = $record;
@@ -91,16 +91,33 @@ class FFIPayslipsController extends Controller
                         $datafromCsv[] = $record;
                     }
                 }
-                $datafromCsv = array_chunk($datafromCsv, 1000);
+                $datafromCsv = array_chunk($datafromCsv, 10);
                 foreach ($datafromCsv as $index => $dataCsv) {
                     foreach ($dataCsv as $data) {
-                        $payslipdata[$index][] = array_combine($header, $data);
+                        if (is_string($data)) {
+                            // If it's a string, we parse it as CSV
+                            $data = str_getcsv($data);
+                        }
+
+                        // Make sure that $data is an array before proceeding
+                        if (!is_array($data)) {
+                            continue;
+                        }
+
+                        if (count($data) !== count($header)) {
+                            continue;
+                        }
+
+                        $payslipRecords = array_combine($header, $data);
+                        if ($payslipRecords === false) {
+                            continue;
+                        }
+
+                        // Create the payslip entry and dispatch the job
+                        $payslipEntry = FFIPayslipsModel::create($payslipRecords);
+                        PayslipCreate::dispatch($payslipEntry->id, $month, $year);
                     }
-                    $batch->add(new PayslipCreate($payslipdata[$index], $month, $year));
-                    // PayslipCreate::dispatch($payslipdata[$index], $month, $year);
                 }
-                session()->put('lastBatch',$batch);
-                return back();
             }
         } catch (Exception $e) {
             dd($e);

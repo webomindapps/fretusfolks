@@ -28,7 +28,7 @@ class AdmsPipLetterController extends Controller
         $orderBy = request()->orderBy;
         $paginate = request()->paginate;
 
-        $query = $this->model()->with('pip_letter');
+        $query = $this->model()->with('letters');
 
         if ($from_date && $to_date) {
             $query->whereBetween('created_at', [$from_date, $to_date]);

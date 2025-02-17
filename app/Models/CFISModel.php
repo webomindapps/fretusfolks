@@ -188,8 +188,8 @@ class CFISModel extends Model
     {
         return $this->hasMany(TerminationLetter::class);
     }
-    public function pipletter()
-    {
-        return $this->hasMany(Pipletter::class);
-    }
+    // public function pipletters()
+    // {
+    //     return $this->hasMany(Pipletter::class);
+    // }
 }
