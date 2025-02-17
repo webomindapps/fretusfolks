@@ -2,24 +2,24 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Exception;
 use ZipArchive;
+use App\Models\Payslips;
+use App\Jobs\PayslipCreate;
 use Illuminate\Http\Request;
+use Illuminate\Bus\Batchable;
 use RecursiveIteratorIterator;
 use Barryvdh\DomPDF\Facade\Pdf;
 use RecursiveDirectoryIterator;
 use App\Models\FFIPayslipsModel;
 use App\Exports\FFI_PayslipsExport;
 use App\Imports\FFI_PayslipsImport;
+use Illuminate\Support\Facades\Bus;
 use App\Http\Controllers\Controller;
-use App\Jobs\PayslipCreate;
-use App\Models\Payslips;
-use Exception;
 use Illuminate\Support\Facades\File;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Bus\Batchable;
-use Illuminate\Support\Facades\Bus;
 
 class FFIPayslipsController extends Controller
 {
@@ -93,30 +93,15 @@ class FFIPayslipsController extends Controller
                 }
                 $datafromCsv = array_chunk($datafromCsv, 10);
                 foreach ($datafromCsv as $index => $dataCsv) {
+
                     foreach ($dataCsv as $data) {
-                        if (is_string($data)) {
-                            // If it's a string, we parse it as CSV
-                            $data = str_getcsv($data);
-                        }
+                        // dd($header, $data);
 
-                        // Make sure that $data is an array before proceeding
-                        if (!is_array($data)) {
-                            continue;
-                        }
-
-                        if (count($data) !== count($header)) {
-                            continue;
-                        }
-
-                        $payslipRecords = array_combine($header, $data);
-                        if ($payslipRecords === false) {
-                            continue;
-                        }
-
-                        // Create the payslip entry and dispatch the job
-                        $payslipEntry = FFIPayslipsModel::create($payslipRecords);
-                        PayslipCreate::dispatch($payslipEntry->id, $month, $year);
+                        $payslipdata[$index][] = array_combine($header, $data);
                     }
+                    // dd($payslipdata[$index], $month, $year);
+                    $payslips = PayslipCreate::dispatch($payslipdata[$index], $month, $year);
+                    // dd($payslips);
                 }
             }
         } catch (Exception $e) {

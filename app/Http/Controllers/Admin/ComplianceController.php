@@ -8,6 +8,7 @@ use App\Models\CFISModel;
 use App\Models\DCSChildren;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Exports\CadidateDownload;
 use App\Exports\CandidatesExport;
 use App\Imports\CandidatesImport;
 use Illuminate\Support\Facades\DB;
@@ -38,9 +39,8 @@ class ComplianceController extends Controller
 
 
         $query = $this->model()->query()
-            ->where('hr_approval', 1);
-
-
+            ->where('hr_approval', 1)
+            ->where('comp_status', 0);
 
         if ($from_date && $to_date) {
             $query->whereBetween('created_at', [$from_date, $to_date]);
@@ -186,7 +186,8 @@ class ComplianceController extends Controller
             'phone1',
             'email',
             'uan_no',
-            'esic_no'
+            'esic_no',
+            'comp_status'
         ]);
 
         DB::beginTransaction();
@@ -204,7 +205,7 @@ class ComplianceController extends Controller
             return redirect()->back()->with('error', 'Failed to update candidate data. Please try again.');
         }
     }
-    
+
     // Import from Excel
     public function import(Request $request)
     {
@@ -215,6 +216,15 @@ class ComplianceController extends Controller
         Excel::import(new CandidatesImport, $request->file('file'));
 
         return back()->with('success', 'Candidates Imported Successfully');
+    }
+    public function download(Request $request)
+    {
+
+        $query = $this->model()->query()->where('hr_approval', 1)->where('comp_status', 0);
+
+        $candidates = $query->get();
+
+        return Excel::download(new CadidateDownload($candidates), 'candidates.xlsx');
     }
 
 }

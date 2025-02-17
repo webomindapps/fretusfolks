@@ -358,7 +358,7 @@ Route::prefix('admin')->group(function () {
         Route::get('pip_letter', [AdmsPipLetterController::class, 'index'])->name('pip_letter');
         Route::get('/pip_letter/create', [AdmsPipLetterController::class, 'create'])->name('pip_letter.create');
         Route::post('/pip_letter/create', [AdmsPipLetterController::class, 'store']);
-        Route::get('/pip_letter/details', [AdmsPipLetterController::class, 'details'])->name('pip_letter.details');
+        Route::get('/pip_letter/{emp_id}/details', [AdmsPipLetterController::class, 'details'])->name('pip_letter.details');
         Route::get('pip_letter/{id}/view', [AdmsPipLetterController::class, 'viewpdf'])->name('pip_letter.viewpdf');
         Route::get('pip_letter/{id}/edit', [AdmsPipLetterController::class, 'edit'])->name('pip_letter.edit');
         Route::post('pip_letter/{id}/edit', [AdmsPipLetterController::class, 'update']);
@@ -372,6 +372,8 @@ Route::prefix('admin')->group(function () {
         Route::get('candidatemaster/{id}/edit', [ComplianceController::class, 'edit'])->name('candidatemaster.edit');
         Route::post('candidatemaster/{id}/edit', [ComplianceController::class, 'update']);
         Route::post('/candidatemaster/import', [ComplianceController::class, 'import'])->name('candidatemaster.import');
+        Route::post('candidatemaster/formate/download', [ComplianceController::class, 'download'])->name('candidatemaster.formdownload');
+
 
         //Employee Lifecycle
         Route::get('candidatelifecycle', [EmployeeLifecycleController::class, 'index'])->name('candidatelifecycle');

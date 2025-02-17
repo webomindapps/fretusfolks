@@ -103,5 +103,9 @@ class Payslips extends Model
         'modify_on',
         'payslips_letter_path'
     ];
+    public function payslips()
+    {
+        return $this->belongsTo(CFISModel::class, 'emp_id', 'ffi_emp_id');
+    }
 }
 

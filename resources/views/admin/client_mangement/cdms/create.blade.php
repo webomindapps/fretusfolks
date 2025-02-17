@@ -38,10 +38,17 @@
 
                                 <x-forms.input label="Enter Contact Person Name:" type="text" name="contact_person"
                                     id="contact_person" :required="true" size="col-lg-6 mt-2" :value="old('contact_person')" />
-
+                                {{-- 
                                 <x-forms.input label="Enter Contact Person Mobile Number:" type="number"
                                     name="contact_person_phone" id="contact_person_phone" :required="true"
-                                    size="col-lg-6 mt-2" :value="old('contact_person_phone')" />
+                                    size="col-lg-6 mt-2" :value="old('contact_person_phone')" /> --}}
+                                <div class="form-group col-lg-4 mt-2">
+                                    <label for="contact_person_phone">Enter Contact Person Mobile Number: <span
+                                            style="color: red">*</span></label>
+                                    <input type="text" name="contact_person_phone" id="contact_person_phone"
+                                        class="form-control" maxlength="10" inputmode="numeric"
+                                        value="{{ old('contact_person_phone') }}" required>
+                                </div>
 
                                 <x-forms.input label="Enter Contact Person Mail ID:" type="email"
                                     name="contact_person_email" id="contact_person_email" :required="true"
@@ -54,6 +61,14 @@
                                 <x-forms.input label="Contact Person Phone (Communication):" type="number"
                                     name="contact_phone_comm" id="contact_phone_comm" :required="true"
                                     size="col-lg-6 mt-2" :value="old('contact_phone_comm')" />
+
+                                <div class="form-group col-lg-4 mt-2">
+                                    <label for="contact_phone_comm">Contact Person Phone (Communication): <span
+                                            style="color: red">*</span></label>
+                                    <input type="text" name="contact_phone_comm" id="contact_phone_comm"
+                                        class="form-control" maxlength="10" inputmode="numeric"
+                                        value="{{ old('contact_phone_comm') }}" required>
+                                </div>
 
                                 <x-forms.input label="Contact Person Mail (Communication):" type="email"
                                     name="contact_email_comm" id="contact_email_comm" :required="true"
@@ -122,13 +137,15 @@
                                     ['value' => '1', 'label' => 'LOI'],
                                     ['value' => '2', 'label' => 'Agreement'],
                                 ]" id="mode_agreement"
-                                    name="mode_agreement" :required="true" size="col-lg-6 mt-2" />
+                                    name="mode_agreement" :required="true" size="col-lg-6 mt-2"
+                                    :value="old('mode_agreement')" />
                                 <x-forms.radio label="Type of Agreement:" :options="[
                                     ['value' => '1', 'label' => 'One Time Sourcing'],
                                     ['value' => '2', 'label' => 'Contractual'],
                                     ['value' => '3', 'label' => 'Other'],
                                 ]" id="agreement_type"
-                                    name="agreement_type" :required="true" size="col-lg-6 mt-2" />
+                                    name="agreement_type" :required="false" size="col-lg-6 mt-2"
+                                    :value="old('agreement_type')" />
 
                                 <div class="form-group col-lg-6 mt-2">
                                     <label for="file">Attach Agreement Documents:
@@ -137,6 +154,7 @@
                                     </label>
                                     <div class="custom-file">
                                         <input type="file" class="form-control" id="agreement_doc"
+                                            accept="application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/pdf, image/jpg, image/png"
                                             name="agreement_doc">
                                     </div>
                                     <span class="form-text text-muted">Max file size 5 MB</span>
@@ -144,32 +162,32 @@
                                 </div>
                                 <div class="form-group col-lg-6 mt-2">
                                     <label for="contract_start">Contract Start Date:</label>
-                                    <span style="color: red">*</span>
                                     <input type="date" class="form-control" id="contract_start"
-                                        name="contract_start" required :value="old('contract_start')">
+                                        name="contract_start" value="{{ old('contract_start') }}">
                                 </div>
                                 <div class="form-group col-lg-6 mt-2">
                                     <label for="contract_end">Contract End Date:</label>
-                                    <span style="color: red">*</span>
                                     <input type="date" class="form-control" id="contract_end" name="contract_end"
-                                        required :value="old('contract_end')">
+                                        value="{{ old('contract_end') }}">
                                 </div>
+
                                 <div class="form-group col-md-12">
                                     <h5 class="card-title">Commercial</h5>
                                 </div>
                                 <x-forms.input label="Rate: " type="number" name="rate" id="rate"
                                     :required="true" size="col-lg-4 mt-2" :value="old('rate')" />
-                                <x-forms.select label="Commercial Type:" name="commercial_type" id="commercial_type"
-                                    :required="true" size="col-lg-2 mt-2" :options="[
-                                        [
-                                            'label' => '%',
-                                            'value' => 1,
-                                        ],
-                                        [
-                                            'label' => 'Rs',
-                                            'value' => 2,
-                                        ],
-                                    ]" :value="'%'" />
+
+                                <div class="col-lg-2 mt-2">
+                                    <label for="commercial_type" class="form-label">Commercial Type:</label>
+                                    <select name="commercial_type" id="commercial_type" class="form-control"
+                                        required>
+                                        <option value="1" {{ old('commercial_type') == 1 ? 'selected' : '' }}>%
+                                        </option>
+                                        <option value="2" {{ old('commercial_type') == 2 ? 'selected' : '' }}>Rs
+                                        </option>
+                                    </select>
+                                </div>
+
                                 <x-forms.input label="Remark: " type="text" name="remark" id="remark"
                                     :required="true" size="col-lg-6 mt-2" :value="old('remark')" />
                             </div>

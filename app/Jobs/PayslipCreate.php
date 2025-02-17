@@ -28,6 +28,7 @@ class PayslipCreate implements ShouldQueue
      */
     public function handle(): void
     {
+        
         foreach ($this->payslips as $key => $row) {
             $data[] = [
                 'emp_id' => $row['emp_id'],

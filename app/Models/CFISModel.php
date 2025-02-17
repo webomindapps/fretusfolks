@@ -113,6 +113,7 @@ class CFISModel extends Model
         'hr_approval',
         'pan_status',
         'note',
+        'comp_status',
     ];
 
     protected $casts = [
@@ -186,10 +187,14 @@ class CFISModel extends Model
     }
     public function terminationletter()
     {
-        return $this->hasMany(TerminationLetter::class);
+        return $this->hasMany(TerminationLetter::class, 'emp_id', 'ffi_emp_id');
     }
-    // public function pipletters()
-    // {
-    //     return $this->hasMany(Pipletter::class);
-    // }
+    public function pipletter()
+    {
+        return $this->hasMany(Pipletter::class, 'emp_id', 'ffi_emp_id');
+    }
+    public function payslipletter()
+    {
+        return $this->hasMany(Payslips::class, 'emp_id', 'ffi_emp_id');
+    }
 }

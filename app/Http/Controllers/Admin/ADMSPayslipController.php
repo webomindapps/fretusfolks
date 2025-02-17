@@ -65,7 +65,7 @@ class ADMSPayslipController extends Controller
             'year' => 'required',
             'file' => 'required|file|mimes:xlsx,csv,txt',
         ]);
-
+        // dd($request->all());
         $file = $request->file('file');
         $month = $request->input('month');
         $year = $request->input('year');
@@ -79,7 +79,6 @@ class ADMSPayslipController extends Controller
                 $header = null;
                 $datafromCsv = array();
                 $records = array_map('str_getcsv', file($fileWithPath));
-                $batch = Bus::batch([])->dispatch();
                 foreach ($records as $key => $record) {
                     if (!$header) {
                         $header = $record;
@@ -87,26 +86,34 @@ class ADMSPayslipController extends Controller
                         $datafromCsv[] = $record;
                     }
                 }
-                $datafromCsv = array_chunk($datafromCsv, 1000);
+                $datafromCsv = array_chunk($datafromCsv, 50);
                 foreach ($datafromCsv as $index => $dataCsv) {
+
                     foreach ($dataCsv as $data) {
-                        // Ensure row count matches header count
-                        if (count($header) === count($data)) {
-                            $payslipdata[$index][] = array_combine($header, $data);
-                        } else {
-                            // Log or ignore problematic rows
-                            \Log::error("CSV row column mismatch: Expected " . count($header) . " columns, found " . count($data));
-                            continue;
-                        }
+                        // dd($header, $data);
+
+                        $payslipdata[$index][] = array_combine($header, $data);
                     }
-                    $batch->add(new ADMSPayslipCreate($payslipdata[$index], $month, $year));
+                    // dd($payslipdata[$index], $month, $year);
+                    ADMSPayslipCreate::dispatch($payslipdata[$index], $month, $year);
+                    // dd($payslips);
                 }
-                session()->put('lastBatch', $batch);
-                return back();
             }
         } catch (Exception $e) {
             dd($e);
         }
+        // $import = new FFI_PayslipsImport($month, $year);
+
+        // try {
+        //     Excel::import($import, $file);
+        // } catch (Exception $e) {
+        //     return redirect()->route('admin.ffi_payslips')->with('error', 'There was an error during the import process: ' . $e->getMessage());
+        // }
+
+        // $error = '';
+        // foreach ($import->failures() as $failure) {
+        //     $error .= 'Row no: ' . $failure->row() . ', Column: ' . $failure->attribute() . ', Error: ' . implode(', ', $failure->errors()) . '<br>';
+        // }
         $error = '';
         return redirect()->route('admin.payslips')->with([
             'success' => 'Payslips added successfully',

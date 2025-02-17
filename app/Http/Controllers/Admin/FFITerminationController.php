@@ -19,7 +19,7 @@ class FFITerminationController extends Controller
     }
     public function index()
     {
-        $searchColumns = ['id', 'emp_name', 'date', 'phone1', 'email'];
+        $searchColumns = ['id', 'date', 'emp_id'];
         $search = request()->search;
         $from_date = request()->from_date;
         $to_date = request()->to_date;

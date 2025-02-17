@@ -249,8 +249,8 @@ class PaymentController extends Controller
             ->with(
                 [
                     'invoice' => function ($query) {
-                        $query->select('id', 'invoice_no', 'service_location', 'date');
-                    }
+                        $query->select('id', 'invoice_no', 'date', 'service_location');
+                    },
                 ],
                 [
                     'client' => function ($query) {
@@ -264,7 +264,7 @@ class PaymentController extends Controller
                 ],
             )->newQuery();
         // dd($query);
-        if (!empty($selectedClients) || $fromDate || $toDate || !empty($selectedStates) || $status !== null) {
+        if (!empty($selectedClient) || $fromDate || $toDate || !empty($selectedStates) || $status !== null) {
 
             if (!empty($selectedClient)) {
                 $query->whereIn('client_id', $selectedClient);
@@ -274,7 +274,9 @@ class PaymentController extends Controller
                 $query->whereBetween('date_time', [$fromDate, $toDate]);
             }
             if (!empty($selectedStates)) {
-                $query->whereIn('service_location', $selectedStates);
+                $query->whereHas('invoice', function ($query) use ($selectedStates) {
+                    $query->whereIn('service_location', $selectedStates);
+                });
             }
 
             if ($status !== null && $status !== '') {

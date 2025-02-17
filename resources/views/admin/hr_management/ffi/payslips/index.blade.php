@@ -67,8 +67,8 @@
 
                         <div>
                             <button type="submit" class="btn btn-primary">Upload</button>
-                            <a href="{{ asset('admin/fffi_payslip_formate.xlsx') }}"
-                                class="btn btn-info text-white ms-3">
+                            <a href="{{ asset('admin/fffi_payslip_format.csv') }}"
+                                class="btn btn-info text-white ms-3" download="fffi_payslip_format.csv">
                                 Download Sample
                             </a>
                         </div>

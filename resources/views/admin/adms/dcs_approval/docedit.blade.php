@@ -112,12 +112,22 @@
                                     :required="true" size="col-lg-6 mt-2" :options="FretusFolks::getMarital()" :value="old('maritial_status', $candidate->maritial_status)" />
                                 <div id="married-fields" style="display: none;" class="col-12">
                                     <div class="row">
-                                        <x-forms.input label="Spouse Name:" type="text" name="spouse_name"
-                                            id="spouse_name" :required="false" size="col-lg-3 mt-2"
-                                            :value="old('spouse_name', $candidate->spouse_name)" />
-                                        <x-forms.input label="Spouse's DOB: " type="date" name="spouse_dob"
-                                            id="spouse_dob" :required="false" size="col-lg-3 mt-2"
-                                            :value="old('spouse_dob', $candidate->spouse_dob)" />
+                                        <div class="form-group col-lg-3 mt-2">
+                                            <label for="spouse_name">Spouse Name:<span
+                                                    style="color: red">*</span></label>
+                                            <input type="text" name="spouse_name" id="spouse_name"
+                                                class="form-control"
+                                                value="{{ old('spouse_name', $candidate->spouse_name) }}">
+                                        </div>
+
+                                        <div class="form-group col-lg-3 mt-2">
+                                            <label for="spouse_dob">Spouse's DOB:<span
+                                                    style="color: red">*</span></label>
+                                            <input type="date" name="spouse_dob" id="spouse_dob"
+                                                class="form-control"
+                                                value="{{ old('spouse_dob', $candidate->spouse_dob) }}">
+                                        </div>
+
                                         <div class="form-group col-lg-3 mt-2">
                                             <label for="spouse_aadhar_no">Enter Spouse Adhar Card No: <span
                                                     style="color: red">*</span></label>
@@ -135,32 +145,16 @@
                                             id="no_of_childrens" :required="false" size="col-lg-6 mt-2"
                                             :value="old('no_of_childrens', $candidate->no_of_childrens)" />
                                     </div>
-                                </div>
-                                {{-- <div id="children-details-container" class="mt-3" style="display: none;">
-                                    <div id="children-details">
+                                    <div id="children-details-container" class="mt-3" style="display: none;">
+                                        <div id="children-details">
+                                        </div>
+                                        <div id="max-children-message"
+                                            style="display: none; color: red; margin-top: 10px;">
+                                            You can only add details for up to 2 children.
+                                        </div>
                                     </div>
-
-                                </div> --}}
-
-                                <div id="children-details-form" class="mt-3">
-                                    @if (!empty($children) && $children->count() > 0)
-                                        @foreach ($children as $index => $child)
-                                            <div class="row mb-3">
-                                                <div class="col-lg-6">
-                                                    <x-forms.input label="Child {{ $index + 1 }} Name:"
-                                                        type="text" name="child_names[{{ $index }}]"
-                                                        id="child_name_{{ $index }}" :value="$child->name" />
-                                                </div>
-                                                <div class="col-lg-6">
-                                                    <x-forms.input label="Child {{ $index + 1 }} DOB:"
-                                                        type="date" name="child_dobs[{{ $index }}]"
-                                                        id="child_dob_{{ $index }}" :value="$child->dob" />
-                                                </div>
-
-                                            </div>
-                                        @endforeach
-                                    @endif
                                 </div>
+
 
 
                                 <x-forms.input label="Father Name:  " type="text" name="father_name"
@@ -231,18 +225,23 @@
                                 <x-forms.input label="Official Email ID: " type="email" name="official_mail_id"
                                     id="official_mail_id" :required="false" size="col-lg-4 mt-2"
                                     :value="old('official_mail_id', $candidate->official_mail_id)" />
-                                <x-forms.textarea label="Enter Permanent Address:" name="permanent_address"
-                                    id="permanent_address" :required="true" size="col-lg-6 mt-2"
-                                    :value="old('permanent_address', $candidate->permanent_address)" />
-                                <x-forms.textarea label="Enter Present Address:" name="present_address"
-                                    id="present_address" :required="true" size="col-lg-6 mt-2" :value="old('present_address', $candidate->present_address)" />
+                                <div class="form-group col-lg-6 mt-2">
+                                    <label for="permanent_address">Enter Permanent Address:<span
+                                            style="color: red">*</span></label>
+                                    <textarea name="permanent_address" id="permanent_address" class="form-control" required>{{ old('permanent_address', $candidate->permanent_address) }}</textarea>
+                                </div>
 
+                                <div class="form-group col-lg-6 mt-2">
+                                    <label for="present_address">Enter Present Address:<span
+                                            style="color: red">*</span></label>
+                                    <textarea name="present_address" id="present_address" class="form-control" required>{{ old('present_address', $candidate->present_address) }}</textarea>
+                                </div>
                                 <div class="form-group col-lg-6 mt-2">
                                     <label for="pan_status">Do you have a PAN Card? <span
                                             style="color: red">*</span></label>
                                     <select name="pan_status" id="pan_status" class="form-control">
-                                        <option value="Yes">Yes</option>
-                                        <option value="No">No</option>
+                                        <option value="1">Yes</option>
+                                        <option value="0">No</option>
                                     </select>
                                 </div>
 
@@ -713,17 +712,21 @@
         //no of children
         document.addEventListener('DOMContentLoaded', function() {
             const maxChildren = 2;
-            let currentChildren = 0;
-
             const noOfChildrenField = document.getElementById('no_of_childrens');
             const childrenDetailsContainer = document.getElementById('children-details-container');
             const childrenDetails = document.getElementById('children-details');
             const maxChildrenMessage = document.getElementById('max-children-message');
 
-            function updateChildDetails() {
-                const noOfChildren = parseInt(noOfChildrenField.value);
+            function calculateAge(dob) {
+                if (!dob) return 0;
+                const birthDate = new Date(dob);
+                const today = new Date();
+                return (today.getFullYear() - birthDate.getFullYear()) * 12 + (today.getMonth() - birthDate
+                    .getMonth());
+            }
 
-                // Clear previous child details
+            function updateChildDetails(existingChildren = []) {
+                const noOfChildren = parseInt(noOfChildrenField.value) || 0;
                 childrenDetails.innerHTML = '';
 
                 if (noOfChildren > 0) {
@@ -731,15 +734,42 @@
                     maxChildrenMessage.style.display = 'none';
 
                     for (let i = 1; i <= noOfChildren && i <= maxChildren; i++) {
+                        let childData = existingChildren[i - 1] || {};
+
                         const childRow = document.createElement('div');
                         childRow.className = 'row align-items-center mb-2 child-row';
                         childRow.innerHTML = `
-                    <x-forms.input label="Child ${i} Name:" type="text" name="child_names[]" 
-                        id="child_name_${i}" :required="true" size="col-lg-6" />
-                    <x-forms.input label="Child ${i} DOB:" type="date" name="child_dobs[]" 
-                        id="child_dob_${i}" :required="true" size="col-lg-6" />
-                `;
+                        <div class="form-group col-lg-3">
+                            <label for="child_name_${i}">Child ${i} Name:<span style="color: red;">*</span></label>
+                            <input type="text" name="child_names[]" id="child_name_${i}" class="form-control" 
+                                   value="${childData.name || ''}" required>
+                        </div>
+                        <div class="form-group col-lg-3">
+                            <label for="child_dob_${i}">Child ${i} DOB:<span style="color: red;">*</span></label>
+                            <input type="date" name="child_dobs[]" id="child_dob_${i}" class="form-control"
+                                   value="${childData.dob || ''}" required>
+                        </div>
+                        <div class="form-group col-lg-3 child-aadhar" id="child_aadhar_field_${i}" style="display: none;">
+                            <label for="child_aadhar_${i}">Child ${i} Aadhar No:<span style="color: red;">*</span></label>
+                            <input type="text" name="child_aadhar[]" id="child_aadhar_${i}" class="form-control" 
+                                   value="${childData.aadhar_no || ''}" maxlength="12" inputmode="numeric">
+                        </div>
+                        <div class="form-group col-lg-3">
+                            <label for="child_photo_${i}">Child ${i} Photo:</label>
+                            <input type="file" name="child_photo[]" id="child_photo_${i}" accept="application/pdf, image/jpg, image/png" 
+                                   class="form-control">
+                        </div>
+                    `;
                         childrenDetails.appendChild(childRow);
+
+                        let dobField = document.getElementById(`child_dob_${i}`);
+                        dobField.addEventListener('input', function() {
+                            checkChildAge(i);
+                        });
+
+                        if (childData.dob) {
+                            checkChildAge(i);
+                        }
                     }
 
                     if (noOfChildren > maxChildren) {
@@ -750,7 +780,43 @@
                 }
             }
 
-            noOfChildrenField.addEventListener('input', updateChildDetails);
+            function checkChildAge(index) {
+                const dobField = document.getElementById(`child_dob_${index}`);
+                const aadharField = document.getElementById(`child_aadhar_field_${index}`);
+                const aadharInput = document.getElementById(`child_aadhar_${index}`);
+
+                if (dobField.value) {
+                    const ageInMonths = calculateAge(dobField.value);
+                    if (ageInMonths > 6) {
+                        aadharField.style.display = 'block';
+                        aadharInput.setAttribute('required', 'required');
+                    } else {
+                        aadharField.style.display = 'none';
+                        aadharInput.removeAttribute('required');
+                    }
+                }
+            }
+
+            noOfChildrenField.addEventListener('input', function() {
+                updateChildDetails();
+            });
+
+            let existingChildren = {!! json_encode(
+                old('child_names')
+                    ? collect(old('child_names'))->map(function ($name, $index) {
+                        return [
+                            'name' => $name,
+                            'dob' => old('child_dobs')[$index] ?? '',
+                            'aadhar_no' => old('child_aadhar')[$index] ?? '',
+                        ];
+                    })
+                    : $children ?? [],
+            ) !!};
+
+            if (existingChildren.length > 0) {
+                noOfChildrenField.value = existingChildren.length;
+                updateChildDetails(existingChildren);
+            }
         });
     </script>
 </x-applayout>
