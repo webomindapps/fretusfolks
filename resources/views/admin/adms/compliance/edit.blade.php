@@ -27,9 +27,9 @@
                                 <x-forms.select label="Enter Client Name:" name="client_id" id="client_id"
                                     :required="true" size="col-lg-6 mt-2" :options="FretusFolks::getClientname()" :value="old('client_id', $candidate->client_id)"
                                     readonly />
-                                    <x-forms.input label=" FFI Employee ID: " type="text" name="ffi_emp_id" id="ffi_emp_id"
-                                    :required="true" size="col-lg-6 mt-2" :value="old('ffi_emp_id', $candidate->ffi_emp_id)" readonly />
-                             
+                                <x-forms.input label=" FFI Employee ID: " type="text" name="ffi_emp_id"
+                                    id="ffi_emp_id" :required="true" size="col-lg-6 mt-2" :value="old('ffi_emp_id', $candidate->ffi_emp_id)" readonly />
+
                                 <x-forms.input label=" Employee Name: " type="text" name="emp_name" id="emp_name"
                                     :required="true" size="col-lg-6 mt-2" :value="old('emp_name', $candidate->emp_name)" readonly />
                                 <x-forms.input label=" Employee Mobile: " type="number" name="phone1" id="phone1"
@@ -42,6 +42,22 @@
                                     :required="true" size="col-lg-6 mt-2" :value="old('uan_no', $candidate->uan_no)" />
                                 <x-forms.input label="ESIC No:" type="text" name="esic_no" id="esic_no"
                                     :required="true" size="col-lg-6 mt-2" :value="old('esic_no', $candidate->esic_no)" />
+                                <div class="form-group col-lg-6 mt-2">
+                                    <label for="comp_status">Status <span style="color: red">*</span></label>
+                                    <select id="comp_status" name="comp_status" class="form-control" required
+                                        onchange="toggleNotesField(this.value)">
+                                        <option value="">Select Status</option>
+                                        <option value="1"
+                                            {{ old('comp_status', $candidate->comp_status ?? '') == '1' ? 'selected' : '' }}>
+                                            Approved
+                                        </option>
+                                        <option value="0"
+                                            {{ old('comp_status', $candidate->comp_status ?? '') == '0' ? 'selected' : '' }}>
+                                            Pending
+                                        </option>
+                                    </select>
+                                </div>
+
                             </div>
                             <div class="row">
                                 <div class="col-lg-12 mt-4">

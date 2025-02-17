@@ -3,9 +3,12 @@
 
         <div class="d-flex justify-content-end align-items-center">
             <div class="d-flex gap-3">
-                <a href="{{ asset('admin/CandidateFormate.xlsx') }}" class="btn btn-primary text-white">
-                    <i class='bx bxs-download'></i> Download
-                </a>
+                <form action="{{ route('admin.candidatemaster.formdownload') }}" method="POST" style="display: inline;">
+                    @csrf
+                    <button type="submit" class="btn btn-primary text-white">
+                        <i class='bx bxs-download'></i> Download
+                    </button>
+                </form>
 
                 <form action="{{ route('admin.candidatemaster.import') }}" method="POST" enctype="multipart/form-data"
                     class="d-flex align-items-center">

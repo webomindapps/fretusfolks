@@ -372,6 +372,8 @@ Route::prefix('admin')->group(function () {
         Route::get('candidatemaster/{id}/edit', [ComplianceController::class, 'edit'])->name('candidatemaster.edit');
         Route::post('candidatemaster/{id}/edit', [ComplianceController::class, 'update']);
         Route::post('/candidatemaster/import', [ComplianceController::class, 'import'])->name('candidatemaster.import');
+        Route::post('candidatemaster/formate/download', [ComplianceController::class, 'download'])->name('candidatemaster.formdownload');
+
 
         //Employee Lifecycle
         Route::get('candidatelifecycle', [EmployeeLifecycleController::class, 'index'])->name('candidatelifecycle');

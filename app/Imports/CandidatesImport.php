@@ -19,6 +19,7 @@ class CandidatesImport implements ToModel, WithHeadingRow
                 'email' => $row['email'],
                 'uan_no' => $row['uan_no'],
                 'esic_no' => $row['esic_no'],
+                'comp_status' => 1,
             ]
         );
     }

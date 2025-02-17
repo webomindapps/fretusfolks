@@ -492,6 +492,7 @@ class DCSApprovalController extends Controller
         try {
             $validatedData['data_status'] = $request->input('data_status', 1);
             $validatedData['dcs_approval'] = $request->input('dcs_approval', 0);
+            $validatedData['comp_status'] = $request->input('comp_status', 1);
             $candidate->update($validatedData);
 
             $fileFields = ['pan_path', 'aadhar_path', 'driving_license_path', 'photo', 'resume', 'bank_document', 'family_photo', 'father_photo', 'mother_photo', 'spouse_photo', 'pan_declaration'];
