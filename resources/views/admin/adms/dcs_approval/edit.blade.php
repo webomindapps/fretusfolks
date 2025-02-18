@@ -388,21 +388,21 @@
                                         required>
                                 </div> --}}
                                 <x-forms.input label="Enter Bank Name:" type="text" name="bank_name"
-                                    id="bank_name" :required="true" size="col-lg-6 mt-2" :value="old('bank_name', $candidate->bank_name)" />
+                                    id="bank_name" :required="true" size="col-lg-6 mt-2" :value="old('bank_name', $bankdetails->bank_name ?? '')" />
+
                                 <div class="form-group col-lg-6 mt-2">
                                     <label for="bank_document">Attach Bank Document: <span
                                             style="color: red;">*</span></label>
                                     <input type="file" name="bank_document" id="bank_document"
                                         accept="application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/pdf"
-                                        class="form-control"
-                                        value="{{ old('bank_document', $candidate->bank_document) }}" required>
+                                        class="form-control" value="{{ old('bank_document') }}" required>
                                 </div>
                                 <x-forms.input label="Enter Bank Account No::" type="text" name="bank_account_no"
-                                    id="bank_account_no" :required="true" size="col-lg-6 mt-2" :value="old('bank_account_no', $candidate->bank_account_no)" />
+                                    id="bank_account_no" :required="true" size="col-lg-6 mt-2" :value="old('bank_account_no', $bankdetails->bank_account_no ?? '')" />
                                 <x-forms.input label="Repeat Bank Account No:" type="text" name="bank_account_no"
-                                    id="bank_account_no" :required="true" size="col-lg-6 mt-2" :value="old('bank_account_no', $candidate->bank_account_no)" />
+                                    id="bank_account_no" :required="true" size="col-lg-6 mt-2" :value="old('bank_account_no', $bankdetails->bank_account_no ?? '')" />
                                 <x-forms.input label="Enter Bank IFSC CODE:" type="text" name="bank_ifsc_code"
-                                    id="bank_ifsc_code" :required="true" size="col-lg-6 mt-2" :value="old('bank_ifsc_code', $candidate->bank_ifsc_code)" />
+                                    id="bank_ifsc_code" :required="true" size="col-lg-6 mt-2" :value="old('bank_ifsc_code', $bankdetails->bank_ifsc_code ?? '')" />
                                 <x-forms.select label="Do you Have UAN No? " :options="[['value' => 'No', 'label' => 'No'], ['value' => 'Yes', 'label' => 'Yes']]" id="uan_status"
                                     name="uan_status" :required="true" size="col-lg-6 mt-2 mr-2"
                                     :value="old('uan_status')" />
@@ -516,7 +516,6 @@
                                                     'pan_path' => 'PAN Document',
                                                     'aadhar_path' => 'Aadhar Document',
                                                     'driving_license_path' => 'Driving License',
-                                                    'bank_document' => 'Bank Document',
                                                     'voter_id' => 'Voter ID/ PVC/ UL',
                                                     'emp_form' => 'Employee Form',
                                                     'pf_esic_form' => 'PF Form / ESIC',
@@ -577,9 +576,20 @@
                                                                 View
                                                             </a>
                                                         </td>
-
                                                     </tr>
                                                 @endforeach
+                                            @endif
+                                            @if (!is_null($bankdetails) && $bankdetails->bank_document)
+                                                <tr>
+                                                    <td>
+                                                        Bank Document </td>
+                                                    <td>
+                                                        <a href="{{ asset('storage/' . $bankdetails->bank_document) }}"
+                                                            target="_blank" class="btn btn-custom">
+                                                            View
+                                                        </a>
+                                                    </td>
+                                                </tr>
                                             @endif
                                         </tbody>
                                     </table>
@@ -834,7 +844,7 @@ class="col-lg-5 me-3 " >
             function pending_update() {
                 var formData = new FormData(document.getElementById('pendingDetailsForm'));
                 console.log(formData);
-                
+
                 fetch('{{ route('admin.dcs_approval.pending.update') }}', {
                         method: 'POST',
                         headers: {

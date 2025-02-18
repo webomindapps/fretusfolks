@@ -13,7 +13,8 @@
         .btn-custom:hover {
             background-color: #0056b3;
         }
-        .rejected{
+
+        .rejected {
             background-color: #f8d7da;
         }
     </style>
@@ -323,16 +324,20 @@
                                         value="{{ old('family_photo', $candidate->family_photo) }}">
                                 </div>
                                 <x-forms.input label="Enter Bank Name:" type="text" name="bank_name"
-                                    id="bank_name" :required="true" size="col-lg-6 mt-2" :value="old('bank_name', $candidate->bank_name)" />
+                                    id="bank_name" :required="true" size="col-lg-6 mt-2" :value="old('bank_name', $bankdetails->bank_name ?? '')" />
 
-                                <x-forms.input label="Attach New Bank Document:" type="file" name="bank_document"
-                                    id="bank_document" :required="false" size="col-lg-6 mt-2" />
+                                <div class="form-group col-lg-6 mt-2">
+                                    <label for="bank_document">Attach Bank Document: </label>
+                                    <input type="file" name="bank_document" id="bank_document"
+                                        accept="application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/pdf"
+                                        class="form-control" value="{{ old('bank_document') }}">
+                                </div>
                                 <x-forms.input label="Enter Bank Account No::" type="text" name="bank_account_no"
-                                    id="bank_account_no" :required="true" size="col-lg-6 mt-2" :value="old('bank_account_no', $candidate->bank_account_no)" />
+                                    id="bank_account_no" :required="true" size="col-lg-6 mt-2" :value="old('bank_account_no', $bankdetails->bank_account_no ?? '')" />
                                 <x-forms.input label="Repeat Bank Account No:" type="text" name="bank_account_no"
-                                    id="bank_account_no" :required="false" size="col-lg-6 mt-2" :value="old('bank_account_no', $candidate->bank_account_no)" />
+                                    id="bank_account_no" :required="true" size="col-lg-6 mt-2" :value="old('bank_account_no', $bankdetails->bank_account_no ?? '')" />
                                 <x-forms.input label="Enter Bank IFSC CODE:" type="text" name="bank_ifsc_code"
-                                    id="bank_ifsc_code" :required="true" size="col-lg-6 mt-2" :value="old('bank_ifsc_code', $candidate->bank_ifsc_code)" />
+                                    id="bank_ifsc_code" :required="true" size="col-lg-6 mt-2" :value="old('bank_ifsc_code', $bankdetails->bank_ifsc_code ?? '')" />
                                 <x-forms.input label="UAN No:" type="text" name="uan_no" id="uan_no"
                                     :required="false" size="col-lg-6 mt-2" :value="old('uan_no', $candidate->uan_no)" />
 
@@ -371,7 +376,7 @@
 
                                             @if ($candidate->candidateDocuments->isNotEmpty())
                                                 @foreach ($candidate->candidateDocuments as $certificate)
-                                                    <tr class="{{$certificate->status==2?'rejected':''}}">
+                                                    <tr class="{{ $certificate->status == 2 ? 'rejected' : '' }}">
                                                         <td>
                                                             {{ $candidateDocuments[$certificate->name] ?? $certificate->name }}
                                                         </td>
@@ -499,6 +504,46 @@
                                                     </tr>
                                                 @endforeach
                                             @endif
+                                            @if (!is_null($bankdetails) && $bankdetails->bank_document)
+                                                <tr>
+                                                    <td>
+                                                        Bank Document </td>
+                                                    <td>
+                                                        <a href="{{ asset('storage/' . $bankdetails->bank_document) }}"
+                                                            target="_blank" class="btn btn-custom">
+                                                            View
+                                                        </a>
+                                                    </td>
+                                                    <td>
+                                                        <input type="file" name="bank_document" id="bank_document"
+                                                            accept="application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/pdf"
+                                                            class="form-control">
+                                                    </td>
+                                                    <td>
+                                                        <div class="dropdown">
+                                                            <button class="btn btn btn-sm dropdown-toggle"
+                                                                type="button"
+                                                                id="statusDropdown{{ $bankdetails->id }}"
+                                                                data-bs-toggle="dropdown" aria-expanded="false">
+                                                                {{ $bankdetails->bank_status == 1 ? 'Approved' : ($bankdetails->bank_status == 0 ? 'Pending' : 'Rejected') }}
+                                                            </button>
+                                                            <ul class="dropdown-menu"
+                                                                aria-labelledby="statusDropdown{{ $bankdetails->id }}">
+                                                                <li><a class="dropdown-item"
+                                                                        href="{{ route('admin.document.status', ['id' => $bankdetails->id, 'newStatus' => 0]) }}">Pending</a>
+                                                                </li>
+                                                                <li><a class="dropdown-item"
+                                                                        href="{{ route('admin.document.status', ['id' => $bankdetails->id, 'newStatus' => 2]) }}">Rejected</a>
+                                                                </li>
+                                                                {{-- <li><a class="dropdown-item"
+                                                                    href="{{ route('admin.document.status', ['id' => $bankdetails->id, 'newStatus' => 1]) }}">Approved</a>
+                                                            </li> --}}
+                                                            </ul>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            @endif
+
                                         </tbody>
                                     </table>
 
