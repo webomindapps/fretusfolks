@@ -4,11 +4,12 @@ namespace App\Http\Controllers\Admin;
 
 use Exception;
 use App\Models\CFISModel;
-use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\BankDetails;
 use App\Models\DCSChildren;
 use App\Models\OfferLetter;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\OtherCertificate;
 use App\Models\CandidateDocuments;
 use Illuminate\Support\Facades\DB;
@@ -65,8 +66,12 @@ class DCSApprovalController extends Controller
     {
         $candidate = $this->model()->with('candidateDocuments', 'educationCertificates', 'otherCertificates')->find($id);
         $children = DCSChildren::where('emp_id', $candidate->id)->get(['name', 'dob', 'aadhar_no']);
+        $bankdetails = BankDetails::where('emp_id', $candidate->id)
+            ->whereIn('status', [null, 1])
+            ->first() ?? new BankDetails();
+
         // dd($children);
-        return view('admin.adms.dcs_approval.edit', compact('candidate', 'children'));
+        return view('admin.adms.dcs_approval.edit', compact('candidate', 'children', 'bankdetails'));
 
     }
     public function update(Request $request, $id)
@@ -126,10 +131,10 @@ class DCSApprovalController extends Controller
             'photo' => 'nullable|file|mimes:jpg,png,pdf|',
             'family_photo' => 'nullable|file|mimes:jpg,png,pdf',
             'resume' => 'nullable|file',
-            'bank_document' => 'nullable|file',
-            'bank_name' => 'nullable|string|max:255',
-            'bank_account_no' => 'nullable|string|max:255',
-            'bank_ifsc_code' => 'nullable|string|max:255',
+            // 'bank_document' => 'nullable|file',
+            // 'bank_name' => 'nullable|string|max:255',
+            // 'bank_account_no' => 'nullable|string|max:255',
+            // 'bank_ifsc_code' => 'nullable|string|max:255',
             'uan_no' => 'nullable|string|max:255',
             'esic_no' => 'nullable|string|max:255',
             'basic_salary' => 'nullable|numeric',
@@ -177,7 +182,7 @@ class DCSApprovalController extends Controller
 
             $candidate->update($validatedData);
             // dd($request->all());
-            $fileFields = ['pan_path', 'aadhar_path', 'driving_license_path', 'photo', 'resume', 'bank_document', 'family_photo', 'father_photo', 'mother_photo', 'spouse_photo', 'pan_declaration'];
+            $fileFields = ['pan_path', 'aadhar_path', 'driving_license_path', 'photo', 'resume', 'family_photo', 'father_photo', 'mother_photo', 'spouse_photo', 'pan_declaration'];
             foreach ($fileFields as $field) {
                 if ($request->hasFile($field)) {
                     $file = $request->file($field);
@@ -275,7 +280,28 @@ class DCSApprovalController extends Controller
                     DCSChildren::insert($childrenData);
                 }
             }
+            if ($request->has(['bank_name', 'bank_account_no', 'bank_ifsc_code'])) {
+                if (!isset($candidate) || empty($candidate->id)) {
+                    return back()->with('error', 'Candidate not found.');
+                }
+                $filePath = null;
+                if ($request->hasFile('bank_document')) {
+                    $file = $request->file('bank_document');
+                    $fileName = 'bank_document_' . $candidate->id . '.' . $file->getClientOriginalExtension();
+                    $filePath = $file->storeAs('documents/bank', $fileName, 'public');
+                }
+                BankDetails::updateOrCreate(
+                    ['emp_id' => $candidate->id],
+                    [
+                        'bank_name' => $request->bank_name,
+                        'bank_account_no' => $request->bank_account_no,
+                        'bank_ifsc_code' => $request->bank_ifsc_code,
+                        'bank_status' => 1,
+                        'bank_document' => $filePath ?? null,
+                    ]
+                );
 
+            }
             $candidate->save();
 
             DB::commit();
@@ -367,33 +393,40 @@ class DCSApprovalController extends Controller
             ->findOrFail($id);
 
         if (!$candidate->client || !$candidate->client->client_ffi_id) {
-            return redirect()->back()->with('error', 'Client FFI ID not found Contact Admin');
+            return redirect()->back()->with('error', 'Client FFI ID not found. Contact Admin');
         }
-
 
         $clientFfiId = $candidate->client->client_ffi_id;
 
-        $lastId = $this->model()
-            ->whereHas('client', function ($query) use ($candidate) {
-                $query->where('id', $candidate->client_id);
-            })
-            ->where('ffi_emp_id', 'LIKE', $clientFfiId . '%')
-            ->orderBy('ffi_emp_id', 'desc')
-            ->value('ffi_emp_id');
-
-        if ($lastId) {
-            $number = (int) substr($lastId, strlen($clientFfiId));
-            $newNumber = str_pad($number + 1, 4, '0', STR_PAD_LEFT);
+        if ($candidate->ffi_emp_id) {
+            $uniqueId = $candidate->ffi_emp_id;
         } else {
-            $newNumber = '0001';
-        }
+            $lastId = $this->model()
+                ->whereHas('client', function ($query) use ($candidate) {
+                    $query->where('id', $candidate->client_id);
+                })
+                ->where('ffi_emp_id', 'LIKE', $clientFfiId . '%')
+                ->orderBy('ffi_emp_id', 'desc')
+                ->value('ffi_emp_id');
 
-        $uniqueId = $clientFfiId . $newNumber;
+            if ($lastId) {
+                $number = (int) substr($lastId, strlen($clientFfiId));
+                $newNumber = str_pad($number + 1, 4, '0', STR_PAD_LEFT);
+            } else {
+                $newNumber = '0001';
+            }
+
+            $uniqueId = $clientFfiId . $newNumber;
+
+            $candidate->update(['ffi_emp_id' => $uniqueId]);
+        }
+        $bankdetails = BankDetails::where('emp_id', $candidate->id)->where('status', 1)->first();
 
         $children = DCSChildren::where('emp_id', $candidate->id)->get();
 
-        return view('admin.adms.hr.hredit', compact('candidate', 'uniqueId', 'children'));
+        return view('admin.adms.hr.hredit', compact('candidate', 'uniqueId', 'children', 'bankdetails'));
     }
+
 
     public function hrupdate(Request $request, $id)
     {
@@ -451,10 +484,10 @@ class DCSApprovalController extends Controller
             'photo' => 'nullable|file',
             'family_photo' => 'nullable|file|mimes:jpg,png,pdf',
             'resume' => 'nullable|file',
-            'bank_document' => 'nullable|file',
-            'bank_name' => 'nullable|string|max:255',
-            'bank_account_no' => 'nullable|string|max:255',
-            'bank_ifsc_code' => 'nullable|string|max:255',
+            // 'bank_document' => 'nullable|file',
+            // 'bank_name' => 'nullable|string|max:255',
+            // 'bank_account_no' => 'nullable|string|max:255',
+            // 'bank_ifsc_code' => 'nullable|string|max:255',
             'uan_no' => 'nullable|string|max:255',
             'esic_no' => 'nullable|string|max:255',
             'basic_salary' => 'nullable|numeric',
@@ -495,7 +528,7 @@ class DCSApprovalController extends Controller
             $validatedData['comp_status'] = $request->input('comp_status', 1);
             $candidate->update($validatedData);
 
-            $fileFields = ['pan_path', 'aadhar_path', 'driving_license_path', 'photo', 'resume', 'bank_document', 'family_photo', 'father_photo', 'mother_photo', 'spouse_photo', 'pan_declaration'];
+            $fileFields = ['pan_path', 'aadhar_path', 'driving_license_path', 'photo', 'resume', 'family_photo', 'father_photo', 'mother_photo', 'spouse_photo', 'pan_declaration'];
             foreach ($fileFields as $field) {
                 if ($request->hasFile($field)) {
                     $file = $request->file($field);
@@ -593,6 +626,28 @@ class DCSApprovalController extends Controller
                 if (!empty($childrenData)) {
                     DCSChildren::insert($childrenData);
                 }
+            }
+            if ($request->has(['bank_name', 'bank_account_no', 'bank_ifsc_code'])) {
+                if (!isset($candidate) || empty($candidate->id)) {
+                    return back()->with('error', 'Candidate not found.');
+                }
+                $filePath = null;
+                if ($request->hasFile('bank_document')) {
+                    $file = $request->file('bank_document');
+                    $fileName = 'bank_document_' . $candidate->id . '.' . $file->getClientOriginalExtension();
+                    $filePath = $file->storeAs('documents/bank', $fileName, 'public');
+                }
+                BankDetails::updateOrCreate(
+                    ['emp_id' => $candidate->id],
+                    [
+                        'bank_name' => $request->bank_name,
+                        'bank_account_no' => $request->bank_account_no,
+                        'bank_ifsc_code' => $request->bank_ifsc_code,
+                        'bank_status' => 1,
+                        'bank_document' => $filePath ?? null,
+                    ]
+                );
+
             }
 
             $candidate->hr_approval = $request->hr_approval;
@@ -740,10 +795,10 @@ class DCSApprovalController extends Controller
             'photo' => 'nullable|file|mimes:jpg,png,pdf|',
             'family_photo' => 'nullable|file|mimes:jpg,png,pdf',
             'resume' => 'nullable|file',
-            'bank_document' => 'nullable|file',
-            'bank_name' => 'nullable|string|max:255',
-            'bank_account_no' => 'nullable|string|max:255',
-            'bank_ifsc_code' => 'nullable|string|max:255',
+            // 'bank_document' => 'nullable|file',
+            // 'bank_name' => 'nullable|string|max:255',
+            // 'bank_account_no' => 'nullable|string|max:255',
+            // 'bank_ifsc_code' => 'nullable|string|max:255',
             'uan_no' => 'nullable|string|max:255',
             'esic_no' => 'nullable|string|max:255',
             'basic_salary' => 'nullable|numeric',
@@ -784,7 +839,7 @@ class DCSApprovalController extends Controller
             $candidate->update($validatedData);
             // dd($request->all());
 
-            $fileFields = ['pan_path', 'aadhar_path', 'driving_license_path', 'photo', 'resume', 'bank_document', 'family_photo', 'father_photo', 'mother_photo', 'spouse_photo', 'pan_declaration'];
+            $fileFields = ['pan_path', 'aadhar_path', 'driving_license_path', 'photo', 'resume', 'family_photo', 'father_photo', 'mother_photo', 'spouse_photo', 'pan_declaration'];
 
             foreach ($fileFields as $field) {
                 if ($request->hasFile($field)) {
@@ -885,7 +940,28 @@ class DCSApprovalController extends Controller
                     DCSChildren::insert($childrenData);
                 }
             }
+            if ($request->has(['bank_name', 'bank_account_no', 'bank_ifsc_code'])) {
+                if (!isset($candidate) || empty($candidate->id)) {
+                    return back()->with('error', 'Candidate not found.');
+                }
+                $filePath = null;
+                if ($request->hasFile('bank_document')) {
+                    $file = $request->file('bank_document');
+                    $fileName = 'bank_document_' . $candidate->id . '.' . $file->getClientOriginalExtension();
+                    $filePath = $file->storeAs('documents/bank', $fileName, 'public');
+                }
+                BankDetails::updateOrCreate(
+                    ['emp_id' => $candidate->id],
+                    [
+                        'bank_name' => $request->bank_name,
+                        'bank_account_no' => $request->bank_account_no,
+                        'bank_ifsc_code' => $request->bank_ifsc_code,
+                        'bank_status' => 1,
+                        'bank_document' => $filePath ?? null,
+                    ]
+                );
 
+            }
 
             $candidate->save();
             DB::commit();
@@ -956,8 +1032,9 @@ class DCSApprovalController extends Controller
             ->findOrFail($id);
 
         $children = DCSChildren::where('emp_id', $candidate->id)->get();
+        $bankdetails = BankDetails::where('emp_id', $candidate->id)->where('status', 1)->first();
 
-        return view("admin.adms.dcs_approval.docedit", compact('candidate', 'children'));
+        return view("admin.adms.dcs_approval.docedit", compact('candidate', 'children', 'bankdetails'));
     }
     public function docupdate(Request $request, $id)
     {
@@ -1016,10 +1093,10 @@ class DCSApprovalController extends Controller
             'photo' => 'nullable|file|mimes:jpg,png,pdf|',
             'family_photo' => 'nullable|file|mimes:jpg,png,pdf',
             'resume' => 'nullable|file',
-            'bank_document' => 'nullable|file',
-            'bank_name' => 'nullable|string|max:255',
-            'bank_account_no' => 'nullable|string|max:255',
-            'bank_ifsc_code' => 'nullable|string|max:255',
+            // 'bank_document' => 'nullable|file',
+            // 'bank_name' => 'nullable|string|max:255',
+            // 'bank_account_no' => 'nullable|string|max:255',
+            // 'bank_ifsc_code' => 'nullable|string|max:255',
             'uan_no' => 'nullable|string|max:255',
             'esic_no' => 'nullable|string|max:255',
             'basic_salary' => 'nullable|numeric',
@@ -1157,7 +1234,28 @@ class DCSApprovalController extends Controller
                     DCSChildren::insert($childrenData);
                 }
             }
+            if ($request->has(['bank_name', 'bank_account_no', 'bank_ifsc_code'])) {
+                if (!isset($candidate) || empty($candidate->id)) {
+                    return back()->with('error', 'Candidate not found.');
+                }
+                $filePath = null;
+                if ($request->hasFile('bank_document')) {
+                    $file = $request->file('bank_document');
+                    $fileName = 'bank_document_' . $candidate->id . '.' . $file->getClientOriginalExtension();
+                    $filePath = $file->storeAs('documents/bank', $fileName, 'public');
+                }
+                BankDetails::updateOrCreate(
+                    ['emp_id' => $candidate->id],
+                    [
+                        'bank_name' => $request->bank_name,
+                        'bank_account_no' => $request->bank_account_no,
+                        'bank_ifsc_code' => $request->bank_ifsc_code,
+                        'bank_status' => 1,
+                        'bank_document' => $filePath ?? null,
+                    ]
+                );
 
+            }
             $candidate->save();
             DB::commit();
 
