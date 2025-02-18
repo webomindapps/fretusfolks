@@ -102,8 +102,8 @@
                                 <td>{{ $result->phone1 }}</td>
                                 <td>{{ $result->email }}</td>
                                 <td>
-                                    <a href="javascript:void(0);" class="btn btn-info" data-target="#client_details"
-                                        onclick="showCandidateDetails({{ $result->id }})">
+                                    <a href="{{ route('admin.candidatelifecycle.view', $result->id) }}"
+                                        class="btn btn-info">
                                         <i class='bx bx-link-alt'></i> View
                                     </a>
                                 </td>
@@ -146,27 +146,27 @@
             }
 
 
-            function showCandidateDetails(employeeId) {
-                fetch(`/admin/candidatelifecycle/view/${employeeId}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.html_content) {
-                            document.querySelector('#client_details').innerHTML = data.html_content;
-                            $('#client_details').modal('show');
-                            const closeButton = document.querySelector('#closeModalButton');
-                            if (closeButton) {
-                                closeButton.addEventListener('click', function() {
-                                    $('#client_details').modal('hide');
-                                });
-                            }
-                        } else {
-                            console.error('No HTML content found in the response');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error fetching client details:', error);
-                    });
-            }
+            // function showCandidateDetails(employeeId) {
+            //     fetch(`/admin/candidatelifecycle/view/${employeeId}`)
+            //         .then(response => response.json())
+            //         .then(data => {
+            //             if (data.html_content) {
+            //                 document.querySelector('#client_details').innerHTML = data.html_content;
+            //                 $('#client_details').modal('show');
+            //                 const closeButton = document.querySelector('#closeModalButton');
+            //                 if (closeButton) {
+            //                     closeButton.addEventListener('click', function() {
+            //                         $('#client_details').modal('hide');
+            //                     });
+            //                 }
+            //             } else {
+            //                 console.error('No HTML content found in the response');
+            //             }
+            //         })
+            //         .catch(error => {
+            //             console.error('Error fetching client details:', error);
+            //         });
+            // }
 
             document.getElementById('export-form').addEventListener('submit', function(e) {
                 const selectedFields = Array.from(document.querySelectorAll('.data-checkbox:checked'))
