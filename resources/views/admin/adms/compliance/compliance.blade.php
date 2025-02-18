@@ -79,13 +79,11 @@
                                             <i class='bx bx-edit-alt'></i>
                                             Edit
                                         </a>
-                                        <a href="javascript:void(0);" class="dropdown-item" data-toggle="modal"
-                                            data-target="#client_details"
-                                            onclick="showCandidateDetails({{ $item->id }})">
-                                            <i class='bx bx-link-alt'></i>
-                                            View Details
+                                       
+                                        <a href="{{ route('admin.candidatemaster.view', $item->id) }}"
+                                            class="dropdown-item">
+                                            <i class='bx bx-link-alt'></i> View
                                         </a>
-
                                         <a class="dropdown-item"
                                             href="{{ route('admin.candidatemaster.download', $item->id) }}">
                                             <i class='bx bxs-download'></i>
@@ -100,30 +98,5 @@
             </x-table>
         </div>
     </div>
-    <x-model1 />
-    @push('scripts')
-        <script>
-            function showCandidateDetails(employeeId) {
-                fetch(`/admin/candidatemaster/view/${employeeId}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.html_content) {
-                            document.querySelector('#client_details').innerHTML = data.html_content;
-                            $('#client_details').modal('show');
-                            const closeButton = document.querySelector('#closeModalButton');
-                            if (closeButton) {
-                                closeButton.addEventListener('click', function() {
-                                    $('#client_details').modal('hide');
-                                });
-                            }
-                        } else {
-                            console.error('No HTML content found in the response');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error fetching client details:', error);
-                    });
-            }
-        </script>
-    @endpush
+   
 </x-applayout>

@@ -420,7 +420,7 @@ class DCSApprovalController extends Controller
 
             $candidate->update(['ffi_emp_id' => $uniqueId]);
         }
-        $bankdetails = BankDetails::where('emp_id', $candidate->id)->where('status', 1)->first();
+        $bankdetails = BankDetails::where('emp_id', $candidate->id)->where('status', 1)->get();
 
         $children = DCSChildren::where('emp_id', $candidate->id)->get();
 
@@ -525,7 +525,7 @@ class DCSApprovalController extends Controller
         try {
             $validatedData['data_status'] = $request->input('data_status', 1);
             $validatedData['dcs_approval'] = $request->input('dcs_approval', 0);
-            $validatedData['comp_status'] = $request->input('comp_status', 1);
+            $validatedData['comp_status'] = $request->input('comp_status', 0);
             $candidate->update($validatedData);
 
             $fileFields = ['pan_path', 'aadhar_path', 'driving_license_path', 'photo', 'resume', 'family_photo', 'father_photo', 'mother_photo', 'spouse_photo', 'pan_declaration'];
@@ -627,27 +627,29 @@ class DCSApprovalController extends Controller
                     DCSChildren::insert($childrenData);
                 }
             }
+
             if ($request->has(['bank_name', 'bank_account_no', 'bank_ifsc_code'])) {
                 if (!isset($candidate) || empty($candidate->id)) {
                     return back()->with('error', 'Candidate not found.');
                 }
-                $filePath = null;
+                $bankDetails = BankDetails::where('emp_id', $candidate->id)
+                    ->where('status', 1)
+                    ->first();
+                $filePath = $bankDetails ? $bankDetails->bank_document : null;
                 if ($request->hasFile('bank_document')) {
                     $file = $request->file('bank_document');
                     $fileName = 'bank_document_' . $candidate->id . '.' . $file->getClientOriginalExtension();
                     $filePath = $file->storeAs('documents/bank', $fileName, 'public');
                 }
-                BankDetails::updateOrCreate(
-                    ['emp_id' => $candidate->id],
-                    [
+                BankDetails::where('emp_id', $candidate->id)
+                    ->where('status', 1)
+                    ->update([
                         'bank_name' => $request->bank_name,
                         'bank_account_no' => $request->bank_account_no,
                         'bank_ifsc_code' => $request->bank_ifsc_code,
                         'bank_status' => 1,
-                        'bank_document' => $filePath ?? null,
-                    ]
-                );
-
+                        'bank_document' => $filePath,
+                    ]);
             }
 
             $candidate->hr_approval = $request->hr_approval;
@@ -957,7 +959,7 @@ class DCSApprovalController extends Controller
                         'bank_account_no' => $request->bank_account_no,
                         'bank_ifsc_code' => $request->bank_ifsc_code,
                         'bank_status' => 1,
-                        'bank_document' => $filePath ?? null,
+                        'bank_document' => $filePath,
                     ]
                 );
 
@@ -1032,7 +1034,7 @@ class DCSApprovalController extends Controller
             ->findOrFail($id);
 
         $children = DCSChildren::where('emp_id', $candidate->id)->get();
-        $bankdetails = BankDetails::where('emp_id', $candidate->id)->where('status', 1)->first();
+        $bankdetails = BankDetails::where('emp_id', $candidate->id)->where('status', 1)->get();
 
         return view("admin.adms.dcs_approval.docedit", compact('candidate', 'children', 'bankdetails'));
     }
@@ -1238,23 +1240,24 @@ class DCSApprovalController extends Controller
                 if (!isset($candidate) || empty($candidate->id)) {
                     return back()->with('error', 'Candidate not found.');
                 }
-                $filePath = null;
+                $bankDetails = BankDetails::where('emp_id', $candidate->id)
+                    ->where('status', 1)
+                    ->first();
+                $filePath = $bankDetails ? $bankDetails->bank_document : null;
                 if ($request->hasFile('bank_document')) {
                     $file = $request->file('bank_document');
                     $fileName = 'bank_document_' . $candidate->id . '.' . $file->getClientOriginalExtension();
                     $filePath = $file->storeAs('documents/bank', $fileName, 'public');
                 }
-                BankDetails::updateOrCreate(
-                    ['emp_id' => $candidate->id],
-                    [
+                BankDetails::where('emp_id', $candidate->id)
+                    ->where('status', 1)
+                    ->update([
                         'bank_name' => $request->bank_name,
                         'bank_account_no' => $request->bank_account_no,
                         'bank_ifsc_code' => $request->bank_ifsc_code,
                         'bank_status' => 1,
-                        'bank_document' => $filePath ?? null,
-                    ]
-                );
-
+                        'bank_document' => $filePath,
+                    ]);
             }
             $candidate->save();
             DB::commit();

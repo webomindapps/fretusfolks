@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\BankDetails;
 use Exception;
 use ZipArchive;
 use App\Models\CFISModel;
@@ -62,16 +63,18 @@ class ComplianceController extends Controller
 
         // $education = FFIEducationModel::where('emp_id', $id)->get();
         $children = DCSChildren::where('emp_id', $id)->get();
+        $bankdetails = BankDetails::where('emp_id', $id)->get();
         $candidate = $this->model()
             ->with(['client', 'educationCertificates', 'otherCertificates', 'candidateDocuments'])
             ->findOrFail($id);
-        $htmlContent = view('admin.adms.compliance.view', compact('candidate', 'children'))->render();
-        return response()->json(['html_content' => $htmlContent]);
+        return view('admin.adms.compliance.view', compact('candidate', 'children', 'bankdetails'));
+        // return response()->json(['html_content' => $htmlContent]);
     }
 
     public function downloadpdf($id)
     {
         $children = DCSChildren::where('emp_id', $id)->get();
+        $bankdetails = BankDetails::where('emp_id', $id)->get();
         $candidate = $this->model()
             ->with(['client', 'candidateDocuments', 'educationCertificates', 'otherCertificates'])
             ->findOrFail($id);
@@ -81,7 +84,7 @@ class ComplianceController extends Controller
             File::makeDirectory($tempDir, 0755, true, true);
         }
 
-        $pdf = Pdf::loadView('admin.adms.compliance.candidate-pdf', compact('candidate', 'children'));
+        $pdf = Pdf::loadView('admin.adms.compliance.candidate-pdf', compact('candidate', 'children', 'bankdetails'));
         $pdfPath = $tempDir . "/candidate_details_$id.pdf";
         File::put($pdfPath, $pdf->output());
 
@@ -97,6 +100,8 @@ class ComplianceController extends Controller
             $this->addDocumentsToZip($zip, $candidate->educationCertificates, 'Education_Documents');
             $this->addDocumentsToZip($zip, $candidate->otherCertificates, 'Other_Documents');
             $this->addDocumentsToZip($zip, $candidate->candidateDocuments, 'Candidate_Documents');
+            $this->addDocumentsToZip($zip, $children, 'Children_images');
+            $this->addDocumentsToZip($zip, $bankdetails, 'Bank_Document');
 
 
             $zip->close();
@@ -123,8 +128,16 @@ class ComplianceController extends Controller
     {
 
         foreach ($documents as $document) {
-            $docPath = $document->path;
-
+            if (isset($document->bank_document)) {
+                // For bank document
+                $docPath = $document->bank_document;
+            } elseif (isset($document->path)) {
+                // For other documents (e.g., candidate documents, certificates)
+                $docPath = $document->path;
+            } elseif (isset($document->child_image)) {
+                // For children's images (assuming there's a field named 'child_image' for images)
+                $docPath = $document->child_image;
+            }
             if (!empty($docPath)) {
 
                 $originalStoragePath = storage_path("app/public/" . $docPath);
@@ -225,6 +238,88 @@ class ComplianceController extends Controller
         $candidates = $query->get();
 
         return Excel::download(new CadidateDownload($candidates), 'candidates.xlsx');
+    }
+
+    public function create($id)
+    {
+        $candidate = $this->model()->find($id);
+        return view('admin.adms.compliance.bank_create', compact('candidate'));
+
+    }
+    public function store(Request $request, $id)
+    {
+        $candidate = $this->model()->findOrFail($id);
+
+        $request->validate([
+            'bank_name' => 'required|string|max:255',
+            'bank_account_no' => 'required|string|max:50',
+            'bank_ifsc_code' => 'required|string|max:20',
+            'bank_document' => 'required',
+            'status' => 'required',
+        ]);
+
+        $filePath = null;
+        if ($request->hasFile('bank_document')) {
+            $file = $request->file('bank_document');
+            $fileName = 'bank_document_' . $request->emp_id . '.' . $file->getClientOriginalExtension();
+            $filePath = $file->storeAs('documents/bank', $fileName, 'public');
+        }
+
+        BankDetails::create([
+            'emp_id' => $request->emp_id,
+            'bank_name' => $request->bank_name,
+            'bank_account_no' => $request->bank_account_no,
+            'bank_ifsc_code' => $request->bank_ifsc_code,
+            'bank_document' => $filePath,
+            'status' => $request->status,
+        ]);
+        return redirect()->route('admin.candidatemaster.view', $candidate->id)->with('success', 'Bank details saved successfully!');
+
+    }
+    public function destroy($id)
+    {
+        $bankDetails = BankDetails::findOrFail($id);
+
+        $bankDetails->delete();
+        return redirect()->route('admin.candidatemaster')->with('success', 'Successfully deleted!');
+    }
+    public function bankedit($id)
+    {
+        $bankdetails = BankDetails::find($id);
+        return view('admin.adms.compliance.bank_edit', compact('bankdetails'));
+
+    }
+    public function bankupdate(Request $request, $id)
+    {
+        $request->validate([
+            'bank_name' => 'required|string|max:255',
+            'bank_account_no' => 'required|string|max:50',
+            'bank_ifsc_code' => 'required|string|max:20',
+            'status' => 'required',
+        ]);
+
+        $bankDetails = BankDetails::find($id);
+
+        if (!$bankDetails) {
+            return redirect()->back()->with('error', 'Bank details not found.');
+        }
+
+        $filePath = $bankDetails->bank_document;
+        if ($request->hasFile('bank_document')) {
+            $file = $request->file('bank_document');
+            $fileName = 'bank_document_' . $bankDetails->emp_id . '.' . $file->getClientOriginalExtension();
+            $filePath = $file->storeAs('documents/bank', $fileName, 'public');
+        }
+
+        $bankDetails->update([
+            'bank_name' => $request->bank_name,
+            'bank_account_no' => $request->bank_account_no,
+            'bank_ifsc_code' => $request->bank_ifsc_code,
+            'bank_document' => $filePath,
+            'status' => $request->status,
+        ]);
+
+        return redirect()->route('admin.candidatemaster')->with('success', 'Successfully updated!');
     }
 
 }

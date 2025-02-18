@@ -373,7 +373,11 @@ Route::prefix('admin')->group(function () {
         Route::post('candidatemaster/{id}/edit', [ComplianceController::class, 'update']);
         Route::post('/candidatemaster/import', [ComplianceController::class, 'import'])->name('candidatemaster.import');
         Route::post('candidatemaster/formate/download', [ComplianceController::class, 'download'])->name('candidatemaster.formdownload');
-
+        Route::get('/bankdetails/{id}/create', [ComplianceController::class, 'create'])->name('bankdetails.create');
+        Route::post('/bankdetails/{id}/create', [ComplianceController::class, 'store']);
+        Route::get('/bankdetails/{id}/edit', [ComplianceController::class, 'bankedit'])->name('bankdetails.edit');
+        Route::post('/bankdetails/{id}/edit', [ComplianceController::class, 'bankupdate']);
+        Route::get('bankdetails/{id}/delete', [ComplianceController::class, 'destroy'])->name('bankdetails.delete');
 
         //Employee Lifecycle
         Route::get('candidatelifecycle', [EmployeeLifecycleController::class, 'index'])->name('candidatelifecycle');

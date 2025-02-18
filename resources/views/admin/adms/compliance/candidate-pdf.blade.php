@@ -133,6 +133,9 @@
                     <div class="col-md-4 mt-2">
                         <b>Date of Birth:</b> <span>{{ date('d-m-Y', strtotime($child->child_dob)) }}</span>
                     </div>
+                    <div class="col-md-4 mt-2">
+                        <b>Child Aadhar No:</b> <span>{{ $child->aadhar_no }}</span>
+                    </div>
                 @endforeach
             @endif
 
@@ -143,7 +146,25 @@
 
         <div class="page-break"></div>
 
-
+        @if ($bankdetails->isNotEmpty())
+            @foreach ($bankdetails as $bank)
+                <div class="col-md-4 mt-2">
+                    <b>Bank Name:</b> <span>{{ $bank->bank_name }}</span>
+                </div>
+                <div class="col-md-4 mt-2">
+                    <b>Bank Accout No:</b> <span>{{ $bank->bank_account_no }}</span>
+                </div>
+                <div class="col-md-4 mt-2">
+                    <b>Bank IFSC Code:</b> <span>{{ $bank->bank_ifsc_code }}</span>
+                </div>
+                <div class="col-md-4 mt-2">
+                    <b>Status:</b> <span class="{{ $bank->status == 1 ? 'text-success' : 'text-danger' }}">
+                        {{ $bank->status == 1 ? 'Active' : 'Inactive' }}
+                    </span>
+                </div>
+            @endforeach
+        @endif
+        <hr>
         <!-- Salary Details Section -->
         <h2 class="bg-light p-2">Salary Details</h2>
         <div class="row">

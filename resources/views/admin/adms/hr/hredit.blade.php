@@ -277,23 +277,29 @@
                                         accept="application/pdf, image/jpg, image/png" class="form-control"
                                         value="{{ old('family_photo', $candidate->family_photo) }}">
                                 </div>
-                                <x-forms.input label="Enter Bank Name:" type="text" name="bank_name"
-                                    id="bank_name" :required="true" size="col-lg-6 mt-2" :value="old('bank_name', $bankdetails->bank_name)" />
+                                {{-- {{ dd($bankdetails->bank_name) }} --}}
+                                @foreach ($bankdetails as $bank)
+                                    <x-forms.input label="Enter Bank Name:" type="text" name="bank_name"
+                                        id="bank_name" :required="true" size="col-lg-6 mt-2" :value="old('bank_name', $bank->bank_name ?? '')" />
 
-                                <div class="form-group col-lg-6 mt-2">
-                                    <label for="bank_document">Attach Bank Document: </label>
-                                    <input type="file" name="bank_document" id="bank_document"
-                                        accept="application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/pdf"
-                                        class="form-control" value="{{ old('bank_document') }}">
-                                </div>
-                                <x-forms.input label="Enter Bank Account No::" type="text" name="bank_account_no"
-                                    id="bank_account_no" :required="true" size="col-lg-6 mt-2" :value="old('bank_account_no', $bankdetails->bank_account_no)" />
-                                <x-forms.input label="Repeat Bank Account No:" type="text" name="bank_account_no"
-                                    id="bank_account_no" :required="true" size="col-lg-6 mt-2" :value="old('bank_account_no', $bankdetails->bank_account_no)" />
-                                <x-forms.input label="Enter Bank IFSC CODE:" type="text" name="bank_ifsc_code"
-                                    id="bank_ifsc_code" :required="true" size="col-lg-6 mt-2"
-                                    :value="old('bank_ifsc_code', $bankdetails->bank_ifsc_code)" /><x-forms.input label="UAN No:" type="text" name="uan_no"
-                                    id="uan_no" :required="false" size="col-lg-6 mt-2" :value="old('uan_no', $candidate->uan_no)" />
+                                    <div class="form-group col-lg-6 mt-2">
+                                        <label for="bank_document">Attach Bank Document: </label>
+                                        <input type="file" name="bank_document" id="bank_document"
+                                            accept="application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/pdf"
+                                            class="form-control" value="{{ old('bank_document') }}">
+                                    </div>
+                                    <x-forms.input label="Enter Bank Account No::" type="text"
+                                        name="bank_account_no" id="bank_account_no" :required="true"
+                                        size="col-lg-6 mt-2" :value="old('bank_account_no', $bank->bank_account_no ?? '')" />
+                                    <x-forms.input label="Repeat Bank Account No:" type="text"
+                                        name="bank_account_no" id="bank_account_no" :required="true"
+                                        size="col-lg-6 mt-2" :value="old('bank_account_no', $bank->bank_account_no ?? '')" />
+                                    <x-forms.input label="Enter Bank IFSC CODE:" type="text" name="bank_ifsc_code"
+                                        id="bank_ifsc_code" :required="true" size="col-lg-6 mt-2"
+                                        :value="old('bank_ifsc_code', $bank->bank_ifsc_code ?? '')" />
+                                @endforeach
+                                <x-forms.input label="UAN No:" type="text" name="uan_no" id="uan_no"
+                                    :required="false" size="col-lg-6 mt-2" :value="old('uan_no', $candidate->uan_no)" />
 
                                 <label size="col-lg-6 mt-4"><strong>Current Uploaded Documents</strong></label>
                                 <div style="border: 1px solid #d6c8c8; padding: 2%; margin-bottom: 1%;">
@@ -313,7 +319,6 @@
                                                     'driving_license_path' => 'Driving License',
                                                     'photo' => 'Photo',
                                                     'resume' => 'Resume',
-                                                    'bank_document' => 'Bank Document',
                                                     'voter_id' => 'Voter ID/ PVC/ UL',
                                                     'emp_form' => 'Employee Form',
                                                     'pf_esic_form' => 'PF Form / ESIC',
@@ -364,40 +369,48 @@
                                                     </tr>
                                                 @endforeach
                                             @endif
-                                            @if (!is_null($bankdetails) && $bankdetails->bank_document)
-                                                <tr>
-                                                    <td>
-                                                        Bank Document </td>
-                                                    <td>
-                                                        <a href="{{ asset('storage/' . $bankdetails->bank_document) }}"
-                                                            target="_blank" class="btn btn-custom">
-                                                            View
-                                                        </a>
-                                                    </td>
-                                                    <td>
-                                                        <div class="dropdown">
-                                                            <button class="btn btn btn-sm dropdown-toggle"
-                                                                type="button"
-                                                                id="statusDropdown{{ $bankdetails->id }}"
-                                                                data-bs-toggle="dropdown" aria-expanded="false">
-                                                                {{ $bankdetails->bank_status == 1 ? 'Approved' : ($bankdetails->bank_status == 0 ? 'Pending' : 'Rejected') }}
-                                                            </button>
-                                                            <ul class="dropdown-menu"
-                                                                aria-labelledby="statusDropdown{{ $bankdetails->id }}">
-                                                                <li><a class="dropdown-item"
-                                                                        href="{{ route('admin.document.status', ['id' => $bankdetails->id, 'newStatus' => 0]) }}">Pending</a>
-                                                                </li>
-                                                                <li><a class="dropdown-item"
-                                                                        href="{{ route('admin.document.status', ['id' => $bankdetails->id, 'newStatus' => 2]) }}">Rejected</a>
-                                                                </li>
-                                                                <li><a class="dropdown-item"
-                                                                        href="{{ route('admin.document.status', ['id' => $bankdetails->id, 'newStatus' => 1]) }}">Approved</a>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                    </td>
-                                                </tr>
+                                            {{-- {{ dd($bankdetails->bank_document) }} --}}
+
+                                            @if ($bankdetails->isNotEmpty())
+                                                @foreach ($bankdetails as $bank)
+                                                    @if ($bank->bank_document)
+                                                        <!-- Move this check inside the loop -->
+                                                        <tr>
+                                                            <td>Bank Document</td>
+                                                            <td>
+                                                                <a href="{{ asset('storage/' . $bank->bank_document) }}"
+                                                                    target="_blank" class="btn btn-custom">
+                                                                    View
+                                                                </a>
+                                                            </td>
+                                                            <td>
+                                                                <div class="dropdown">
+                                                                    <button class="btn btn-sm dropdown-toggle"
+                                                                        type="button"
+                                                                        id="statusDropdown{{ $bank->id }}"
+                                                                        data-bs-toggle="dropdown"
+                                                                        aria-expanded="false">
+                                                                        {{ $bank->bank_status == 1 ? 'Approved' : ($bank->bank_status == 0 ? 'Pending' : 'Rejected') }}
+                                                                    </button>
+                                                                    <ul class="dropdown-menu"
+                                                                        aria-labelledby="statusDropdown{{ $bank->id }}">
+                                                                        <li><a class="dropdown-item"
+                                                                                href="{{ route('admin.document.status', ['id' => $bank->id, 'newStatus' => 0]) }}">Pending</a>
+                                                                        </li>
+                                                                        <li><a class="dropdown-item"
+                                                                                href="{{ route('admin.document.status', ['id' => $bank->id, 'newStatus' => 2]) }}">Rejected</a>
+                                                                        </li>
+                                                                        <li><a class="dropdown-item"
+                                                                                href="{{ route('admin.document.status', ['id' => $bank->id, 'newStatus' => 1]) }}">Approved</a>
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    @endif
+                                                @endforeach
                                             @endif
+
                                             {{-- Education Certificates --}}
                                             @if ($candidate->educationCertificates->isNotEmpty())
                                                 @foreach ($candidate->educationCertificates as $certificate)

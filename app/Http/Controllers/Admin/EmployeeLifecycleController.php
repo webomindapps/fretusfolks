@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\CFISModel;
+use App\Models\BankDetails;
 use App\Models\DCSChildren;
-use App\Models\IncrementLetter;
 use Illuminate\Http\Request;
+use App\Models\IncrementLetter;
 use App\Http\Controllers\Controller;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\CadidateReportExport;
@@ -70,12 +71,13 @@ class EmployeeLifecycleController extends Controller
     public function viewdetail($id)
     {
         $children = DCSChildren::where('emp_id', $id)->get();
+        $bankdetails = BankDetails::where('emp_id', $id)->get();
 
         $candidate = $this->model()
             ->with(['client', 'educationCertificates', 'otherCertificates', 'candidateDocuments', 'offerletters', 'incrementletters', 'showcauseletters', 'warningletters', 'pipletter', 'terminationletter'])
             ->findOrFail($id);
         // dd($candidate->showcauseletters);
-        return view('admin.adms.employee_lifecycle.view', compact('candidate', 'children'));
+        return view('admin.adms.employee_lifecycle.view', compact('candidate', 'children','bankdetails'));
         // return response()->json(['html_content' => $htmlContent]);
     }
 

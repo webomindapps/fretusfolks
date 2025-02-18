@@ -195,7 +195,7 @@
 
                         <hr>
                         <div class="card custom-card">
-                            <div class="custom-header d-flex justify-content-between align-items-center"
+                            <div class="custom-header d-flex justify-content-between align-items-center w-100"
                                 data-bs-toggle="collapse" data-bs-target="#bankDetails" aria-expanded="false"
                                 aria-controls="bankDetails">
                                 <span>Bank Details</span>
@@ -205,21 +205,55 @@
                             <div id="bankDetails" class="accordion-collapse collapse" aria-labelledby="headingbank"
                                 data-bs-parent="#accordionExample">
                                 <div class="card-body">
+
                                     <div class="row">
-                                        <div class="col-md-4 mb-2"><b>Bank Name:</b>
-                                            <span>{{ $candidate->bank_name }}</span>
-                                        </div>
-                                        <div class="col-md-4 mb-2"><b>Bank Account No:</b>
-                                            <span>{{ $candidate->bank_account_no }}</span>
-                                        </div>
-                                        <div class="col-md-4 mb-2"><b>Bank IFSC No:</b>
-                                            <span>{{ $candidate->bank_ifsc_code }}</span>
-                                        </div>
-                                        <div class="col-md-4 mb-2"><b>UAN NO:</b> <span>{{ $candidate->uan_no }}</span>
-                                        </div>
-                                        <div class="col-md-4 mb-2"><b>ESIC No:</b>
-                                            <span>{{ $candidate->esic_no }}</span>
-                                        </div>
+                                        @if ($bankdetails->isNotEmpty())
+                                            <div class="table-responsive">
+                                                <table class="table table-bordered">
+                                                    <thead class="table-light">
+                                                        <tr>
+                                                            <th>SL No</th>
+                                                            <th>Bank Name</th>
+                                                            <th>Account No</th>
+                                                            <th>IFSC Code</th>
+                                                            <th>Bank Document</th>
+                                                            <th>Status</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {{-- {{dd($bankdetails)}} --}}
+                                                        @foreach ($bankdetails as $index => $bank)
+                                                            <tr>
+                                                                <td>{{ $index + 1 }}</td>
+                                                                <td>{{ $bank->bank_name }}</td>
+                                                                <td>{{ $bank->bank_account_no }}</td>
+                                                                <td>{{ $bank->bank_ifsc_code }}</td>
+                                                                <td>
+                                                                    @if ($bank->bank_document)
+                                                                        <a href="{{ asset('storage/' . $bank->bank_document) }}"
+                                                                            target="_blank"
+                                                                            class="btn btn-sm btn-primary">
+                                                                            View
+                                                                        </a>
+                                                                    @else
+                                                                        <span class="text-muted">No Document</span>
+                                                                    @endif
+                                                                </td>
+                                                                <td>
+                                                                    <span
+                                                                        class="badge {{ $bank->status == 1 ? 'bg-success' : 'bg-danger' }}">
+                                                                        {{ $bank->status == 1 ? 'Active' : 'Inactive' }}
+                                                                    </span>
+                                                                </td>
+
+                                                            </tr>
+                                                        @endforeach
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+                                        @endif
+
                                     </div>
                                 </div>
                             </div>
@@ -239,6 +273,12 @@
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-md-4 mb-2"><b>Basic Salary:</b>
+                                            <div class="col-md-4 mb-2"><b>UAN NO:</b>
+                                                <span>{{ $candidate->uan_no }}</span>
+                                            </div>
+                                            <div class="col-md-4 mb-2"><b>ESIC No:</b>
+                                                <span>{{ $candidate->esic_no }}</span>
+                                            </div>
                                             <span>{{ $candidate->basic_salary }}</span>
                                         </div>
                                         <div class="col-md-4 mb-2"><b>HRA:</b> <span>{{ $candidate->hra }}</span>
