@@ -171,6 +171,9 @@ class AdmsWarningLetterController extends Controller
     public function delete($id)
     {
         $warning = $this->model()->findOrFail($id);
+        if ($warning && $warning->warning_letter_path) {
+            Storage::disk('public')->delete($warning->warning_letter_path);
+        }
         $warning->delete();
         return redirect()->route('admin.warning_letter')->with('success', 'Warning Letter has been deleted');
     }

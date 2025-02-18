@@ -174,6 +174,9 @@ class AdmsTerminationLetterController extends Controller
     public function delete($id)
     {
         $termination = $this->model()->findOrFail($id);
+        if ($termination && $termination->termination_letter_path) {
+            Storage::disk('public')->delete($termination->termination_letter_path);
+        }
         $termination->delete();
         return redirect()->route('admin.termination_letter')->with('success', 'Termination Letter has been deleted');
     }

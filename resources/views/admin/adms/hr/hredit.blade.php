@@ -714,6 +714,16 @@
                         }
                     });
 
+                    var bankaccno = $('#bank_account_no').val();
+                    var retypebankaccno = $('repeat_bank_account_no').val();
+                    if (bankaccno != retypebankaccno) {
+                        isValid = false;
+                        $('#bank_account_no').after(
+                            "<span class='error' style='color:red; font-size: 13px;'>Bank acount number not matched.</span>"
+                        );
+                    }
+
+
                     return isValid;
                 }
 
@@ -740,6 +750,17 @@
                     );
                 }
             });
+            $('#bank_account_no,#repeat_bank_account_no').on('change', function() {
+                var bankaccno = $('#bank_account_no').val();
+                var retypebankaccno = $('repeat_bank_account_no').val();
+                if (bankaccno != retypebankaccno) {
+                    isValid = false;
+                    $('#bank_account_no').after(
+                        "<span class='error' style='color:red; font-size: 13px;'>Bank account not matched .</span>"
+                    );
+                }
+            });
+
 
             // **Real-time validation for Aadhar & Phone**
             $('#father_aadhar_no, #mother_aadhar_no, #aadhar_no').on('blur input', function() {
@@ -749,7 +770,8 @@
 
                 if (!aadharNumber) {
                     $(this).after(
-                        "<span class='error' style='color:red; font-size: 13px;'>Aadhar number is required.</span>");
+                        "<span class='error' style='color:red; font-size: 13px;'>Aadhar number is required.</span>"
+                    );
                 } else if (!aadharPattern.test(aadharNumber)) {
                     $(this).after(
                         "<span class='error' style='color:red; font-size: 13px;'>Aadhar number must be a 12-digit numeric value.</span>"
@@ -764,7 +786,8 @@
 
                 if (!phoneNumber) {
                     $(this).after(
-                        "<span class='error' style='color:red; font-size: 13px;'>Phone number is required.</span>");
+                        "<span class='error' style='color:red; font-size: 13px;'>Phone number is required.</span>"
+                    );
                 } else if (!phonePattern.test(phoneNumber)) {
                     $(this).after(
                         "<span class='error' style='color:red; font-size: 13px;'>Phone number must be a 10-digit numeric value.</span>"
