@@ -185,6 +185,10 @@ class AdmsPipLetterController extends Controller
     public function delete($id)
     {
         $pip = $this->model()->findOrFail($id);
+
+        if ($pip && $pip->pip_letter_path) {
+            Storage::disk('public')->delete($pip->pip_letter_path);
+        }
         $pip->delete();
         return redirect()->route('admin.pip_letter')->with('success', 'Pip Letter has been deleted');
     }

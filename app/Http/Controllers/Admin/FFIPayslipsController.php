@@ -91,7 +91,7 @@ class FFIPayslipsController extends Controller
                         $datafromCsv[] = $record;
                     }
                 }
-                $datafromCsv = array_chunk($datafromCsv, 1000);
+                $datafromCsv = array_chunk($datafromCsv, 10);
                 foreach ($datafromCsv as $index => $dataCsv) {
 
                     foreach ($dataCsv as $data) {

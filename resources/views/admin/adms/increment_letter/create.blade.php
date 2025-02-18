@@ -81,7 +81,7 @@
                                             id="emp_esic" :required="true" size="col-lg-2 mt-2"
                                             :value="old('emp_esic')" />
                                         <x-forms.input label="PT: " type="number" name="pt" id="pt"
-                                            :required="true" size="col-lg-2 mt-2" :value="old('pt')" />
+                                            :required="true" size="col-lg-2 mt-2" :value="old('pt','0')" />
                                         <x-forms.input label="Total Deduction: " type="number"
                                             name="total_deduction" id="total_deduction" :required="true"
                                             size="col-lg-3 mt-2" :value="old('total_deduction')" />
@@ -207,11 +207,22 @@
                     let takeHome = grossSalary - totalDeduction;
                     document.getElementById("take_home").value = takeHome.toFixed(2);
 
+                    let Esicpercentage = empESIC / grossSalary * 100;
+                    document.getElementById("esic_percentage").value = Esicpercentage.toFixed(2);
+
+
                     let employerPF = Math.min(basic * 0.13, 1950);
                     document.getElementById("employer_pf").value = employerPF.toFixed(2);
 
+                    let employerpfpercentage=employerPF/basic *100;
+                    document.getElementById("employer_pf_percentage").value = employerpfpercentage.toFixed(2);
+
                     let employerESIC = grossSalary < 21000 ? grossSalary * 0.0325 : 0;
                     document.getElementById("employer_esic").value = employerESIC.toFixed(2);
+
+                    let employerEsicpercentage = employerESIC / grossSalary * 100
+                    document.getElementById("employer_esic_percentage").value = employerEsicpercentage.toFixed(2);
+
 
                     let mediclaim = parseFloat(document.getElementById("mediclaim").value) || 0;
 
