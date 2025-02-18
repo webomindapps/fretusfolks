@@ -168,6 +168,9 @@ class AdmsShowcauseLetterController extends Controller
     public function delete($id)
     {
         $showcause = $this->model()->findOrFail($id);
+        if ($showcause && $showcause->showcause_letter_path) {
+            Storage::disk('public')->delete($showcause->showcause_letter_path);
+        }
         $showcause->delete();
         return redirect()->route('admin.showcause_letter')->with('success', 'ShowCause Letter has Been Deleted');
     }

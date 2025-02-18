@@ -37,6 +37,7 @@ use App\Http\Controllers\Admin\FFIOfferLetterController;
 use App\Http\Controllers\Admin\FFITerminationController;
 use App\Http\Controllers\Admin\CMSLabourNoticeController;
 use App\Http\Controllers\Admin\FFIIncrementLetterController;
+use App\Jobs\ADMSPayslipCreate;
 
 Route::get('/', function () {
     return to_route('admin.dashboard');
@@ -384,6 +385,7 @@ Route::prefix('admin')->group(function () {
         Route::get('/payslips', [ADMSPayslipController::class, 'index'])->name('payslips');
         Route::post('payslips/bulk-upload', [ADMSPayslipController::class, 'bulkUpload'])->name('payslips.bulk.upload');
         Route::post('payslips/export', [ADMSPayslipController::class, 'export'])->name('payslips.export');
+        Route::get('payslips/download-filtered',[ADMSPayslipController::class,'downloadfiltered'])->name('payslips.downloadformat');
         Route::get('payslips/search-payslip', [ADMSPayslipController::class, 'searchPayslip'])->name('search.payslips');
         Route::get('/generate-payslips/{id}', [ADMSPayslipController::class, 'generatePayslipsPdf'])->name('generate.payslips');
         Route::get('/payslips/delete/{id}', [ADMSPayslipController::class, 'destroy'])->name('payslips.delete');

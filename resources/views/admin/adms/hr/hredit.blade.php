@@ -247,7 +247,7 @@
                                     <label for="aadhar_no">Enter Adhar Card No:</label>
                                     <input type="text" name="aadhar_no" id="aadhar_no" class="form-control"
                                         maxlength="12" inputmode="numeric"
-                                        value="{{ old('aadhar_no', $candidate->aadhar_no) }}" >
+                                        value="{{ old('aadhar_no', $candidate->aadhar_no) }}">
                                 </div>
                                 <div class="form-group col-lg-6 mt-2">
                                     <label for="aadhar_path">Attach Aadhar Card: <span
@@ -286,7 +286,8 @@
                                 <x-forms.input label="Enter Bank Account No::" type="text" name="bank_account_no"
                                     id="bank_account_no" :required="true" size="col-lg-6 mt-2" :value="old('bank_account_no', $candidate->bank_account_no)" />
                                 <x-forms.input label="Repeat Bank Account No:" type="text" name="bank_account_no"
-                                    id="bank_account_no" :required="false" size="col-lg-6 mt-2" :value="old('bank_account_no', $candidate->bank_account_no)" />
+                                    id="repeat_bank_account_no" :required="false" size="col-lg-6 mt-2"
+                                    :value="old('bank_account_no', $candidate->bank_account_no)" />
                                 <x-forms.input label="Enter Bank IFSC CODE:" type="text" name="bank_ifsc_code"
                                     id="bank_ifsc_code" :required="true" size="col-lg-6 mt-2" :value="old('bank_ifsc_code', $candidate->bank_ifsc_code)" />
                                 <x-forms.input label="UAN No:" type="text" name="uan_no" id="uan_no"
@@ -627,7 +628,7 @@
                             isValid = false;
                             field.after(
                                 `<span class='error' style='color:red; font-size: 13px;'>${getErrorMessage(field.attr('id'))}</span>`
-                                );
+                            );
                         }
                     });
 
@@ -639,12 +640,12 @@
                             isValid = false;
                             $(this).after(
                                 "<span class='error' style='color:red; font-size: 13px;'>Aadhar number is required.</span>"
-                                );
+                            );
                         } else if (!aadharPattern.test(aadharNumber)) {
                             isValid = false;
                             $(this).after(
                                 "<span class='error' style='color:red; font-size: 13px;'>Aadhar number must be a 12-digit numeric value.</span>"
-                                );
+                            );
                         }
                     });
 
@@ -656,19 +657,29 @@
                             isValid = false;
                             $(this).after(
                                 "<span class='error' style='color:red; font-size: 13px;'>Phone number is required.</span>"
-                                );
+                            );
                         } else if (!phonePattern.test(phoneNumber)) {
                             isValid = false;
                             $(this).after(
                                 "<span class='error' style='color:red; font-size: 13px;'>Phone number must be a 10-digit numeric value.</span>"
-                                );
+                            );
                         }
                     });
+
+                    var bankaccno = $('#bank_account_no').val();
+                    var retypebankaccno = $('repeat_bank_account_no').val();
+                    if (bankaccno != retypebankaccno) {
+                        isValid = false;
+                        $('#bank_account_no').after(
+                            "<span class='error' style='color:red; font-size: 13px;'>Bank acount number not matched.</span>"
+                        );
+                    }
+
 
                     return isValid;
                 }
 
-               
+
 
                 if (validateForm()) {
                     let status = document.getElementById('hr_approval').value;
@@ -688,9 +699,20 @@
                 if (!fieldValue) {
                     $(this).after(
                         `<span class='error' style='color:red; font-size: 13px;'>${getErrorMessage($(this).attr('id'))}</span>`
-                        );
+                    );
                 }
             });
+            $('#bank_account_no,#repeat_bank_account_no').on('change', function() {
+                var bankaccno = $('#bank_account_no').val();
+                var retypebankaccno = $('repeat_bank_account_no').val();
+                if (bankaccno != retypebankaccno) {
+                    isValid = false;
+                    $('#bank_account_no').after(
+                        "<span class='error' style='color:red; font-size: 13px;'>Bank account not matched .</span>"
+                    );
+                }
+            });
+
 
             // **Real-time validation for Aadhar & Phone**
             $('#father_aadhar_no, #mother_aadhar_no, #aadhar_no').on('blur input', function() {
@@ -700,11 +722,12 @@
 
                 if (!aadharNumber) {
                     $(this).after(
-                        "<span class='error' style='color:red; font-size: 13px;'>Aadhar number is required.</span>");
+                        "<span class='error' style='color:red; font-size: 13px;'>Aadhar number is required.</span>"
+                    );
                 } else if (!aadharPattern.test(aadharNumber)) {
                     $(this).after(
                         "<span class='error' style='color:red; font-size: 13px;'>Aadhar number must be a 12-digit numeric value.</span>"
-                        );
+                    );
                 }
             });
 
@@ -715,11 +738,12 @@
 
                 if (!phoneNumber) {
                     $(this).after(
-                        "<span class='error' style='color:red; font-size: 13px;'>Phone number is required.</span>");
+                        "<span class='error' style='color:red; font-size: 13px;'>Phone number is required.</span>"
+                    );
                 } else if (!phonePattern.test(phoneNumber)) {
                     $(this).after(
                         "<span class='error' style='color:red; font-size: 13px;'>Phone number must be a 10-digit numeric value.</span>"
-                        );
+                    );
                 }
             });
 

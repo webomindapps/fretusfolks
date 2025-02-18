@@ -17,6 +17,102 @@
             <!-- Upload Payslips Tab -->
             <div class="tab-pane fade show active" id="upload" role="tabpanel" aria-labelledby="upload-tab">
                 <div class="card-header">
+                    <h5 class="card-title">Download format</h5>
+                </div>
+                <div class="card-body">
+                    <form action="{{ route('admin.payslips') }}" method="GET">
+                        <div class="row">
+                            <div class="col-lg-3 mt-2">
+                                <label for="data">Client Name</label>
+                                <div class="dropdown">
+                                    <input type="text" class="btn dropdown-toggle" id="dropdownMenuButton"
+                                        data-bs-toggle="dropdown" aria-expanded="false" readonly
+                                        value="Select Client" />
+                                    <ul class="dropdown-menu ps-3" aria-labelledby="dropdownMenuButton">
+                                        <li>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="select_all_data"
+                                                    onchange="toggleSelectAll(this, '.data-checkbox', '#dropdownMenuButton', 'Select Data')">
+                                                <label class="form-check-label" for="select_all_data">Select All</label>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <hr class="dropdown-divider">
+                                        </li>
+                                        @foreach (FretusFolks::getClientname() as $option)
+                                            <li>
+                                                <div class="form-check">
+                                                    <input class="form-check-input data-checkbox" type="checkbox"
+                                                        name="data[]" value="{{ $option['value'] }}"
+                                                        id="data_{{ $loop->index }}"
+                                                        onchange="updateSelectedCount('.data-checkbox', '#dropdownMenuButton', 'Select Data')">
+                                                    <label class="form-check-label"
+                                                        for="data_{{ $loop->index }}">{{ $option['label'] }}</label>
+                                                </div>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3 mt-2">
+                                <label for="service_state">State</label>
+                                <div class="dropdown">
+                                    <input type="text" class="btn btn-secondary dropdown-toggle"
+                                        id="dropdownMenuButtonState" data-bs-toggle="dropdown" aria-expanded="false"
+                                        readonly value="Select State" />
+                                    <ul class="dropdown-menu ps-3" aria-labelledby="dropdownMenuButtonState">
+                                        <li>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="select_all_states"
+                                                    onchange="toggleSelectAll(this, '.state-checkbox', '#dropdownMenuButtonState', 'Select State')">
+                                                <label class="form-check-label" for="select_all_states">Select
+                                                    All</label>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <hr class="dropdown-divider">
+                                        </li>
+                                        @foreach (FretusFolks::getStates() as $option)
+                                            <li>
+                                                <div class="form-check">
+                                                    <input class="form-check-input state-checkbox" type="checkbox"
+                                                        name="service_state[]" value="{{ $option['value'] }}"
+                                                        id="service_state_{{ $loop->index }}"
+                                                        onchange="updateSelectedCount('.state-checkbox', '#dropdownMenuButtonState', 'Select State')">
+                                                    <label class="form-check-label"
+                                                        for="service_state_{{ $loop->index }}">{{ $option['label'] }}</label>
+                                                </div>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <!-- From Date -->
+                            <div class="col-lg-2 mt-2">
+                                <label for="from">From Date</label>
+                                <input type="date" class="form-control" id="from" name="from">
+                            </div>
+
+                            <!-- To Date -->
+                            <div class="col-lg-2 mt-2">
+                                <label for="to">To Date</label>
+                                <input type="date" class="form-control" id="to" name="to">
+                            </div>
+
+                            <div class="col-lg-2 mt-4">
+                                <a class="btn btn-info  w-20 text-white mt-3" id="downloadFilteredCSV"
+                                    download="payslip_format.csv">
+                                    Download Sample
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+
+                <div class="card-header">
                     <h5 class="card-title">Upload Payslips</h5>
                 </div>
 
@@ -26,18 +122,20 @@
                     </div>
                 @endif
 
-                <form action="{{ route('admin.payslips.bulk.upload') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('admin.payslips.bulk.upload') }}" method="POST"
+                    enctype="multipart/form-data">
                     @csrf
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-md-5">
+                            <div class="col-md-5 ">
                                 <div class="form-group">
                                     <label>Month <span class="text-danger">*</span></label>
                                     <select name="month" id="month" class="form-control" required>
                                         <option value="">Select Month</option>
                                         @foreach (range(1, 12) as $month)
                                             <option value="{{ $month }}">
-                                                {{ \Carbon\Carbon::create()->month($month)->format('F') }}</option>
+                                                {{ \Carbon\Carbon::create()->month($month)->format('F') }}
+                                            </option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -53,23 +151,19 @@
                                     </select>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="row">
                             <div class="col-md-10">
                                 <div class="form-group">
                                     <label>Upload File <span class="text-danger">*</span></label>
-                                    <input type="file" name="file" id="file" class="form-control" required>
+                                    <input type="file" name="file" id="file" class="form-control"
+                                        required>
                                 </div>
                             </div>
                         </div>
 
                         <div>
                             <button type="submit" class="btn btn-primary">Upload</button>
-                            <a href="{{ asset('admin/payslip_format.csv') }}"
-                                class="btn btn-info text-white ms-3" download="payslip_format.csv">
-                                Download Sample
-                            </a>
+
                         </div>
                     </div>
                 </form>
@@ -92,7 +186,8 @@
                                         <option value="">Select Month</option>
                                         @foreach (range(1, 12) as $month)
                                             <option value="{{ $month }}">
-                                                {{ \Carbon\Carbon::create()->month($month)->format('F') }}</option>
+                                                {{ \Carbon\Carbon::create()->month($month)->format('F') }}
+                                            </option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -310,6 +405,62 @@
             //                 alert('An error occurred while fetching payslip details.');
             //             }
             //         });
+        </script>
+        <script>
+            function updateSelectedCount(checkboxClass, dropdownInputId, defaultText) {
+                const checkboxes = document.querySelectorAll(checkboxClass);
+                const dropdownInput = document.querySelector(dropdownInputId);
+                const selectedCount = Array.from(checkboxes).filter(cb => cb.checked).length;
+
+                dropdownInput.value = selectedCount > 0 ? `${selectedCount} selected` : defaultText;
+                const selectAllCheckbox = document.querySelector('#select_all_data');
+                selectAllCheckbox.checked = selectedCount === checkboxes.length;
+            }
+
+            function toggleSelectAll(selectAllCheckbox, checkboxClass, dropdownInputId, defaultText) {
+                const dropdown = selectAllCheckbox.closest('.dropdown-menu');
+                const checkboxes = dropdown.querySelectorAll(checkboxClass);
+                const isChecked = selectAllCheckbox.checked;
+
+                checkboxes.forEach(cb => cb.checked = isChecked);
+                updateSelectedCount(checkboxClass, dropdownInputId, defaultText);
+            }
+        </script>
+        <script>
+            $(document).on('click', '#downloadFilteredCSV', function() {
+                let selectedClients = [];
+                let selectedStates = [];
+
+                $('.data-checkbox:checked').each(function() {
+                    selectedClients.push($(this).val());
+                });
+
+                $('.state-checkbox:checked').each(function() {
+                    selectedStates.push($(this).val());
+                });
+
+                let fromDate = $('#from').val();
+                let toDate = $('#to').val();
+
+                if (selectedClients.length === 0 || selectedStates.length === 0) {
+                    alert("Please select at least one Client and one State.");
+                    return;
+                }
+
+                // Construct the query parameters
+                let queryParams = {
+                    data: selectedClients,
+                    service_state: selectedStates
+                };
+
+                if (fromDate) queryParams.from = fromDate;
+                if (toDate) queryParams.to = toDate;
+
+                let queryString = $.param(queryParams);
+
+                // Redirect to download CSV
+                window.location.href = `payslips/download-filtered?${queryString}`;
+            });
         </script>
     @endpush
 </x-applayout>
