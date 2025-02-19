@@ -30,11 +30,11 @@
         <div class="row g-3 mt-2">
             <div class="col-xl-8">
                 <!-- Dashboard content -->
-                <div class="card" style="padding: 2%;">
+                <div class="card mb-2" style="padding: 2%;">
                     <div class="card-header header-elements-inline">
                         <h6 class="card-title">CDMS Reports</h6>
                     </div>
-                    <div class="row mt-1">
+                    <div class="row my-1">
                         <div class="col-lg-4">
                             <div class="card bg-teal-400" style="zoom: 1;">
                                 <div class="card-body">
@@ -42,7 +42,7 @@
                                         <div class="data">
                                             <h3 class="font-weight-semibold mb-0">
                                                 <div class="data">
-                                                    {{ $cdms->count() }}
+                                                    {{ $active_cdms + $inactive_cdms }}
                                                 </div>
                                             </h3>
                                         </div>
@@ -61,7 +61,7 @@
                                     <div class="d-flex">
                                         <h3 class="font-weight-semibold mb-0">
                                             <div class="data">
-                                                {{ $cdms->where('active_status', '0')->count() }}
+                                                {{ $active_cdms }}
                                             </div>
                                         </h3>
                                         <div class="list-icons ml-auto">
@@ -81,7 +81,7 @@
                                     <div class="d-flex">
                                         <h3 class="font-weight-semibold mb-0">
                                             <div class="data">
-                                                {{ $cdms->where('active_status', '1')->count() }}
+                                                {{ $inactive_cdms }}
                                             </div>
                                         </h3>
 
@@ -96,44 +96,11 @@
                     </div>
                 </div>
                 <!-- Marketing campaigns -->
-
-                @php
-                    // $active = $cfis
-                    //     ->where('client_id', $cfis->client_id)
-                    //     ->where('emp_name', '!=', '')
-                    //     ->where('active_status', '0')
-                    //     ->where('status', '0')
-                    //     ->where('dcs_approval', '1')
-                    //     ->count();
-
-                    // $inactive = $cfis
-                    //     ->where('client_id', $cfis->client_id)
-                    //     ->where('active_status', '1')
-                    //     ->where('status', '1')
-                    //     ->where('dcs_approval', '1')
-                    //     ->count();
-
-                    $inactiveCount = $cfis
-                        ->where('emp_name', '!=', '')
-                        ->where('active_status', '0')
-                        ->where('status', '0')
-                        ->where('dcs_approval', '1')
-                        ->count();
-
-                    $activeCount = $cfis
-                        ->where('emp_name', '!=', '')
-                        ->where('active_status', '1')
-                        ->where('dcs_approval', '1')
-                        ->count();
-
-                    $totalCount = $inactiveCount + $activeCount;
-                @endphp
                 <div class="card" style="height: 360px;">
                     <div class="card-header header-elements-sm-inline">
                         <h6 class="card-title">Company Details</h6>
                         <div class="header-elements">
-                            <span class="badge bg-success badge-pill">Total Employee :
-                                {{ $totalCount }} </span>
+                            {{-- <span class="badge bg-success badge-pill">Total Employee :</span> --}}
                             <div class="list-icons ml-3">
                                 <div class="list-icons-item dropdown">
                                     <a class="list-icons-item" data-action="reload" contenteditable="false"
@@ -153,15 +120,18 @@
                                     <th>Inactive Employee</th>
                                 </tr>
                             </thead>
-                            @foreach ($cfis->unique('client_id') as $cfi)
+                            @foreach ($clients as $client)
+                                @php
+                                    $active = $client->client->where('status', 1)->count();
+                                    $inactive = $client->client->where('status', 0)->count();
+                                @endphp
                                 <tr>
-                                    <td>{{ $cfi->client?->client_name }}</td>
-                                    {{-- <td>{{ $inactive + $active }}</td> --}}
-                                    {{-- <td>{{ $active }}</td>
-                                    <td>{{ $inactive }}</td> --}}
+                                    <td>{{ $client->client_name }}</td>
+                                    <td>{{ $active + $inactive }}</td>
+                                    <td>{{ $active }}</td>
+                                    <td>{{ $inactive }}</td>
                                 </tr>
                             @endforeach
-
                         </table>
                     </div>
                 </div>
@@ -285,7 +255,7 @@
                     </div>
                     <div class="table-responsive">
                         @foreach ($birthdays as $fhrm)
-                            <div class="card card-body bg-blue-400 has-bg-image">
+                            <div class="card card-body bg-blue-400 has-bg-image my-2 mx-1">
                                 <div class="media">
                                     <div class="media-body">
                                         <h5 class="mb-0">{{ $fhrm->emp_name }}</h5>
