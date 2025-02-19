@@ -40,6 +40,7 @@ class LoginController extends Controller
     }
     public function dashboard(Request $request)
     {
+        $userRole = Auth::user()->getRoleNames()->first(); 
         $today = Carbon::today();
         $from_date = $request->from_date;
         $to_date = $request->to_date;
@@ -48,7 +49,6 @@ class LoginController extends Controller
             $fhrms = FHRMSModel::whereBetween('modified_date', [$from_date, $to_date])->count();
             $cfis = CFISModel::whereBetween('created_at', [$from_date, $to_date])->groupBy('client_id')->get();
             $labour = CMSLabour::whereBetween('created_at', [$from_date, $to_date])->groupBy('client_id')->get();
-
         } else {
             $cdms = ClientManagement::all();
             $fhrms = FHRMSModel::all();
@@ -64,7 +64,7 @@ class LoginController extends Controller
                 ->distinct('client_id')
                 ->get();
         }
-        return view('admin.dashboard', compact('cdms', 'fhrms', 'cfis', 'birthdays', 'labour'));
+        return view('admin.dashboard', compact('cdms', 'fhrms', 'cfis', 'birthdays', 'labour','userRole'));
     }
     public function logout()
     {

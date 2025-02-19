@@ -1,30 +1,35 @@
 <x-applayout>
     <div class="main">
         <div class="container-fluid">
-            <div class="row pt-3 pb-2 border-bottom">
+            @if ($userRole === 'HR Operations')
                 <div class="col-lg-4">
-                    <h3>Dashboard</h3>
+                    <h3> HR Dashboard</h3>
                 </div>
-                <div class="col-lg-8 text-end ms-auto ">
-                    <form class="row justify-content-end" id="filterFrom">
-                        <div class="col-lg-3">
-                            <div class="cdate">
-                                <input type="date" class="form-control filter" name="from_date"
-                                    value="{{ request()->from_date }}">
+            @else
+                <div class="row pt-3 pb-2 border-bottom">
+                    <div class="col-lg-4">
+                        <h3>Dashboard</h3>
+                    </div>
+                    <div class="col-lg-8 text-end ms-auto ">
+                        <form class="row justify-content-end" id="filterFrom">
+                            <div class="col-lg-3">
+                                <div class="cdate">
+                                    <input type="date" class="form-control filter" name="from_date"
+                                        value="{{ request()->from_date }}">
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-lg-1 text-center my-auto">
-                            <span class="fw-semibold fs-6">To</span>
-                        </div>
-                        <div class="col-lg-3">
-                            <div class="cdate">
-                                <input type="date" class="form-control filter" name="to_date"
-                                    value="{{ request()->to_date ?? date('Y-m-d') }}">
+                            <div class="col-lg-1 text-center my-auto">
+                                <span class="fw-semibold fs-6">To</span>
                             </div>
-                        </div>
-                    </form>
+                            <div class="col-lg-3">
+                                <div class="cdate">
+                                    <input type="date" class="form-control filter" name="to_date"
+                                        value="{{ request()->to_date ?? date('Y-m-d') }}">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-            </div>
         </div>
 
         <div class="row g-3 mt-2">
@@ -158,7 +163,7 @@
                                     <td>{{ $cfi->client?->client_name }}</td>
                                     {{-- <td>{{ $inactive + $active }}</td> --}}
                                     {{-- <td>{{ $active }}</td>
-                                    <td>{{ $inactive }}</td> --}}
+                                        <td>{{ $inactive }}</td> --}}
                                 </tr>
                             @endforeach
 
@@ -346,6 +351,8 @@
             </div>
         </div>
     </div>
+    @endif
+
     @push('scripts')
         <script>
             $('.filter').change(function() {

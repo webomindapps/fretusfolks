@@ -234,7 +234,8 @@ class ADMSPayslipController extends Controller
             $query->whereBetween('created_at', [$fromDate, $toDate]);
         }
 
-        $candidates = $query->get();
+        $candidates = $query->where('hr_approval', 1)
+            ->where('comp_status', 1)->get();
 
         if ($candidates->isEmpty()) {
             return redirect()->back()->with('error', 'No records found');
@@ -341,7 +342,7 @@ class ADMSPayslipController extends Controller
                 'other_deduction',
                 'total_deduction',
                 'net_salary',
-                'in_words'
+                
             ];
 
 

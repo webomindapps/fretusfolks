@@ -9,6 +9,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Foundation\Queue\Queueable;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Storage;
+use NumberFormatter;
 
 class ADMSPayslipCreate implements ShouldQueue
 {
@@ -30,6 +31,8 @@ class ADMSPayslipCreate implements ShouldQueue
      */
     public function handle(): void
     {
+        $formatter = new NumberFormatter("en", NumberFormatter::SPELLOUT);
+
         $paypdf = [];
         $data = [];
         foreach ($this->payslips as $key => $row) {
@@ -124,7 +127,7 @@ class ADMSPayslipCreate implements ShouldQueue
                 'other_deduction' => $row['other_deduction'],
                 'total_deduction' => $row['total_deduction'],
                 'net_salary' => $row['net_salary'],
-                'in_words' => $row['in_words'],
+                'in_words' => ucfirst($formatter->format($row['net_salary'])),
                 'month' => $this->month,
                 'year' => $this->year,
                 'date_upload' => now(),
