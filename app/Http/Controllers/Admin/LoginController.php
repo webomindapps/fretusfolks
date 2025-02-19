@@ -45,26 +45,31 @@ class LoginController extends Controller
         $from_date = $request->from_date;
         $to_date = $request->to_date;
         if ($from_date && $to_date) {
-            $cdms = ClientManagement::whereBetween('modify_by', [$from_date, $to_date])->count();
+            $active_cdms = ClientManagement::whereBetween('modify_by', [$from_date, $to_date])->where('active_status', '0')->count();
+            $inactive_cdms = ClientManagement::whereBetween('modify_by', [$from_date, $to_date])->where('active_status', '1')->count();
             $fhrms = FHRMSModel::whereBetween('modified_date', [$from_date, $to_date])->count();
-            $cfis = CFISModel::whereBetween('created_at', [$from_date, $to_date])->groupBy('client_id')->get();
+            // $cfis = CFISModel::whereBetween('created_at', [$from_date, $to_date])->groupBy('client_id')->get();
+            $clients = ClientManagement::whereBetween('modify_date', [$from_date, $to_date])->with(['client' => function ($query) {
+                $query->select('id', 'client_id', 'status');
+            }])->get();
             $labour = CMSLabour::whereBetween('created_at', [$from_date, $to_date])->groupBy('client_id')->get();
         } else {
-            $cdms = ClientManagement::all();
+            $active_cdms = ClientManagement::where('active_status', '0')->count();
+            $inactive_cdms = ClientManagement::where('active_status', '1')->count();
             $fhrms = FHRMSModel::all();
-            $birthdays = FHRMSModel::whereMonth('dob', '>=', $today->month)
-                ->whereYear('dob', '<=', $today->year)
-                ->orderByRaw("MONTH(dob), DAY(dob)")
-                ->limit(5)
-                ->get();
-            $cfis = CFISModel::with('client')
-                ->distinct('client_id')
-                ->get();
-            $labour = CMSLabour::with('client', 'state')
-                ->distinct('client_id')
-                ->get();
+            // $cfis = CFISModel::with('client')->distinct('client_id')->get();
+            $clients = ClientManagement::with(['client' => function ($query) {
+                $query->select('id', 'client_id', 'status');
+            }])->get();;
+            $labour = CMSLabour::with('client', 'state')->distinct('client_id')->get();
         }
         return view('admin.dashboard', compact('cdms', 'fhrms', 'cfis', 'birthdays', 'labour','userRole'));
+        $birthdays = FHRMSModel::whereMonth('dob', '>=', $today->month)
+            ->whereYear('dob', '<=', $today->year)
+            ->orderByRaw("MONTH(dob), DAY(dob)")
+            ->limit(5)
+            ->get();
+        return view('admin.dashboard', compact('active_cdms', 'inactive_cdms', 'fhrms', 'clients', 'birthdays', 'labour'));
     }
     public function logout()
     {
