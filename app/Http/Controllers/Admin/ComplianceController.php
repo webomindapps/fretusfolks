@@ -10,7 +10,6 @@ use App\Models\DCSChildren;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Exports\CadidateDownload;
-use App\Exports\CandidatesExport;
 use App\Imports\CandidatesImport;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -18,7 +17,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\CandidateMasterExport;
-use Illuminate\Support\Facades\Storage;
 
 class ComplianceController extends Controller
 {
@@ -48,8 +46,7 @@ class ComplianceController extends Controller
         }
         if ($search != '')
             $query->where(function ($q) use ($search, $searchColumns) {
-                foreach ($searchColumns as $key => $value)
-                    ($key == 0) ? $q->where($value, 'LIKE', '%' . $search . '%') : $q->orWhere($value, 'LIKE', '%' . $search . '%');
+                foreach ($searchColumns as $key => $value) ($key == 0) ? $q->where($value, 'LIKE', '%' . $search . '%') : $q->orWhere($value, 'LIKE', '%' . $search . '%');
             });
 
         ($order == '') ? $query->orderByDesc('id') : $query->orderBy($order, $orderBy);
@@ -126,7 +123,6 @@ class ComplianceController extends Controller
      */
     private function addDocumentsToZip(ZipArchive $zip, $documents, $folderName)
     {
-
         foreach ($documents as $document) {
             if (isset($document->bank_document)) {
                 $docPath = $document->bank_document;
@@ -136,29 +132,14 @@ class ComplianceController extends Controller
                 $docPath = $document->photo;
             }
             if (!empty($docPath)) {
-
-                $originalStoragePath = storage_path("app/public/" . $docPath);
-
-
-                $tempDir = storage_path('app/temp');
-
-
-                if (!File::exists($tempDir)) {
-                    File::makeDirectory($tempDir, 0755, true, true);
-                }
-
-
+                $originalStoragePath = public_path($docPath);
                 $fileName = basename($docPath);
-                $tempFilePath = $tempDir . "/" . $fileName;
-
 
                 if (File::exists($originalStoragePath)) {
-
-                    File::copy($originalStoragePath, $tempFilePath);
-                    $zip->addFile($tempFilePath, "$folderName/$fileName");
+                    $zip->addFile($originalStoragePath, "$folderName/$fileName");
+                    Log::info("Added file to ZIP: $folderName/$fileName");
                 } else {
-                    Log::warning("File does not exist in public directory: $originalStoragePath");
-                    Log::warning("File is null or missing: $fileName");
+                    Log::warning("File not found: $originalStoragePath");
                 }
             }
         }
@@ -241,7 +222,6 @@ class ComplianceController extends Controller
     {
         $candidate = $this->model()->find($id);
         return view('admin.adms.compliance.bank_create', compact('candidate'));
-
     }
     public function store(Request $request, $id)
     {
@@ -271,7 +251,6 @@ class ComplianceController extends Controller
             'status' => $request->status,
         ]);
         return redirect()->route('admin.candidatemaster.view', $candidate->id)->with('success', 'Bank details saved successfully!');
-
     }
     public function destroy($id)
     {
@@ -284,7 +263,6 @@ class ComplianceController extends Controller
     {
         $bankdetails = BankDetails::find($id);
         return view('admin.adms.compliance.bank_edit', compact('bankdetails'));
-
     }
     public function bankupdate(Request $request, $id)
     {
@@ -318,5 +296,4 @@ class ComplianceController extends Controller
 
         return redirect()->route('admin.candidatemaster')->with('success', 'Successfully updated!');
     }
-
 }

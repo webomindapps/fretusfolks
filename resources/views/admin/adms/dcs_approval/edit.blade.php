@@ -415,7 +415,7 @@
                                 <x-forms.input label="Enter Bank Account No::" type="text" name="bank_account_no"
                                     id="bank_account_no" :required="true" size="col-lg-6 mt-2" :value="old('bank_account_no', $bankdetails->bank_account_no ?? '')" />
                                 <x-forms.input label="Repeat Bank Account No:" type="text" name="bank_account_no"
-                                    id="bank_account_no" :required="true" size="col-lg-6 mt-2" :value="old('bank_account_no', $bankdetails->bank_account_no ?? '')" />
+                                    id="repeat_bank_account_no" :required="true" size="col-lg-6 mt-2" :value="old('bank_account_no', $bankdetails->bank_account_no ?? '')" />
                                 <x-forms.input label="Enter Bank IFSC CODE:" type="text" name="bank_ifsc_code"
                                     id="bank_ifsc_code" :required="true" size="col-lg-6 mt-2" :value="old('bank_ifsc_code', $bankdetails->bank_ifsc_code ?? '')" />
                                 <x-forms.select label="Do you Have UAN No? " :options="[['value' => 'No', 'label' => 'No'], ['value' => 'Yes', 'label' => 'Yes']]" id="uan_status"
