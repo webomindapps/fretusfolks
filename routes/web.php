@@ -37,6 +37,7 @@ use App\Http\Controllers\Admin\FFIOfferLetterController;
 use App\Http\Controllers\Admin\FFITerminationController;
 use App\Http\Controllers\Admin\CMSLabourNoticeController;
 use App\Http\Controllers\Admin\FFIIncrementLetterController;
+use App\Http\Controllers\ComplainceBankAccountController;
 use App\Jobs\ADMSPayslipCreate;
 
 Route::get('/', function () {
@@ -393,6 +394,9 @@ Route::prefix('admin')->group(function () {
         Route::get('payslips/search-payslip', [ADMSPayslipController::class, 'searchPayslip'])->name('search.payslips');
         Route::get('/generate-payslips/{id}', [ADMSPayslipController::class, 'generatePayslipsPdf'])->name('generate.payslips');
         Route::get('/payslips/delete/{id}', [ADMSPayslipController::class, 'destroy'])->name('payslips.delete');
+
+        //Pending Bank Approvals
+        Route::get('/pending-bank-approval',[ComplainceBankAccountController::class,'index'])->name('pendingbankapprovals');
 
     });
 });

@@ -179,6 +179,13 @@ class SideBar extends Component
                     'roles' => ['Admin', 'Compliance'],
                 ],
                 [
+                    'title' => 'Pending Bank Approvals',
+                    'icon' => 'bx bx-chevron-right',
+                    'route' => 'admin.pendingbankapprovals',
+                    'name' => 'pending-bank-approval',
+                    'roles' => ['Admin', 'Compliance'],
+                ],
+                [
                     'title' => 'Candidates Lifecycle',
                     'icon' => 'bx bx-chevron-right',
                     'route' => 'admin.candidatelifecycle',
