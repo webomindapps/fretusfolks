@@ -12,7 +12,7 @@
                         <div class="col-lg-12">
                             <h3 class="text-center my-4">Sign in to continue</h3>
                             <div class="mb-3">
-                                <select name="role" class="form-select" style="border-radius: 10px !important;">
+                                <select name="role" class="form-select" style="border-radius: 10px !important;" required>
                                     <option value="">Select User Type</option>
                                     @foreach ($roles as $role)
                                         <option value="{{ $role->name }}">{{ $role->name }}</option>

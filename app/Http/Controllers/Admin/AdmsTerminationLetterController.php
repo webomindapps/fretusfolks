@@ -74,7 +74,6 @@ class AdmsTerminationLetterController extends Controller
         $request->validate([
             'emp_id' => 'required',
             'status' => 'nullable|string',
-            'emp_id' => 'nullable',
             'date' => 'required|date',
 
         ]);

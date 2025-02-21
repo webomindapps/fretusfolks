@@ -108,7 +108,19 @@
                                             <label for="spouse_photo">Spouse Photo: </label>
                                             <input type="file" name="spouse_photo" id="spouse_photo"
                                                 accept="application/pdf, image/jpg, image/png" class="form-control"
-                                                value="{{ old('spouse_photo', $candidate->spouse_photo) }}">
+                                                value="{{ old('spouse_photo') }}">
+                                            @if ($candidate->candidateDocuments->where('name', 'spouse_photo')->isNotEmpty())
+                                                @php
+                                                    $spouse_photo = $candidate->candidateDocuments
+                                                        ->where('name', 'spouse_photo')
+                                                        ->first();
+                                                @endphp
+                                                <div id="image-preview-container" class="d-flex mt-2">
+                                                    <img src="{{ asset('storage/' . $spouse_photo->path) }}"
+                                                        class="img-thumbnail" width="100" height="100"
+                                                        alt="Uploaded image">
+                                                </div>
+                                            @endif
                                         </div>
                                         <x-forms.input label="No of Children:" type="number" name="no_of_childrens"
                                             id="no_of_childrens" :required="false" size="col-lg-6 mt-2"
@@ -141,7 +153,19 @@
                                     <label for="father_photo">Father Photo: </label>
                                     <input type="file" name="father_photo" id="father_photo"
                                         accept="application/pdf, image/jpg, image/png" class="form-control"
-                                        value="{{ old('father_photo', $candidate->father_photo) }}">
+                                        value="{{ old('father_photo') }}">
+                                    @if ($candidate->candidateDocuments->where('name', 'father_photo')->isNotEmpty())
+                                        @php
+                                            $father_photo = $candidate->candidateDocuments
+                                                ->where('name', 'father_photo')
+                                                ->first();
+                                        @endphp
+                                        <div id="image-preview-container" class="d-flex mt-2">
+                                            <img src="{{ asset('storage/' . $father_photo->path) }}"
+                                                class="img-thumbnail" width="100" height="100"
+                                                alt="Uploaded image">
+                                        </div>
+                                    @endif
                                 </div>
                                 <x-forms.input label="Mother Name: " type="text" name="mother_name"
                                     id="mother_name" :required="true" size="col-lg-3 mt-2" :value="old('mother_name', $candidate->mother_name)" />
@@ -158,7 +182,19 @@
                                     <label for="mother_photo">Mother Photo: </label>
                                     <input type="file" name="mother_photo" id="mother_photo"
                                         accept="application/pdf, image/jpg, image/png" class="form-control"
-                                        value="{{ old('mother_photo', $candidate->mother_photo) }}">
+                                        value="{{ old('mother_photo') }}">
+                                    @if ($candidate->candidateDocuments->where('name', 'mother_photo')->isNotEmpty())
+                                        @php
+                                            $mother_photo = $candidate->candidateDocuments
+                                                ->where('name', 'mother_photo')
+                                                ->first();
+                                        @endphp
+                                        <div id="image-preview-container" class="d-flex mt-2">
+                                            <img src="{{ asset('storage/' . $mother_photo->path) }}"
+                                                class="img-thumbnail" width="100" height="100"
+                                                alt="Uploaded image">
+                                        </div>
+                                    @endif
                                 </div>
                                 <x-forms.input label="Religion: " type="text" name="religion" id="religion"
                                     :required="true" size="col-lg-6 mt-2" :value="old('religion', $candidate->religion)" />
@@ -169,9 +205,13 @@
                                     id="mother_tongue" :required="true" size="col-lg-6 mt-2" :value="old('mother_tongue', $candidate->mother_tongue)" />
                                 <x-forms.select label="Blood Group:" name="blood_group" id="blood_group"
                                     :required="true" size="col-lg-6 mt-2" :options="FretusFolks::getBlood()" :value="old('blood_group', $candidate->blood_group)" />
-                                <x-forms.input label="Emergency Contact Person Number :" type="number"
-                                    name="emer_contact_no" id="emer_contact_no" :required="true"
-                                    size="col-lg-6 mt-2" :value="old('emer_contact_no', $candidate->emer_contact_no)" />
+                                <div class="form-group col-lg-6 mt-2">
+                                    <label for="emer_contact_no">Emergency Contact Person Number: <span
+                                            style="color: red">*</span></label>
+                                    <input type="text" name="emer_contact_no" id="emer_contact_no"
+                                        class="form-control" maxlength="10" inputmode="numeric"
+                                        value="{{ old('emer_contact_no', $candidate->emer_contact_no) }}" required>
+                                </div>
                                 <x-forms.input label="Emergency Contact Person Name:" type="text" name="emer_name"
                                     id="emer_name" :required="true" size="col-lg-6 mt-2" :value="old('emer_name', $candidate->emer_name)" />
                                 <x-forms.input label="Emergency Contact Person Relation:" type="text"
@@ -271,11 +311,23 @@
                                     id="photo" :required="false" size="col-lg-6 mt-2" />
                                 <x-forms.input label="Attach New Resume:" type="file" name="resume"
                                     id="resume" :required="false" size="col-lg-6 mt-2" />
-                                <div class="form-group col-lg-6 mt-2">
-                                    <label for="family_photo">Family Photo: </label>
-                                    <input type="file" name="family_photo" id="family_photo"
+                                <div class="form-group col-lg-3 mt-2">
+                                    <label for="mother_photo">Mother Photo: </label>
+                                    <input type="file" name="mother_photo" id="mother_photo"
                                         accept="application/pdf, image/jpg, image/png" class="form-control"
-                                        value="{{ old('family_photo', $candidate->family_photo) }}">
+                                        value="{{ old('mother_photo') }}">
+                                    @if ($candidate->candidateDocuments->where('name', 'mother_photo')->isNotEmpty())
+                                        @php
+                                            $mother_photo = $candidate->candidateDocuments
+                                                ->where('name', 'mother_photo')
+                                                ->first();
+                                        @endphp
+                                        <div id="image-preview-container" class="d-flex mt-2">
+                                            <img src="{{ asset('storage/' . $mother_photo->path) }}"
+                                                class="img-thumbnail" width="100" height="100"
+                                                alt="Uploaded image">
+                                        </div>
+                                    @endif
                                 </div>
                                 {{-- {{ dd($bankdetails->bank_name) }} --}}
                                 @foreach ($bankdetails as $bank)
@@ -324,10 +376,10 @@
                                                     'pf_esic_form' => 'PF Form / ESIC',
                                                     'payslip' => 'Payslip/Fitness Document',
                                                     'exp_letter' => 'Experience Letter',
-                                                    'father_photo' => 'Father Photo',
-                                                    'mother_photo' => 'Mother Photo',
-                                                    'spouse_photo' => 'Spouse_photo',
-                                                    'family_photo' => 'Family Photo',
+                                                    // 'father_photo' => 'Father Photo',
+                                                    // 'mother_photo' => 'Mother Photo',
+                                                    // 'spouse_photo' => 'Spouse_photo',
+                                                    // 'family_photo' => 'Family Photo',
                                                     'pan_declaration' => 'Pan Declaration',
                                                 ];
                                             @endphp
@@ -541,7 +593,7 @@
                                             :value="old('mediclaim', $candidate->mediclaim)" />
                                         <x-forms.input label="Grand Total:  " type="number" name="ctc"
                                             id="ctc" :required="false" size="col-lg-3 mt-2"
-                                            :value="old('basic_salary', $candidate->ctc)" />
+                                            :value="old('ctc', $candidate->ctc)" />
                                     </div>
                                 </div>
 
@@ -614,49 +666,83 @@
             document.addEventListener("DOMContentLoaded", function() {
                 function calculateSalary() {
                     let basic = parseFloat(document.getElementById("basic_salary").value) || 0;
-                    let hra = parseFloat(document.getElementById("hra").value) || 0;
-                    let conveyance = parseFloat(document.getElementById("conveyance").value) || 0;
-                    let medical = parseFloat(document.getElementById("medical_reimbursement").value) || 0;
-                    let specialAllowance = parseFloat(document.getElementById("special_allowance").value) || 0;
-                    let otherAllowance = parseFloat(document.getElementById("other_allowance").value) || 0;
+                    let hraInput = document.getElementById("hra");
+                    let conveyanceInput = document.getElementById("conveyance");
+                    let medicalInput = document.getElementById("medical_reimbursement");
+                    let specialAllowanceInput = document.getElementById("special_allowance");
+                    let otherAllowanceInput = document.getElementById("other_allowance");
+                    let stBonusInput = document.getElementById("st_bonus");
 
-                    hra = basic * 0.40;
-                    document.getElementById("hra").value = hra.toFixed(2);
+                    if (!hraInput.dataset.edited) {
+                        hraInput.value = (basic * 0.40).toFixed(2);
+                    }
+                    if (!stBonusInput.dataset.edited) {
+                        stBonusInput.value = (basic * 0.0833).toFixed(2);
+                    }
 
-                    let st_bonus = basic * 0.0833;
-                    document.getElementById("st_bonus").value = st_bonus.toFixed(2);
+                    let grossSalary = basic +
+                        (parseFloat(hraInput.value) || 0) +
+                        (parseFloat(conveyanceInput.value) || 0) +
+                        (parseFloat(medicalInput.value) || 0) +
+                        (parseFloat(specialAllowanceInput.value) || 0) +
+                        (parseFloat(otherAllowanceInput.value) || 0) +
+                        (parseFloat(stBonusInput.value) || 0);
 
-                    let grossSalary = basic + hra + conveyance + medical + specialAllowance + st_bonus + otherAllowance;
                     document.getElementById("gross_salary").value = grossSalary.toFixed(2);
 
-                    let empPF = Math.min(basic * 0.12, 1800);
-                    document.getElementById("emp_pf").value = empPF.toFixed(2);
+                    let empPFInput = document.getElementById("emp_pf");
+                    let empESICInput = document.getElementById("emp_esic");
+                    let empPTInput = document.getElementById("pt");
+                    let totalDeductionInput = document.getElementById("total_deduction");
+                    let takeHomeInput = document.getElementById("take_home");
+                    let employerPFInput = document.getElementById("employer_pf");
+                    let employerESICInput = document.getElementById("employer_esic");
+                    let mediclaimInput = document.getElementById("mediclaim");
+                    let ctcInput = document.getElementById("ctc");
 
-                    let empESIC = grossSalary < 21000 ? grossSalary * 0.0075 : 0;
-                    document.getElementById("emp_esic").value = empESIC.toFixed(2);
+                    if (!empPFInput.dataset.edited) {
+                        empPFInput.value = Math.min(basic * 0.12, 1800).toFixed(2);
+                    }
 
-                    let totalDeduction = empPF + empESIC;
-                    document.getElementById("total_deduction").value = totalDeduction.toFixed(2);
+                    if (!empESICInput.dataset.edited) {
+                        empESICInput.value = (grossSalary < 21000 ? grossSalary * 0.0075 : 0).toFixed(2);
+                    }
 
-                    let takeHome = grossSalary - totalDeduction;
-                    document.getElementById("take_home").value = takeHome.toFixed(2);
+                    let totalDeduction = (parseFloat(empPFInput.value) || 0) + (parseFloat(empESICInput.value) || 0+(parseFloat(empPtInput.value) || 0));
+                    totalDeductionInput.value = totalDeduction.toFixed(2);
 
-                    let employerPF = Math.min(basic * 0.13, 1950);
-                    document.getElementById("employer_pf").value = employerPF.toFixed(2);
+                    takeHomeInput.value = (grossSalary - totalDeduction).toFixed(2);
 
-                    let employerESIC = grossSalary < 21000 ? grossSalary * 0.0325 : 0;
-                    document.getElementById("employer_esic").value = employerESIC.toFixed(2);
+                    if (!employerPFInput.dataset.edited) {
+                        employerPFInput.value = Math.min(basic * 0.13, 1950).toFixed(2);
+                    }
 
-                    let mediclaim = parseFloat(document.getElementById("mediclaim").value) || 0;
+                    if (!employerESICInput.dataset.edited) {
+                        employerESICInput.value = (grossSalary < 21000 ? grossSalary * 0.0325 : 0).toFixed(2);
+                    }
 
-                    let ctc = grossSalary + employerPF + employerESIC + mediclaim;
-                    document.getElementById("ctc").value = ctc.toFixed(2);
+                    let ctc = grossSalary +
+                        (parseFloat(employerPFInput.value) || 0) +
+                        (parseFloat(employerESICInput.value) || 0) +
+                        (parseFloat(mediclaimInput.value) || 0);
+                    ctcInput.value = ctc.toFixed(2);
                 }
 
                 document.querySelectorAll("input[type='number']").forEach(input => {
-                    input.addEventListener("input", calculateSalary);
+                    input.value = "0.00"; 
+                    input.addEventListener("input", function() {
+                        this.dataset.edited = "true"; 
+                    });
+
+                    input.addEventListener("blur", function() {
+                        if (this.value.trim() === "") {
+                            this.value = "0.00"; 
+                        }
+                        calculateSalary(); 
+                    });
                 });
-                calculateSalary();
+
+                calculateSalary(); 
             });
         </script>
         <script>
@@ -985,27 +1071,34 @@
                             const childRow = document.createElement('div');
                             childRow.className = 'row align-items-center mb-2 child-row';
                             childRow.innerHTML = `
-                        <div class="form-group col-lg-3">
-                            <label for="child_name_${i}">Child ${i} Name:<span style="color: red;">*</span></label>
-                            <input type="text" name="child_names[]" id="child_name_${i}" class="form-control" 
-                                   value="${childData.name || ''}" required>
-                        </div>
-                        <div class="form-group col-lg-3">
-                            <label for="child_dob_${i}">Child ${i} DOB:<span style="color: red;">*</span></label>
-                            <input type="date" name="child_dobs[]" id="child_dob_${i}" class="form-control"
-                                   value="${childData.dob || ''}" required>
-                        </div>
-                        <div class="form-group col-lg-3 child-aadhar" id="child_aadhar_field_${i}" style="display: none;">
-                            <label for="child_aadhar_${i}">Child ${i} Aadhar No:<span style="color: red;">*</span></label>
-                            <input type="text" name="child_aadhar[]" id="child_aadhar_${i}" class="form-control" 
-                                   value="${childData.aadhar_no || ''}" maxlength="12" inputmode="numeric">
-                        </div>
-                        <div class="form-group col-lg-3">
-                            <label for="child_photo_${i}">Child ${i} Photo:</label>
-                            <input type="file" name="child_photo[]" id="child_photo_${i}" accept="application/pdf, image/jpg, image/png" 
-                                   class="form-control">
-                        </div>
-                    `;
+        <div class="form-group col-lg-3">
+            <label for="child_name_${i}">Child ${i} Name:<span style="color: red;">*</span></label>
+            <input type="text" name="child_names[]" id="child_name_${i}" class="form-control" 
+                   value="${childData.name || ''}" required>
+        </div>
+        <div class="form-group col-lg-3">
+            <label for="child_dob_${i}">Child ${i} DOB:<span style="color: red;">*</span></label>
+            <input type="date" name="child_dobs[]" id="child_dob_${i}" class="form-control"
+                   value="${childData.dob || ''}" required>
+        </div>
+        <div class="form-group col-lg-3 child-aadhar" id="child_aadhar_field_${i}" style="display: none;">
+            <label for="child_aadhar_${i}">Child ${i} Aadhar No:<span style="color: red;">*</span></label>
+            <input type="text" name="child_aadhar[]" id="child_aadhar_${i}" class="form-control" 
+                   value="${childData.aadhar_no || ''}" maxlength="12" inputmode="numeric">
+        </div>
+        <div class="form-group col-lg-3">
+            <label for="child_photo_${i}">Child ${i} Photo:</label>
+            <input type="file" name="child_photo[]" id="child_photo_${i}" accept="application/pdf, image/jpg, image/png" 
+                   class="form-control">
+
+            ${childData.photo ? `
+                                                    <div id="image-preview-container-${i}" class="d-flex mt-2">
+                                                        <img src="/storage/${childData.photo}" 
+                                                             class="img-thumbnail" width="100" height="100" 
+                                                             alt="Child ${i} Uploaded Photo">
+                                                    </div>` : ''}
+        </div>
+    `;
                             childrenDetails.appendChild(childRow);
 
                             let dobField = document.getElementById(`child_dob_${i}`);

@@ -178,34 +178,105 @@
                 <form action="{{ route('admin.payslips.export') }}" method="POST">
                     @csrf
                     <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label>Month <span class="text-danger">*</span></label>
-                                    <select name="month" id="month" class="form-control" required>
-                                        <option value="">Select Month</option>
-                                        @foreach (range(1, 12) as $month)
-                                            <option value="{{ $month }}">
-                                                {{ \Carbon\Carbon::create()->month($month)->format('F') }}
-                                            </option>
+                        <div class="row align-items-end">
+                            <!-- Multi-Select Client Dropdown -->
+                            <div class="col-lg-3">
+                                <label for="data">Client Name (Multi-Select)</label>
+                                <div class="dropdown">
+                                    <input type="text" class="btn dropdown-toggle" id="dropdownMenuButtonclient"
+                                        data-bs-toggle="dropdown" aria-expanded="false" readonly
+                                        value="Select Client" />
+                                    <ul class="dropdown-menu ps-3" aria-labelledby="dropdownMenuButtonclient">
+                                        <li>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox"
+                                                    id="select_all_client"
+                                                    onchange="toggleSelectAll(this, '.client-checkbox', '#dropdownMenuButtonclient', 'Select client')">
+                                                <label class="form-check-label" for="select_all_client">Select
+                                                    All</label>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <hr class="dropdown-divider">
+                                        </li>
+                                        @foreach (FretusFolks::getClientname() as $option)
+                                            <li>
+                                                <div class="form-check">
+                                                    <input class="form-check-input client-checkbox" type="checkbox"
+                                                        name="client[]" value="{{ $option['value'] }}"
+                                                        id="client_{{ $loop->index }}"
+                                                        onchange="updateSelectedCount('.client-checkbox', '#dropdownMenuButtonclient', 'Select client')">
+                                                    <label class="form-check-label"
+                                                        for="client_{{ $loop->index }}">{{ $option['label'] }}</label>
+                                                </div>
+                                            </li>
                                         @endforeach
-                                    </select>
+                                    </ul>
                                 </div>
                             </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label>Year <span class="text-danger">*</span></label>
-                                    <select name="year" id="year" class="form-control" required>
-                                        <option value="">Select Year</option>
-                                        @foreach (range(2018, now()->year) as $year)
-                                            <option value="{{ $year }}">{{ $year }}</option>
+
+                            <!-- Single-Select State Dropdown -->
+                            <div class="col-lg-3">
+                                <label for="service_state">State</label>
+                                <div class="dropdown">
+                                    <input type="text" class="btn btn-secondary dropdown-toggle"
+                                        id="dropdownMenuButtonlocation" data-bs-toggle="dropdown"
+                                        aria-expanded="false" readonly value="Select State" />
+                                    <ul class="dropdown-menu ps-3" aria-labelledby="dropdownMenuButtonlocation">
+                                        <li>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox"
+                                                    id="select_all_location"
+                                                    onchange="toggleSelectAll(this, '.state-checkbox', '#dropdownMenuButtonlocation', 'Select State')">
+                                                <label class="form-check-label" for="select_all_location">Select
+                                                    All</label>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <hr class="dropdown-divider">
+                                        </li>
+                                        @foreach (FretusFolks::getStates() as $option)
+                                            <li>
+                                                <div class="form-check">
+                                                    <input class="form-check-input state-checkbox" type="checkbox"
+                                                        name="location[]" value="{{ $option['value'] }}"
+                                                        id="location_{{ $loop->index }}"
+                                                        onchange="updateSelectedCount('.state-checkbox', '#dropdownMenuButtonlocation', 'Select State')">
+                                                    <label class="form-check-label"
+                                                        for="location_{{ $loop->index }}">{{ $option['label'] }}</label>
+                                                </div>
+                                            </li>
                                         @endforeach
-                                    </select>
+                                    </ul>
                                 </div>
+                            </div>
+
+                            <!-- Select Month -->
+                            <div class="col-md-3">
+                                <label>Month <span class="text-danger">*</span></label>
+                                <select name="month" id="month" class="form-control" required>
+                                    <option value="">Select Month</option>
+                                    @foreach (range(1, 12) as $month)
+                                        <option value="{{ $month }}">
+                                            {{ \Carbon\Carbon::create()->month($month)->format('F') }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <!-- Select Year -->
+                            <div class="col-md-3">
+                                <label>Year <span class="text-danger">*</span></label>
+                                <select name="year" id="year" class="form-control" required>
+                                    <option value="">Select Year</option>
+                                    @foreach (range(2018, now()->year) as $year)
+                                        <option value="{{ $year }}">{{ $year }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
 
-                        <div>
+
+                        <div class="col-lg-3 mt-2">
                             <button type="submit" class="btn btn-primary">Download</button>
                         </div>
                     </div>

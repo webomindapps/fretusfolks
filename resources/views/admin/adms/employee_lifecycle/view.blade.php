@@ -272,13 +272,13 @@
                                 aria-labelledby="headingsalary" data-bs-parent="#accordionExample">
                                 <div class="card-body">
                                     <div class="row">
+                                        <div class="col-md-4 mb-2"><b>UAN NO:</b>
+                                            <span>{{ $candidate->uan_no }}</span>
+                                        </div>
+                                        <div class="col-md-4 mb-2"><b>ESIC No:</b>
+                                            <span>{{ $candidate->esic_no }}</span>
+                                        </div>
                                         <div class="col-md-4 mb-2"><b>Basic Salary:</b>
-                                            <div class="col-md-4 mb-2"><b>UAN NO:</b>
-                                                <span>{{ $candidate->uan_no }}</span>
-                                            </div>
-                                            <div class="col-md-4 mb-2"><b>ESIC No:</b>
-                                                <span>{{ $candidate->esic_no }}</span>
-                                            </div>
                                             <span>{{ $candidate->basic_salary }}</span>
                                         </div>
                                         <div class="col-md-4 mb-2"><b>HRA:</b> <span>{{ $candidate->hra }}</span>

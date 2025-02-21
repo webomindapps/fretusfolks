@@ -140,7 +140,19 @@
                                             <label for="spouse_photo">Spouse Photo: </label>
                                             <input type="file" name="spouse_photo" id="spouse_photo"
                                                 accept="application/pdf, image/jpg, image/png" class="form-control"
-                                                value="{{ old('spouse_photo', $candidate->spouse_photo) }}">
+                                                value="{{ old('spouse_photo') }}">
+                                            @if ($candidate->candidateDocuments->where('name', 'spouse_photo')->isNotEmpty())
+                                                @php
+                                                    $spouse_photo = $candidate->candidateDocuments
+                                                        ->where('name', 'spouse_photo')
+                                                        ->first();
+                                                @endphp
+                                                <div id="image-preview-container" class="d-flex mt-2">
+                                                    <img src="{{ asset('storage/' . $spouse_photo->path) }}"
+                                                        class="img-thumbnail" width="100" height="100"
+                                                        alt="Uploaded image">
+                                                </div>
+                                            @endif
                                         </div>
                                         <x-forms.input label="No of Children:" type="number" name="no_of_childrens"
                                             id="no_of_childrens" :required="false" size="col-lg-6 mt-2"
@@ -173,7 +185,19 @@
                                     <label for="father_photo">Father Photo: </label>
                                     <input type="file" name="father_photo" id="father_photo"
                                         accept="application/pdf, image/jpg, image/png" class="form-control"
-                                        value="{{ old('father_photo', $candidate->father_photo) }}">
+                                        value="{{ old('father_photo') }}">
+                                    @if ($candidate->candidateDocuments->where('name', 'father_photo')->isNotEmpty())
+                                        @php
+                                            $father_photo = $candidate->candidateDocuments
+                                                ->where('name', 'father_photo')
+                                                ->first();
+                                        @endphp
+                                        <div id="image-preview-container" class="d-flex mt-2">
+                                            <img src="{{ asset('storage/' . $father_photo->path) }}"
+                                                class="img-thumbnail" width="100" height="100"
+                                                alt="Uploaded image">
+                                        </div>
+                                    @endif
                                 </div>
                                 <x-forms.input label="Mother Name: " type="text" name="mother_name"
                                     id="mother_name" :required="true" size="col-lg-3 mt-2" :value="old('mother_name', $candidate->mother_name)" />
@@ -190,7 +214,19 @@
                                     <label for="mother_photo">Mother Photo: </label>
                                     <input type="file" name="mother_photo" id="mother_photo"
                                         accept="application/pdf, image/jpg, image/png" class="form-control"
-                                        value="{{ old('mother_photo', $candidate->mother_photo) }}">
+                                        value="{{ old('mother_photo') }}">
+                                    @if ($candidate->candidateDocuments->where('name', 'mother_photo')->isNotEmpty())
+                                        @php
+                                            $mother_photo = $candidate->candidateDocuments
+                                                ->where('name', 'mother_photo')
+                                                ->first();
+                                        @endphp
+                                        <div id="image-preview-container" class="d-flex mt-2">
+                                            <img src="{{ asset('storage/' . $mother_photo->path) }}"
+                                                class="img-thumbnail" width="100" height="100"
+                                                alt="Uploaded image">
+                                        </div>
+                                    @endif
                                 </div>
                                 <x-forms.input label="Religion: " type="text" name="religion" id="religion"
                                     :required="true" size="col-lg-6 mt-2" :value="old('religion', $candidate->religion)" />
@@ -321,7 +357,19 @@
                                     <label for="family_photo">Family Photo: </label>
                                     <input type="file" name="family_photo" id="family_photo"
                                         accept="application/pdf, image/jpg, image/png" class="form-control"
-                                        value="{{ old('family_photo', $candidate->family_photo) }}">
+                                        value="{{ old('family_photo') }}">
+                                    @if ($candidate->candidateDocuments->where('name', 'family_photo')->isNotEmpty())
+                                        @php
+                                            $family_photo = $candidate->candidateDocuments
+                                                ->where('name', 'family_photo')
+                                                ->first();
+                                        @endphp
+                                        <div id="image-preview-container" class="d-flex mt-2">
+                                            <img src="{{ asset('storage/' . $family_photo->path) }}"
+                                                class="img-thumbnail" width="100" height="100"
+                                                alt="Uploaded image">
+                                        </div>
+                                    @endif
                                 </div>
                                 @foreach ($bankdetails as $bank)
                                     <x-forms.input label="Enter Bank Name:" type="text" name="bank_name"
@@ -342,9 +390,9 @@
                                     <x-forms.input label="Enter Bank IFSC CODE:" type="text" name="bank_ifsc_code"
                                         id="bank_ifsc_code" :required="true" size="col-lg-6 mt-2"
                                         :value="old('bank_ifsc_code', $bank->bank_ifsc_code ?? '')" />
-                                @endforeach <x-forms.input label="UAN No:" type="text"
-                                    name="uan_no" id="uan_no" :required="false" size="col-lg-6 mt-2"
-                                    :value="old('uan_no', $candidate->uan_no)" />
+                                @endforeach
+                                <x-forms.input label="UAN No:" type="text" name="uan_no" id="uan_no"
+                                    :required="false" size="col-lg-6 mt-2" :value="old('uan_no', $candidate->uan_no)" />
 
                                 <label class="col-lg-12 mt-4"><strong>Current Uploaded Documents</strong></label>
                                 <div style="border: 1px solid #d6c8c8; padding: 2%; margin-bottom: 1%;">
@@ -365,16 +413,15 @@
                                                     'driving_license_path' => 'Driving License',
                                                     'photo' => 'Photo',
                                                     'resume' => 'Resume',
-                                                    'bank_document' => 'Bank Document',
                                                     'voter_id' => 'Voter ID/ PVC/ UL',
                                                     'emp_form' => 'Employee Form',
                                                     'pf_esic_form' => 'PF Form / ESIC',
                                                     'payslip' => 'Payslip/Fitness Document',
                                                     'exp_letter' => 'Experience Letter',
-                                                    'father_photo' => 'Father Photo',
-                                                    'mother_photo' => 'Mother Photo',
-                                                    'spouse_photo' => 'Spouse_photo',
-                                                    'family_photo' => 'Family Photo',
+                                                    // 'father_photo' => 'Father Photo',
+                                                    // 'mother_photo' => 'Mother Photo',
+                                                    // 'spouse_photo' => 'Spouse_photo',
+                                                    // 'family_photo' => 'Family Photo',
                                                     'pan_declaration' => 'Pan Declaration',
                                                 ];
                                             @endphp
@@ -637,13 +684,19 @@
 
                                     </div>
                                 </div>
-                                <x-forms.select label="Status " :options="[
-                                    // ['value' => '1', 'label' => 'Approved'],
-                                    ['value' => '0', 'label' => 'Pending'],
-                                    ['value' => '2', 'label' => 'Rejected'],
-                                ]" id="hr_approval"
-                                    name="hr_approval" :required="true" size="col-lg-6 mt-2 mr-2"
-                                    :value="old('hr_approval')" />
+                                <div class="form-group col-lg-6 mt-2 mr-2">
+                                    <label for="hr_approval">Status</label>
+                                    <select id="hr_approval" name="hr_approval" class="form-control" required
+                                        onchange="toggleNotesField(this.value)">
+                                        <option value="">Select Status</option>
+                                        {{-- <option value="1" {{ old('hr_approval') == '1' ? 'selected' : '' }}>
+                                            Approved</option> --}}
+                                        <option value="0" {{ old('hr_approval') == '0' ? 'selected' : '' }}>
+                                            Pending</option>
+                                        <option value="2" {{ old('hr_approval') == '2' ? 'selected' : '' }}>
+                                            Rejected</option>
+                                    </select>
+                                </div>
                             </div>
                             <div class="row">
                                 <div class="col-lg-12 mt-4">
@@ -789,27 +842,34 @@
                         const childRow = document.createElement('div');
                         childRow.className = 'row align-items-center mb-2 child-row';
                         childRow.innerHTML = `
-                        <div class="form-group col-lg-3">
-                            <label for="child_name_${i}">Child ${i} Name:<span style="color: red;">*</span></label>
-                            <input type="text" name="child_names[]" id="child_name_${i}" class="form-control" 
-                                   value="${childData.name || ''}" required>
-                        </div>
-                        <div class="form-group col-lg-3">
-                            <label for="child_dob_${i}">Child ${i} DOB:<span style="color: red;">*</span></label>
-                            <input type="date" name="child_dobs[]" id="child_dob_${i}" class="form-control"
-                                   value="${childData.dob || ''}" required>
-                        </div>
-                        <div class="form-group col-lg-3 child-aadhar" id="child_aadhar_field_${i}" style="display: none;">
-                            <label for="child_aadhar_${i}">Child ${i} Aadhar No:<span style="color: red;">*</span></label>
-                            <input type="text" name="child_aadhar[]" id="child_aadhar_${i}" class="form-control" 
-                                   value="${childData.aadhar_no || ''}" maxlength="12" inputmode="numeric">
-                        </div>
-                        <div class="form-group col-lg-3">
-                            <label for="child_photo_${i}">Child ${i} Photo:</label>
-                            <input type="file" name="child_photo[]" id="child_photo_${i}" accept="application/pdf, image/jpg, image/png" 
-                                   class="form-control">
-                        </div>
-                    `;
+        <div class="form-group col-lg-3">
+            <label for="child_name_${i}">Child ${i} Name:<span style="color: red;">*</span></label>
+            <input type="text" name="child_names[]" id="child_name_${i}" class="form-control" 
+                   value="${childData.name || ''}" required>
+        </div>
+        <div class="form-group col-lg-3">
+            <label for="child_dob_${i}">Child ${i} DOB:<span style="color: red;">*</span></label>
+            <input type="date" name="child_dobs[]" id="child_dob_${i}" class="form-control"
+                   value="${childData.dob || ''}" required>
+        </div>
+        <div class="form-group col-lg-3 child-aadhar" id="child_aadhar_field_${i}" style="display: none;">
+            <label for="child_aadhar_${i}">Child ${i} Aadhar No:<span style="color: red;">*</span></label>
+            <input type="text" name="child_aadhar[]" id="child_aadhar_${i}" class="form-control" 
+                   value="${childData.aadhar_no || ''}" maxlength="12" inputmode="numeric">
+        </div>
+        <div class="form-group col-lg-3">
+            <label for="child_photo_${i}">Child ${i} Photo:</label>
+            <input type="file" name="child_photo[]" id="child_photo_${i}" accept="application/pdf, image/jpg, image/png" 
+                   class="form-control">
+
+            ${childData.photo ? `
+                            <div id="image-preview-container-${i}" class="d-flex mt-2">
+                                <img src="/storage/${childData.photo}" 
+                                     class="img-thumbnail" width="100" height="100" 
+                                     alt="Child ${i} Uploaded Photo">
+                            </div>` : ''}
+        </div>
+    `;
                         childrenDetails.appendChild(childRow);
 
                         let dobField = document.getElementById(`child_dob_${i}`);

@@ -134,11 +134,27 @@ class ADMSPayslipController extends Controller
         $request->validate([
             'month' => 'required|integer',
             'year' => 'required|integer',
+            'client' => 'nullable|array',
+            'state' => 'nullable|array',
         ]);
-        $payslips = $this->model()->where('month', $request->month)
-            ->where('year', $request->year)
-            ->get();
+
+        $payslips = $this->model() 
+        ->where('month', $request->month)
+        ->where('year', $request->year)
+        ->whereHas('payslips', function ($query) use ($request) {
+            if (!empty($request->client)) {
+                $query->whereIn('client_id', $request->client);
+            }
+            if (!empty($request->state)) {
+                $query->whereIn('state', $request->state);
+            }
+        })
+        ->get();
+
+
         return $this->zipDownload($payslips);
+
+        
         // return Excel::download(new FFI_PayslipsExport($month, $year), "Payslips_{$month}_{$year}.xlsx");
     }
     public function searchPayslip(Request $request)
@@ -174,44 +190,38 @@ class ADMSPayslipController extends Controller
 
     public function generatePayslipsPdf($id)
     {
-        $payslip = $this->model()->findOrFail($id);
+        $payletter = $this->model()->findOrFail($id);
+        // dd($payletter->payslips_letter_path);
+        if (!$payletter->payslips_letter_path) {
+            abort(404, 'PDF not found');
+        }
 
-        $data = [
-            'payslip' => $payslip,
-        ];
+        $filePath = str_replace('storage/', '', $payletter->payslips_letter_path);
 
-        $pdf = PDF::loadView('admin.adms.payslip.formate', $data)
-            ->setPaper('A4', 'portrait')
-            ->setOptions(['margin-top' => 10, 'margin-bottom' => 10, 'margin-left' => 15, 'margin-right' => 15]);
-
-
-        return $pdf->stream('payslip' . $payslip->id . '.pdf');
+        return response()->file(public_path($filePath));
     }
     public function zipDownload($payslips)
     {
-        $zipFileName = "payslips_" . date('Y') . '.zip';
+        $zipFileName = "payslips_{$payslips->first()->month}_{$payslips->first()->year}.zip";
         $zipPath = public_path($zipFileName);
 
-        // Create ZIP archive
         $zip = new ZipArchive();
         if ($zip->open($zipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE) === true) {
             foreach ($payslips as $payslip) {
-                $data = [
-                    'payslip' => $payslip,
-                ];
-
-                // Generate PDF content
-                $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true, 'chroot' => public_path()])
-                    ->loadView('admin.adms.payslip.formate', $data);
-                $fileName = $payslip->emp_id . '_' . $payslip->emp_name . '.pdf';
-
-                // Add PDF to the ZIP archive as a stream
-                $zip->addFromString($fileName, $pdf->output());
+                // dd($payslip);
+                $filePath = $payslip->payslips_letter_path;
+                // dd($filePath);
+                if (Storage::disk('public')->exists($filePath)) {
+                    $absolutePath = public_path($filePath);
+                    // dd($absolutePath);
+                    $zip->addFile($absolutePath, basename($filePath));
+                }
             }
             $zip->close();
         } else {
             return response()->json(['error' => 'Could not create ZIP file.'], 500);
         }
+
         return response()->download($zipPath)->deleteFileAfterSend(true);
     }
 
@@ -228,7 +238,9 @@ class ADMSPayslipController extends Controller
         }
         $query = CFISModel::query()
             ->whereIn('client_id', $clients)
-            ->whereIn('state', $states);
+            ->whereIn('state', $states)
+            ->where('status', 1);
+
 
         if (!empty($fromDate) && !empty($toDate)) {
             $query->whereBetween('created_at', [$fromDate, $toDate]);

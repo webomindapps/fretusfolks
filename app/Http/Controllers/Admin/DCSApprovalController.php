@@ -65,7 +65,7 @@ class DCSApprovalController extends Controller
     public function edit($id)
     {
         $candidate = $this->model()->with('candidateDocuments', 'educationCertificates', 'otherCertificates')->find($id);
-        $children = DCSChildren::where('emp_id', $candidate->id)->get(['name', 'dob', 'aadhar_no']);
+        $children = DCSChildren::where('emp_id', $candidate->id)->get();
         $bankdetails = BankDetails::where('emp_id', $candidate->id)
             ->whereIn('status', [null, 1])
             ->first() ?? new BankDetails();
@@ -280,6 +280,7 @@ class DCSApprovalController extends Controller
                     DCSChildren::insert($childrenData);
                 }
             }
+
             if ($request->has(['bank_name', 'bank_account_no', 'bank_ifsc_code'])) {
                 if (!isset($candidate) || empty($candidate->id)) {
                     return back()->with('error', 'Candidate not found.');
@@ -297,7 +298,7 @@ class DCSApprovalController extends Controller
                         'bank_account_no' => $request->bank_account_no,
                         'bank_ifsc_code' => $request->bank_ifsc_code,
                         'bank_status' => 1,
-                        'bank_document' => $filePath ?? null,
+                        'bank_document' => $filePath ,
                     ]
                 );
 
@@ -1029,8 +1030,7 @@ class DCSApprovalController extends Controller
     public function docedit($id)
     {
         $candidate = $this->model()
-            ->with(['client'])
-            ->with(['educationCertificates', 'otherCertificates', 'candidateDocuments'])
+            ->with(['client','educationCertificates', 'otherCertificates', 'candidateDocuments'])
             ->findOrFail($id);
 
         $children = DCSChildren::where('emp_id', $candidate->id)->get();

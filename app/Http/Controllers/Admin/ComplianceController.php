@@ -129,14 +129,11 @@ class ComplianceController extends Controller
 
         foreach ($documents as $document) {
             if (isset($document->bank_document)) {
-                // For bank document
                 $docPath = $document->bank_document;
             } elseif (isset($document->path)) {
-                // For other documents (e.g., candidate documents, certificates)
                 $docPath = $document->path;
-            } elseif (isset($document->child_image)) {
-                // For children's images (assuming there's a field named 'child_image' for images)
-                $docPath = $document->child_image;
+            } elseif (isset($document->photo)) {
+                $docPath = $document->photo;
             }
             if (!empty($docPath)) {
 
