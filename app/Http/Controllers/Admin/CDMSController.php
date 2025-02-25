@@ -56,7 +56,7 @@ class CDMSController extends Controller
     public function store(Request $request)
     {
         // dd($request->all());
-        $validatedData = $request->validate([
+        $request->validate([
             'client_code' => 'required|string|max:255',
             'client_ffi_id' => 'required|string|max:255',
             'client_name' => 'required|string|max:255',
@@ -86,7 +86,7 @@ class CDMSController extends Controller
             'commercial_type' => 'required|integer',
             'remark' => 'required|string',
         ]);
-
+        $validatedData = $request->all();
         $validatedData['status'] = $request->input('status', 1);
         $validatedData['active_status'] = $request->input('active_status', 0);
         $validatedData['modify_date'] = $request->input('modify_date', now());
