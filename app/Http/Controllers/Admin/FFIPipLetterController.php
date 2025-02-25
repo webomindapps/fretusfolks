@@ -56,7 +56,7 @@ class FFIPipLetterController extends Controller
     }
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
+        $request->validate([
             'ffi_emp_id' => 'required',
             'status' => 'nullable|string',
             'from_name' => 'required|string',
@@ -68,6 +68,8 @@ class FFIPipLetterController extends Controller
             'updates' => 'required|string',
             'timeline' => 'required|string',
         ]);
+        $validatedData = $request->all();
+
         DB::beginTransaction();
         try {
             $warning = $this->model()->create($validatedData);
@@ -110,7 +112,7 @@ class FFIPipLetterController extends Controller
 
     public function update(Request $request, $id)
     {
-        $validatedData = $request->validate([
+         $request->validate([
             'ffi_emp_id' => 'required',
             'status' => 'nullable|string',
             'from_name' => 'required|string',
@@ -122,6 +124,7 @@ class FFIPipLetterController extends Controller
             'updates' => 'required|string',
             'timeline' => 'required|string',
         ]);
+        $validatedData = $request->all();
 
         DB::beginTransaction();
         try {

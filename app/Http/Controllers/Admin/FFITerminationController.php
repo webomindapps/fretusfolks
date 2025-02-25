@@ -57,7 +57,7 @@ class FFITerminationController extends Controller
     }
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
+        $request->validate([
             'ffi_emp_id' => 'required', // Ensure the employee exists
             'status' => 'nullable|string',
             'emp_id' => 'nullable',
@@ -67,6 +67,8 @@ class FFITerminationController extends Controller
             'absent_date' => 'required|date',
             'content' => 'nullable|string',
         ]);
+        $validatedData = $request->all();
+
         DB::beginTransaction();
         try {
             $termination = $this->model()->create($validatedData);
@@ -147,7 +149,7 @@ class FFITerminationController extends Controller
 
     public function update(Request $request, $id)
     {
-        $validatedData = $request->validate([
+        $request->validate([
             'ffi_emp_id' => 'required',
             'status' => 'nullable|string',
             'emp_id' => 'nullable',
@@ -157,6 +159,7 @@ class FFITerminationController extends Controller
             'absent_date' => 'required|date',
             'content' => 'nullable|string',
         ]);
+        $validatedData = $request->all();
 
         DB::beginTransaction();
         try {

@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\BankDetails;
 use Exception;
 use ZipArchive;
 use App\Models\CFISModel;
+use App\Models\BankDetails;
 use App\Models\DCSChildren;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Exports\CadidateDownload;
 use App\Imports\CandidatesImport;
+use App\Jobs\ImportCandidatesJob;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
@@ -46,7 +47,8 @@ class ComplianceController extends Controller
         }
         if ($search != '')
             $query->where(function ($q) use ($search, $searchColumns) {
-                foreach ($searchColumns as $key => $value) ($key == 0) ? $q->where($value, 'LIKE', '%' . $search . '%') : $q->orWhere($value, 'LIKE', '%' . $search . '%');
+                foreach ($searchColumns as $key => $value)
+                    ($key == 0) ? $q->where($value, 'LIKE', '%' . $search . '%') : $q->orWhere($value, 'LIKE', '%' . $search . '%');
             });
 
         ($order == '') ? $query->orderByDesc('id') : $query->orderBy($order, $orderBy);
@@ -170,7 +172,7 @@ class ComplianceController extends Controller
     {
         $candidate = $this->model()->findOrFail($id);
 
-        $validatedData = $request->only([
+        $request->only([
             'client_id',
             'ffi_emp_id',
             'emp_name',
@@ -180,7 +182,7 @@ class ComplianceController extends Controller
             'esic_no',
             'comp_status'
         ]);
-
+        $validatedData = $request->all();
         DB::beginTransaction();
         try {
             $candidate->update($validatedData);
@@ -198,15 +200,31 @@ class ComplianceController extends Controller
     }
 
     // Import from Excel
+    // public function import(Request $request)
+    // {
+    //     $request->validate([
+    //         'file' => 'required|mimes:xlsx,csv'
+    //     ]);
+
+    //     Excel::import(new CandidatesImport, $request->file('file'));
+
+    //     return back()->with('success', 'Candidates Imported Successfully');
+    // }
     public function import(Request $request)
     {
         $request->validate([
             'file' => 'required|mimes:xlsx,csv'
         ]);
 
-        Excel::import(new CandidatesImport, $request->file('file'));
+        $file = $request->file('file');
+        $filePath = $file->storeAs('imports', $file->getClientOriginalName());
+        // dd($filePath);
 
-        return back()->with('success', 'Candidates Imported Successfully');
+        ImportCandidatesJob::dispatch($filePath)->onQueue('imports');
+        // dd('Job Dispatched: ', ['job' => $job]);
+        // Log::info('Job Dispatched: ', ['job' => $job]);
+
+        return back()->with('success', 'Import started. You will be notified once completed.');
     }
     public function download(Request $request)
     {
@@ -241,7 +259,9 @@ class ComplianceController extends Controller
             $fileName = 'bank_document_' . $request->emp_id . '.' . $file->getClientOriginalExtension();
             $filePath = $file->storeAs('documents/bank', $fileName, 'public');
         }
-
+        if ($request->status == 1) {
+            BankDetails::where('emp_id', $request->emp_id)->update(['status' => 0]);
+        }
         BankDetails::create([
             'emp_id' => $request->emp_id,
             'bank_name' => $request->bank_name,
@@ -285,7 +305,11 @@ class ComplianceController extends Controller
             $fileName = 'bank_document_' . $bankDetails->emp_id . '.' . $file->getClientOriginalExtension();
             $filePath = $file->storeAs('documents/bank', $fileName, 'public');
         }
-
+        if ($request->status == 1) {
+            BankDetails::where('emp_id', $bankDetails->emp_id)
+                ->where('id', '!=', $id) // Exclude the current record
+                ->update(['status' => 0]);
+        }
         $bankDetails->update([
             'bank_name' => $request->bank_name,
             'bank_account_no' => $request->bank_account_no,

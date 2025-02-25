@@ -59,7 +59,7 @@ class FFIOfferLetterController extends Controller
     }
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
+        $request->validate([
             'ffi_emp_id' => 'required', // Ensure the employee exists
             'offer_letter_type' => 'nullable|string|max:255',
             'status' => 'nullable|string',
@@ -84,6 +84,7 @@ class FFIOfferLetterController extends Controller
             'ctc' => 'nullable|numeric|min:0',
             'employee_id' => 'nullable',
         ]);
+        $validatedData = $request->all();
         DB::beginTransaction();
         try {
             $offer = $this->model()->create($validatedData);
@@ -137,10 +138,13 @@ class FFIOfferLetterController extends Controller
             'offerLetter' => $offerLetter,
         ];
 
-        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 
-        'isRemoteEnabled' => true,'chroot' => public_path()])->loadView('admin.hr_management.ffi.offer_letter.formate1', $data);
-            // ->setPaper('A4', 'portrait')
-            // ->setOptions(['margin-top' => 10, 'margin-bottom' => 10, 'margin-left' => 15, 'margin-right' => 15]);
+        $pdf = PDF::setOptions([
+            'isHtml5ParserEnabled' => true,
+            'isRemoteEnabled' => true,
+            'chroot' => public_path()
+        ])->loadView('admin.hr_management.ffi.offer_letter.formate1', $data);
+        // ->setPaper('A4', 'portrait')
+        // ->setOptions(['margin-top' => 10, 'margin-bottom' => 10, 'margin-left' => 15, 'margin-right' => 15]);
 
 
         return $pdf->stream('offer_letter_' . $offerLetter->id . '.pdf');

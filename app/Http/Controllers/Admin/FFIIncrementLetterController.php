@@ -59,7 +59,7 @@ class FFIIncrementLetterController extends Controller
     }
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
+         $request->validate([
             'ffi_emp_id' => 'required',
             'offer_letter_type' => 'nullable|string|max:255',
             'status' => 'nullable|string',
@@ -87,6 +87,7 @@ class FFIIncrementLetterController extends Controller
             'employee_id' => 'nullable',
 
         ]);
+        $validatedData = $request->all();
         DB::beginTransaction();
         try {
             $increment = $this->model()->create($validatedData);

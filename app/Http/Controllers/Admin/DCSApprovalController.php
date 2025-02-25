@@ -298,7 +298,7 @@ class DCSApprovalController extends Controller
                         'bank_account_no' => $request->bank_account_no,
                         'bank_ifsc_code' => $request->bank_ifsc_code,
                         'bank_status' => 1,
-                        'bank_document' => $filePath ,
+                        'bank_document' => $filePath,
                     ]
                 );
 
@@ -358,16 +358,21 @@ class DCSApprovalController extends Controller
         $paginate = request()->paginate;
         $userId = auth()->id();
 
-        $query = $this->model()->query()
-            // ->whereIn('data_status', [0, 1])
-            ->whereIn('data_status', [1])
-            ->whereIn('hr_approval', [0, 1])
-            ->whereHas('hrMasters', function ($q) use ($userId) {
-                $q->where('user_id', $userId)
-                    ->whereIn('dcs_approval', [0]);
-            })
-            ->with(['hrMasters.client']);
-
+        if (auth()->user()->hasRole('Admin')) {
+            $query = $this->model()->query()
+                ->whereIn('data_status', [1])
+                ->whereIn('hr_approval', [0, 1]);
+        } else {
+            $query = $this->model()->query()
+                // ->whereIn('data_status', [0, 1])
+                ->whereIn('data_status', [1])
+                ->whereIn('hr_approval', [0, 1])
+                ->whereHas('hrMasters', function ($q) use ($userId) {
+                    $q->where('user_id', $userId)
+                        ->whereIn('dcs_approval', [0]);
+                })
+                ->with(['hrMasters.client']);
+        }
         $from_date = request()->get('from_date');
         $to_date = request()->get('to_date');
         if ($from_date && $to_date) {
@@ -1030,7 +1035,7 @@ class DCSApprovalController extends Controller
     public function docedit($id)
     {
         $candidate = $this->model()
-            ->with(['client','educationCertificates', 'otherCertificates', 'candidateDocuments'])
+            ->with(['client', 'educationCertificates', 'otherCertificates', 'candidateDocuments'])
             ->findOrFail($id);
 
         $children = DCSChildren::where('emp_id', $candidate->id)->get();

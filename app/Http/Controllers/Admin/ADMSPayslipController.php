@@ -4,15 +4,16 @@ namespace App\Http\Controllers\Admin;
 
 use Exception;
 use ZipArchive;
-use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 use App\Models\Payslips;
+use App\Models\CFISModel;
 use Illuminate\Http\Request;
 use App\Jobs\ADMSPayslipCreate;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Bus;
 use App\Http\Controllers\Controller;
-use App\Models\CFISModel;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
+
 
 class ADMSPayslipController extends Controller
 {
@@ -57,10 +58,7 @@ class ADMSPayslipController extends Controller
     }
     public function destroy($id)
     {
-        $payslip = $this->model()->find($id);
-        if ($payslip && $payslip->payslips_letter_path) {
-            Storage::disk('public')->delete($payslip->payslips_letter_path);
-        }
+        $this->model()->destroy($id);
         return redirect()->route('admin.payslips')->with('success', 'Successfully deleted!');
     }
     public function bulkUpload(Request $request)
@@ -83,7 +81,9 @@ class ADMSPayslipController extends Controller
                 }
                 $header = null;
                 $datafromCsv = array();
+                // dd($fileWithPath);
                 $records = array_map('str_getcsv', file($fileWithPath));
+                // dd($records);
                 foreach ($records as $key => $record) {
                     if (!$header) {
                         $header = $record;
@@ -91,7 +91,7 @@ class ADMSPayslipController extends Controller
                         $datafromCsv[] = $record;
                     }
                 }
-                $datafromCsv = array_chunk($datafromCsv, 50);
+                $datafromCsv = array_chunk($datafromCsv, 1000);
                 foreach ($datafromCsv as $index => $dataCsv) {
 
                     foreach ($dataCsv as $data) {
@@ -101,11 +101,6 @@ class ADMSPayslipController extends Controller
                     }
                     // dd($payslipdata[$index], $month, $year);
                     ADMSPayslipCreate::dispatch($payslipdata[$index], $month, $year);
-                    // dd($payslips);
-                }
-                // **Delete the file after processing**
-                if (file_exists($fileWithPath)) {
-                    unlink($fileWithPath);
                 }
             }
         } catch (Exception $e) {
@@ -138,24 +133,24 @@ class ADMSPayslipController extends Controller
             'state' => 'nullable|array',
         ]);
 
-        $payslips = $this->model() 
-        ->where('month', $request->month)
-        ->where('year', $request->year)
-        ->whereHas('payslips', function ($query) use ($request) {
-            if (!empty($request->client)) {
-                $query->whereIn('client_id', $request->client);
-            }
-            if (!empty($request->state)) {
-                $query->whereIn('state', $request->state);
-            }
-        })
-        ->get();
+        $payslips = $this->model()
+            ->where('month', $request->month)
+            ->where('year', $request->year)
+            ->whereHas('payslips', function ($query) use ($request) {
+                if (!empty($request->client)) {
+                    $query->whereIn('client_id', $request->client);
+                }
+                if (!empty($request->state)) {
+                    $query->whereIn('state', $request->state);
+                }
+            })
+            ->get();
 
+        if ($payslips->isEmpty()) {
+            return back()->with('error', 'No payslips found for the selected month and year.');
+        }
 
         return $this->zipDownload($payslips);
-
-        
-        // return Excel::download(new FFI_PayslipsExport($month, $year), "Payslips_{$month}_{$year}.xlsx");
     }
     public function searchPayslip(Request $request)
     {
@@ -211,6 +206,10 @@ class ADMSPayslipController extends Controller
                 // dd($payslip);
                 $filePath = $payslip->payslips_letter_path;
                 // dd($filePath);
+
+                if (!$filePath) {
+                    return redirect()->back()->with('error', 'No Payslips Found for the Month and Year');
+                }
                 if (Storage::disk('public')->exists($filePath)) {
                     $absolutePath = public_path($filePath);
                     // dd($absolutePath);
@@ -224,7 +223,6 @@ class ADMSPayslipController extends Controller
 
         return response()->download($zipPath)->deleteFileAfterSend(true);
     }
-
     public function downloadfiltered(Request $request)
     {
 
@@ -354,7 +352,6 @@ class ADMSPayslipController extends Controller
                 'other_deduction',
                 'total_deduction',
                 'net_salary',
-                
             ];
 
 

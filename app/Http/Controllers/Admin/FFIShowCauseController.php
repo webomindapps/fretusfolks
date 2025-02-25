@@ -57,13 +57,14 @@ class FFIShowCauseController extends Controller
     }
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
+        $request->validate([
             'ffi_emp_id' => 'required',
             'status' => 'nullable|string',
             'emp_id' => 'nullable',
             'date' => 'required|date',
             'content' => 'required|string',
         ]);
+        $validatedData = $request->all();
         DB::beginTransaction();
         try {
             $show = $this->model()->create($validatedData);
@@ -144,14 +145,14 @@ class FFIShowCauseController extends Controller
 
     public function update(Request $request, $id)
     {
-        $validatedData = $request->validate([
+        $request->validate([
             'ffi_emp_id' => 'required',
             'status' => 'nullable|string',
             'emp_id' => 'nullable',
             'date' => 'required|date',
             'content' => 'required|string',
         ]);
-
+        $validatedData = $request->all();
         DB::beginTransaction();
         try {
             $show = $this->model()->findOrFail($id);

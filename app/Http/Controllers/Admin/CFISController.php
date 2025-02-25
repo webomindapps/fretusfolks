@@ -60,7 +60,7 @@ class CFISController extends Controller
     }
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
+        $request->validate([
             'client_id' => 'required|integer',
             'emp_name' => 'required|string|max:255',
             'phone1' => [
@@ -96,6 +96,7 @@ class CFISController extends Controller
             'photo' => 'required|file|mimes:jpg,jpeg,png|max:2048',
             'resume' => 'nullable',
         ]);
+        $validatedData = $request->all();
         $validatedData['created_at'] = $request->input('created_at', now());
         $validatedData['created_by'] = auth()->id();
         $validatedData['status'] = $request->input('status', 1);
@@ -144,7 +145,7 @@ class CFISController extends Controller
     {
         $candidate = $this->model()->findOrFail($id);
 
-        $validatedData = $request->only([
+        $request->only([
             'client_id',
             'emp_name',
             'phone1',
@@ -161,6 +162,7 @@ class CFISController extends Controller
         ]);
 
         // $validatedData['created_by'] = auth()->id();
+        $validatedData = $request->all();
         $validatedData['dcs_approval'] = $request->input('dcs_approval', 1);
         $validatedData['data_status'] = $request->input('data_status', 0);
 

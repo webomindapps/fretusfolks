@@ -213,7 +213,7 @@
                                             </a>
                                         </div>
                                     </div>
-                                    <div class="row">
+                                    <div class="row mt-2">
                                         @if ($bankdetails->isNotEmpty())
                                             <div class="table-responsive">
                                                 <table class="table table-bordered">
@@ -255,21 +255,26 @@
                                                                 </td>
                                                                 <td>
                                                                     <div class="dropdown pop_Up dropdown_bg">
-                                                                        <div class="dropdown-toggle" id="dropdownMenuButton-{{ $bank->id }}"
-                                                                            data-bs-toggle="dropdown" aria-expanded="true">
+                                                                        <div class="dropdown-toggle"
+                                                                            id="dropdownMenuButton-{{ $bank->id }}"
+                                                                            data-bs-toggle="dropdown"
+                                                                            aria-expanded="true">
                                                                             Action
                                                                         </div>
-                                                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                                                        <ul class="dropdown-menu"
+                                                                            aria-labelledby="dropdownMenuButton1">
                                                                             <li>
-                                                                               
+
                                                                                 <a href="{{ route('admin.bankdetails.edit', $bank->id) }}"
                                                                                     class="dropdown-item">
-                                                                                    <i class="bx bx-edit-alt" aria-hidden="true"></i> Edit
+                                                                                    <i class="bx bx-edit-alt"
+                                                                                        aria-hidden="true"></i> Edit
                                                                                 </a>
                                                                                 <a href="{{ route('admin.bankdetails.delete', $bank) }}"
                                                                                     class="dropdown-item"
                                                                                     onclick="return confirm('Are you sure to delete this?')">
-                                                                                    <i class="bx bx-trash-alt"></i> Delete
+                                                                                    <i class="bx bx-trash-alt"></i>
+                                                                                    Delete
                                                                                 </a>
                                                                             </li>
                                                                         </ul>

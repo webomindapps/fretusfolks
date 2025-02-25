@@ -56,7 +56,7 @@ class FHRMSController extends Controller
     }
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
+        $request->validate([
             'ffi_emp_id' => 'required|string|max:255',
             'emp_name' => 'required|string|max:255',
             'interview_date' => 'required|date',
@@ -144,6 +144,7 @@ class FHRMSController extends Controller
                 $filePaths[$field] = $request->file($field)->store('uploads', 'public');
             }
         }
+        $validatedData = $request->all();
 
         DB::beginTransaction();
         try {
@@ -200,7 +201,7 @@ class FHRMSController extends Controller
     {
         $employee = $this->model()->findOrFail($id);
 
-        $validatedData = $request->validate([
+        $request->validate([
             'ffi_emp_id' => 'required|string|max:255',
             'emp_name' => 'required|string|max:255',
             'interview_date' => 'required|date',
@@ -281,6 +282,7 @@ class FHRMSController extends Controller
             'payslip',
             'exp_letter'
         ];
+        $validatedData = $request->all();
 
         DB::beginTransaction();
 
@@ -511,7 +513,7 @@ class FHRMSController extends Controller
 
     public function storePendingDetails(Request $request)
     {
-        $validatedData = $request->validate([
+        $request->validate([
             'ffi_emp_id' => 'nullable|string|max:255',
             'emp_name' => 'nullable|string|max:255',
             'interview_date' => 'nullable|date',
@@ -598,6 +600,7 @@ class FHRMSController extends Controller
                 $filePaths[$field] = $request->file($field)->store('uploads', 'public');
             }
         }
+        $validatedData = $request->all();
 
         DB::beginTransaction();
         try {
@@ -636,8 +639,8 @@ class FHRMSController extends Controller
     }
     public function updatePendingDetails(Request $request)
     {
-        $validatedData = $request->validate([
-            'id' => 'required|integer|exists:fhrms,id', 
+        $request->validate([
+            'id' => 'required|integer|exists:fhrms,id',
             'ffi_emp_id' => 'nullable|string|max:255',
             'emp_name' => 'nullable|string|max:255',
             'interview_date' => 'nullable|date',
@@ -703,7 +706,7 @@ class FHRMSController extends Controller
             'password' => 'nullable|string',
             'psd' => 'nullable',
         ]);
-    
+
         $filePaths = [];
         $fileFields = [
             'pan_path',
@@ -718,43 +721,44 @@ class FHRMSController extends Controller
             'payslip',
             'exp_letter'
         ];
-    
+
         foreach ($fileFields as $field) {
             if ($request->hasFile($field)) {
                 $filePaths[$field] = $request->file($field)->store('uploads', 'public');
             }
         }
-    
+        $validatedData = $request->all();
+
         DB::beginTransaction();
         try {
             $employee = $this->model()->findOrFail($validatedData['id']);
-    
+
             $employee->fill($validatedData);
             $employee->fill($filePaths);
             $employee->save();
-    
+
             if ($request->hasFile('education_certificates')) {
                 foreach ($request->file('education_certificates') as $file) {
                     $filePath = $file->store('education_certificates', 'public');
-    
+
                     FFIEducationModel::updateOrCreate(
                         ['emp_id' => $employee->id, 'path' => $filePath],
                         ['path' => $filePath]
                     );
                 }
             }
-    
+
             if ($request->hasFile('others')) {
                 foreach ($request->file('others') as $file) {
                     $filePath = $file->store('others', 'public');
-    
+
                     FFIOTherModel::updateOrCreate(
                         ['emp_id' => $employee->id, 'path' => $filePath],
                         ['path' => $filePath]
                     );
                 }
             }
-    
+
             DB::commit();
             return response()->json(['success' => true, 'message' => 'Record updated successfully.']);
         } catch (Exception $e) {
@@ -762,7 +766,7 @@ class FHRMSController extends Controller
             return response()->json(['success' => false, 'message' => $e->getMessage()]);
         }
     }
-    
+
     public function todayBirthday(Request $request)
     {
         $query = $this->model()->query();
