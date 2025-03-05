@@ -1,6 +1,6 @@
 <x-applayout>
     <x-admin.breadcrumb title="CMS Labour Notice" :create="route('admin.cms.labour.create')" />
-    <div class="form-card px-3 mt-4">
+    <div class="form-card px-md-3 px-2 mt-4">
         <form action="{{ route('admin.cms.labour') }}">
             <div class="row">
                 <div class="col-lg-4">

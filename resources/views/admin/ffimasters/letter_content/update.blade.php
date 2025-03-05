@@ -15,7 +15,7 @@
 
 
     <div class="col-lg-12 pb-4">
-        <div class="form-card px-3">
+        <div class="form-card px-md-3 px-2">
             <form method="POST" class="formSubmit" action="{{ route('admin.letter_content.edit', $letter_content->id) }}">
                 @csrf
                 <div class="row">

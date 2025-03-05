@@ -14,7 +14,7 @@
     @endif
 
     <div class="col-lg-12 pb-4">
-        <div class="form-card px-3">
+        <div class="form-card px-md-3 px-2">
             <form action="{{ route('admin.ffi_termination.edit', $termination->id) }}" method="POST" enctype="multipart/form-data"
                 id="employeeForm">
                 @csrf

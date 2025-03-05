@@ -26,7 +26,7 @@
         </div>
     @endif
     <div class="col-lg-12 pb-4">
-        <div class="form-card px-3">
+        <div class="form-card px-md-3 px-2">
             <form action="{{ route('admin.hr.hredit', $candidate->id) }}" method="POST" id="HRedit"
                 enctype="multipart/form-data">
                 @csrf

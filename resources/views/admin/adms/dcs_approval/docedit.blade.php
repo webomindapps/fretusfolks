@@ -59,7 +59,7 @@
     </div>
 
     <div class="col-lg-12 pb-4">
-        <div class="form-card px-3">
+        <div class="form-card px-md-3 px-2">
             <form action="{{ route('admin.dcs_approval.docedit', $candidate->id) }}" method="POST"
                 enctype="multipart/form-data">
                 @csrf

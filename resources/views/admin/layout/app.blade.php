@@ -19,7 +19,7 @@
 </head>
 
 <body>
-    <div class="sidebar ">
+    <div class="sidebar active">
         <div class="logo_content">
             <div class="logo">
                 <div href="">

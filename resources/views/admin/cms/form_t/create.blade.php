@@ -12,7 +12,7 @@
         </div>
     @endif
 
-    <div class="form-card px-3">
+    <div class="form-card px-md-3 px-2">
         <form method="POST" class="formSubmit" action="{{ route('admin.cms.formt.create') }}"
             enctype="multipart/form-data">
             @csrf

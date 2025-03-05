@@ -11,7 +11,7 @@
     <div class="content">
         <div class="row">
             <div class="col-lg-12 pb-4 ">
-                <div class="form-card px-3">
+                <div class="form-card px-md-3 px-2">
                     <form id="my_form" action="" method="get" enctype="multipart/form-data">
                         <div class="row">
                             <x-forms.input label="From Date" type="date" name="from_date" id="from-date"

@@ -17,7 +17,7 @@
     <div class="content">
         <div class="row">
             <div class="col-lg-12 pb-4 ">
-                <div class="form-card px-3">
+                <div class="form-card px-md-3 px-2">
                     <form id="my_form" action="{{ route('admin.cdms_report') }}" method="GET"
                         enctype="multipart/form-data">
                         @csrf
