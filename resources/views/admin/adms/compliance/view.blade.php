@@ -106,7 +106,12 @@
                                         <div class="col-md-4 mb-2"><b>Driving License NO:</b>
                                             <span>{{ $candidate->driving_license_no }}</span>
                                         </div>
-
+                                        <div class="col-md-4 mb-2"><b>Created By:</b>
+                                            <span>{{ $candidate->createdBy->name ?? 'N/A' }}</span>
+                                        </div>
+                                        <div class="col-md-4 mb-2"><b>Approved By:</b>
+                                            <span>{{ $candidate->modifiedBy->name ?? 'N/A' }}</span>
+                                        </div>
                                         <div class="col-md-12 mb-2"><b>Permanent Address:</b>
                                             <span>{{ $candidate->permanent_address }}</span>
                                         </div>

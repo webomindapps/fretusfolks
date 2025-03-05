@@ -197,4 +197,12 @@ class CFISModel extends Model
     {
         return $this->hasMany(Payslips::class, 'emp_id', 'ffi_emp_id');
     }
+    public function modifiedBy()
+    {
+        return $this->belongsTo(MuserMaster::class, 'modify_by', 'id');
+    }
+    public function createdBy()
+    {
+        return $this->belongsTo(MuserMaster::class, 'created_by', 'id');
+    }
 }

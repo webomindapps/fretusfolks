@@ -1,47 +1,54 @@
 <?php
-
 namespace App\Jobs;
 
+use App\Models\CFISModel;
 use Illuminate\Bus\Queueable;
-use App\Imports\CandidatesImport;
-use Illuminate\Http\UploadedFile;
-use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Bus\Batchable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 
 class ImportCandidatesJob implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable, Queueable, SerializesModels, Batchable;
 
-    protected $filePath;
+    protected $data;
 
     /**
      * Create a new job instance.
      */
-    public function __construct($filePath)
+    public function __construct($data)
     {
-        $this->filePath = $filePath;
+        $this->data = $data;
     }
 
-    /**x
+    /**
      * Execute the job.
      */
     public function handle(): void
     {
-        $fullPath = storage_path('app/' . $this->filePath);
+        $info = [];
+        dd($this->data);
+        foreach ($this->data as $row) {
+            $info[] = [
+                'ffi_emp_id' => $row['ffi_emp_id'],
+                'emp_name' => $row['emp_name'],
+                'email' => $row['email'] ?? null,
+                'uan_no' => $row['uan_no'] ?? null,
+                'esic_no' => $row['esic_no'] ?? null,
+                'comp_status' => 1,
+            ];
 
-        if (!file_exists($fullPath)) {
-            \Log::error('Import file not found: ' . $fullPath);
-            return;
+
         }
 
-        Excel::import(new CandidatesImport, $fullPath);
-
-        Storage::delete($this->filePath);
+        if (!empty($info)) {
+            foreach ($info as $data) {
+                CFISModel::updateOrCreate(
+                    ['ffi_emp_id' => $data['ffi_emp_id']],
+                    $data
+                );
+            }
+        }
     }
 }
-

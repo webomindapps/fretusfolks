@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\MuserMaster;
 use Exception;
 use ZipArchive;
 use App\Models\CFISModel;
@@ -64,7 +65,7 @@ class ComplianceController extends Controller
         $children = DCSChildren::where('emp_id', $id)->get();
         $bankdetails = BankDetails::where('emp_id', $id)->get();
         $candidate = $this->model()
-            ->with(['client', 'educationCertificates', 'otherCertificates', 'candidateDocuments'])
+            ->with(['client', 'educationCertificates', 'otherCertificates', 'candidateDocuments', 'modifiedBy', 'createdBy'])
             ->findOrFail($id);
         return view('admin.adms.compliance.view', compact('candidate', 'children', 'bankdetails'));
         // return response()->json(['html_content' => $htmlContent]);
@@ -199,33 +200,67 @@ class ComplianceController extends Controller
         }
     }
 
-    // Import from Excel
-    // public function import(Request $request)
-    // {
-    //     $request->validate([
-    //         'file' => 'required|mimes:xlsx,csv'
-    //     ]);
-
-    //     Excel::import(new CandidatesImport, $request->file('file'));
-
-    //     return back()->with('success', 'Candidates Imported Successfully');
-    // }
     public function import(Request $request)
     {
         $request->validate([
-            'file' => 'required|mimes:xlsx,csv'
+            'file' => 'required|file|mimes:csv',
         ]);
 
         $file = $request->file('file');
-        $filePath = $file->storeAs('imports', $file->getClientOriginalName());
-        // dd($filePath);
 
-        ImportCandidatesJob::dispatch($filePath)->onQueue('imports');
-        // dd('Job Dispatched: ', ['job' => $job]);
-        // Log::info('Job Dispatched: ', ['job' => $job]);
+        try {
+            if ($file) {
+                $fileName = time() . '_' . $file->getClientOriginalName();
+                $filePath = public_path('imports');
 
-        return back()->with('success', 'Import started. You will be notified once completed.');
+                $file->move($filePath, $fileName);
+                $fileWithPath = $filePath . '/' . $fileName;
+
+                $header = null;
+                $datafromCsv = [];
+
+                $records = array_map('str_getcsv', file($fileWithPath));
+                // dd($records);
+                foreach ($records as $key => $record) {
+                    if (!$header) {
+                        $header = $record;
+                    } else {
+                        $datafromCsv[] = $record;
+                    }
+                }
+
+                $dataChunks = array_chunk($datafromCsv, 1000);
+
+                foreach ($dataChunks as $chunk) {
+                    $processedData = [];
+
+                    foreach ($chunk as $record) {
+                        if (count($header) == count($record)) {
+                            $processedData[] = array_combine($header, $record);
+                        }
+                    }
+
+                    if (!empty($processedData)) {
+                        // 
+                        ImportCandidatesJob::dispatch($processedData);
+                        // dd($processedData);
+                    }
+                }
+                if (file_exists($fileWithPath)) {
+                    unlink($fileWithPath);
+                }
+            }
+        } catch (Exception $e) {
+            return redirect()->route('admin.candidatemaster')->with([
+                'error_msg' => 'Import failed: ' . $e->getMessage()
+            ]);
+        }
+
+        return redirect()->route('admin.candidatemaster')->with([
+            'success' => 'File imported successfully'
+        ]);
     }
+
     public function download(Request $request)
     {
 
@@ -233,7 +268,7 @@ class ComplianceController extends Controller
 
         $candidates = $query->get();
 
-        return Excel::download(new CadidateDownload($candidates), 'candidates.xlsx');
+        return Excel::download(new CadidateDownload($candidates), 'candidates.csv');
     }
 
     public function create($id)

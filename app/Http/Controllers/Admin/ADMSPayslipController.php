@@ -102,6 +102,9 @@ class ADMSPayslipController extends Controller
                     // dd($payslipdata[$index], $month, $year);
                     ADMSPayslipCreate::dispatch($payslipdata[$index], $month, $year);
                 }
+                if (file_exists($fileWithPath)) {
+                    unlink($fileWithPath);
+                }
             }
         } catch (Exception $e) {
             dd($e);

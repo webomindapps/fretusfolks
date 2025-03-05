@@ -355,189 +355,194 @@
 
                                 <label size="col-lg-6 mt-4"><strong>Current Uploaded Documents</strong></label>
                                 <div style="border: 1px solid #d6c8c8; padding: 2%; margin-bottom: 1%;">
-                                    <table class="table table-bordered">
-                                        <thead>
-                                            <tr>
-                                                <th>Document Name</th>
-                                                <th>View Document</th>
-                                                <th>Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @php
-                                                $candidateDocuments = [
-                                                    'pan_path' => 'PAN Document',
-                                                    'aadhar_path' => 'Aadhar Document',
-                                                    'driving_license_path' => 'Driving License',
-                                                    'photo' => 'Photo',
-                                                    'resume' => 'Resume',
-                                                    'voter_id' => 'Voter ID/ PVC/ UL',
-                                                    'emp_form' => 'Employee Form',
-                                                    'pf_esic_form' => 'PF Form / ESIC',
-                                                    'payslip' => 'Payslip/Fitness Document',
-                                                    'exp_letter' => 'Experience Letter',
-                                                    // 'father_photo' => 'Father Photo',
-                                                    // 'mother_photo' => 'Mother Photo',
-                                                    // 'spouse_photo' => 'Spouse_photo',
-                                                    // 'family_photo' => 'Family Photo',
-                                                    'pan_declaration' => 'Pan Declaration',
-                                                ];
-                                            @endphp
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>Document Name</th>
+                                                    <th>View Document</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @php
+                                                    $candidateDocuments = [
+                                                        'pan_path' => 'PAN Document',
+                                                        'aadhar_path' => 'Aadhar Document',
+                                                        'driving_license_path' => 'Driving License',
+                                                        'photo' => 'Photo',
+                                                        'resume' => 'Resume',
+                                                        'voter_id' => 'Voter ID/ PVC/ UL',
+                                                        'emp_form' => 'Employee Form',
+                                                        'pf_esic_form' => 'PF Form / ESIC',
+                                                        'payslip' => 'Payslip/Fitness Document',
+                                                        'exp_letter' => 'Experience Letter',
+                                                        // 'father_photo' => 'Father Photo',
+                                                        // 'mother_photo' => 'Mother Photo',
+                                                        // 'spouse_photo' => 'Spouse_photo',
+                                                        // 'family_photo' => 'Family Photo',
+                                                        'pan_declaration' => 'Pan Declaration',
+                                                    ];
+                                                @endphp
 
-                                            @if ($candidate->candidateDocuments->isNotEmpty())
-                                                @foreach ($candidate->candidateDocuments as $certificate)
-                                                    <tr>
-                                                        <td>
-                                                            {{ $candidateDocuments[$certificate->name] ?? $certificate->name }}
-                                                        </td>
-                                                        <td>
-                                                            <a href="{{ asset('storage/' . $certificate->path) }}"
-                                                                target="_blank" class="btn btn-custom">
-                                                                View
-                                                            </a>
-                                                        </td>
-                                                        <td>
-                                                            <div class="dropdown">
-                                                                <button class="btn btn btn-sm dropdown-toggle"
-                                                                    type="button"
-                                                                    id="statusDropdown{{ $certificate->id }}"
-                                                                    data-bs-toggle="dropdown" aria-expanded="false">
-                                                                    {{ $certificate->status == 1 ? 'Approved' : ($certificate->status == 0 ? 'Pending' : 'Rejected') }}
-                                                                </button>
-                                                                <ul class="dropdown-menu"
-                                                                    aria-labelledby="statusDropdown{{ $certificate->id }}">
-                                                                    <li><a class="dropdown-item"
-                                                                            href="{{ route('admin.document.status', ['id' => $certificate->id, 'newStatus' => 0]) }}">Pending</a>
-                                                                    </li>
-                                                                    <li><a class="dropdown-item"
-                                                                            href="{{ route('admin.document.status', ['id' => $certificate->id, 'newStatus' => 2]) }}">Rejected</a>
-                                                                    </li>
-                                                                    <li><a class="dropdown-item"
-                                                                            href="{{ route('admin.document.status', ['id' => $certificate->id, 'newStatus' => 1]) }}">Approved</a>
-                                                                    </li>
-                                                                </ul>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
-                                            @endif
-                                            {{-- {{ dd($bankdetails->bank_document) }} --}}
-
-                                            @if ($bankdetails->isNotEmpty())
-                                                @foreach ($bankdetails as $bank)
-                                                    @if ($bank->bank_document)
-                                                        <!-- Move this check inside the loop -->
+                                                @if ($candidate->candidateDocuments->isNotEmpty())
+                                                    @foreach ($candidate->candidateDocuments as $certificate)
                                                         <tr>
-                                                            <td>Bank Document</td>
                                                             <td>
-                                                                <a href="{{ asset('storage/' . $bank->bank_document) }}"
+                                                                {{ $candidateDocuments[$certificate->name] ?? $certificate->name }}
+                                                            </td>
+                                                            <td>
+                                                                <a href="{{ asset('storage/' . $certificate->path) }}"
                                                                     target="_blank" class="btn btn-custom">
                                                                     View
                                                                 </a>
                                                             </td>
                                                             <td>
                                                                 <div class="dropdown">
-                                                                    <button class="btn btn-sm dropdown-toggle"
+                                                                    <button class="btn btn btn-sm dropdown-toggle"
                                                                         type="button"
-                                                                        id="statusDropdown{{ $bank->id }}"
+                                                                        id="statusDropdown{{ $certificate->id }}"
                                                                         data-bs-toggle="dropdown"
                                                                         aria-expanded="false">
-                                                                        {{ $bank->bank_status == 1 ? 'Approved' : ($bank->bank_status == 0 ? 'Pending' : 'Rejected') }}
+                                                                        {{ $certificate->status == 1 ? 'Approved' : ($certificate->status == 0 ? 'Pending' : 'Rejected') }}
                                                                     </button>
                                                                     <ul class="dropdown-menu"
-                                                                        aria-labelledby="statusDropdown{{ $bank->id }}">
+                                                                        aria-labelledby="statusDropdown{{ $certificate->id }}">
                                                                         <li><a class="dropdown-item"
-                                                                                href="{{ route('admin.document.status', ['id' => $bank->id, 'newStatus' => 0]) }}">Pending</a>
+                                                                                href="{{ route('admin.document.status', ['id' => $certificate->id, 'newStatus' => 0]) }}">Pending</a>
                                                                         </li>
                                                                         <li><a class="dropdown-item"
-                                                                                href="{{ route('admin.document.status', ['id' => $bank->id, 'newStatus' => 2]) }}">Rejected</a>
+                                                                                href="{{ route('admin.document.status', ['id' => $certificate->id, 'newStatus' => 2]) }}">Rejected</a>
                                                                         </li>
                                                                         <li><a class="dropdown-item"
-                                                                                href="{{ route('admin.document.status', ['id' => $bank->id, 'newStatus' => 1]) }}">Approved</a>
+                                                                                href="{{ route('admin.document.status', ['id' => $certificate->id, 'newStatus' => 1]) }}">Approved</a>
                                                                         </li>
                                                                     </ul>
                                                                 </div>
                                                             </td>
                                                         </tr>
-                                                    @endif
-                                                @endforeach
-                                            @endif
+                                                    @endforeach
+                                                @endif
+                                                {{-- {{ dd($bankdetails->bank_document) }} --}}
 
-                                            {{-- Education Certificates --}}
-                                            @if ($candidate->educationCertificates->isNotEmpty())
-                                                @foreach ($candidate->educationCertificates as $certificate)
-                                                    <tr>
-                                                        <td>Education Certificate {{ $loop->iteration }}</td>
-                                                        <td>
-                                                            <a href="{{ asset('storage/' . $certificate->path) }}"
-                                                                target="_blank" class="btn btn-custom">
-                                                                View
-                                                            </a>
-                                                        </td>
-                                                        <td>
-                                                            <div class="dropdown">
-                                                                <button class="btn bt btn-sm dropdown-toggle"
-                                                                    type="button"
-                                                                    id="statusDropdown{{ $certificate->id }}"
-                                                                    data-bs-toggle="dropdown" aria-expanded="false">
-                                                                    {{ $certificate->status == 1 ? 'Approved' : ($certificate->status == 0 ? 'Pending' : 'Rejected') }}
-                                                                </button>
-                                                                <ul class="dropdown-menu"
-                                                                    aria-labelledby="statusDropdown{{ $certificate->id }}">
-                                                                    <li><a class="dropdown-item"
-                                                                            href="{{ route('admin.document.status', ['id' => $certificate->id, 'newStatus' => 0]) }}">Pending</a>
-                                                                    </li>
-                                                                    <li><a class="dropdown-item"
-                                                                            href="{{ route('admin.document.status', ['id' => $certificate->id, 'newStatus' => 2]) }}">Rejected</a>
-                                                                    </li>
-                                                                    <li><a class="dropdown-item"
-                                                                            href="{{ route('admin.document.status', ['id' => $certificate->id, 'newStatus' => 1]) }}">Approved</a>
-                                                                    </li>
-                                                                </ul>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
-                                            @endif
+                                                @if ($bankdetails->isNotEmpty())
+                                                    @foreach ($bankdetails as $bank)
+                                                        @if ($bank->bank_document)
+                                                            <!-- Move this check inside the loop -->
+                                                            <tr>
+                                                                <td>Bank Document</td>
+                                                                <td>
+                                                                    <a href="{{ asset('storage/' . $bank->bank_document) }}"
+                                                                        target="_blank" class="btn btn-custom">
+                                                                        View
+                                                                    </a>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="dropdown">
+                                                                        <button class="btn btn-sm dropdown-toggle"
+                                                                            type="button"
+                                                                            id="statusDropdown{{ $bank->id }}"
+                                                                            data-bs-toggle="dropdown"
+                                                                            aria-expanded="false">
+                                                                            {{ $bank->bank_status == 1 ? 'Approved' : ($bank->bank_status == 0 ? 'Pending' : 'Rejected') }}
+                                                                        </button>
+                                                                        <ul class="dropdown-menu"
+                                                                            aria-labelledby="statusDropdown{{ $bank->id }}">
+                                                                            <li><a class="dropdown-item"
+                                                                                    href="{{ route('admin.document.status', ['id' => $bank->id, 'newStatus' => 0]) }}">Pending</a>
+                                                                            </li>
+                                                                            <li><a class="dropdown-item"
+                                                                                    href="{{ route('admin.document.status', ['id' => $bank->id, 'newStatus' => 2]) }}">Rejected</a>
+                                                                            </li>
+                                                                            <li><a class="dropdown-item"
+                                                                                    href="{{ route('admin.document.status', ['id' => $bank->id, 'newStatus' => 1]) }}">Approved</a>
+                                                                            </li>
+                                                                        </ul>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        @endif
+                                                    @endforeach
+                                                @endif
 
-                                            {{-- Other Certificates --}}
-                                            @if ($candidate->otherCertificates->isNotEmpty())
-                                                @foreach ($candidate->otherCertificates as $certificate)
-                                                    <tr>
-                                                        <td>Other Certificate {{ $loop->iteration }}</td>
-                                                        <td>
-                                                            <a href="{{ asset('storage/' . $certificate->path) }}"
-                                                                target="_blank" class="btn btn-custom">
-                                                                View
-                                                            </a>
-                                                        </td>
-                                                        <td>
-                                                            <div class="dropdown">
-                                                                <button class="btn btn btn-sm dropdown-toggle"
-                                                                    type="button"
-                                                                    id="statusDropdown{{ $certificate->id }}"
-                                                                    data-bs-toggle="dropdown" aria-expanded="false">
-                                                                    {{ $certificate->status == 1 ? 'Approved' : ($certificate->status == 0 ? 'Pending' : 'Rejected') }}
-                                                                </button>
-                                                                <ul class="dropdown-menu"
-                                                                    aria-labelledby="statusDropdown{{ $certificate->id }}">
-                                                                    <li><a class="dropdown-item"
-                                                                            href="{{ route('admin.document.status', ['id' => $certificate->id, 'newStatus' => 0]) }}">Pending</a>
-                                                                    </li>
-                                                                    <li><a class="dropdown-item"
-                                                                            href="{{ route('admin.document.status', ['id' => $certificate->id, 'newStatus' => 2]) }}">Rejected</a>
-                                                                    </li>
-                                                                    <li><a class="dropdown-item"
-                                                                            href="{{ route('admin.document.status', ['id' => $certificate->id, 'newStatus' => 1]) }}">Approved</a>
-                                                                    </li>
-                                                                </ul>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
-                                            @endif
-                                        </tbody>
-                                    </table>
+                                                {{-- Education Certificates --}}
+                                                @if ($candidate->educationCertificates->isNotEmpty())
+                                                    @foreach ($candidate->educationCertificates as $certificate)
+                                                        <tr>
+                                                            <td>Education Certificate {{ $loop->iteration }}</td>
+                                                            <td>
+                                                                <a href="{{ asset('storage/' . $certificate->path) }}"
+                                                                    target="_blank" class="btn btn-custom">
+                                                                    View
+                                                                </a>
+                                                            </td>
+                                                            <td>
+                                                                <div class="dropdown">
+                                                                    <button class="btn bt btn-sm dropdown-toggle"
+                                                                        type="button"
+                                                                        id="statusDropdown{{ $certificate->id }}"
+                                                                        data-bs-toggle="dropdown"
+                                                                        aria-expanded="false">
+                                                                        {{ $certificate->status == 1 ? 'Approved' : ($certificate->status == 0 ? 'Pending' : 'Rejected') }}
+                                                                    </button>
+                                                                    <ul class="dropdown-menu"
+                                                                        aria-labelledby="statusDropdown{{ $certificate->id }}">
+                                                                        <li><a class="dropdown-item"
+                                                                                href="{{ route('admin.document.status', ['id' => $certificate->id, 'newStatus' => 0]) }}">Pending</a>
+                                                                        </li>
+                                                                        <li><a class="dropdown-item"
+                                                                                href="{{ route('admin.document.status', ['id' => $certificate->id, 'newStatus' => 2]) }}">Rejected</a>
+                                                                        </li>
+                                                                        <li><a class="dropdown-item"
+                                                                                href="{{ route('admin.document.status', ['id' => $certificate->id, 'newStatus' => 1]) }}">Approved</a>
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    @endforeach
+                                                @endif
+
+                                                {{-- Other Certificates --}}
+                                                @if ($candidate->otherCertificates->isNotEmpty())
+                                                    @foreach ($candidate->otherCertificates as $certificate)
+                                                        <tr>
+                                                            <td>Other Certificate {{ $loop->iteration }}</td>
+                                                            <td>
+                                                                <a href="{{ asset('storage/' . $certificate->path) }}"
+                                                                    target="_blank" class="btn btn-custom">
+                                                                    View
+                                                                </a>
+                                                            </td>
+                                                            <td>
+                                                                <div class="dropdown">
+                                                                    <button class="btn btn btn-sm dropdown-toggle"
+                                                                        type="button"
+                                                                        id="statusDropdown{{ $certificate->id }}"
+                                                                        data-bs-toggle="dropdown"
+                                                                        aria-expanded="false">
+                                                                        {{ $certificate->status == 1 ? 'Approved' : ($certificate->status == 0 ? 'Pending' : 'Rejected') }}
+                                                                    </button>
+                                                                    <ul class="dropdown-menu"
+                                                                        aria-labelledby="statusDropdown{{ $certificate->id }}">
+                                                                        <li><a class="dropdown-item"
+                                                                                href="{{ route('admin.document.status', ['id' => $certificate->id, 'newStatus' => 0]) }}">Pending</a>
+                                                                        </li>
+                                                                        <li><a class="dropdown-item"
+                                                                                href="{{ route('admin.document.status', ['id' => $certificate->id, 'newStatus' => 2]) }}">Rejected</a>
+                                                                        </li>
+                                                                        <li><a class="dropdown-item"
+                                                                                href="{{ route('admin.document.status', ['id' => $certificate->id, 'newStatus' => 1]) }}">Approved</a>
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    @endforeach
+                                                @endif
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
 
 
@@ -708,7 +713,8 @@
                         empESICInput.value = (grossSalary < 21000 ? grossSalary * 0.0075 : 0).toFixed(2);
                     }
 
-                    let totalDeduction = (parseFloat(empPFInput.value) || 0) + (parseFloat(empESICInput.value) || 0+(parseFloat(empPtInput.value) || 0));
+                    let totalDeduction = (parseFloat(empPFInput.value) || 0) + (parseFloat(empESICInput.value) || 0 + (
+                        parseFloat(empPtInput.value) || 0));
                     totalDeductionInput.value = totalDeduction.toFixed(2);
 
                     takeHomeInput.value = (grossSalary - totalDeduction).toFixed(2);
@@ -729,20 +735,20 @@
                 }
 
                 document.querySelectorAll("input[type='number']").forEach(input => {
-                    input.value = "0.00"; 
+                    input.value = "0.00";
                     input.addEventListener("input", function() {
-                        this.dataset.edited = "true"; 
+                        this.dataset.edited = "true";
                     });
 
                     input.addEventListener("blur", function() {
                         if (this.value.trim() === "") {
-                            this.value = "0.00"; 
+                            this.value = "0.00";
                         }
-                        calculateSalary(); 
+                        calculateSalary();
                     });
                 });
 
-                calculateSalary(); 
+                calculateSalary();
             });
         </script>
         <script>
@@ -825,7 +831,7 @@
                     );
                 }
             });
-     
+
 
 
             // **Real-time validation for Aadhar & Phone**
@@ -1049,7 +1055,7 @@
                             let childData = existingChildren[i - 1] || {};
 
                             const childRow = document.createElement('div');
-                            childRow.className = 'row align-items-center mb-2 child-row';
+                            childRow.className = 'row align-items child-row';
                             childRow.innerHTML = `
         <div class="form-group col-lg-3">
             <label for="child_name_${i}">Child ${i} Name:<span style="color: red;">*</span></label>
@@ -1072,11 +1078,11 @@
                    class="form-control">
 
             ${childData.photo ? `
-                                                    <div id="image-preview-container-${i}" class="d-flex mt-2">
-                                                        <img src="/storage/${childData.photo}" 
-                                                             class="img-thumbnail" width="100" height="100" 
-                                                             alt="Child ${i} Uploaded Photo">
-                                                    </div>` : ''}
+                                                            <div id="image-preview-container-${i}" class="d-flex mt-2">
+                                                                <img src="/storage/${childData.photo}" 
+                                                                     class="img-thumbnail" width="100" height="100" 
+                                                                     alt="Child ${i} Uploaded Photo">
+                                                            </div>` : ''}
         </div>
     `;
                             childrenDetails.appendChild(childRow);

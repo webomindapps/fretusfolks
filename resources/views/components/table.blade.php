@@ -27,50 +27,52 @@
     </div>
     <div class="row custom_table">
         <div class="col-lg-12">
-            <table class="table">
-                <thead>
-                    <tr>
-                        @if (isset($checkAll) && $checkAll)
-                            <th>
-                                <input type="checkbox" id="checkAll" class="checkALl">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            @if (isset($checkAll) && $checkAll)
+                                <th>
+                                    <input type="checkbox" id="checkAll" class="checkALl">
+                                </th>
+                            @endif
+
+                            <th colspan="{{ count($columns) }}" id="bulk-options" style="display: none;">
+                                <div class="row">
+                                    <div class="col-lg-3">
+                                        <select id="bulkOperation">
+                                            <option value="">Select</option>
+                                            <option value="1">Delete</option>
+                                            <option value="2">Status Change</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <select name="" id="bulkStatus" style="display: none;">
+                                            <option value="">Select</option>
+                                            <option value="1">Active</option>
+                                            <option value="0">Inactive</option>
+                                        </select>
+                                    </div>
+                                </div>
                             </th>
-                        @endif
 
-                        <th colspan="{{ count($columns) }}" id="bulk-options" style="display: none;">
-                            <div class="row">
-                                <div class="col-lg-3">
-                                    <select id="bulkOperation">
-                                        <option value="">Select</option>
-                                        <option value="1">Delete</option>
-                                        <option value="2">Status Change</option>
-                                    </select>
-                                </div>
-                                <div class="col-lg-3">
-                                    <select name="" id="bulkStatus" style="display: none;">
-                                        <option value="">Select</option>
-                                        <option value="1">Active</option>
-                                        <option value="0">Inactive</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </th>
-
-                        @foreach ($columns as $column)
-                            <th class="sorting" data-sort="{{ $column['sort'] }}" data-column="{{ $column['column'] }}"
-                                scope="col">
-                                {{ $column['label'] }}</th>
-                        @endforeach
-                    </tr>
-                </thead>
-                <tbody>
-                    {{ $slot }}
-                </tbody>
-            </table>
+                            @foreach ($columns as $column)
+                                <th class="sorting" data-sort="{{ $column['sort'] }}"
+                                    data-column="{{ $column['column'] }}" scope="col">
+                                    {{ $column['label'] }}</th>
+                            @endforeach
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{ $slot }}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
     <div class="row text-center">
-        <div class="col-lg-12">
-            {{ $data->withQueryString()->links() }}
+        <div class="col-lg-3">
+            {{ $data->onEachSide(0)->withQueryString()->links() }}
         </div>
     </div>
 

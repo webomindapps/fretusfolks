@@ -16,6 +16,8 @@ return new class extends Migration {
             // $table->bigInteger('id')->unsigned()->autoIncrement()->change();
             DB::statement("UPDATE payslips SET date_upload = NULL WHERE date_upload = '0000-00-00'");
             DB::statement("UPDATE payslips SET doj = NULL WHERE doj = '0000-00-00'");
+            //make nullable in database also
+
             $table->string('payslips_letter_path')->after('modify_on')->nullable();
             $table->timestamps();
         });

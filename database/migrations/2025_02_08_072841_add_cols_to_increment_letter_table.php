@@ -14,7 +14,8 @@ return new class extends Migration
     {
         Schema::table('increment_letter', function (Blueprint $table) {
             //  DB::statement('ALTER TABLE increment_letter ADD PRIMARY KEY (`id`);');
-            DB::statement("UPDATE increment_letter SET effective_date = NULL WHERE effective_date = '0000-00-00'");
+            DB::statement("UPDATE increment_letter SET effective_date = NULL WHERE effective_date = '0000-00-00'"); 
+            //make nullable in database also
             // $table->bigInteger('id')->unsigned()->autoIncrement()->change();
             $table->string('increment_path')->after('emp_name')->nullable();
             $table->timestamps();
