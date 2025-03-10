@@ -122,14 +122,22 @@ class AdmsPipLetterController extends Controller
     {
         $pip = $this->model()->findOrFail($id);
 
-        if (!$pip->pip_letter_path) {
-            abort(404, 'PDF not found');
+        if (!empty($pip->pip_letter_path)) {
+            $filePath = storage_path('app/public/' . str_replace('storage/', '', $pip->pip_letter_path));
+
+            if (file_exists($filePath)) {
+                return response()->file($filePath);
+            }
         }
 
-        $filePath = str_replace('storage/', '', $pip->pip_letter_path);
+        $data = ['pipLetter' => $pip];
 
-        return response()->file(storage_path('app/public/' . $filePath));
+        $pdf = PDF::loadView('admin.adms.pip_letter.format', $data)
+            ->setPaper('A4', 'portrait');
+
+        return $pdf->stream("pip_{$pip->emp_id}_{$pip->month}_{$pip->year}.pdf");
     }
+
     public function edit($id)
     {
         $pip = $this->model()->findOrFail($id);
@@ -146,7 +154,7 @@ class AdmsPipLetterController extends Controller
 
         DB::beginTransaction();
         try {
-            $pipLetter  = $this->model()->findOrFail($id);
+            $pipLetter = $this->model()->findOrFail($id);
 
             if ($pipLetter->termination_letter_path && Storage::disk('public')->exists($pipLetter->termination_letter_path)) {
                 Storage::disk('public')->delete($pipLetter->termination_letter_path);

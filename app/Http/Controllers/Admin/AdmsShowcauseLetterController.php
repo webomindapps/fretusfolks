@@ -108,13 +108,20 @@ class AdmsShowcauseLetterController extends Controller
     {
         $showcause = $this->model()->findOrFail($id);
 
-        if (!$showcause->showcause_letter_path) {
-            abort(404, 'PDF not found');
+        if (!empty($showcause->showcause_letter_path)) {
+            $filePath = storage_path('app/public/' . str_replace('storage/', '', $showcause->showcause_letter_path));
+
+            if (file_exists($filePath)) {
+                return response()->file($filePath);
+            }
         }
+        $data = ['showLetter' => $showcause];
 
-        $filePath = str_replace('storage/', '', $showcause->showcause_letter_path);
+        $pdf = PDF::loadView('admin.adms.showcause_letter.format', $data)
+            ->setPaper('A4', 'portrait');
 
-        return response()->file(storage_path('app/public/' . $filePath));
+
+        return $pdf->stream("showcause_{$showcause->emp_id}_{$showcause->month}_{$showcause->year}.pdf");
     }
 
     public function edit($id)

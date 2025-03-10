@@ -110,15 +110,24 @@ class AdmsWarningLetterController extends Controller
     public function viewpdf($id)
     {
         $warning = $this->model()->findOrFail($id);
-
-        if (!$warning->warning_letter_path) {
-            abort(404, 'PDF not found');
+    
+        if (!empty($warning->warning_letter_path)) {
+            $filePath = storage_path('app/public/' . str_replace('storage/', '', $warning->warning_letter_path));
+    
+            if (file_exists($filePath)) {
+                return response()->file($filePath);
+            }
         }
-
-        $filePath = str_replace('storage/', '', $warning->warning_letter_path);
-
-        return response()->file(storage_path('app/public/' . $filePath));
+    
+        $data = ['warning' => $warning];
+    
+        $pdf = PDF::loadView('admin.adms.warning_letter.format', $data)
+            ->setPaper('A4', 'portrait');
+           
+    
+        return $pdf->stream("warning_{$warning->emp_id}_{$warning->month}_{$warning->year}.pdf");
     }
+    
     public function edit($id)
     {
         $warning = $this->model()->findOrFail($id);

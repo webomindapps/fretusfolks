@@ -59,13 +59,20 @@ class OfferLetterController extends Controller
     {
         $offerLetter = $this->model()->with('employee')->findOrFail($id);
 
-        if (!$offerLetter->offer_letter_path) {
-            abort(404, 'PDF not found');
+        if (!empty($offerLetter->offer_letter_path)) {
+            $filePath = storage_path('app/public/' . str_replace('storage/', '', $offerLetter->offer_letter_path));
+
+            if (file_exists($filePath)) {
+                return response()->file($filePath);
+            }
         }
+        $data = ['offerLetter' => $offerLetter];
 
-        $filePath = str_replace('storage/', '', $offerLetter->offer_letter_path);
+        $pdf = PDF::loadView('admin.adms.offer_letter.formate', $data)
+            ->setPaper('A4', 'portrait');
 
-        return response()->file(storage_path('app/public/' . $filePath));
+
+        return $pdf->stream("offer_letter_{$offerLetter->employee?->emp_id}.pdf");
     }
 
     public function destroy($id)

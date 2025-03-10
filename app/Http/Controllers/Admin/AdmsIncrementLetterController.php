@@ -221,24 +221,31 @@ class AdmsIncrementLetterController extends Controller
     {
         $increment = $this->model()->findOrFail($id);
 
-        if (!$increment->increment_path) {
-            abort(404, 'PDF not found');
+        if (!empty($increment->increment_path)) {
+            $filePath = storage_path('app/public/' . str_replace('storage/', '', $increment->increment_path));
+
+            if (file_exists($filePath)) {
+                return response()->file($filePath);
+            }
         }
+        $data = ['increment' => $increment];
 
-        $filePath = str_replace('storage/', '', $increment->increment_path);
+        $pdf = PDF::loadView('admin.adms.increment_letter.format', $data)
+            ->setPaper('A4', 'portrait');
 
-        return response()->file(storage_path('app/public/' . $filePath));
+        return $pdf->stream("increment_{$increment->emp_id}_{$increment->month}_{$increment->year}.pdf");
     }
+
     public function destroy($id)
     {
         $increment = $this->model()->find($id);
-    
+
         if ($increment && $increment->increment_path) {
-            Storage::disk('public')->delete($increment->increment_path); 
+            Storage::disk('public')->delete($increment->increment_path);
         }
-    
+
         $increment->delete();
-    
+
         return redirect()->route('admin.increment_letter')->with('success', 'Increment Letter has been deleted');
     }
 }

@@ -189,34 +189,60 @@ class ADMSPayslipController extends Controller
     public function generatePayslipsPdf($id)
     {
         $payletter = $this->model()->findOrFail($id);
-        // dd($payletter->payslips_letter_path);
+
         if (!$payletter->payslips_letter_path) {
-            abort(404, 'PDF not found');
+            $data = [
+                'payslip' => $payletter,
+            ];
+
+            $pdf = PDF::loadView('admin.adms.payslip.formate', $data)
+                ->setPaper('A4', 'portrait')
+                ->setOptions(['margin-top' => 10, 'margin-bottom' => 10, 'margin-left' => 15, 'margin-right' => 15]);
+
+            return $pdf->stream("payslip_{$payletter->id}.pdf");
+        }
+        $filePath = storage_path("app/public/" . str_replace('storage/', '', $payletter->payslips_letter_path));
+
+        if (!file_exists($filePath)) {
+            return redirect()->back()->with('error', 'Payslip file not found.');
         }
 
-        $filePath = str_replace('storage/', '', $payletter->payslips_letter_path);
-
-        return response()->file(public_path($filePath));
+        return response()->file($filePath);
     }
+
     public function zipDownload($payslips)
     {
+        if ($payslips->isEmpty()) {
+            return redirect()->back()->with('error', 'No Payslips Found for the Month and Year');
+        }
+        // dd($payslips);
         $zipFileName = "payslips_{$payslips->first()->month}_{$payslips->first()->year}.zip";
         $zipPath = public_path($zipFileName);
 
         $zip = new ZipArchive();
         if ($zip->open($zipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE) === true) {
             foreach ($payslips as $payslip) {
-                // dd($payslip);
                 $filePath = $payslip->payslips_letter_path;
                 // dd($filePath);
-
-                if (!$filePath) {
-                    return redirect()->back()->with('error', 'No Payslips Found for the Month and Year');
-                }
-                if (Storage::disk('public')->exists($filePath)) {
+                if ($filePath && Storage::disk('public')->exists($filePath)) {
                     $absolutePath = public_path($filePath);
-                    // dd($absolutePath);
-                    $zip->addFile($absolutePath, basename($filePath));
+                    if (file_exists($absolutePath)) {
+                        $zip->addFile($absolutePath, basename($filePath));
+                    }
+                } else {
+                    $data = ['payslip' => $payslip];
+                    // dd($data);
+                    $pdf = PDF::setOptions([
+                        'isHtml5ParserEnabled' => true,
+                        'isRemoteEnabled' => true,
+                        'chroot' => public_path()
+                    ])
+                        ->loadView('admin.adms.payslip.formate', $data)
+                        ->setPaper('a4', 'portrait');
+
+                    $fileName = "{$payslip->emp_id}_{$payslip->employee_name}.pdf";
+
+                    $zip->addFromString($fileName, $pdf->output());
                 }
             }
             $zip->close();
@@ -226,6 +252,7 @@ class ADMSPayslipController extends Controller
 
         return response()->download($zipPath)->deleteFileAfterSend(true);
     }
+
     public function downloadfiltered(Request $request)
     {
 
