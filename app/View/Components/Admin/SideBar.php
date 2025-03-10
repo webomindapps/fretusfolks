@@ -92,21 +92,21 @@ class SideBar extends Component
                     'icon' => 'bx bx-chevron-right',
                     'route' => 'admin.cfis',
                     'name' => 'cfis',
-                    'roles' => ['Admin', 'Recruitment'],
+                    'roles' => ['Admin', 'Recruitment', 'HR Operations'],
                 ],
                 [
                     'title' => 'Approved Candidates',
                     'icon' => 'bx bx-chevron-right',
                     'route' => 'admin.dcs_approval',
                     'name' => 'dcs_approval',
-                    'roles' => ['Admin', 'Recruitment'],
+                    'roles' => ['Admin', 'Recruitment', 'HR Operations'],
                 ],
                 [
                     'title' => 'Rejected Candidates ',
                     'icon' => 'bx bx-chevron-right',
                     'route' => 'admin.dcs_rejected',
                     'name' => 'dcs_rejected',
-                    'roles' => ['Admin', 'Recruitment'],
+                    'roles' => ['Admin', 'Recruitment', 'HR Operations'],
                 ],
                 [
                     'title' => 'Hr Approved Candidates',
@@ -120,7 +120,7 @@ class SideBar extends Component
                     'icon' => 'bx bx-chevron-right',
                     'route' => 'admin.doc_rejected',
                     'name' => 'doc_rejected',
-                    'roles' => ['Admin', 'Recruitment'],
+                    'roles' => ['Admin', 'Recruitment', 'HR Operations'],
                 ],
                 [
                     'title' => 'Offer Letter  ',

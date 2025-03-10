@@ -82,24 +82,21 @@
                                 <div id="married-fields" style="display: none;" class="col-12">
                                     <div class="row">
                                         <div class="form-group col-lg-3 mt-2">
-                                            <label for="spouse_name">Spouse Name:<span
-                                                    style="color: red">*</span></label>
+                                            <label for="spouse_name">Spouse Name:</label>
                                             <input type="text" name="spouse_name" id="spouse_name"
                                                 class="form-control"
                                                 value="{{ old('spouse_name', $candidate->spouse_name) }}">
                                         </div>
 
                                         <div class="form-group col-lg-3 mt-2">
-                                            <label for="spouse_dob">Spouse's DOB:<span
-                                                    style="color: red">*</span></label>
+                                            <label for="spouse_dob">Spouse's DOB:</label>
                                             <input type="date" name="spouse_dob" id="spouse_dob"
                                                 class="form-control"
                                                 value="{{ old('spouse_dob', $candidate->spouse_dob) }}">
                                         </div>
 
                                         <div class="form-group col-lg-3 mt-2">
-                                            <label for="spouse_aadhar_no">Enter Spouse Adhar Card No: <span
-                                                    style="color: red">*</span></label>
+                                            <label for="spouse_aadhar_no">Enter Spouse Adhar Card No: </label>
                                             <input type="text" name="spouse_aadhar_no" id="spouse_aadhar_no"
                                                 class="form-control" maxlength="12" inputmode="numeric"
                                                 value="{{ old('spouse_aadhar_no', $candidate->spouse_aadhar_no) }}">
@@ -139,12 +136,11 @@
 
 
                                 <x-forms.input label="Father Name:  " type="text" name="father_name"
-                                    id="father_name" :required="true" size="col-lg-3 mt-2" :value="old('father_name', $candidate->father_name)" />
+                                    id="father_name" :required="false" size="col-lg-3 mt-2" :value="old('father_name', $candidate->father_name)" />
                                 <x-forms.input label="Father's DOB: " type="date" name="father_dob"
-                                    id="father_dob" :required="true" size="col-lg-3 mt-2" :value="old('father_dob', $candidate->father_dob)" />
+                                    id="father_dob" :required="false" size="col-lg-3 mt-2" :value="old('father_dob', $candidate->father_dob)" />
                                 <div class="form-group col-lg-3 mt-2">
-                                    <label for="father_aadhar_no">Father's Adhar Card No: <span
-                                            style="color: red">*</span></label>
+                                    <label for="father_aadhar_no">Father's Adhar Card No: </label>
                                     <input type="text" name="father_aadhar_no" id="father_aadhar_no"
                                         class="form-control" maxlength="12" inputmode="numeric"
                                         value="{{ old('father_aadhar_no', $candidate->father_aadhar_no) }}" required>
@@ -168,15 +164,14 @@
                                     @endif
                                 </div>
                                 <x-forms.input label="Mother Name: " type="text" name="mother_name"
-                                    id="mother_name" :required="true" size="col-lg-3 mt-2" :value="old('mother_name', $candidate->mother_name)" />
+                                    id="mother_name" :required="false" size="col-lg-3 mt-2" :value="old('mother_name', $candidate->mother_name)" />
                                 <x-forms.input label="Mother's DOB: " type="date" name="mother_dob"
-                                    id="mother_dob" :required="true" size="col-lg-3 mt-2" :value="old('mother_dob', $candidate->mother_dob)" />
+                                    id="mother_dob" :required="false" size="col-lg-3 mt-2" :value="old('mother_dob', $candidate->mother_dob)" />
                                 <div class="form-group col-lg-3 mt-2">
-                                    <label for="mother_aadhar_no">Mother's Adhar Card No: <span
-                                            style="color: red">*</span></label>
+                                    <label for="mother_aadhar_no">Mother's Adhar Card No: </label>
                                     <input type="text" name="mother_aadhar_no" id="mother_aadhar_no"
                                         class="form-control" maxlength="12" inputmode="numeric"
-                                        value="{{ old('mother_aadhar_no', $candidate->mother_aadhar_no) }}" required>
+                                        value="{{ old('mother_aadhar_no', $candidate->mother_aadhar_no) }}">
                                 </div>
                                 <div class="form-group col-lg-3 mt-2">
                                     <label for="mother_photo">Mother Photo: </label>
@@ -936,24 +931,24 @@
                 function toggleMarriedFields() {
                     if (maritalStatus.value === 'Married') {
                         marriedFields.style.display = 'block';
-                        $('#spouse_aadhar_no').on('blur input', function() {
-                            $(this).next('.error').remove();
-                            var aadharPattern = /^\d{12}$/;
-                            $(' #spouse_aadhar_no').each(function() {
-                                var aadharNumber = $(this).val();
-                                if (!aadharNumber) {
-                                    isValid = false;
-                                    $(this).after(
-                                        "<span class='error' style='color:red; font-size: 13px;'>Please enter the Aadhar number.</span>"
-                                    );
-                                } else if (!aadharPattern.test(aadharNumber)) {
-                                    isValid = false;
-                                    $(this).after(
-                                        "<span class='error' style='color:red; font-size: 13px;'>Aadhar number must be a 12-digit numeric value.</span>"
-                                    );
-                                }
-                            });
-                        });
+                        // $('#spouse_aadhar_no').on('blur input', function() {
+                        //     $(this).next('.error').remove();
+                        //     var aadharPattern = /^\d{12}$/;
+                        //     $(' #spouse_aadhar_no').each(function() {
+                        //         var aadharNumber = $(this).val();
+                        //         if (!aadharNumber) {
+                        //             isValid = false;
+                        //             $(this).after(
+                        //                 "<span class='error' style='color:red; font-size: 13px;'>Please enter the Aadhar number.</span>"
+                        //             );
+                        //         } else if (!aadharPattern.test(aadharNumber)) {
+                        //             isValid = false;
+                        //             $(this).after(
+                        //                 "<span class='error' style='color:red; font-size: 13px;'>Aadhar number must be a 12-digit numeric value.</span>"
+                        //             );
+                        //         }
+                        //     });
+                        // });
 
                     } else {
                         marriedFields.style.display = 'none';
@@ -1058,17 +1053,17 @@
                             childRow.className = 'row align-items child-row';
                             childRow.innerHTML = `
         <div class="form-group col-lg-3">
-            <label for="child_name_${i}">Child ${i} Name:<span style="color: red;">*</span></label>
+            <label for="child_name_${i}">Child ${i} Name:</label>
             <input type="text" name="child_names[]" id="child_name_${i}" class="form-control" 
-                   value="${childData.name || ''}" required>
+                   value="${childData.name || ''}" >
         </div>
         <div class="form-group col-lg-3">
-            <label for="child_dob_${i}">Child ${i} DOB:<span style="color: red;">*</span></label>
+            <label for="child_dob_${i}">Child ${i} DOB:</label>
             <input type="date" name="child_dobs[]" id="child_dob_${i}" class="form-control"
-                   value="${childData.dob || ''}" required>
+                   value="${childData.dob || ''}" >
         </div>
         <div class="form-group col-lg-3 child-aadhar" id="child_aadhar_field_${i}" style="display: none;">
-            <label for="child_aadhar_${i}">Child ${i} Aadhar No:<span style="color: red;">*</span></label>
+            <label for="child_aadhar_${i}">Child ${i} Aadhar No:</label>
             <input type="text" name="child_aadhar[]" id="child_aadhar_${i}" class="form-control" 
                    value="${childData.aadhar_no || ''}" maxlength="12" inputmode="numeric">
         </div>
@@ -1078,11 +1073,11 @@
                    class="form-control">
 
             ${childData.photo ? `
-                                                            <div id="image-preview-container-${i}" class="d-flex mt-2">
-                                                                <img src="/storage/${childData.photo}" 
-                                                                     class="img-thumbnail" width="100" height="100" 
-                                                                     alt="Child ${i} Uploaded Photo">
-                                                            </div>` : ''}
+                                                                    <div id="image-preview-container-${i}" class="d-flex mt-2">
+                                                                        <img src="/storage/${childData.photo}" 
+                                                                             class="img-thumbnail" width="100" height="100" 
+                                                                             alt="Child ${i} Uploaded Photo">
+                                                                    </div>` : ''}
         </div>
     `;
                             childrenDetails.appendChild(childRow);

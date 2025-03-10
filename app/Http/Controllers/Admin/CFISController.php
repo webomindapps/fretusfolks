@@ -32,7 +32,7 @@ class CFISController extends Controller
         // $query = $this->model()->query()->where('data_status', 0)->where('created_by', auth()->id());
         if (auth()->user()->hasRole('Admin')) {
             $query = $this->model()->query()->where('dcs_approval', 1)->where('data_status', 0);
-        } else {
+        } elseif (auth()->user()->hasRole(['HR Operations', 'Recruitment'])) {
             $query = $this->model()->query()->where('dcs_approval', 1)
                 ->where('created_by', auth()->id())
                 ->where('data_status', 0);

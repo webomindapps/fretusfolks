@@ -34,75 +34,87 @@
                 <div class="col-lg-3">
                     <div class="card bg-teal-400" style="zoom: 1;">
                         <div class="card-body">
-                            <div class="dashboard-card">
-                                <div class="data">
-                                    <h3 class="font-weight-semibold mb-0">
-                                        <div class="data">
-                                            {{ $onboardingCount }}
-                                        </div>
-                                    </h3>
-                                </div>
-                            </div>
-                            <div>
-                                No Of Onboardings <div class="font-size-sm opacity-75">For Clients</div>
-                            </div>
+                            <a
+                                href="{{ route('admin.hrindex') }}?from_date={{ request()->from_date }}&to_date={{ request()->to_date ?? date('Y-m-d') }}">
 
+                                <div class="dashboard-card">
+                                    <div class="data">
+                                        <h3 class="font-weight-semibold mb-0">
+                                            <div class="data">
+                                                {{ $onboardingCount }}
+                                            </div>
+                                        </h3>
+                                    </div>
+                                </div>
+                                <div>
+                                    No Of Onboardings <div class="font-size-sm opacity-75">For Clients</div>
+                                </div>
+                            </a>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-3">
                     <div class="card bg-pink-400">
-                        <div class="card-body">
-                            <div class="d-flex">
-                                <h3 class="font-weight-semibold mb-0">
-                                    <div class="data">
-                                        {{ $offerlettercount }}
-                                    </div>
-                                </h3>
-                                <div class="list-icons ml-auto">
+                        <a
+                            href="{{ route('admin.offer_letter') }}?from_date={{ request()->from_date }}&to_date={{ request()->to_date ?? date('Y-m-d') }}">
+                            <div class="card-body">
+                                <div class="d-flex">
+                                    <h3 class="font-weight-semibold mb-0">
+                                        <div class="data">
+                                            {{ $offerlettercount }}
+                                        </div>
+                                    </h3>
+                                    <div class="list-icons ml-auto">
 
+                                    </div>
+                                </div>
+                                <div>
+                                    Offer Letters Released <div class="font-size-sm opacity-75">For Employees</div>
                                 </div>
                             </div>
-                            <div>
-                                Offer Letters Released <div class="font-size-sm opacity-75">For Employees</div>
-                            </div>
-                        </div>
+                        </a>
                     </div>
                 </div>
                 <div class="col-lg-3">
                     <div class="card bg-blue-400">
-                        <div class="card-body">
-                            <div class="d-flex">
-                                <h3 class="font-weight-semibold mb-0">
-                                    <div class="data">
-                                        {{ $esicNumbers }}
-                                    </div>
-                                </h3>
+                        <a
+                            href="{{ route('admin.hrindex') }}?from_date={{ request()->from_date }}&to_date={{ request()->to_date ?? date('Y-m-d') }}">
+                            <div class="card-body">
+                                <div class="d-flex">
+                                    <h3 class="font-weight-semibold mb-0">
+                                        <div class="data">
+                                            {{ $esicNumbers }}
+                                        </div>
+                                    </h3>
 
+                                </div>
+                                <div>
+                                    Eisc's Generated <div class="font-size-sm opacity-75">For Employess</div>
+                                </div>
                             </div>
-                            <div>
-                                Eisc's Generated <div class="font-size-sm opacity-75">For Employess</div>
-                            </div>
-                        </div>
+                        </a>
                     </div>
                 </div>
                 <div class="col-lg-3 ">
                     <div class="card bg-pink-400">
-                        <div class="card-body">
-                            <div class="d-flex">
-                                <h3 class="font-weight-semibold mb-0">
-                                    <div class="data">
-                                        {{ $uanNumbers }}
-                                    </div>
-                                </h3>
-                                <div class="list-icons ml-auto">
+                        <a
+                            href="{{ route('admin.hrindex') }}?from_date={{ request()->from_date }}&to_date={{ request()->to_date ?? date('Y-m-d') }}">
+                            <div class="card-body">
+                                <div class="d-flex">
+                                    <h3 class="font-weight-semibold mb-0">
+                                        <div class="data">
+                                            {{ $uanNumbers }}
+                                        </div>
+                                    </h3>
+                                    <div class="list-icons ml-auto">
 
+                                    </div>
+                                </div>
+                                <div>
+                                    Uan's Generated <div class="font-size-sm opacity-75">For Employees</div>
                                 </div>
                             </div>
-                            <div>
-                                Uan's Generated <div class="font-size-sm opacity-75">For Employees</div>
-                            </div>
-                        </div>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -118,32 +130,41 @@
                     <div class="row my-1 g-2">
                         <div class="col-lg-4">
                             <div class="card bg-teal-400" style="zoom: 1;">
-                                <div class="card-body">
-                                    <h3 class="font-weight-semibold mb-0">{{ $onboardingCount }}</h3>
-                                    <div>Bank Accounts<div class="font-size-sm opacity-75">Pending for
-                                            verification</div>
+                                <a
+                                    href="{{ route('admin.hrindex') }}?from_date={{ request()->from_date }}&to_date={{ request()->to_date ?? date('Y-m-d') }}">
+                                    <div class="card-body">
+                                        <h3 class="font-weight-semibold mb-0">{{ $onboardingCount }}</h3>
+                                        <div>Bank Accounts<div class="font-size-sm opacity-75">Pending for
+                                                verification</div>
+                                        </div>
                                     </div>
-                                </div>
+                                </a>
                             </div>
                         </div>
                         <div class="col-lg-4">
                             <div class="card bg-pink-400">
-                                <div class="card-body">
-                                    <h3 class="font-weight-semibold mb-0">{{ $pendingdocumentscount }}</h3>
-                                    <div>Documents Pending <div class="font-size-sm opacity-75">For Verification
+                                <a
+                                    href="{{ route('admin.hrindex') }}?from_date={{ request()->from_date }}&to_date={{ request()->to_date ?? date('Y-m-d') }}">
+                                    <div class="card-body">
+                                        <h3 class="font-weight-semibold mb-0">{{ $pendingdocumentscount }}</h3>
+                                        <div>Documents Pending <div class="font-size-sm opacity-75">For Verification
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                </a>
                             </div>
                         </div>
                         <div class="col-lg-4">
                             <div class="card bg-teal-400" style="zoom: 1;">
-                                <div class="card-body">
-                                    <h3 class="font-weight-semibold mb-0">{{ $pendingdocumentscount }}</h3>
-                                    <div>Offer Letter Pending <div class="font-size-sm opacity-75">For Employees
+                                <a
+                                    href="{{ route('admin.hrindex') }}?from_date={{ request()->from_date }}&to_date={{ request()->to_date ?? date('Y-m-d') }}">
+                                    <div class="card-body">
+                                        <h3 class="font-weight-semibold mb-0">{{ $pendingdocumentscount }}</h3>
+                                        <div>Offer Letter Pending <div class="font-size-sm opacity-75">For Employees
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -159,29 +180,38 @@
                     <div class="row my-1">
                         <div class="col-lg-4">
                             <div class="card bg-teal-400" style="zoom: 1;">
-                                <div class="card-body">
-                                    <h3 class="font-weight-semibold mb-0">{{ $hrtotalclients }}</h3>
-                                    <div>Total Clients <div class="font-size-sm opacity-75">Under HR</div>
+                                <a
+                                    href="{{ route('admin.hrindex') }}?from_date={{ request()->from_date }}&to_date={{ request()->to_date ?? date('Y-m-d') }}">
+                                    <div class="card-body">
+                                        <h3 class="font-weight-semibold mb-0">{{ $hrtotalclients }}</h3>
+                                        <div>Total Clients <div class="font-size-sm opacity-75">Under HR</div>
+                                        </div>
                                     </div>
-                                </div>
+                                </a>
                             </div>
                         </div>
                         <div class="col-lg-4">
                             <div class="card bg-pink-400">
-                                <div class="card-body">
-                                    <h3 class="font-weight-semibold mb-0">{{ $hractiveclient }}</h3>
-                                    <div>Active Clients <div class="font-size-sm opacity-75">Under HR</div>
+                                <a
+                                    href="{{ route('admin.hrindex') }}?from_date={{ request()->from_date }}&to_date={{ request()->to_date ?? date('Y-m-d') }}">
+                                    <div class="card-body">
+                                        <h3 class="font-weight-semibold mb-0">{{ $hractiveclient }}</h3>
+                                        <div>Active Clients <div class="font-size-sm opacity-75">Under HR</div>
+                                        </div>
                                     </div>
-                                </div>
+                                </a>
                             </div>
                         </div>
                         <div class="col-lg-4">
                             <div class="card bg-blue-400">
-                                <div class="card-body">
-                                    <h3 class="font-weight-semibold mb-0">{{ $hrinactiveclient }}</h3>
-                                    <div>Inactive Clients <div class="font-size-sm opacity-75">Under HR</div>
+                                <a
+                                    href="{{ route('admin.hrindex') }}?from_date={{ request()->from_date }}&to_date={{ request()->to_date ?? date('Y-m-d') }}">
+                                    <div class="card-body">
+                                        <h3 class="font-weight-semibold mb-0">{{ $hrinactiveclient }}</h3>
+                                        <div>Inactive Clients <div class="font-size-sm opacity-75">Under HR</div>
+                                        </div>
                                     </div>
-                                </div>
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -265,60 +295,70 @@
                     <div class="row mt-1">
                         <div class="col-lg-4">
                             <div class="card bg-teal-400" style="zoom: 1;">
-                                <div class="card-body">
-                                    <div class="dashboard-card">
-                                        <div class="data">
-                                            <h3 class="font-weight-semibold mb-0">
-                                                <div class="data">
-                                                    {{ $clients->count() }}
-                                                </div>
-                                            </h3>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        Total Client
-                                        <div class="font-size-sm opacity-75">In CDMA</div>
-                                    </div>
+                                <a
+                                    href="{{ route('admin.cdms') }}?from_date={{ request()->from_date }}&to_date={{ request()->to_date ?? date('Y-m-d') }}">
 
-                                </div>
+                                    <div class="card-body">
+                                        <div class="dashboard-card">
+                                            <div class="data">
+                                                <h3 class="font-weight-semibold mb-0">
+                                                    <div class="data">
+                                                        {{ $clients->count() }}
+                                                    </div>
+                                                </h3>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            Total Client
+                                            <div class="font-size-sm opacity-75">In CDMA</div>
+                                        </div>
+
+                                    </div>
+                                </a>
                             </div>
                         </div>
                         <div class="col-lg-4">
                             <div class="card bg-pink-400">
-                                <div class="card-body">
-                                    <div class="d-flex">
-                                        <h3 class="font-weight-semibold mb-0">
-                                            <div class="data">
-                                                {{ $clients->where('active_status', '0')->count() }}
-                                            </div>
-                                        </h3>
-                                        <div class="list-icons ml-auto">
+                                <a
+                                    href="{{ route('admin.cdms') }}?from_date={{ request()->from_date }}&to_date={{ request()->to_date ?? date('Y-m-d') }}">
+                                    <div class="card-body">
+                                        <div class="d-flex">
+                                            <h3 class="font-weight-semibold mb-0">
+                                                <div class="data">
+                                                    {{ $clients->where('active_status', '0')->count() }}
+                                                </div>
+                                            </h3>
+                                            <div class="list-icons ml-auto">
 
+                                            </div>
+                                        </div>
+                                        <div>
+                                            Active Client
+                                            <div class="font-size-sm opacity-75">In CDMA</div>
                                         </div>
                                     </div>
-                                    <div>
-                                        Active Client
-                                        <div class="font-size-sm opacity-75">In CDMA</div>
-                                    </div>
-                                </div>
+                                </a>
                             </div>
                         </div>
                         <div class="col-lg-4">
                             <div class="card bg-blue-400">
-                                <div class="card-body">
-                                    <div class="d-flex">
-                                        <h3 class="font-weight-semibold mb-0">
-                                            <div class="data">
-                                                {{ $clients->where('active_status', '1')->count() }}
-                                            </div>
-                                        </h3>
+                                <a
+                                    href="{{ route('admin.cdms') }}?from_date={{ request()->from_date }}&to_date={{ request()->to_date ?? date('Y-m-d') }}">
+                                    <div class="card-body">
+                                        <div class="d-flex">
+                                            <h3 class="font-weight-semibold mb-0">
+                                                <div class="data">
+                                                    {{ $clients->where('active_status', '1')->count() }}
+                                                </div>
+                                            </h3>
 
+                                        </div>
+                                        <div>
+                                            Inactive Client
+                                            <div class="font-size-sm opacity-75">In CDMA</div>
+                                        </div>
                                     </div>
-                                    <div>
-                                        Inactive Client
-                                        <div class="font-size-sm opacity-75">In CDMA</div>
-                                    </div>
-                                </div>
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -363,75 +403,86 @@
                 <div class="col-lg-3">
                     <div class="card bg-teal-400" style="zoom: 1;">
                         <div class="card-body">
-                            <div class="dashboard-card">
-                                <div class="data">
-                                    <h3 class="font-weight-semibold mb-0">
-                                        <div class="data">
-                                            {{ $candidateStats->candidate }}
-                                        </div>
-                                    </h3>
+                            <a
+                                href="{{ route('admin.cfis') }}?from_date={{ request()->from_date }}&to_date={{ request()->to_date ?? date('Y-m-d') }}">
+                                <div class="dashboard-card">
+                                    <div class="data">
+                                        <h3 class="font-weight-semibold mb-0">
+                                            <div class="data">
+                                                {{ $candidateStats->candidate }}
+                                            </div>
+                                        </h3>
+                                    </div>
                                 </div>
-                            </div>
-                            <div>
-                                <div class="font-size-sm opacity-75"> No Of New Candidates</div>
-                            </div>
-
+                                <div>
+                                    <div class="font-size-sm opacity-75"> No Of New Candidates</div>
+                                </div>
+                            </a>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-3">
                     <div class="card bg-pink-400">
-                        <div class="card-body">
-                            <div class="d-flex">
-                                <h3 class="font-weight-semibold mb-0">
-                                    <div class="data">
-                                        {{ $candidateStats->Approvedcandidate }}
-                                    </div>
-                                </h3>
-                                <div class="list-icons ml-auto">
+                        <a
+                            href="{{ route('admin.dcs_approval') }}?from_date={{ request()->from_date }}&to_date={{ request()->to_date ?? date('Y-m-d') }}">
+                            <div class="card-body">
+                                <div class="d-flex">
+                                    <h3 class="font-weight-semibold mb-0">
+                                        <div class="data">
+                                            {{ $candidateStats->Approvedcandidate }}
+                                        </div>
+                                    </h3>
+                                    <div class="list-icons ml-auto">
 
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="font-size-sm opacity-75"> No Of Approved Candidates</div>
                                 </div>
                             </div>
-                            <div>
-                                <div class="font-size-sm opacity-75"> No Of Approved Candidates</div>
-                            </div>
-                        </div>
+                        </a>
                     </div>
                 </div>
                 <div class="col-lg-3">
                     <div class="card bg-blue-400">
-                        <div class="card-body">
-                            <div class="d-flex">
-                                <h3 class="font-weight-semibold mb-0">
-                                    <div class="data">
-                                        {{ $candidateStats->Rejectedcandidate }}
-                                    </div>
-                                </h3>
+                        <a
+                            href="{{ route('admin.dcs_rejected') }}?from_date={{ request()->from_date }}&to_date={{ request()->to_date ?? date('Y-m-d') }}">
+                            <div class="card-body">
+                                <div class="d-flex">
+                                    <h3 class="font-weight-semibold mb-0">
+                                        <div class="data">
+                                            {{ $candidateStats->Rejectedcandidate }}
+                                        </div>
+                                    </h3>
 
+                                </div>
+                                <div>
+                                    <div class="font-size-sm opacity-75">No of Rejected Candidate</div>
+                                </div>
                             </div>
-                            <div>
-                                <div class="font-size-sm opacity-75">No of Rejected Candidate</div>
-                            </div>
-                        </div>
+                        </a>
                     </div>
                 </div>
                 <div class="col-lg-3 ">
                     <div class="card bg-pink-400">
-                        <div class="card-body">
-                            <div class="d-flex">
-                                <h3 class="font-weight-semibold mb-0">
-                                    <div class="data">
-                                        {{ $candidateStats->Rejecteddocument }}
-                                    </div>
-                                </h3>
-                                <div class="list-icons ml-auto">
+                        <a
+                            href="{{ route('admin.doc_rejected') }}?from_date={{ request()->from_date }}&to_date={{ request()->to_date ?? date('Y-m-d') }}">
+                            <div class="card-body">
+                                <div class="d-flex">
+                                    <h3 class="font-weight-semibold mb-0">
+                                        <div class="data">
+                                            {{ $candidateStats->Rejecteddocument }}
+                                        </div>
+                                    </h3>
+                                    <div class="list-icons ml-auto">
 
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="font-size-sm opacity-75"> No of Rejected Documents</div>
                                 </div>
                             </div>
-                            <div>
-                                <div class="font-size-sm opacity-75"> No of Rejected Documents</div>
-                            </div>
-                        </div>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -470,75 +521,86 @@
                 <div class="col-lg-3">
                     <div class="card bg-teal-400" style="zoom: 1;">
                         <div class="card-body">
-                            <div class="dashboard-card">
-                                <div class="data">
-                                    <h3 class="font-weight-semibold mb-0">
-                                        <div class="data">
-                                            {{ $candidateStats->PendingComp }}
-                                        </div>
-                                    </h3>
+                            <a
+                                href="{{ route('admin.candidatemaster') }}?from_date={{ request()->from_date }}&to_date={{ request()->to_date ?? date('Y-m-d') }}">
+                                <div class="dashboard-card">
+                                    <div class="data">
+                                        <h3 class="font-weight-semibold mb-0">
+                                            <div class="data">
+                                                {{ $candidateStats->PendingComp }}
+                                            </div>
+                                        </h3>
+                                    </div>
                                 </div>
-                            </div>
-                            <div>
-                                <div class="font-size-sm opacity-75"> No Of Pending Compliance</div>
-                            </div>
-
+                                <div>
+                                    <div class="font-size-sm opacity-75"> No Of Pending Compliance</div>
+                                </div>
+                            </a>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-3">
                     <div class="card bg-pink-400">
-                        <div class="card-body">
-                            <div class="d-flex">
-                                <h3 class="font-weight-semibold mb-0">
-                                    <div class="data">
-                                        {{ $candidateStats->ApprovedComp }}
-                                    </div>
-                                </h3>
-                                <div class="list-icons ml-auto">
+                        <a
+                            href="{{ route('admin.candidatemaster') }}?from_date={{ request()->from_date }}&to_date={{ request()->to_date ?? date('Y-m-d') }}">
+                            <div class="card-body">
+                                <div class="d-flex">
+                                    <h3 class="font-weight-semibold mb-0">
+                                        <div class="data">
+                                            {{ $candidateStats->ApprovedComp }}
+                                        </div>
+                                    </h3>
+                                    <div class="list-icons ml-auto">
 
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="font-size-sm opacity-75"> No Of Approved Compliance</div>
                                 </div>
                             </div>
-                            <div>
-                                <div class="font-size-sm opacity-75"> No Of Approved Compliance</div>
-                            </div>
-                        </div>
+                        </a>
                     </div>
                 </div>
                 <div class="col-lg-3">
                     <div class="card bg-blue-400">
-                        <div class="card-body">
-                            <div class="d-flex">
-                                <h3 class="font-weight-semibold mb-0">
-                                    <div class="data">
-                                        {{ $esicNumbers }}
-                                    </div>
-                                </h3>
+                        <a
+                            href="{{ route('admin.candidatemaster') }}?from_date={{ request()->from_date }}&to_date={{ request()->to_date ?? date('Y-m-d') }}">
+                            <div class="card-body">
+                                <div class="d-flex">
+                                    <h3 class="font-weight-semibold mb-0">
+                                        <div class="data">
+                                            {{ $esicNumbers }}
+                                        </div>
+                                    </h3>
 
+                                </div>
+                                <div>
+                                    <div class="font-size-sm opacity-75">No of ESIC Created</div>
+                                </div>
                             </div>
-                            <div>
-                                <div class="font-size-sm opacity-75">No of ESIC Created</div>
-                            </div>
-                        </div>
+                        </a>
                     </div>
                 </div>
                 <div class="col-lg-3 ">
                     <div class="card bg-pink-400">
-                        <div class="card-body">
-                            <div class="d-flex">
-                                <h3 class="font-weight-semibold mb-0">
-                                    <div class="data">
-                                        {{ $uanNumbers }}
-                                    </div>
-                                </h3>
-                                <div class="list-icons ml-auto">
+                        <a
+                            href="{{ route('admin.candidatemaster') }}?from_date={{ request()->from_date }}&to_date={{ request()->to_date ?? date('Y-m-d') }}">
+                            <div class="card-body">
+                                <div class="d-flex">
+                                    <h3 class="font-weight-semibold mb-0">
+                                        <div class="data">
+                                            {{ $uanNumbers }}
+                                        </div>
+                                    </h3>
+                                    <div class="list-icons ml-auto">
 
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="font-size-sm opacity-75"> No of UAN Created</div>
                                 </div>
                             </div>
-                            <div>
-                                <div class="font-size-sm opacity-75"> No of UAN Created</div>
-                            </div>
-                        </div>
+                        </a>
                     </div>
                 </div>
             </div>

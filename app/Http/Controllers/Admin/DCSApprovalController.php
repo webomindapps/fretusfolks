@@ -40,7 +40,7 @@ class DCSApprovalController extends Controller
             $query = $this->model()->query();
             // ->where('dcs_approval', 0)
             // ->whereIn('data_status', [0]);
-        } else {
+        } elseif (auth()->user()->hasRole(['HR Operations', 'Recruitment'])) {
             $query = $this->model()->query()
                 ->where('dcs_approval', 0)
                 ->where('created_by', auth()->id())
@@ -161,10 +161,10 @@ class DCSApprovalController extends Controller
             'psd' => 'nullable|string|max:255',
             'document_type.*' => 'nullable|string',
             'document_file.*' => 'nullable|file',
-            'child_names.*' => 'required|string|max:255',
-            'child_dobs.*' => 'required|date',
+            'child_names.*' => 'nullable|string|max:255',
+            'child_dobs.*' => 'nullable|date',
             'child_photo.*' => 'nullable|file|mimes:jpg,png,pdf',
-            'child_aadhar_no.*' => 'required|string|min:12',
+            'child_aadhar_no.*' => 'nullable|string|min:12',
 
         ], [
             'document_type.required' => 'Please upload atleast one document'
@@ -462,6 +462,8 @@ class DCSApprovalController extends Controller
             'gender' => 'nullable|string|max:255',
             'father_name' => 'nullable|string|max:255',
             'father_dob' => 'nullable|date',
+            'father_aadhar_no' => 'nullable|string|min:12',
+            'mother_aadhar_no' => 'nullable|string|min:12',
             'mother_name' => 'nullable|string|max:255',
             'mother_dob' => 'nullable|date',
             'religion' => 'nullable|string|max:255',
@@ -472,6 +474,8 @@ class DCSApprovalController extends Controller
             'emer_name' => 'nullable|string|max:255',
             'emer_relation' => 'nullable|string|max:255',
             'spouse_name' => 'nullable|string|max:255',
+            'spouse_dob' => 'nullable|date',
+            'spouse_aadhar_no' => 'nullable|string|min:12',
             'no_of_childrens' => 'nullable|integer',
             'blood_group' => 'nullable|string|max:255',
             'qualification' => 'nullable|string|max:255',
@@ -522,7 +526,7 @@ class DCSApprovalController extends Controller
             'document_file.*' => 'nullable|file',
             'child_names.*' => 'nullable|string|max:255',
             'child_dobs.*' => 'nullable|date',
-            'child_photo.*' => 'required|file|mimes:jpg,png,pdf',
+            'child_photo.*' => 'nullable|file|mimes:jpg,png,pdf',
             'note' => 'nullable|string'
 
         ]);
