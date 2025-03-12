@@ -14,9 +14,10 @@ use Illuminate\Support\Facades\Bus;
 use App\Http\Controllers\Controller;
 use App\Jobs\CreateZipAndEmail;
 use App\Jobs\GeneratePayslipPDFs;
+use Illuminate\Bus\Batch;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
-
+use Throwable;
 
 class ADMSPayslipController extends Controller
 {
@@ -156,7 +157,7 @@ class ADMSPayslipController extends Controller
             return back()->with('error', 'No payslips found for the selected month and year.');
         }
 
-        return $this->zipDownload($payslips);
+        return $this->zipDownload($payslips,$request->ademails);
     }
     public function searchPayslip(Request $request)
     {
@@ -212,21 +213,34 @@ class ADMSPayslipController extends Controller
 
         return response()->file($filePath);
     }
-
-    public function zipDownload($payslips)
+    public function zipDownload($payslips,$ademails)
     {
         if ($payslips->isEmpty()) {
             return redirect()->back()->with('error', 'No Payslips Found for the Month and Year');
         }
+
         try {
+            $batch = Bus::batch([])->then(function (Batch $batch) {
+                Cache::put("batch_status_{$batch->id}", 'completed', 3600);
+            })->catch(function (Batch $batch, Throwable $e) {
+                Cache::put("batch_status_{$batch->id}", 'failed', 3600);
+            })->dispatch();
+
             foreach ($payslips as $payslip) {
-                GeneratePayslipPDFs::dispatch($payslip);
+                $batch->add(new GeneratePayslipPDFs($payslip));
             }
-            CreateZipAndEmail::dispatch($payslips, 'dhruba@webomindapps.com');
-        } catch (Exception $e) {
+            $emails = explode(',', $ademails);
+            $emails = array_map('trim', $emails);
+            $batch->add(new CreateZipAndEmail($payslips, $emails));
+
+            // Store batch ID in session to track progress
+            session(['batch_id' => $batch->id]);
+
+            return redirect()->back()->with('success', 'Payslips are being processed. You will receive an email when ready.');
+        } catch (Throwable $e) {
             dd($e);
+            return redirect()->back()->with('error', 'An error occurred while processing payslips.');
         }
-        return redirect()->back()->with('success', 'Payslips are being generated and compressed. You will receive an email when ready.');
     }
 
     public function downloadfiltered(Request $request)

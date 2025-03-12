@@ -2,7 +2,6 @@
 
 namespace App\Jobs;
 
-use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -10,10 +9,11 @@ use Illuminate\Queue\SerializesModels;
 use ZipArchive;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\PayslipZipReady;
+use Illuminate\Bus\Batchable;
 
 class CreateZipAndEmail implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable, InteractsWithQueue, SerializesModels, Batchable;
 
     public $payslips;
     public $email;
@@ -21,7 +21,7 @@ class CreateZipAndEmail implements ShouldQueue
     public function __construct($payslips, $email)
     {
         $this->payslips = $payslips;
-        $this->email = $email;
+        $this->email = is_array($email) ? $email : [$email];
     }
 
     public function handle()

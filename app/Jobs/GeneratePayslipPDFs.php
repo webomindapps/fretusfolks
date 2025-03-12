@@ -3,17 +3,19 @@
 namespace App\Jobs;
 
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Bus\Batchable;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Queue\Queueable;
-use Illuminate\Support\Facades\Cache;
+use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
 
-class GeneratePayslipPDFs implements ShouldQueue
+class GeneratePayslipPDFs implements ShouldQueue, ShouldBeUnique
 {
-    use Queueable;
+    use Dispatchable, InteractsWithQueue, SerializesModels, Batchable;
+
     public $payslip;
-    /**
-     * Create a new job instance.
-     */
+
     public function __construct($payslip)
     {
         $this->payslip = $payslip;

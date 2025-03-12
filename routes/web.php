@@ -44,6 +44,31 @@ Route::get('/', function () {
     return to_route('admin.dashboard');
     // return view('welcome');
 });
+use Illuminate\Bus\Batch;
+use Illuminate\Support\Facades\Bus;
+use Illuminate\Http\Request;
+
+Route::get('/batch-status', function (Request $request) {
+    $batchId = session('batch_id');
+
+    if (!$batchId) {
+        return response()->json(['status' => 'no_batch']);
+    }
+
+    $batch = Bus::findBatch($batchId);
+
+    if (!$batch) {
+        return response()->json(['status' => 'not_found']);
+    }
+
+    return response()->json([
+        'status' => $batch->progress(),
+        'total_jobs' => $batch->totalJobs,
+        'pending_jobs' => $batch->pendingJobs,
+        'processed_jobs' => $batch->processedJobs(),
+        'failed_jobs' => $batch->failedJobs
+    ]);
+});
 
 Route::prefix('admin')->group(function () {
     Route::get('login', [LoginController::class, 'index'])->name('login');
