@@ -2,6 +2,12 @@
     <x-admin.breadcrumb title=" Payslips" />
 
     <div class="p-2">
+        <p id="payslip-completed" class="text-success"></p>
+        <div id="progress-bar-container" style="display: none;">
+            <p id="progress-text"></p>
+            <progress id="progress-bar" value="0" max="100" class="w-100"></progress>
+        </div>
+        <hr class="mt-2">
         <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item">
                 <a class="nav-link active" id="upload-tab" data-toggle="tab" href="#upload" role="tab"
@@ -175,7 +181,7 @@
                     <h5 class="card-title">Download Payslips</h5>
                 </div>
 
-                <form action="{{ route('admin.payslips.export') }}" method="POST">
+                <form id="payslipForm" action="{{ route('admin.payslips.export') }}" method="POST">
                     @csrf
                     <div class="card-body">
                         <div class="row align-items-end">
@@ -276,8 +282,12 @@
                         </div>
 
 
-                        <div class="col-lg-3 mt-2">
-                            <button type="submit" class="btn btn-primary">Download</button>
+                        <div class="col-lg-12 mt-2">
+                            <div class="d-flex">
+                                <input type="text" name="ademails" class="form-control" placeholder="Enter Email Addresses (Comma Separated)"
+                                    required>
+                                <button type="submit" class="btn btn-primary ms-2" id="dwnPayBtn">Download</button>
+                            </div>
                         </div>
                     </div>
                 </form>
@@ -403,79 +413,6 @@
                     });
                 });
             });
-
-            //         document.querySelector('#searchBtn').addEventListener('click', async function(e) {
-            //             e.preventDefault();
-            //             const empId = document.querySelector('input[name="emp_id"]').value;
-            //             const month = document.querySelector('select[name="month1"]').value;
-            //             const year = document.querySelector('select[name="year1"]').value;
-
-            //             if (!month || !year) {
-            //                 alert('Please select both Month and Year');
-            //                 return;
-            //             }
-
-            //             try {
-            //                 const response = await fetch("{{ route('admin.search.ffi_payslips') }}", {
-            //                     method: 'POST',
-            //                     headers: {
-            //                         'Content-Type': 'application/json',
-            //                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
-            //                             'content')
-            //                     },
-            //                     body: JSON.stringify({
-            //                         emp_id: empId,
-            //                         month: month,
-            //                         year: year
-            //                     })
-            //                 });
-
-            //                 const data = await response.json();
-            //                 const tableBody = document.getElementById('get_details');
-            //                 tableBody.innerHTML = '';
-
-            //                 if (data.success && Array.isArray(data.data) && data.data.length > 0) {
-            //                     data.data.forEach((item, index) => {
-            //                         tableBody.innerHTML += `
-    //                <tr>
-    // <td>${index + 1}</td>
-    // <td>${item.emp_id}</td>
-    // <td>${item.employee_name}</td>
-    // <td>${item.designation}</td>
-    // <td>${item.department}</td>
-    // <td>${new Date(item.year, item.month - 1).toLocaleString('default', { month: 'long', year: 'numeric' })}</td>
-    // <td class="text-center">
-    //                                 <div class="dropdown pop_Up dropdown_bg">
-    //                             <div class="dropdown-toggle" id="dropdownMenuButton-${item.id}"
-    //                                 data-bs-toggle="dropdown" aria-expanded="true">
-    //                                 Action
-    //                             </div>
-    //                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-    //                                 <li>
-    //                                  <a href="{{ url('/') }}/admin/generate-payslips/${item.id}" target="_blank" class="dropdown-item">
-    //                     <i class="bx bx-link-alt"></i> View Details
-    //                 </a>
-    //                 <a href="/admin/ffi-payslips/delete/${item.id}" class="dropdown-item" onclick="return confirm('Are you sure to delete this?')">
-    //                     <i class="bx bx-trash-alt"></i> Delete
-    //                 </a>
-    //                                 </li>
-    //                             </ul>
-    //                         </div>
-    //                             </td>
-    //                             </tr>
-
-    //             `;
-            //                     });
-            //                     document.getElementById('payslip_table').style.display = 'block';
-            //                 } else {
-            //                     tableBody.innerHTML = `<tr><td colspan="7" class="text-center">No records found</td></tr>`;
-            //                     document.getElementById('payslip_table').style.display = 'block';
-            //                 }
-            //             } catch (error) {
-            //                 console.error(error);
-            //                 alert('An error occurred while fetching payslip details.');
-            //             }
-            //         });
         </script>
         <script>
             function updateSelectedCount(checkboxClass, dropdownInputId, defaultText) {
@@ -532,6 +469,52 @@
                 // Redirect to download CSV
                 window.location.href = `payslips/download-filtered?${queryString}`;
             });
+        </script>
+        <script src="https://cdn.jsdelivr.net/npm/jquery"></script>
+        <script>
+            let progressInterval;
+        
+            $("#payslipForm").on("submit", function(event) {
+                event.preventDefault();
+                $('#dwnPayBtn').prop('disabled', true);
+                $("#progress-bar-container").show();
+                $("#progress-bar").val(0);
+                $("#progress-text").text("Processing Payslips...");
+                $("#payslip-completed").text("");
+        
+                $.ajax({
+                    url: $(this).attr("action"),
+                    type: "POST",
+                    data: $(this).serialize(),
+                    success: function(response) {
+                        startProgressCheck();
+                    },
+                    error: function(xhr) {
+                        $("#progress-bar-container").hide();
+                        alert("Something went wrong. Please try again.");
+                    }
+                });
+            });
+        
+            function startProgressCheck() {
+                progressInterval = setInterval(() => {
+                    $.get("/batch-status", function(data) {
+                        if (data.status !== "not_found") {
+                            $("#progress-bar").val(data.status);
+                            $("#progress-text").text("Processing Payslips... " + data.status + "%");
+        
+                            if (data.status == 100) {
+                                clearInterval(progressInterval);
+                                $('#dwnPayBtn').prop('disabled', false);
+                                $("#progress-bar-container").hide();
+                                $("#payslip-completed").text("Payslip Zip has been sent to your email.");
+                            }else{
+                                $("#payslip-completed").text("");
+                            }
+                        }
+                    });
+                }, 3000);
+            }
         </script>
     @endpush
 </x-applayout>

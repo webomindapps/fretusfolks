@@ -12,8 +12,12 @@ use App\Jobs\ADMSPayslipCreate;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Bus;
 use App\Http\Controllers\Controller;
+use App\Jobs\CreateZipAndEmail;
+use App\Jobs\GeneratePayslipPDFs;
+use Illuminate\Bus\Batch;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
-
+use Throwable;
 
 class ADMSPayslipController extends Controller
 {
@@ -153,7 +157,7 @@ class ADMSPayslipController extends Controller
             return back()->with('error', 'No payslips found for the selected month and year.');
         }
 
-        return $this->zipDownload($payslips);
+        return $this->zipDownload($payslips,$request->ademails);
     }
     public function searchPayslip(Request $request)
     {
@@ -209,48 +213,34 @@ class ADMSPayslipController extends Controller
 
         return response()->file($filePath);
     }
-
-    public function zipDownload($payslips)
+    public function zipDownload($payslips,$ademails)
     {
         if ($payslips->isEmpty()) {
             return redirect()->back()->with('error', 'No Payslips Found for the Month and Year');
         }
-        // dd($payslips);
-        $zipFileName = "payslips_{$payslips->first()->month}_{$payslips->first()->year}.zip";
-        $zipPath = public_path($zipFileName);
 
-        $zip = new ZipArchive();
-        if ($zip->open($zipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE) === true) {
+        try {
+            $batch = Bus::batch([])->then(function (Batch $batch) {
+                Cache::put("batch_status_{$batch->id}", 'completed', 3600);
+            })->catch(function (Batch $batch, Throwable $e) {
+                Cache::put("batch_status_{$batch->id}", 'failed', 3600);
+            })->dispatch();
+
             foreach ($payslips as $payslip) {
-                $filePath = $payslip->payslips_letter_path;
-                // dd($filePath);
-                if ($filePath && Storage::disk('public')->exists($filePath)) {
-                    $absolutePath = public_path($filePath);
-                    if (file_exists($absolutePath)) {
-                        $zip->addFile($absolutePath, basename($filePath));
-                    }
-                } else {
-                    $data = ['payslip' => $payslip];
-                    // dd($data);
-                    $pdf = PDF::setOptions([
-                        'isHtml5ParserEnabled' => true,
-                        'isRemoteEnabled' => true,
-                        'chroot' => public_path()
-                    ])
-                        ->loadView('admin.adms.payslip.formate', $data)
-                        ->setPaper('a4', 'portrait');
-
-                    $fileName = "{$payslip->emp_id}_{$payslip->employee_name}.pdf";
-
-                    $zip->addFromString($fileName, $pdf->output());
-                }
+                $batch->add(new GeneratePayslipPDFs($payslip));
             }
-            $zip->close();
-        } else {
-            return response()->json(['error' => 'Could not create ZIP file.'], 500);
-        }
+            $emails = explode(',', $ademails);
+            $emails = array_map('trim', $emails);
+            $batch->add(new CreateZipAndEmail($payslips, $emails));
 
-        return response()->download($zipPath)->deleteFileAfterSend(true);
+            // Store batch ID in session to track progress
+            session(['batch_id' => $batch->id]);
+
+            return redirect()->back()->with('success', 'Payslips are being processed. You will receive an email when ready.');
+        } catch (Throwable $e) {
+            dd($e);
+            return redirect()->back()->with('error', 'An error occurred while processing payslips.');
+        }
     }
 
     public function downloadfiltered(Request $request)
