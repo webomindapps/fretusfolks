@@ -16,7 +16,16 @@
                 <tr>
                     @if (!empty($fields) && is_array($fields))
                         @foreach ($fields as $field)
-                            <td>{{ data_get($client, $field, 'N/A') }}</td>
+                            <td style="white-space: nowrap;">
+                                @switch($field)
+                                    @case('state')
+                                        {{ $client->stateRelation?->state_name }}
+                                    @break
+
+                                    @default
+                                        {{ $client->$field ?? 'N/A' }}
+                                @endswitch
+                            </td>
                         @endforeach
                     @else
                         <td>No Data</td>

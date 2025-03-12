@@ -1,5 +1,10 @@
 <x-applayout>
-
+    <style>
+        a {
+            text-decoration: none !important;
+            color: inherit;
+        }
+    </style>
     @if ($userRole === 'HR Operations')
         <div class="row pt-3 pb-2 border-bottom">
 
