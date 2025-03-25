@@ -298,7 +298,7 @@ class DCSApprovalController extends Controller
                         'bank_name' => $request->bank_name,
                         'bank_account_no' => $request->bank_account_no,
                         'bank_ifsc_code' => $request->bank_ifsc_code,
-                        'bank_status' => 1,
+                        'bank_status' => 0,
                         'bank_document' => $filePath,
                     ]
                 );
@@ -659,7 +659,7 @@ class DCSApprovalController extends Controller
                         'bank_name' => $request->bank_name,
                         'bank_account_no' => $request->bank_account_no,
                         'bank_ifsc_code' => $request->bank_ifsc_code,
-                        'bank_status' => 1,
+                        'bank_status' => 0,
                         'bank_document' => $filePath,
                     ]);
             }
@@ -970,7 +970,7 @@ class DCSApprovalController extends Controller
                         'bank_name' => $request->bank_name,
                         'bank_account_no' => $request->bank_account_no,
                         'bank_ifsc_code' => $request->bank_ifsc_code,
-                        'bank_status' => 1,
+                        'bank_status' => 0,
                         'bank_document' => $filePath,
                     ]
                 );
@@ -1266,7 +1266,7 @@ class DCSApprovalController extends Controller
                         'bank_name' => $request->bank_name,
                         'bank_account_no' => $request->bank_account_no,
                         'bank_ifsc_code' => $request->bank_ifsc_code,
-                        'bank_status' => 1,
+                        'bank_status' => 0,
                         'bank_document' => $filePath,
                     ]);
             }

@@ -424,6 +424,8 @@ Route::prefix('admin')->group(function () {
 
         //Pending Bank Approvals
         Route::get('/pending-bank-approval',[ComplainceBankAccountController::class,'index'])->name('pendingbankapprovals');
+        Route::get('/pending-bank-approval/edit/{id}',[ComplainceBankAccountController::class,'edit'])->name('pendingbankapprovals.edit');
+        Route::post('/pending-bank-approval/edit/{id}',[ComplainceBankAccountController::class,'update']);
 
     });
 });

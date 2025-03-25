@@ -205,4 +205,8 @@ class CFISModel extends Model
     {
         return $this->belongsTo(MuserMaster::class, 'created_by', 'id');
     }
+    public function Bankdetails()
+    {
+        $this->hasMany(BankDetails::class, 'ffi_emp_id', 'id');
+    }
 }

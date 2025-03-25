@@ -182,7 +182,7 @@
                     <div class="card-header header-elements-inline">
                         <h6 class="card-title">HR CDMS Details</h6>
                     </div>
-                    <div class="row my-1">
+                    <div class="row my-1 g-2">
                         <div class="col-lg-4">
                             <div class="card bg-teal-400" style="zoom: 1;">
                                 <a
@@ -297,7 +297,7 @@
                     <div class="card-header header-elements-inline">
                         <h6 class="card-title">CDMS Reports</h6>
                     </div>
-                    <div class="row mt-1">
+                    <div class="row mt-1 g-2">
                         <div class="col-lg-4">
                             <div class="card bg-teal-400" style="zoom: 1;">
                                 <a
@@ -404,7 +404,7 @@
             <div class="card-header header-elements-inline">
                 <h6 class="card-title">Candidates</h6>
             </div>
-            <div class="row my-1">
+            <div class="row my-1 g-2">
                 <div class="col-lg-3">
                     <div class="card bg-teal-400" style="zoom: 1;">
                         <div class="card-body">
@@ -522,7 +522,7 @@
             <div class="card-header header-elements-inline">
                 <h6 class="card-title">Candidates</h6>
             </div>
-            <div class="row my-1">
+            <div class="row my-1 g-2">
                 <div class="col-lg-3">
                     <div class="card bg-teal-400" style="zoom: 1;">
                         <div class="card-body">
