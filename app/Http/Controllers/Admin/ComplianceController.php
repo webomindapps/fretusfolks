@@ -325,7 +325,7 @@ class ComplianceController extends Controller
             'bank_name' => 'required|string|max:255',
             'bank_account_no' => 'required|string|max:50',
             'bank_ifsc_code' => 'required|string|max:20',
-            'status' => 'required',
+            'bank_status' => 'required',
         ]);
 
         $bankDetails = BankDetails::find($id);
@@ -340,17 +340,17 @@ class ComplianceController extends Controller
             $fileName = 'bank_document_' . $bankDetails->emp_id . '.' . $file->getClientOriginalExtension();
             $filePath = $file->storeAs('documents/bank', $fileName, 'public');
         }
-        if ($request->status == 1) {
+        if ($request->bank_status == 1) {
             BankDetails::where('emp_id', $bankDetails->emp_id)
                 ->where('id', '!=', $id) // Exclude the current record
-                ->update(['status' => 0]);
+                ->update(['bank_status' => 0]);
         }
         $bankDetails->update([
             'bank_name' => $request->bank_name,
             'bank_account_no' => $request->bank_account_no,
             'bank_ifsc_code' => $request->bank_ifsc_code,
             'bank_document' => $filePath,
-            'status' => $request->status,
+            'bank_status' => $request->bank_status,
         ]);
 
         return redirect()->route('admin.candidatemaster')->with('success', 'Successfully updated!');
