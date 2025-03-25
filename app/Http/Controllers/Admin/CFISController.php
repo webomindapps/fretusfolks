@@ -9,6 +9,7 @@ use App\Exports\CFISExport;
 use App\Jobs\ImportCFISJob;
 use Illuminate\Http\Request;
 use App\Models\ClientManagement;
+use App\Jobs\ImportBulkUpdateJob;
 use App\Models\CandidateDocuments;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
@@ -318,5 +319,93 @@ class CFISController extends Controller
         ]);
     }
 
+    public function bulkindex()
+    {
+        $searchColumns = ['id', 'client_id', 'emp_name', 'joining_date', 'phone1'];
+        $search = request()->search;
+        $from_date = request()->from_date;
+        $to_date = request()->to_date;
+        $order = request()->orderedColumn;
+        $orderBy = request()->orderBy;
+        $paginate = request()->paginate;
 
+        // $query = $this->model()->query();
+        if (auth()->user()->hasRole(['Admin', 'HR Operations', 'Recruitment'])) {
+            $query = $this->model()->query();
+        }
+        //  elseif (auth()->user()->hasRole(['HR Operations', 'Recruitment'])) {
+        //     $query = $this->model()->query()->where('dcs_approval', 1)
+        //         ->where('created_by', auth()->id())
+        //         ->where('data_status', 0);
+        // }
+
+        if ($from_date && $to_date) {
+            $query->whereBetween('created_at', [$from_date, $to_date]);
+        }
+        if ($search != '')
+            $query->where(function ($q) use ($search, $searchColumns) {
+                foreach ($searchColumns as $key => $value)
+                    ($key == 0) ? $q->where($value, 'LIKE', '%' . $search . '%') : $q->orWhere($value, 'LIKE', '%' . $search . '%');
+            });
+
+        ($order == '') ? $query->orderByDesc('id') : $query->orderBy($order, $orderBy);
+
+        $candidate = $paginate ? $query->paginate($paginate)->appends(request()->query()) : $query->paginate(10)->appends(request()->query());
+
+        return view("admin.adms.bulk_update", compact("candidate"));
+
+    }
+    public function bulkimport(Request $request)
+    {
+
+
+        $file = $request->file;
+        // dd($file);
+        try {
+            if ($file) {
+                $fileName = time() . '_' . $file->getClientOriginalName();
+                $filePath = public_path('imports');
+
+                $file->move($filePath, $fileName);
+                $fileWithPath = $filePath . '/' . $fileName;
+
+                $header = null;
+                $datafromCsv = [];
+
+                $records = array_map('str_getcsv', file($fileWithPath));
+                $header = $records[0]; // First row as header
+                unset($records[0]); // Remove header from data
+                // dd($header, $records);
+
+                $dataChunks = array_chunk($records, 1000);
+                // dd($dataChunks);
+                foreach ($dataChunks as $chunk) {
+                    $processedData = [];
+
+                    foreach ($chunk as $record) {
+                        if (count($header) == count($record)) {
+                            $processedData[] = array_combine($header, $record);
+                        }
+                    }
+
+                    if (!empty($processedData)) {
+                        // 
+                        ImportBulkUpdateJob::dispatch($processedData);
+                        // dd($processedData);
+                    }
+                }
+                if (file_exists($fileWithPath)) {
+                    unlink($fileWithPath);
+                }
+            }
+        } catch (Exception $e) {
+            return redirect()->route('admin.cfisbulk')->with([
+                'error_msg' => 'Import failed: ' . $e->getMessage()
+            ]);
+        }
+
+        return redirect()->route('admin.cfisbulk')->with([
+            'success' => 'File imported successfully'
+        ]);
+    }
 }

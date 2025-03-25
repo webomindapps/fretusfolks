@@ -192,6 +192,13 @@ class SideBar extends Component
                     'name' => 'candidatelifecycle',
                     'roles' => ['Admin', 'HR Operations'],
                 ],
+                [
+                    'title' => 'Bulk Update',
+                    'icon' => 'bx bx-chevron-right',
+                    'route' => 'admin.cfisbulk',
+                    'name' => 'cfisbulk',
+                    'roles' => ['Admin', 'Recruitment', 'HR Operations'],
+                ],
             ],
 
         ],

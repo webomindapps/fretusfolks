@@ -178,7 +178,10 @@ Route::prefix('admin')->group(function () {
         Route::get('cfis/status/{id}', [CFISController::class, 'toggleStatus'])->name('cfis.status');
         Route::get('cfis/data-status/{id}/{newStatus}', [CFISController::class, 'toggleData_status'])->name('cfis.data_status');
         Route::post('/cfis/import', [CFISController::class, 'import'])->name('cfis.import');
-       
+        Route::get('/cfis/bulk', [CFISController::class, 'bulkindex'])->name('cfisbulk');
+        Route::post('/cfis/bulkimport', [CFISController::class, 'bulkimport'])->name('cfis.bulkimport');
+
+
 
         //dcs_approval
         Route::get('/dcs_approval', [DCSApprovalController::class, 'index'])->name('dcs_approval');
@@ -417,15 +420,15 @@ Route::prefix('admin')->group(function () {
         Route::get('/payslips', [ADMSPayslipController::class, 'index'])->name('payslips');
         Route::post('payslips/bulk-upload', [ADMSPayslipController::class, 'bulkUpload'])->name('payslips.bulk.upload');
         Route::post('payslips/export', [ADMSPayslipController::class, 'export'])->name('payslips.export');
-        Route::get('payslips/download-filtered',[ADMSPayslipController::class,'downloadfiltered'])->name('payslips.downloadformat');
+        Route::get('payslips/download-filtered', [ADMSPayslipController::class, 'downloadfiltered'])->name('payslips.downloadformat');
         Route::get('payslips/search-payslip', [ADMSPayslipController::class, 'searchPayslip'])->name('search.payslips');
         Route::get('/generate-payslips/{id}', [ADMSPayslipController::class, 'generatePayslipsPdf'])->name('generate.payslips');
         Route::get('/payslips/delete/{id}', [ADMSPayslipController::class, 'destroy'])->name('payslips.delete');
 
         //Pending Bank Approvals
-        Route::get('/pending-bank-approval',[ComplainceBankAccountController::class,'index'])->name('pendingbankapprovals');
-        Route::get('/pending-bank-approval/edit/{id}',[ComplainceBankAccountController::class,'edit'])->name('pendingbankapprovals.edit');
-        Route::post('/pending-bank-approval/edit/{id}',[ComplainceBankAccountController::class,'update']);
+        Route::get('/pending-bank-approval', [ComplainceBankAccountController::class, 'index'])->name('pendingbankapprovals');
+        Route::get('/pending-bank-approval/edit/{id}', [ComplainceBankAccountController::class, 'edit'])->name('pendingbankapprovals.edit');
+        Route::post('/pending-bank-approval/edit/{id}', [ComplainceBankAccountController::class, 'update']);
 
     });
 });
