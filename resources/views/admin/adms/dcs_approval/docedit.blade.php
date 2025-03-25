@@ -151,7 +151,7 @@
                                                 </div>
                                             @endif
                                         </div>
-                                        <x-forms.input label="No of Children:" type="number" name="no_of_childrens"
+                                        <x-forms.input label="No of Children:" type="text" name="no_of_childrens"
                                             id="no_of_childrens" :required="false" size="col-lg-6 mt-2"
                                             :value="old('no_of_childrens', $candidate->no_of_childrens)" />
                                     </div>
@@ -388,6 +388,8 @@
                                 @endforeach
                                 <x-forms.input label="UAN No:" type="text" name="uan_no" id="uan_no"
                                     :required="false" size="col-lg-6 mt-2" :value="old('uan_no', $candidate->uan_no)" />
+                                <x-forms.input label="ESIC No:" type="text" name="esic_no" id="esic_no"
+                                    :required="false" size="col-lg-6 mt-2" :value="old('esic_no', $candidate->esic_no)" />
 
                                 <label class="col-lg-12 mt-4"><strong>Current Uploaded Documents</strong></label>
                                 <div style="border: 1px solid #d6c8c8; padding: 2%; margin-bottom: 1%;">
@@ -862,11 +864,11 @@
                    class="form-control">
 
             ${childData.photo ? `
-                                    <div id="image-preview-container-${i}" class="d-flex mt-2">
-                                        <img src="/storage/${childData.photo}" 
-                                             class="img-thumbnail" width="100" height="100" 
-                                             alt="Child ${i} Uploaded Photo">
-                                    </div>` : ''}
+                                        <div id="image-preview-container-${i}" class="d-flex mt-2">
+                                            <img src="/storage/${childData.photo}" 
+                                                 class="img-thumbnail" width="100" height="100" 
+                                                 alt="Child ${i} Uploaded Photo">
+                                        </div>` : ''}
         </div>
     `;
                         childrenDetails.appendChild(childRow);

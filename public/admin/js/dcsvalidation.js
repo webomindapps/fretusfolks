@@ -36,7 +36,7 @@ $(document).ready(function () {
 
         // Validate Aadhar Number
         var aadharPattern = /^\d{12}$/;
-        $(' #father_aadhar_no, #mother_aadhar_no, #aadhar_no').each(function () {
+        $(' #aadhar_no').each(function () {
             var aadharNumber = $(this).val();
             if (!aadharNumber) {
                 isValid = false;

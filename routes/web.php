@@ -177,7 +177,8 @@ Route::prefix('admin')->group(function () {
         Route::post('cfis/export', [CFISController::class, 'export'])->name('cfis.export');
         Route::get('cfis/status/{id}', [CFISController::class, 'toggleStatus'])->name('cfis.status');
         Route::get('cfis/data-status/{id}/{newStatus}', [CFISController::class, 'toggleData_status'])->name('cfis.data_status');
-
+        Route::post('/cfis/import', [CFISController::class, 'import'])->name('cfis.import');
+       
 
         //dcs_approval
         Route::get('/dcs_approval', [DCSApprovalController::class, 'index'])->name('dcs_approval');
@@ -194,6 +195,7 @@ Route::prefix('admin')->group(function () {
         Route::get('dcs_approval/{id}/docedit', [DCSApprovalController::class, 'docedit'])->name('dcs_approval.docedit');
         Route::post('dcs_approval/{id}/docedit', [DCSApprovalController::class, 'docupdate']);
         // Route::post('/offer_letter/generate/{id}', action: [DCSApprovalController::class, 'generateOfferLetter'])->name('offer_letter.generate');
+        Route::post('/dcs_approval/import', [DCSApprovalController::class, 'import'])->name('dcs_approval.import');
 
 
         //fhrms

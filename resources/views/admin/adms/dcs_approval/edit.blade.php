@@ -130,7 +130,7 @@
                                             @endif
 
                                         </div>
-                                        <x-forms.input label="No of Children:" type="number" name="no_of_childrens"
+                                        <x-forms.input label="No of Children:" type="text" name="no_of_childrens"
                                             id="no_of_childrens" :required="false" size="col-lg-6 mt-2"
                                             :value="old('no_of_childrens', $candidate->no_of_childrens)" />
                                     </div>
@@ -145,9 +145,9 @@
                                 </div>
 
                                 <x-forms.input label="Father Name:  " type="text" name="father_name"
-                                    id="father_name" :required="false" size="col-lg-3 mt-2" :value="old('father_name', $candidate->father_name)" />
+                                    id="father_name" :required="true" size="col-lg-3 mt-2" :value="old('father_name', $candidate->father_name)" />
                                 <x-forms.input label="Father's DOB: " type="date" name="father_dob"
-                                    id="father_dob" :required="false" size="col-lg-3 mt-2" :value="old('father_dob', $candidate->father_dob)" />
+                                    id="father_dob" :required="true" size="col-lg-3 mt-2" :value="old('father_dob', $candidate->father_dob)" />
                                 <div class="form-group col-lg-3 mt-2">
                                     <label for="father_aadhar_no">Father's Adhar Card No: </label>
                                     <input type="text" name="father_aadhar_no" id="father_aadhar_no"
@@ -173,9 +173,9 @@
                                     @endif
                                 </div>
                                 <x-forms.input label="Mother Name: " type="text" name="mother_name"
-                                    id="mother_name" :required="false" size="col-lg-3 mt-2" :value="old('mother_name', $candidate->mother_name)" />
+                                    id="mother_name" :required="true" size="col-lg-3 mt-2" :value="old('mother_name', $candidate->mother_name)" />
                                 <x-forms.input label="Mother's DOB: " type="date" name="mother_dob"
-                                    id="mother_dob" :required="false" size="col-lg-3 mt-2" :value="old('mother_dob', $candidate->mother_dob)" />
+                                    id="mother_dob" :required="true" size="col-lg-3 mt-2" :value="old('mother_dob', $candidate->mother_dob)" />
                                 <div class="form-group col-lg-3 mt-2">
                                     <label for="mother_aadhar_no">Mother's Adhar Card No: </label>
                                     <input type="text" name="mother_aadhar_no" id="mother_aadhar_no"
@@ -416,10 +416,17 @@
                                     id="bank_ifsc_code" :required="true" size="col-lg-6 mt-2" :value="old('bank_ifsc_code', $bankdetails->bank_ifsc_code ?? '')" />
                                 <x-forms.select label="Do you Have UAN No? " :options="[['value' => 'No', 'label' => 'No'], ['value' => 'Yes', 'label' => 'Yes']]" id="uan_status"
                                     name="uan_status" :required="true" size="col-lg-6 mt-2 mr-2"
-                                    :value="old('uan_status')" />
-                                <div id="uan-number-field" style="display: none;" class="mt-3">
+                                    :value="old('uan_status', $candidate->uan_status)" />
+                                <div id="uan-number-field" style="display: none;" class="mt-2">
                                     <x-forms.input label="Enter UAN No:" type="text" name="uan_no"
                                         id="uan_no" :required="true" size="col-lg-6" :value="old('uan_no', $candidate->uan_no)" />
+                                </div>
+                                <x-forms.select label="Do you Have Esic No? " :options="[['value' => 'No', 'label' => 'No'], ['value' => 'Yes', 'label' => 'Yes']]" id="esic_status"
+                                    name="esic_status" :required="true" size="col-lg-6 mt-2 mr-2"
+                                    :value="old('esic_status', $candidate->esic_status)" />
+                                <div id="esic-number-field" style="display: none;" class="mt-2">
+                                    <x-forms.input label="Enter Esic No:" type="text" name="esic_no"
+                                        id="esic_no" :required="true" size="col-lg-6" :value="old('esic_no', $candidate->esic_no)" />
                                 </div>
                                 {{-- <x-forms.input label="ESIC No:" type="text" name="esic_no" id="esic_no"
                                     :required="false" size="col-lg-6 mt-2" :value="old('esic_no', $candidate->esic_no)" /> --}}
@@ -542,7 +549,7 @@
 
                                             @if ($candidate->candidateDocuments->isNotEmpty())
                                                 @php
-                                                    $documents = $candidate->candidateDocuments->keyBy('name'); // Optimized lookup
+                                                    $documents = $candidate->candidateDocuments->keyBy('name'); 
                                                 @endphp
 
                                                 @foreach ($candidateDocuments as $key => $label)
@@ -698,6 +705,37 @@
                 });
 
             });
+            //esic
+            document.addEventListener('DOMContentLoaded', function() {
+                const uanStatus = document.getElementById('esic_status');
+                const uanNumberField = document.getElementById('esic-number-field');
+                const uanNumberInput = document.getElementById('esic_no');
+                const form = document.querySelector('form'); // Get the form element
+
+                function toggleUANField() {
+                    if (uanStatus.value === 'Yes') {
+                        uanNumberField.style.display = 'block';
+                        uanNumberInput.setAttribute('required', 'required');
+                    } else {
+                        uanNumberField.style.display = 'none';
+                        uanNumberInput.removeAttribute('required');
+                        uanNumberInput.value = '';
+                    }
+                }
+
+                toggleUANField();
+
+                uanStatus.addEventListener('change', toggleUANField);
+
+                form.addEventListener('submit', function(event) {
+                    if (uanStatus.value === 'Yes' && uanNumberInput.value.trim() === '') {
+                        alert('UAN number is required if UAN status is Yes.');
+                        event.preventDefault();
+                        uanNumberInput.focus();
+                    }
+                });
+
+            });
             //documents
             document.addEventListener('DOMContentLoaded', function() {
                 const documentRowsContainer = document.getElementById('document-rows');
@@ -792,11 +830,11 @@ class="col-lg-5 me-3 " >
                    class="form-control">
 
             ${childData.photo ? `
-                            <div id="image-preview-container-${i}" class="d-flex mt-2">
-                                <img src="/storage/${childData.photo}" 
-                                     class="img-thumbnail" width="100" height="100" 
-                                     alt="Child ${i} Uploaded Photo">
-                            </div>` : ''}
+                                                            <div id="image-preview-container-${i}" class="d-flex mt-2">
+                                                                <img src="/storage/${childData.photo}" 
+                                                                     class="img-thumbnail" width="100" height="100" 
+                                                                     alt="Child ${i} Uploaded Photo">
+                                                            </div>` : ''}
         </div>
     `;
                             childrenDetails.appendChild(childRow);

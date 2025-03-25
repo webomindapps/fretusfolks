@@ -119,7 +119,7 @@
                                                 </div>
                                             @endif
                                         </div>
-                                        <x-forms.input label="No of Children:" type="number" name="no_of_childrens"
+                                        <x-forms.input label="No of Children:" type="text" name="no_of_childrens"
                                             id="no_of_childrens" :required="false" size="col-lg-6 mt-2"
                                             :value="old('no_of_childrens', $candidate->no_of_childrens)" />
                                     </div>
@@ -143,7 +143,7 @@
                                     <label for="father_aadhar_no">Father's Adhar Card No: </label>
                                     <input type="text" name="father_aadhar_no" id="father_aadhar_no"
                                         class="form-control" maxlength="12" inputmode="numeric"
-                                        value="{{ old('father_aadhar_no', $candidate->father_aadhar_no) }}" required>
+                                        value="{{ old('father_aadhar_no', $candidate->father_aadhar_no) }}">
                                 </div>
                                 <div class="form-group col-lg-3 mt-2">
                                     <label for="father_photo">Father Photo: </label>
@@ -306,23 +306,11 @@
                                     id="photo" :required="false" size="col-lg-6 mt-2" />
                                 <x-forms.input label="Attach New Resume:" type="file" name="resume"
                                     id="resume" :required="false" size="col-lg-6 mt-2" />
-                                <div class="form-group col-lg-3 mt-2">
-                                    <label for="mother_photo">Mother Photo: </label>
-                                    <input type="file" name="mother_photo" id="mother_photo"
+                                <div class="form-group col-lg-6 mt-2">
+                                    <label for="family_photo">Family Photo: </label>
+                                    <input type="file" name="family_photo" id="family_photo"
                                         accept="application/pdf, image/jpg, image/png" class="form-control"
-                                        value="{{ old('mother_photo') }}">
-                                    @if ($candidate->candidateDocuments->where('name', 'mother_photo')->isNotEmpty())
-                                        @php
-                                            $mother_photo = $candidate->candidateDocuments
-                                                ->where('name', 'mother_photo')
-                                                ->first();
-                                        @endphp
-                                        <div id="image-preview-container" class="d-flex mt-2">
-                                            <img src="{{ asset('storage/' . $mother_photo->path) }}"
-                                                class="img-thumbnail" width="100" height="100"
-                                                alt="Uploaded image">
-                                        </div>
-                                    @endif
+                                        value="{{ old('family_photo', $candidate->family_photo) }}">
                                 </div>
                                 {{-- {{ dd($bankdetails->bank_name) }} --}}
                                 @foreach ($bankdetails as $bank)
@@ -347,6 +335,8 @@
                                 @endforeach
                                 <x-forms.input label="UAN No:" type="text" name="uan_no" id="uan_no"
                                     :required="false" size="col-lg-6 mt-2" :value="old('uan_no', $candidate->uan_no)" />
+                                <x-forms.input label="ESIC No:" type="text" name="esic_no" id="esic_no"
+                                    :required="false" size="col-lg-6 mt-2" :value="old('esic_no', $candidate->esic_no)" />
 
                                 <label size="col-lg-6 mt-4"><strong>Current Uploaded Documents</strong></label>
                                 <div style="border: 1px solid #d6c8c8; padding: 2%; margin-bottom: 1%;">
@@ -378,10 +368,22 @@
                                                         // 'family_photo' => 'Family Photo',
                                                         'pan_declaration' => 'Pan Declaration',
                                                     ];
+                                                    $requiredDocuments = [
+                                                        'aadhar_path',
+                                                        'pan_path',
+                                                        'driving_license_path',
+                                                        'resume',
+                                                        'voter_id',
+                                                        'emp_form',
+                                                        'pf_esic_form',
+                                                        'payslip',
+                                                        'exp_letter',
+                                                        'pan_declaration',
+                                                    ];
                                                 @endphp
 
                                                 @if ($candidate->candidateDocuments->isNotEmpty())
-                                                    @foreach ($candidate->candidateDocuments as $certificate)
+                                                    @foreach ($candidate->candidateDocuments->whereIn('name', $requiredDocuments) as $certificate)
                                                         <tr>
                                                             <td>
                                                                 {{ $candidateDocuments[$certificate->name] ?? $certificate->name }}
@@ -632,11 +634,14 @@
                                     <select id="hr_approval" name="hr_approval" class="form-control" required
                                         onchange="toggleNotesField(this.value)">
                                         <option value="">Select Status</option>
-                                        <option value="1" {{ old('hr_approval') == '1' ? 'selected' : '' }}>
+                                        <option value="1"
+                                            {{ old('hr_approval', $candidate->hr_approval) == '1' ? 'selected' : '' }}>
                                             Approved</option>
-                                        <option value="0" {{ old('hr_approval') == '0' ? 'selected' : '' }}>
+                                        <option value="0"
+                                            {{ old('hr_approval', $candidate->hr_approval) == '0' ? 'selected' : '' }}>
                                             Pending</option>
-                                        <option value="2" {{ old('hr_approval') == '2' ? 'selected' : '' }}>
+                                        <option value="2"
+                                            {{ old('hr_approval', $candidate->hr_approval) == '2' ? 'selected' : '' }}>
                                             Rejected</option>
                                     </select>
                                 </div>
@@ -769,7 +774,7 @@
 
                     // Validate Aadhar Number
                     var aadharPattern = /^\d{12}$/;
-                    $('#father_aadhar_no, #mother_aadhar_no, #aadhar_no').each(function() {
+                    $('#aadhar_no').each(function() {
                         let aadharNumber = $(this).val().trim();
                         if (!aadharNumber) {
                             isValid = false;
@@ -830,7 +835,7 @@
 
 
             // **Real-time validation for Aadhar & Phone**
-            $('#father_aadhar_no, #mother_aadhar_no, #aadhar_no').on('blur input', function() {
+            $('#aadhar_no').on('blur input', function() {
                 $(this).next('.error').remove();
                 let aadharPattern = /^\d{12}$/;
                 let aadharNumber = $(this).val().trim();
@@ -876,8 +881,7 @@
                     'mother_dob': 'Please Enter Mother DOB',
                     'father_dob': 'Please Enter Father DOB',
                     'languages': 'Please Enter Languages Known',
-                    'father_aadhar_no': 'Please enter the Aadhar number.',
-                    'mother_aadhar_no': 'Please enter the Aadhar number.',
+
                     'aadhar_no': 'Please enter the Aadhar number.',
                     'religion': 'Please Enter Religion',
                 };
@@ -1073,11 +1077,11 @@
                    class="form-control">
 
             ${childData.photo ? `
-                                                                    <div id="image-preview-container-${i}" class="d-flex mt-2">
-                                                                        <img src="/storage/${childData.photo}" 
-                                                                             class="img-thumbnail" width="100" height="100" 
-                                                                             alt="Child ${i} Uploaded Photo">
-                                                                    </div>` : ''}
+                                                                                                            <div id="image-preview-container-${i}" class="d-flex mt-2">
+                                                                                                                <img src="/storage/${childData.photo}" 
+                                                                                                                     class="img-thumbnail" width="100" height="100" 
+                                                                                                                     alt="Child ${i} Uploaded Photo">
+                                                                                                            </div>` : ''}
         </div>
     `;
                             childrenDetails.appendChild(childRow);

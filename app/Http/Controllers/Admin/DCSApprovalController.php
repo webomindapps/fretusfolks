@@ -17,6 +17,7 @@ use App\Http\Controllers\Controller;
 use App\Models\EducationCertificate;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
+use App\Jobs\ImportApprovedCandidatesJob;
 
 class DCSApprovalController extends Controller
 {
@@ -36,11 +37,11 @@ class DCSApprovalController extends Controller
 
         // $query = $this->model()->query()->where('data_status', 1);
 
-        if (auth()->user()->hasRole('Admin')) {
+        if (auth()->user()->hasRole(['HR Operations', 'Admin'])) {
             $query = $this->model()->query();
             // ->where('dcs_approval', 0)
             // ->whereIn('data_status', [0]);
-        } elseif (auth()->user()->hasRole(['HR Operations', 'Recruitment'])) {
+        } elseif (auth()->user()->hasRole('Recruitment')) {
             $query = $this->model()->query()
                 ->where('dcs_approval', 0)
                 ->where('created_by', auth()->id())
@@ -1277,6 +1278,58 @@ class DCSApprovalController extends Controller
             DB::rollBack();
             dd($e);
         }
+    }
+
+    public function import(Request $request)
+    {
+        // dd($request->all());
+        $file = $request->file;
+        // dd($file);
+        try {
+            if ($file) {
+                $fileName = time() . '_' . $file->getClientOriginalName();
+                $filePath = public_path('imports');
+
+                $file->move($filePath, $fileName);
+                $fileWithPath = $filePath . '/' . $fileName;
+
+                $header = null;
+
+                $records = array_map('str_getcsv', file($fileWithPath));
+                $header = $records[0];
+                unset($records[0]);
+                // dd($header, $records);
+
+                $dataChunks = array_chunk($records, 1000);
+                // dd($dataChunks);
+                foreach ($dataChunks as $chunk) {
+                    $processedData = [];
+
+                    foreach ($chunk as $record) {
+                        if (count($header) == count($record)) {
+                            $processedData[] = array_combine($header, $record);
+                        }
+                    }
+
+                    if (!empty($processedData)) {
+                        // 
+                        ImportApprovedCandidatesJob::dispatch($processedData);
+                        // dd($processedData);
+                    }
+                }
+                if (file_exists($fileWithPath)) {
+                    unlink($fileWithPath);
+                }
+            }
+        } catch (Exception $e) {
+            return redirect()->route('admin.dcs_approval')->with([
+                'error_msg' => 'Import failed: ' . $e->getMessage()
+            ]);
+        }
+
+        return redirect()->route('admin.dcs_approval')->with([
+            'success' => 'File imported successfully'
+        ]);
     }
     // public function generateOfferLetter(Request $request, $id)
     // {

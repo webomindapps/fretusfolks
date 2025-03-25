@@ -6,6 +6,7 @@ use Exception;
 use App\Models\CFISModel;
 use App\Exports\CDMSExport;
 use App\Exports\CFISExport;
+use App\Jobs\ImportCFISJob;
 use Illuminate\Http\Request;
 use App\Models\ClientManagement;
 use App\Models\CandidateDocuments;
@@ -257,5 +258,65 @@ class CFISController extends Controller
 
         return redirect()->back()->with('error', 'Item not found.');
     }
+
+    public function import(Request $request)
+    {
+        // dd($request->all());
+
+        // dd($request->file());
+        // $request->validate([
+        //     'file' => 'required|file|mimes:csv',
+        // ]);
+
+        $file = $request->file;
+        // dd($file);
+        try {
+            if ($file) {
+                $fileName = time() . '_' . $file->getClientOriginalName();
+                $filePath = public_path('imports');
+
+                $file->move($filePath, $fileName);
+                $fileWithPath = $filePath . '/' . $fileName;
+
+                $header = null;
+                $datafromCsv = [];
+
+                $records = array_map('str_getcsv', file($fileWithPath));
+                $header = $records[0]; // First row as header
+                unset($records[0]); // Remove header from data
+                // dd($header, $records);
+
+                $dataChunks = array_chunk($records, 1000);
+                // dd($dataChunks);
+                foreach ($dataChunks as $chunk) {
+                    $processedData = [];
+
+                    foreach ($chunk as $record) {
+                        if (count($header) == count($record)) {
+                            $processedData[] = array_combine($header, $record);
+                        }
+                    }
+
+                    if (!empty($processedData)) {
+                        // 
+                        ImportCFISJob::dispatch($processedData);
+                        // dd($processedData);
+                    }
+                }
+                if (file_exists($fileWithPath)) {
+                    unlink($fileWithPath);
+                }
+            }
+        } catch (Exception $e) {
+            return redirect()->route('admin.cfis')->with([
+                'error_msg' => 'Import failed: ' . $e->getMessage()
+            ]);
+        }
+
+        return redirect()->route('admin.cfis')->with([
+            'success' => 'File imported successfully'
+        ]);
+    }
+
 
 }
