@@ -414,12 +414,13 @@ class CFISController extends Controller
         ]);
     }
 
+
+
     public function bulkdownload(Request $request)
     {
         $clientId = $request->client_id;
         $contractDate = $request->date;
 
-        // Fetch employees with related documents
         $employees = CFISModel::with(['candidateDocuments', 'educationCertificates', 'otherCertificates'])
             ->where('client_id', $clientId)
             ->where('contract_date', $contractDate)
@@ -429,69 +430,89 @@ class CFISController extends Controller
             return back()->with('error', 'No employees found for selected criteria.');
         }
 
-        // Create temporary folder
         $baseTempPath = storage_path("app/temp_bulk_" . time());
-
-        if (!File::exists($baseTempPath)) {
-            File::makeDirectory($baseTempPath, 0755, true);
-        }
+        File::makeDirectory($baseTempPath, 0755, true);
 
         foreach ($employees as $employee) {
             $empFolder = $baseTempPath . "/employee_" . $employee->id;
+            File::makeDirectory($empFolder);
 
-            if (!File::exists($empFolder)) {
-                File::makeDirectory($empFolder, 0755, true);
-            }
+            // 1. Export Excel
+            $excelPath = $empFolder . "/employee_details_{$employee->id}.xlsx";
+            Excel::store(new EmployeeExport($employee), str_replace(storage_path('app/'), '', $excelPath));
 
-            // 1. Copy Documents
+            // 2. Add documents
             $this->copyDocuments($employee->candidateDocuments, $empFolder . "/Candidate_Documents");
             $this->copyDocuments($employee->educationCertificates, $empFolder . "/Education_Documents");
             $this->copyDocuments($employee->otherCertificates, $empFolder . "/Other_Documents");
         }
 
-        // Create ZIP File
-        $zipFileName = "bulk_employees_" . now()->format('Ymd_His') . ".zip";
-        $zipFolderPath = storage_path("app/bulk_downloads/");
-        $zipPath = $zipFolderPath . $zipFileName;
-
-        if (!File::exists($zipFolderPath)) {
-            File::makeDirectory($zipFolderPath, 0755, true);
-        }
+        // Create final zip
+        $zipFileName = "bulk_employees_". now()->timestamp .  ".zip";
+        $zipPath = storage_path("app/{$zipFileName}");
 
         $zip = new ZipArchive;
         if ($zip->open($zipPath, ZipArchive::CREATE) === TRUE) {
             $files = File::allFiles($baseTempPath);
-            dd(File::files($baseTempPath));
+            // dd($files);
             foreach ($files as $file) {
                 $relativeName = str_replace($baseTempPath . '/', '', $file->getRealPath());
                 $zip->addFile($file->getRealPath(), $relativeName);
             }
+            // dd($zip);
             $zip->close();
         }
 
-        if (!File::exists($zipPath)) {
-            return back()->with('error', 'ZIP file was not created successfully.');
-        }
-
-        // Cleanup Temporary Files
         File::deleteDirectory($baseTempPath);
 
         return response()->download($zipPath)->deleteFileAfterSend(true);
     }
-    private function copyDocuments($documents, $destPath)
-    {
-        if (!File::exists($destPath)) {
-            File::makeDirectory($destPath, 0755, true);
+
+   private function copyDocuments($documents, $destPath)
+{
+    // Ensure the destination directory exists
+    if (!File::exists($destPath)) {
+        File::makeDirectory($destPath, 0755, true, true);
+        Log::info("Created directory: {$destPath}");
+    }
+
+    foreach ($documents as $document) {
+        $docPath = null;
+
+        if (!empty($document->bank_document)) {
+            $docPath = $document->bank_document;
+        } elseif (!empty($document->path)) {
+            $docPath = $document->path;
+        } elseif (!empty($document->photo)) {
+            $docPath = $document->photo;
         }
-    
-        foreach ($documents as $doc) {
-            $path = $doc->path ?? null;
-            if ($path && File::exists(public_path($path))) {
-                File::copy(public_path($path), $destPath . '/' . basename($path));
-                Log::info("Copied file: " . public_path($path) . " to " . $destPath);
+
+        if ($docPath) {
+            // Convert relative path to full path in storage
+            $originalStoragePath = public_path("storage/" . ltrim($docPath, '/'));
+            $fileName = basename($docPath);
+            $destinationFilePath = $destPath . '/' . $fileName;
+
+            // **Check if file already exists before copying**
+            if (File::exists($destinationFilePath)) {
+                Log::info("File already exists, skipping: {$destinationFilePath}");
+                continue;
+            }
+
+            // **Check if source file exists before copying**
+            if (File::exists($originalStoragePath)) {
+                File::copy($originalStoragePath, $destinationFilePath);
+                Log::info("✅ Copied file: {$originalStoragePath} → {$destinationFilePath}");
             } else {
-                Log::warning("File not found: " . public_path($path));
+                Log::warning("❌ File not found: {$originalStoragePath}");
             }
         }
     }
 }
+
+    
+
+}
+
+
+
