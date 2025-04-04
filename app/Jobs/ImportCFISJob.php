@@ -41,6 +41,7 @@ class ImportCFISJob implements ShouldQueue
                 'status' => 1,
                 'dcs_approval' => 1,
                 'data_status' => 0,
+                'created_by' => auth()->id(),
             ];
 
 

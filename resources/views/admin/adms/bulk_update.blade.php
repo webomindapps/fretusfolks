@@ -1,9 +1,19 @@
 <x-applayout>
-    <x-admin.breadcrumb title="  Bulk Update" />
+    <x-admin.breadcrumb title="  Bulk Update">
+        <button type="button" class="add-btn bg-success text-white" data-bs-toggle="modal" data-bs-target="#downloadModal"
+            style="
+        height: 40px;
+        width: 88px;
+        padding: 4px;
+        margin-right: 50px;">
+            Download
+        </button>
+    </x-admin.breadcrumb>
     <div class="row">
         <div class="d-flex justify-content-end align-items-center">
             <div class="d-flex gap-3">
-                <a href='{{ asset('admin/cfis_bulkupdate.csv') }}' class="btn btn-primary text-white" download="cfis_bulkupdate.csv">
+                <a href='{{ asset('admin/cfis_bulkupdate.csv') }}' class="btn btn-primary text-white"
+                    download="cfis_bulkupdate.csv">
                     <i class='bx bxs-download'></i> Download Sample
                 </a>
 
@@ -82,6 +92,37 @@
                     </tr>
                 @endforeach
             </x-table>
+        </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="downloadModal" tabindex="-1" aria-labelledby="downloadModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <form action="{{ route('admin.cfis.bulkdownload') }}" method="POST">
+                @csrf
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Download Employee Documents</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="client_id">Select Client</label>
+                            <select name="client_id" class="form-control" required>
+                                <option value="">-- Select Client --</option>
+                                @foreach (FretusFolks::getClientname() as $client)
+                                    <option value="{{ $client['value'] }}">{{ $client['label'] }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="date">Select Date</label>
+                            <input type="date" name="date" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success">Download</button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 </x-applayout>

@@ -180,6 +180,7 @@ Route::prefix('admin')->group(function () {
         Route::post('/cfis/import', [CFISController::class, 'import'])->name('cfis.import');
         Route::get('/cfis/bulk', [CFISController::class, 'bulkindex'])->name('cfisbulk');
         Route::post('/cfis/bulkimport', [CFISController::class, 'bulkimport'])->name('cfis.bulkimport');
+        Route::post('/cfis/bulk-download', [CFISController::class, 'bulkdownload'])->name('cfis.bulkdownload');
 
 
 

@@ -27,8 +27,7 @@ class ImportCandidatesJob implements ShouldQueue
      */
     public function handle(): void
     {
-        $info = [];
-        dd($this->data);
+        
         foreach ($this->data as $row) {
             $info[] = [
                 'ffi_emp_id' => $row['ffi_emp_id'],
@@ -41,6 +40,7 @@ class ImportCandidatesJob implements ShouldQueue
 
 
         }
+        \Log::info('Generated data:', $info);
 
         if (!empty($info)) {
             foreach ($info as $data) {
@@ -50,5 +50,7 @@ class ImportCandidatesJob implements ShouldQueue
                 );
             }
         }
+        \Log::info('Job completed successfully');
+
     }
 }

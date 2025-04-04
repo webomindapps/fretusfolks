@@ -3,17 +3,25 @@
 namespace App\Http\Controllers\Admin;
 
 use Exception;
+use ZipArchive;
 use App\Models\CFISModel;
 use App\Exports\CDMSExport;
 use App\Exports\CFISExport;
 use App\Jobs\ImportCFISJob;
+use App\Models\BankDetails;
+use App\Models\DCSChildren;
 use Illuminate\Http\Request;
+use App\Exports\EmployeeExport;
+use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\ClientManagement;
 use App\Jobs\ImportBulkUpdateJob;
 use App\Models\CandidateDocuments;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\File;
 use Maatwebsite\Excel\Facades\Excel;
+
 
 class CFISController extends Controller
 {
@@ -280,7 +288,6 @@ class CFISController extends Controller
                 $fileWithPath = $filePath . '/' . $fileName;
 
                 $header = null;
-                $datafromCsv = [];
 
                 $records = array_map('str_getcsv', file($fileWithPath));
                 $header = $records[0]; // First row as header
@@ -301,7 +308,7 @@ class CFISController extends Controller
                     if (!empty($processedData)) {
                         // 
                         ImportCFISJob::dispatch($processedData);
-                        // dd($processedData);
+                        dd($processedData);
                     }
                 }
                 if (file_exists($fileWithPath)) {
@@ -357,8 +364,6 @@ class CFISController extends Controller
     }
     public function bulkimport(Request $request)
     {
-
-
         $file = $request->file;
         // dd($file);
         try {
@@ -407,5 +412,86 @@ class CFISController extends Controller
         return redirect()->route('admin.cfisbulk')->with([
             'success' => 'File imported successfully'
         ]);
+    }
+
+    public function bulkdownload(Request $request)
+    {
+        $clientId = $request->client_id;
+        $contractDate = $request->date;
+
+        // Fetch employees with related documents
+        $employees = CFISModel::with(['candidateDocuments', 'educationCertificates', 'otherCertificates'])
+            ->where('client_id', $clientId)
+            ->where('contract_date', $contractDate)
+            ->get();
+
+        if ($employees->isEmpty()) {
+            return back()->with('error', 'No employees found for selected criteria.');
+        }
+
+        // Create temporary folder
+        $baseTempPath = storage_path("app/temp_bulk_" . time());
+
+        if (!File::exists($baseTempPath)) {
+            File::makeDirectory($baseTempPath, 0755, true);
+        }
+
+        foreach ($employees as $employee) {
+            $empFolder = $baseTempPath . "/employee_" . $employee->id;
+
+            if (!File::exists($empFolder)) {
+                File::makeDirectory($empFolder, 0755, true);
+            }
+
+            // 1. Copy Documents
+            $this->copyDocuments($employee->candidateDocuments, $empFolder . "/Candidate_Documents");
+            $this->copyDocuments($employee->educationCertificates, $empFolder . "/Education_Documents");
+            $this->copyDocuments($employee->otherCertificates, $empFolder . "/Other_Documents");
+        }
+
+        // Create ZIP File
+        $zipFileName = "bulk_employees_" . now()->format('Ymd_His') . ".zip";
+        $zipFolderPath = storage_path("app/bulk_downloads/");
+        $zipPath = $zipFolderPath . $zipFileName;
+
+        if (!File::exists($zipFolderPath)) {
+            File::makeDirectory($zipFolderPath, 0755, true);
+        }
+
+        $zip = new ZipArchive;
+        if ($zip->open($zipPath, ZipArchive::CREATE) === TRUE) {
+            $files = File::allFiles($baseTempPath);
+            dd(File::files($baseTempPath));
+            foreach ($files as $file) {
+                $relativeName = str_replace($baseTempPath . '/', '', $file->getRealPath());
+                $zip->addFile($file->getRealPath(), $relativeName);
+            }
+            $zip->close();
+        }
+
+        if (!File::exists($zipPath)) {
+            return back()->with('error', 'ZIP file was not created successfully.');
+        }
+
+        // Cleanup Temporary Files
+        File::deleteDirectory($baseTempPath);
+
+        return response()->download($zipPath)->deleteFileAfterSend(true);
+    }
+    private function copyDocuments($documents, $destPath)
+    {
+        if (!File::exists($destPath)) {
+            File::makeDirectory($destPath, 0755, true);
+        }
+    
+        foreach ($documents as $doc) {
+            $path = $doc->path ?? null;
+            if ($path && File::exists(public_path($path))) {
+                File::copy(public_path($path), $destPath . '/' . basename($path));
+                Log::info("Copied file: " . public_path($path) . " to " . $destPath);
+            } else {
+                Log::warning("File not found: " . public_path($path));
+            }
+        }
     }
 }

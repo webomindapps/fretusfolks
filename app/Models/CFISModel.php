@@ -77,6 +77,8 @@ class CFISModel extends Model
         'bank_ifsc_code',
         'uan_no',
         'esic_no',
+        'uan_status',
+        'esic_status',
         'basic_salary',
         'hra',
         'conveyance',

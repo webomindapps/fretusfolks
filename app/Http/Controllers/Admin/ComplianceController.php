@@ -83,7 +83,7 @@ class ComplianceController extends Controller
         if (!File::exists($tempDir)) {
             File::makeDirectory($tempDir, 0755, true, true);
         }
-
+// dd($tempDir);
         $pdf = Pdf::loadView('admin.adms.compliance.candidate-pdf', compact('candidate', 'children', 'bankdetails'));
         $pdfPath = $tempDir . "/candidate_details_$id.pdf";
         File::put($pdfPath, $pdf->output());
@@ -114,17 +114,14 @@ class ComplianceController extends Controller
             return response()->json(['error' => 'ZIP file not found.'], 500);
         }
 
-
+dd($zipPath);
         File::delete($pdfPath);
 
 
         return response()->download($zipPath)->deleteFileAfterSend(true);
     }
 
-    /**
-     * Adds documents to ZIP inside their respective subfolder
-     */
-    private function addDocumentsToZip(ZipArchive $zip, $documents, $folderName)
+     private function addDocumentsToZip(ZipArchive $zip, $documents, $folderName)
     {
         foreach ($documents as $document) {
             if (isset($document->bank_document)) {
@@ -202,11 +199,7 @@ class ComplianceController extends Controller
 
     public function import(Request $request)
     {
-        $request->validate([
-            'file' => 'required|file|mimes:csv',
-        ]);
-
-        $file = $request->file('file');
+        $file = $request->file;
 
         try {
             if ($file) {
@@ -216,21 +209,11 @@ class ComplianceController extends Controller
                 $file->move($filePath, $fileName);
                 $fileWithPath = $filePath . '/' . $fileName;
 
-                $header = null;
-                $datafromCsv = [];
-
                 $records = array_map('str_getcsv', file($fileWithPath));
-                // dd($records);
-                foreach ($records as $key => $record) {
-                    if (!$header) {
-                        $header = $record;
-                    } else {
-                        $datafromCsv[] = $record;
-                    }
-                }
+                $header = $records[0];
+                unset($records[0]);
 
-                $dataChunks = array_chunk($datafromCsv, 1000);
-
+                $dataChunks = array_chunk($records, 1000);
                 foreach ($dataChunks as $chunk) {
                     $processedData = [];
 
@@ -241,11 +224,10 @@ class ComplianceController extends Controller
                     }
 
                     if (!empty($processedData)) {
-                        // 
                         ImportCandidatesJob::dispatch($processedData);
-                        // dd($processedData);
                     }
                 }
+
                 if (file_exists($fileWithPath)) {
                     unlink($fileWithPath);
                 }
@@ -304,6 +286,8 @@ class ComplianceController extends Controller
             'bank_ifsc_code' => $request->bank_ifsc_code,
             'bank_document' => $filePath,
             'status' => $request->status,
+            'bank_status' => 0,
+
         ]);
         return redirect()->route('admin.candidatemaster.view', $candidate->id)->with('success', 'Bank details saved successfully!');
     }
@@ -325,7 +309,7 @@ class ComplianceController extends Controller
             'bank_name' => 'required|string|max:255',
             'bank_account_no' => 'required|string|max:50',
             'bank_ifsc_code' => 'required|string|max:20',
-            'bank_status' => 'required',
+            'status' => 'required',
         ]);
 
         $bankDetails = BankDetails::find($id);
@@ -340,17 +324,17 @@ class ComplianceController extends Controller
             $fileName = 'bank_document_' . $bankDetails->emp_id . '.' . $file->getClientOriginalExtension();
             $filePath = $file->storeAs('documents/bank', $fileName, 'public');
         }
-        if ($request->bank_status == 1) {
+        if ($request->status == 1) {
             BankDetails::where('emp_id', $bankDetails->emp_id)
                 ->where('id', '!=', $id) // Exclude the current record
-                ->update(['bank_status' => 0]);
+                ->update(['status' => 0, 'bank_status' => 0]);
         }
         $bankDetails->update([
             'bank_name' => $request->bank_name,
             'bank_account_no' => $request->bank_account_no,
             'bank_ifsc_code' => $request->bank_ifsc_code,
             'bank_document' => $filePath,
-            'bank_status' => $request->bank_status,
+            'status' => $request->status,
         ]);
 
         return redirect()->route('admin.candidatemaster')->with('success', 'Successfully updated!');

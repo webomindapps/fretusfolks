@@ -156,6 +156,8 @@ class DCSApprovalController extends Controller
             'mediclaim' => 'nullable|numeric',
             'ctc' => 'nullable|numeric',
             'status' => 'nullable|boolean',
+            'uan_status' => 'nullable|integer',
+            'esic_status' => 'nullable|integer',
             'modify_by' => 'nullable|integer',
             'password' => 'nullable|string|max:255',
             'refresh_code' => 'nullable|string|max:255',
@@ -171,7 +173,7 @@ class DCSApprovalController extends Controller
             'document_type.required' => 'Please upload atleast one document'
         ]);
         // $validatedData = $request->all();
-        // dd($request->all());
+        // dd($validatedData );
 
         DB::beginTransaction();
         try {
@@ -180,8 +182,9 @@ class DCSApprovalController extends Controller
             $validatedData['dcs_approval'] = $request->input('dcs_approval', 0);
             $validatedData['data_status'] = $request->input('data_status', 1);
             $validatedData['hr_approval'] = $request->input('hr_approval', 0);
-
+            // dd($validatedData );
             $candidate->update($validatedData);
+            // dd($candidate);
             // dd($request->all());
             $fileFields = ['pan_path', 'aadhar_path', 'driving_license_path', 'photo', 'resume', 'family_photo', 'father_photo', 'mother_photo', 'spouse_photo', 'pan_declaration'];
             foreach ($fileFields as $field) {
@@ -235,6 +238,7 @@ class DCSApprovalController extends Controller
                                 'path' => $filePath,
                                 'status' => 0,
                             ]);
+                            // dd($candidate);
                             $candidate->save();
                         }
                     }
@@ -304,6 +308,7 @@ class DCSApprovalController extends Controller
                 );
 
             }
+            // dd($candidate);
             $candidate->save();
 
             DB::commit();

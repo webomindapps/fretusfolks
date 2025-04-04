@@ -414,14 +414,14 @@
                                     :value="old('bank_account_no', $bankdetails->bank_account_no ?? '')" />
                                 <x-forms.input label="Enter Bank IFSC CODE:" type="text" name="bank_ifsc_code"
                                     id="bank_ifsc_code" :required="true" size="col-lg-6 mt-2" :value="old('bank_ifsc_code', $bankdetails->bank_ifsc_code ?? '')" />
-                                <x-forms.select label="Do you Have UAN No? " :options="[['value' => 'No', 'label' => 'No'], ['value' => 'Yes', 'label' => 'Yes']]" id="uan_status"
+                                <x-forms.select label="Do you Have UAN No? " :options="[['value' => '0', 'label' => 'No'], ['value' => '1', 'label' => 'Yes']]" id="uan_status"
                                     name="uan_status" :required="true" size="col-lg-6 mt-2 mr-2"
                                     :value="old('uan_status', $candidate->uan_status)" />
                                 <div id="uan-number-field" style="display: none;" class="mt-2">
                                     <x-forms.input label="Enter UAN No:" type="text" name="uan_no"
                                         id="uan_no" :required="true" size="col-lg-6" :value="old('uan_no', $candidate->uan_no)" />
                                 </div>
-                                <x-forms.select label="Do you Have Esic No? " :options="[['value' => 'No', 'label' => 'No'], ['value' => 'Yes', 'label' => 'Yes']]" id="esic_status"
+                                <x-forms.select label="Do you Have Esic No? " :options="[['value' => '0', 'label' => 'No'], ['value' => '1', 'label' => 'Yes']]" id="esic_status"
                                     name="esic_status" :required="true" size="col-lg-6 mt-2 mr-2"
                                     :value="old('esic_status', $candidate->esic_status)" />
                                 <div id="esic-number-field" style="display: none;" class="mt-2">
@@ -682,7 +682,7 @@
                 const form = document.querySelector('form'); // Get the form element
 
                 function toggleUANField() {
-                    if (uanStatus.value === 'Yes') {
+                    if (uanStatus.value === '1') {
                         uanNumberField.style.display = 'block';
                         uanNumberInput.setAttribute('required', 'required');
                     } else {
@@ -697,7 +697,7 @@
                 uanStatus.addEventListener('change', toggleUANField);
 
                 form.addEventListener('submit', function(event) {
-                    if (uanStatus.value === 'Yes' && uanNumberInput.value.trim() === '') {
+                    if (uanStatus.value === '1' && uanNumberInput.value.trim() === '') {
                         alert('UAN number is required if UAN status is Yes.');
                         event.preventDefault();
                         uanNumberInput.focus();
@@ -713,7 +713,7 @@
                 const form = document.querySelector('form'); // Get the form element
 
                 function toggleUANField() {
-                    if (uanStatus.value === 'Yes') {
+                    if (uanStatus.value === '1') {
                         uanNumberField.style.display = 'block';
                         uanNumberInput.setAttribute('required', 'required');
                     } else {
@@ -728,7 +728,7 @@
                 uanStatus.addEventListener('change', toggleUANField);
 
                 form.addEventListener('submit', function(event) {
-                    if (uanStatus.value === 'Yes' && uanNumberInput.value.trim() === '') {
+                    if (uanStatus.value === '1' && uanNumberInput.value.trim() === '') {
                         alert('UAN number is required if UAN status is Yes.');
                         event.preventDefault();
                         uanNumberInput.focus();

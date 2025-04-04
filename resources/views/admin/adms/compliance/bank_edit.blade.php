@@ -61,8 +61,8 @@
                                 <x-forms.input label="Enter Bank IFSC CODE:" type="text" name="bank_ifsc_code"
                                     id="bank_ifsc_code" :required="true" size="col-lg-6 mt-2" :value="old('bank_ifsc_code', $bankdetails->bank_ifsc_code ?? '')" />
                                 <div class="form-group col-lg-6 mt-2">
-                                    <label for="status">Status <span style="color: red">*</span></label>
-                                    <select id="status" name="bank_status" class="form-control" required
+                                    <label for="bank_status">Status <span style="color: red">*</span></label>
+                                    <select id="bank_status" name="bank_status" class="form-control" required
                                         onchange="toggleNotesField(this.value)">
                                         <option value="">Select Status</option>
                                         <option value="1"

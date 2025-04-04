@@ -229,6 +229,7 @@
                                                             <th>Account No</th>
                                                             <th>IFSC Code</th>
                                                             <th>Bank Document</th>
+                                                            <th>compliance Approval</th>
                                                             <th>Status</th>
                                                             <th>Action</th>
                                                         </tr>
@@ -251,6 +252,12 @@
                                                                     @else
                                                                         <span class="text-muted">No Document</span>
                                                                     @endif
+                                                                </td>
+                                                                <td>
+                                                                    <span
+                                                                        class="badge {{ $bank->bank_status == 1 ? 'bg-success' : 'bg-danger' }}">
+                                                                        {{ $bank->bank_status == 1 ? 'Completed' : 'Pending' }}
+                                                                    </span>
                                                                 </td>
                                                                 <td>
                                                                     <span
