@@ -274,6 +274,11 @@
                         <td> {{ $increment->pt * 12 }}</td>
                     </tr>
                     <tr>
+                        <td>LWF</td>
+                        <td>{{ $increment->lwf }}</td>
+                        <td> {{ $increment->lwf * 12 }}</td>
+                    </tr>
+                    <tr>
                         <td>Total Deduction</td>
                         <td> {{ $increment->total_deduction }}</td>
                         <td> {{ $increment->total_deduction * 12 }} </td>

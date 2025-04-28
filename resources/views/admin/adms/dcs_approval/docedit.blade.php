@@ -422,11 +422,23 @@
                                                         // 'family_photo' => 'Family Photo',
                                                         'pan_declaration' => 'Pan Declaration',
                                                     ];
+                                                    $requiredDocuments = [
+                                                        'aadhar_path',
+                                                        'pan_path',
+                                                        'driving_license_path',
+                                                        'resume',
+                                                        'voter_id',
+                                                        'emp_form',
+                                                        'pf_esic_form',
+                                                        'payslip',
+                                                        'exp_letter',
+                                                        'pan_declaration',
+                                                    ];
                                                 @endphp
 
                                                 @if ($candidate->candidateDocuments->isNotEmpty())
-                                                    @foreach ($candidate->candidateDocuments as $certificate)
-                                                        <tr class="{{ $certificate->status == 2 ? 'rejected' : '' }}">
+                                                    @foreach ($candidate->candidateDocuments->whereIn('name', $requiredDocuments) as $certificate)
+                                                        <tr>
                                                             <td>
                                                                 {{ $candidateDocuments[$certificate->name] ?? $certificate->name }}
                                                             </td>
@@ -434,18 +446,11 @@
                                                                 <a href="{{ asset('storage/' . $certificate->path) }}"
                                                                     target="_blank" class="btn btn-custom">
                                                                     View
-                                                                    {{ $candidateDocuments[$certificate->name] ?? $certificate->name }}
                                                                 </a>
                                                             </td>
                                                             <td>
-                                                                <input type="file"
-                                                                    accept="application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/pdf"
-                                                                    name="document_file[{{ $certificate->name }}]"
-                                                                    class="form-control">
-                                                            </td>
-                                                            <td>
                                                                 <div class="dropdown">
-                                                                    <button class="btn btn-sm dropdown-toggle"
+                                                                    <button class="btn btn btn-sm dropdown-toggle"
                                                                         type="button"
                                                                         id="statusDropdown{{ $certificate->id }}"
                                                                         data-bs-toggle="dropdown"
@@ -460,15 +465,16 @@
                                                                         <li><a class="dropdown-item"
                                                                                 href="{{ route('admin.document.status', ['id' => $certificate->id, 'newStatus' => 2]) }}">Rejected</a>
                                                                         </li>
-                                                                        {{-- <li><a class="dropdown-item"
-                                                                            href="{{ route('admin.document.status', ['id' => $certificate->id, 'newStatus' => 1]) }}">Approved</a>
-                                                                    </li> --}}
+                                                                        <li><a class="dropdown-item"
+                                                                                href="{{ route('admin.document.status', ['id' => $certificate->id, 'newStatus' => 1]) }}">Approved</a>
+                                                                        </li>
                                                                     </ul>
                                                                 </div>
                                                             </td>
                                                         </tr>
                                                     @endforeach
                                                 @endif
+
 
                                                 {{-- Education Certificates --}}
                                                 @if ($candidate->educationCertificates->isNotEmpty())
@@ -481,12 +487,7 @@
                                                                     View Education Certificate {{ $loop->iteration }}
                                                                 </a>
                                                             </td>
-                                                            <td>
-                                                                <input type="file"
-                                                                    accept="application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/pdf"
-                                                                    name="document_file[education_certificate_{{ $loop->iteration }}]"
-                                                                    class="form-control">
-                                                            </td>
+                                                           
                                                             <td>
                                                                 <div class="dropdown">
                                                                     <button class="btn btn-sm dropdown-toggle"
@@ -525,12 +526,7 @@
                                                                     View Other Certificate {{ $loop->iteration }}
                                                                 </a>
                                                             </td>
-                                                            <td>
-                                                                <input type="file"
-                                                                    accept="application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/pdf"
-                                                                    name="document_file[other_certificate_{{ $loop->iteration }}]"
-                                                                    class="form-control">
-                                                            </td>
+                                                           
                                                             <td>
                                                                 <div class="dropdown">
                                                                     <button class="btn btn-sm dropdown-toggle"
@@ -864,11 +860,11 @@
                    class="form-control">
 
             ${childData.photo ? `
-                                        <div id="image-preview-container-${i}" class="d-flex mt-2">
-                                            <img src="/storage/${childData.photo}" 
-                                                 class="img-thumbnail" width="100" height="100" 
-                                                 alt="Child ${i} Uploaded Photo">
-                                        </div>` : ''}
+                                            <div id="image-preview-container-${i}" class="d-flex mt-2">
+                                                <img src="/storage/${childData.photo}" 
+                                                     class="img-thumbnail" width="100" height="100" 
+                                                     alt="Child ${i} Uploaded Photo">
+                                            </div>` : ''}
         </div>
     `;
                         childrenDetails.appendChild(childRow);

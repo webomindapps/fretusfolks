@@ -112,7 +112,10 @@
             <p style="font-size:16px;line-height:1.5;">
                 <b>To</b>
                 <b> Mr./Mrs./Ms {{ $offerLetter->employee?->emp_name }}</b><br>
-                <b>S/o {{ $offerLetter->employee?->father_name }}</b><br>
+                <b>
+                    {{ $offerLetter->employee?->gender == 'Male' ? 'S/o' : 'D/o' }}
+                    {{ $offerLetter->employee?->father_name }}
+                </b><br>
                 <b>Location : {{ $offerLetter->employee?->location }}</b> <br>
                 <br>
                 <span style="margin-left:0%;font-size:12px;">
@@ -498,7 +501,11 @@
                         <td>{{ $offerLetter->pt }}</td>
                         <td>{{ $offerLetter->pt * 12 }}</td>
                     </tr>
-
+                    <tr>
+                        <td>LWF</td>
+                        <td>{{ $offerLetter->lwf }}</td>
+                        <td>{{ $offerLetter->lwf * 12 }}</td>
+                    </tr>
                     <tr class="gross" style="background: #ecbfbf;">
 
                         <td>Total Deduction</td>

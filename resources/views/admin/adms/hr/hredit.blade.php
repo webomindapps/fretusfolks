@@ -571,13 +571,15 @@
                                             id="gross_salary" :required="false" size="col-lg-3 mt-2"
                                             :value="old('gross_salary', $candidate->gross_salary)" />
                                         <x-forms.input label="Employee PF: " type="number" name="emp_pf"
-                                            id="emp_pf" :required="false" size="col-lg-2 mt-2"
+                                            id="emp_pf" :required="false" size="col-lg-3 mt-2"
                                             :value="old('emp_pf', $candidate->emp_pf)" />
                                         <x-forms.input label="Employee ESIC :" type="number" name="emp_esic"
-                                            id="emp_esic" :required="false" size="col-lg-2 mt-2"
+                                            id="emp_esic" :required="false" size="col-lg-3 mt-2"
                                             :value="old('emp_esic', $candidate->emp_esic)" />
                                         <x-forms.input label="PT: " type="number" name="pt" id="pt"
-                                            :required="false" size="col-lg-2 mt-2" :value="old('pt', $candidate->pt)" />
+                                            :required="false" size="col-lg-3 mt-2" :value="old('pt', $candidate->pt)" />
+                                        <x-forms.input label="LWF: " type="number" name="lwf" id="lwf"
+                                            :required="false" size="col-lg-3 mt-2" :value="old('lwf', $candidate->lwf)" />
                                         <x-forms.input label="Total Deduction:" type="number" name="total_deduction"
                                             id="total_deduction" :required="false" size="col-lg-3 mt-2"
                                             :value="old('total_deduction', $candidate->total_deduction)" />
@@ -698,6 +700,7 @@
                     let empPFInput = document.getElementById("emp_pf");
                     let empESICInput = document.getElementById("emp_esic");
                     let empPTInput = document.getElementById("pt");
+                    let empLWFInput = document.getElementById("lwf");
                     let totalDeductionInput = document.getElementById("total_deduction");
                     let takeHomeInput = document.getElementById("take_home");
                     let employerPFInput = document.getElementById("employer_pf");
@@ -713,8 +716,10 @@
                         empESICInput.value = (grossSalary < 21000 ? grossSalary * 0.0075 : 0).toFixed(2);
                     }
 
-                    let totalDeduction = (parseFloat(empPFInput.value) || 0) + (parseFloat(empESICInput.value) || 0 + (
-                        parseFloat(empPtInput.value) || 0));
+                    let totalDeduction = (parseFloat(empPFInput.value) || 0) + (parseFloat(empESICInput.value) || 0) + (
+                            parseFloat(empPTInput.value) || 0) +
+                        (parseFloat(empLWFInput.value) || 0);
+
                     totalDeductionInput.value = totalDeduction.toFixed(2);
 
                     takeHomeInput.value = (grossSalary - totalDeduction).toFixed(2);
@@ -1077,11 +1082,11 @@
                    class="form-control">
 
             ${childData.photo ? `
-                                                                                                            <div id="image-preview-container-${i}" class="d-flex mt-2">
-                                                                                                                <img src="/storage/${childData.photo}" 
-                                                                                                                     class="img-thumbnail" width="100" height="100" 
-                                                                                                                     alt="Child ${i} Uploaded Photo">
-                                                                                                            </div>` : ''}
+                                                                                                                                                    <div id="image-preview-container-${i}" class="d-flex mt-2">
+                                                                                                                                                        <img src="/storage/${childData.photo}" 
+                                                                                                                                                             class="img-thumbnail" width="100" height="100" 
+                                                                                                                                                             alt="Child ${i} Uploaded Photo">
+                                                                                                                                                    </div>` : ''}
         </div>
     `;
                             childrenDetails.appendChild(childRow);

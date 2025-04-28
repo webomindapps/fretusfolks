@@ -72,16 +72,18 @@
                                             id="pf_percentage" :required="true" size="col-lg-3 mt-2"
                                             :value="old('pf_percentage')" />
                                         <x-forms.input label="Employee PF: " type="number" name="emp_pf"
-                                            id="emp_pf" :required="true" size="col-lg-2 mt-2"
+                                            id="emp_pf" :required="true" size="col-lg-3 mt-2"
                                             :value="old('emp_pf')" />
                                         <x-forms.input label="ESIC Percentage: " type="number"
                                             name="esic_percentage" id="esic_percentage" :required="true"
                                             size="col-lg-3 mt-2" :value="old('esic_percentage')" />
                                         <x-forms.input label="Employee ESIC: " type="number" name="emp_esic"
-                                            id="emp_esic" :required="true" size="col-lg-2 mt-2"
+                                            id="emp_esic" :required="true" size="col-lg-3 mt-2"
                                             :value="old('emp_esic')" />
                                         <x-forms.input label="PT: " type="number" name="pt" id="pt"
-                                            :required="true" size="col-lg-2 mt-2" :value="old('pt','0')" />
+                                            :required="true" size="col-lg-3 mt-2" :value="old('pt', '0')" />
+                                        <x-forms.input label="Lwf: " type="number" name="lwf" id="lwf"
+                                            :required="true" size="col-lg-3 mt-2" :value="old('lwf', '0')" />
                                         <x-forms.input label="Total Deduction: " type="number"
                                             name="total_deduction" id="total_deduction" :required="true"
                                             size="col-lg-3 mt-2" :value="old('total_deduction')" />
@@ -142,6 +144,8 @@
                             $('#location').val(response.data.location);
                             $('#basic_salary').val(response.data.basic_salary ?? 0);
                             $('#hra').val(response.data.hra ?? 0);
+                            $('#pt').val(response.data.pt ?? 0);
+                            $('#lwf').val(response.data.lwf ?? 0);
                             $('#conveyance').val(response.data.conveyance ?? 0);
                             console.log("Designation Value:", response.data.conveyance ?? 0);
 
@@ -181,6 +185,8 @@
                 function calculateSalary() {
                     let basic = parseFloat(document.getElementById("basic_salary").value) || 0;
                     let hra = parseFloat(document.getElementById("hra").value) || 0;
+                    let pt = parseFloat(document.getElementById("pt").value) || 0;
+                    let lwf = parseFloat(document.getElementById("lwf").value) || 0;
                     let conveyance = parseFloat(document.getElementById("conveyance").value) || 0;
                     let medical = parseFloat(document.getElementById("medical_reimbursement").value) || 0;
                     let specialAllowance = parseFloat(document.getElementById("special_allowance").value) || 0;
@@ -201,7 +207,7 @@
                     let empESIC = grossSalary < 21000 ? grossSalary * 0.0075 : 0;
                     document.getElementById("emp_esic").value = empESIC.toFixed(2);
 
-                    let totalDeduction = empPF + empESIC;
+                    let totalDeduction = empPF + empESIC + pt + lwf;
                     document.getElementById("total_deduction").value = totalDeduction.toFixed(2);
 
                     let takeHome = grossSalary - totalDeduction;
@@ -214,7 +220,7 @@
                     let employerPF = Math.min(basic * 0.13, 1950);
                     document.getElementById("employer_pf").value = employerPF.toFixed(2);
 
-                    let employerpfpercentage=employerPF/basic *100;
+                    let employerpfpercentage = employerPF / basic * 100;
                     document.getElementById("employer_pf_percentage").value = employerpfpercentage.toFixed(2);
 
                     let employerESIC = grossSalary < 21000 ? grossSalary * 0.0325 : 0;

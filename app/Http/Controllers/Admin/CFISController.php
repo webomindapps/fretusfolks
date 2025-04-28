@@ -11,8 +11,10 @@ use App\Jobs\ImportCFISJob;
 use App\Models\BankDetails;
 use App\Models\DCSChildren;
 use Illuminate\Http\Request;
+use RecursiveIteratorIterator;
 use App\Exports\EmployeeExport;
 use Barryvdh\DomPDF\Facade\Pdf;
+use RecursiveDirectoryIterator;
 use App\Models\ClientManagement;
 use App\Jobs\ImportBulkUpdateJob;
 use App\Models\CandidateDocuments;
@@ -21,6 +23,7 @@ use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Storage;
 
 
 class CFISController extends Controller
@@ -415,7 +418,6 @@ class CFISController extends Controller
     }
 
 
-
     public function bulkdownload(Request $request)
     {
         $clientId = $request->client_id;
@@ -430,88 +432,83 @@ class CFISController extends Controller
             return back()->with('error', 'No employees found for selected criteria.');
         }
 
-        $baseTempPath = storage_path("app/temp_bulk_" . time());
+        $timestamp = time();
+        $baseTempPath = storage_path("app/temp_bulk_{$timestamp}");
         File::makeDirectory($baseTempPath, 0755, true);
 
         foreach ($employees as $employee) {
-            $empFolder = $baseTempPath . "/employee_" . $employee->id;
-            File::makeDirectory($empFolder);
+            $empFolder = $baseTempPath . "/employee_{$employee->id}";
+            File::makeDirectory($empFolder, 0755, true);
 
-            // 1. Export Excel
-            $excelPath = $empFolder . "/employee_details_{$employee->id}.xlsx";
-            Excel::store(new EmployeeExport($employee), str_replace(storage_path('app/'), '', $excelPath));
 
-            // 2. Add documents
-            $this->copyDocuments($employee->candidateDocuments, $empFolder . "/Candidate_Documents");
-            $this->copyDocuments($employee->educationCertificates, $empFolder . "/Education_Documents");
-            $this->copyDocuments($employee->otherCertificates, $empFolder . "/Other_Documents");
+            $fileName = "employee_details_{$employee->id}.xlsx";
+            $publicPath = "public/employee_exports/{$fileName}";
+            Excel::store(new EmployeeExport($employee), $publicPath);
+
+
+            $source = Storage::path($publicPath);
+            $destination = $baseTempPath . "/" . $fileName;
+
+            if (File::exists($source)) {
+                File::move($source, $destination);
+            } else {
+                Log::warning("❌ Excel file not found: {$source}");
+            }
+
+            $this->copyDocuments($employee->candidateDocuments, "{$empFolder}/Candidate_Documents");
+            $this->copyDocuments($employee->educationCertificates, "{$empFolder}/Education_Documents");
+            $this->copyDocuments($employee->otherCertificates, "{$empFolder}/Other_Documents");
         }
 
-        // Create final zip
-        $zipFileName = "bulk_employees_". now()->timestamp .  ".zip";
+        $zipFileName = "bulk_employees_{$timestamp}.zip";
         $zipPath = storage_path("app/{$zipFileName}");
 
         $zip = new ZipArchive;
         if ($zip->open($zipPath, ZipArchive::CREATE) === TRUE) {
-            $files = File::allFiles($baseTempPath);
-            // dd($files);
-            foreach ($files as $file) {
-                $relativeName = str_replace($baseTempPath . '/', '', $file->getRealPath());
-                $zip->addFile($file->getRealPath(), $relativeName);
-            }
-            // dd($zip);
-            $zip->close();
-        }
+            $files = new RecursiveIteratorIterator(
+                new RecursiveDirectoryIterator($baseTempPath, RecursiveDirectoryIterator::SKIP_DOTS),
+                RecursiveIteratorIterator::LEAVES_ONLY
+            );
 
+            foreach ($files as $file) {
+                $filePath = $file->getRealPath();
+                $relativePath = substr($filePath, strlen($baseTempPath) + 1);
+                $zip->addFile($filePath, $relativePath);
+            }
+
+            $zip->close();
+        } else {
+            return back()->with('error', 'Could not create ZIP file.');
+        }
         File::deleteDirectory($baseTempPath);
 
         return response()->download($zipPath)->deleteFileAfterSend(true);
     }
 
-   private function copyDocuments($documents, $destPath)
-{
-    // Ensure the destination directory exists
-    if (!File::exists($destPath)) {
-        File::makeDirectory($destPath, 0755, true, true);
-        Log::info("Created directory: {$destPath}");
-    }
-
-    foreach ($documents as $document) {
-        $docPath = null;
-
-        if (!empty($document->bank_document)) {
-            $docPath = $document->bank_document;
-        } elseif (!empty($document->path)) {
-            $docPath = $document->path;
-        } elseif (!empty($document->photo)) {
-            $docPath = $document->photo;
+    private function copyDocuments($documents, $destPath)
+    {
+        if (!File::exists($destPath)) {
+            File::makeDirectory($destPath, 0755, true, true);
+            Log::info("Created directory: {$destPath}");
         }
 
-        if ($docPath) {
-            // Convert relative path to full path in storage
-            $originalStoragePath = public_path("storage/" . ltrim($docPath, '/'));
-            $fileName = basename($docPath);
-            $destinationFilePath = $destPath . '/' . $fileName;
+        foreach ($documents as $document) {
+            $docPath = $document->bank_document ?? $document->path ?? $document->photo ?? null;
 
-            // **Check if file already exists before copying**
-            if (File::exists($destinationFilePath)) {
-                Log::info("File already exists, skipping: {$destinationFilePath}");
-                continue;
-            }
+            if ($docPath) {
+                $originalStoragePath = public_path("storage/" . ltrim($docPath, '/'));
+                $fileName = basename($docPath);
+                $destinationFilePath = "{$destPath}/{$fileName}";
 
-            // **Check if source file exists before copying**
-            if (File::exists($originalStoragePath)) {
-                File::copy($originalStoragePath, $destinationFilePath);
-                Log::info("✅ Copied file: {$originalStoragePath} → {$destinationFilePath}");
-            } else {
-                Log::warning("❌ File not found: {$originalStoragePath}");
+                if (File::exists($originalStoragePath)) {
+                    File::copy($originalStoragePath, $destinationFilePath);
+                    Log::info("✅ Copied file: {$originalStoragePath} → {$destinationFilePath}");
+                } else {
+                    Log::warning("❌ File not found: {$originalStoragePath}");
+                }
             }
         }
     }
-}
-
-    
-
 }
 
 

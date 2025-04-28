@@ -34,6 +34,7 @@ class OfferLetter extends Model
         'emp_pf',
         'emp_esic',
         'pt',
+        'lwf',
         'total_deduction',
         'take_home',
         'employer_pf',

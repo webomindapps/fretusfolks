@@ -12,7 +12,7 @@
                     ['label' => 'Actions', 'column' => 'action', 'sort' => false],
                 ];
             @endphp
-            <x-table :columns="$columns" :data="$candidate" :checkAll=true :bulk="route('admin.cfis.bulk')" :route="route('admin.dcs_approval')">
+            <x-table :columns="$columns" :data="$candidate" :checkAll=true :bulk="route('admin.cfis.bulk')" :route="route('admin.dcs_rejected')">
                 {{-- <x-slot:filters>
                     <form action="{{ route('admin.dcs_approval.export') }}" method="POST">
                         @csrf

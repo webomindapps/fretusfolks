@@ -101,7 +101,7 @@
                 @csrf
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Download Employee Documents</h5>
+                        <h5 class="modal-title text-primary">Download Employee Documents</h5>
                     </div>
                     <div class="modal-body">
                         <div class="mb-3">
@@ -125,4 +125,11 @@
             </form>
         </div>
     </div>
+    <style>
+        /* Custom modal width */
+        #downloadModal .modal-dialog {
+            max-width: 450px;
+            /* Adjust width as needed */
+        }
+    </style>
 </x-applayout>
