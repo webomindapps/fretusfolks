@@ -226,7 +226,7 @@ Route::prefix('admin')->group(function () {
         Route::post('ffi_offer_letter/create', [FFIOfferLetterController::class, 'store']);
         Route::get('/get-employee-details/{ffi_emp_id}', [FFIOfferLetterController::class, 'getEmployeeDetails'])->name('get.employee.details');
         Route::get('ffi_offer_letter/{id}/delete', [FFIOfferLetterController::class, 'destroy'])->name('ffi_offer_letter.delete');
-        Route::get('/generate-offer-letter/{id}', [FFIOfferLetterController::class, 'generateOfferLetterPdf'])->name('generate.offer.letter');
+        Route::get('/ffi_generate-offer-letter/{id}', [FFIOfferLetterController::class, 'generateOfferLetterPdf'])->name('ffi_generate.offer.letter');
         Route::post('ffi_offer_letter/bulk_operation', [FFIOfferLetterController::class, 'bulk'])->name('ffi_offer_letter.bulk');
 
         //ffi_increment_letter
@@ -311,7 +311,7 @@ Route::prefix('admin')->group(function () {
         Route::post('ffi_payslips/bulk-upload', [FFIPayslipsController::class, 'bulkUpload'])->name('ffi_payslips.bulk.upload');
         Route::post('ffi_payslips/export', [FFIPayslipsController::class, 'export'])->name('ffi_payslips.export');
         Route::get('ffi_payslips/search-payslip', [FFIPayslipsController::class, 'searchPayslip'])->name('search.ffi_payslips');
-        Route::get('/generate-payslips/{id}', [FFIPayslipsController::class, 'generatePayslipsPdf'])->name('generate.payslips');
+        Route::get('/ffi_generate-payslips/{id}', [FFIPayslipsController::class, 'generatePayslipsPdf'])->name('ffi_generate.payslips');
         Route::get('/ffi_payslips/delete/{id}', [FFIPayslipsController::class, 'destroy'])->name('ffi_payslips.delete');
 
         //tds_report

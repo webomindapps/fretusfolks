@@ -103,22 +103,14 @@ class FFIPayslipsController extends Controller
                     $payslips = PayslipCreate::dispatch($payslipdata[$index], $month, $year);
                     // dd($payslips);
                 }
+                if (file_exists($fileWithPath)) {
+                    unlink($fileWithPath);
+                }
             }
         } catch (Exception $e) {
             dd($e);
         }
-        // $import = new FFI_PayslipsImport($month, $year);
 
-        // try {
-        //     Excel::import($import, $file);
-        // } catch (Exception $e) {
-        //     return redirect()->route('admin.ffi_payslips')->with('error', 'There was an error during the import process: ' . $e->getMessage());
-        // }
-
-        // $error = '';
-        // foreach ($import->failures() as $failure) {
-        //     $error .= 'Row no: ' . $failure->row() . ', Column: ' . $failure->attribute() . ', Error: ' . implode(', ', $failure->errors()) . '<br>';
-        // }
         $error = '';
         return redirect()->route('admin.ffi_payslips')->with([
             'success' => 'Payslips added successfully',
@@ -180,7 +172,6 @@ class FFIPayslipsController extends Controller
     public function generatePayslipsPdf($id)
     {
         $payslip = $this->model()->findOrFail($id);
-
         $data = [
             'payslip' => $payslip,
         ];

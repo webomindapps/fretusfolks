@@ -67,8 +67,8 @@
 
                         <div>
                             <button type="submit" class="btn btn-primary">Upload</button>
-                            <a href="{{ asset('admin/fffi_payslip_format.csv') }}"
-                                class="btn btn-info text-white ms-3" download="fffi_payslip_format.csv">
+                            <a href="{{ asset('admin/fffi_payslip_format.csv') }}" class="btn btn-info text-white ms-3"
+                                download="fffi_payslip_format.csv">
                                 Download Sample
                             </a>
                         </div>
@@ -195,8 +195,8 @@
                                 <td>{{ \DateTime::createFromFormat('!m', $item->month)->format('F') }}-{{ $item->year }}
                                 </td>
                                 <td>
-                                    <a href="{{ route('admin.generate.payslips', ['id' => $item->id]) }}"
-                                        target="_blank" class="btn btn-sm btn-info">
+                                    <a href="{{ route('admin.ffi_generate.payslips', ['id' => $item->id]) }}"
+                                        target="_balnk" class="btn btn-sm btn-info">
                                         View Details
                                     </a>
                                     <a href="{{ route('admin.ffi_payslips.delete', $item) }}"

@@ -12,6 +12,7 @@ use App\Models\FFIEducationModel;
 use App\Exports\FHRMSReportExport;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -152,7 +153,7 @@ class FHRMSController extends Controller
             $employee->fill($filePaths);
             $employee->modified_date = now();
             $employee->psd = $request->password;
-            $employee->password = bcrypt($request->password);
+            $employee->password = Hash::make($request->password);
             $employee->data_status = '0';
             $employee->active_status = '0';
             $employee->save();
@@ -302,7 +303,7 @@ class FHRMSController extends Controller
 
             if ($request->filled('password')) {
                 $employee->psd = $request->password;
-                $employee->password = bcrypt($request->password);
+                $employee->password = Hash::make($request->password);
             }
             $employee->save();
             if ($request->hasFile('education_certificates')) {

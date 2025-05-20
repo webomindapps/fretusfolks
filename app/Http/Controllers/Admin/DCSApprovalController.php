@@ -15,6 +15,7 @@ use App\Models\CandidateDocuments;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\EducationCertificate;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use App\Jobs\ImportApprovedCandidatesJob;
@@ -177,7 +178,7 @@ class DCSApprovalController extends Controller
 
         DB::beginTransaction();
         try {
-            $validatedData['password'] = $request->input('dcs_approval', 'ffemp@123');
+            $validatedData['password'] = Hash::make($request->input('dcs_approval', 'ffemp@123'));
             $validatedData['psd'] = $request->input('dcs_approval', 'ffemp@123');
             $validatedData['dcs_approval'] = $request->input('dcs_approval', 0);
             $validatedData['data_status'] = $request->input('data_status', 1);
@@ -541,6 +542,9 @@ class DCSApprovalController extends Controller
         DB::beginTransaction();
         try {
             $validatedData['data_status'] = $request->input('data_status', 1);
+            // // $validatedData['password'] = Hash::make($request->input('password'));
+            // $validatedData['password'] = password_hash('password', PASSWORD_BCRYPT);
+
             $validatedData['dcs_approval'] = $request->input('dcs_approval', 0);
             $validatedData['comp_status'] = $request->input('comp_status', 0);
             $validatedData['modify_by'] = auth()->id();
