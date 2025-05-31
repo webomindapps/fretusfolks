@@ -6,6 +6,7 @@
             @php
                 $columns = [
                     ['label' => 'Id', 'column' => 'id', 'sort' => true],
+                    ['label' => 'Employee ID', 'column' => 'employee_id', 'sort' => true],
                     ['label' => 'Emp Name', 'column' => 'emp_name', 'sort' => true],
                     ['label' => 'Increment Letter Created On', 'column' => 'date', 'sort' => true],
                     ['label' => 'Designation', 'column' => 'designation', 'sort' => true],
@@ -21,6 +22,7 @@
                                 value="{{ $item->id }}">
                         </td> --}}
                         <td>{{ $item->id }}</td>
+                        <td>{{ $item->employee_id ?? 'N/A' }}</td>
                         <td>{{ $item->emp_name ?? 'N/A' }}</td>
                         <td>{{ \Carbon\Carbon::parse($item->date)->format('d-m-Y') }}</td>
                         <td>{{ $item->designation ?? 'N/A' }}</td>

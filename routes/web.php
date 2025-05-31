@@ -220,6 +220,11 @@ Route::prefix('admin')->group(function () {
         Route::post('fhrms/pending-details', [FHRMSController::class, 'storePendingDetails'])->name('fhrms.pending.store');
         Route::get('/fhrms/ffi_birthday', [FHRMSController::class, 'todayBirthday'])->name('fhrms.ffi_birthday');
         Route::post('/fhrms/pending-update', [FHRMSController::class, 'updatePendingDetails'])->name('fhrms.pending.update');
+        Route::get('fhrms/trashed', [FHRMSController::class, 'trashed'])->name('fhrms.trashed');
+        Route::get('fhrms/{id}/restore', [FHRMSController::class, 'restore'])->name('fhrms.restore');
+        Route::get('fhrms/{id}/force-delete', [FHRMSController::class, 'forceDelete'])->name('fhrms.forceDelete');
+
+
         //FFI-Offer Letter
         Route::get('/ffi_offer_letter', [FFIOfferLetterController::class, 'index'])->name('ffi_offer_letter');
         Route::get('ffi_offer_letter/create', [FFIOfferLetterController::class, 'create'])->name('ffi_offer_letter.create');
@@ -411,7 +416,8 @@ Route::prefix('admin')->group(function () {
         Route::get('/bankdetails/{id}/edit', [ComplianceController::class, 'bankedit'])->name('bankdetails.edit');
         Route::post('/bankdetails/{id}/edit', [ComplianceController::class, 'bankupdate']);
         Route::get('bankdetails/{id}/delete', [ComplianceController::class, 'destroy'])->name('bankdetails.delete');
-
+        Route::post('/candidatemaster/bankimport', [ComplianceController::class, 'bankimport'])->name('candidatemaster.bankimport');
+        Route::post('candidatemaster/formate/bankform', [ComplianceController::class, 'bankdownload'])->name('candidatemaster.bankform');
         //Employee Lifecycle
         Route::get('candidatelifecycle', [EmployeeLifecycleController::class, 'index'])->name('candidatelifecycle');
         Route::get('candidatelifecycle/view/{id}', [EmployeeLifecycleController::class, 'viewdetail'])->name('candidatelifecycle.view');

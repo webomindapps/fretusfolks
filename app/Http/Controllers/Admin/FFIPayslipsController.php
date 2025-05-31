@@ -93,15 +93,22 @@ class FFIPayslipsController extends Controller
                 }
                 $datafromCsv = array_chunk($datafromCsv, 10);
                 foreach ($datafromCsv as $index => $dataCsv) {
-
                     foreach ($dataCsv as $data) {
-                        // dd($header, $data);
+                        $row = array_combine($header, $data);
 
-                        $payslipdata[$index][] = array_combine($header, $data);
+                        // Delete existing record before adding new
+                        if (!empty($row['emp_id']) && !empty($month) && !empty($year)) {
+                            FFIPayslipsModel::where('emp_id', $row['emp_id'])
+                                ->where('month', $month)
+                                ->where('year', $year)
+                                ->delete();
+                        }
+
+                        $payslipdata[$index][] = $row;
                     }
-                    // dd($payslipdata[$index], $month, $year);
-                    $payslips = PayslipCreate::dispatch($payslipdata[$index], $month, $year);
-                    // dd($payslips);
+
+                    // Dispatch job after chunk preparation
+                    PayslipCreate::dispatch($payslipdata[$index], $month, $year);
                 }
                 if (file_exists($fileWithPath)) {
                     unlink($fileWithPath);

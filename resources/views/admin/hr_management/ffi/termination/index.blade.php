@@ -7,9 +7,9 @@
                 $columns = [
                     ['label' => 'Id', 'column' => 'id', 'sort' => true],
                     ['label' => 'Emp Id', 'column' => 'emp_id', 'sort' => true],
-                    ['label' => 'Emp Name', 'column' => 'emp_name', 'sort' => true],
-                    ['label' => 'Date', 'column' => 'date', 'sort' => true],
-                    ['label' => 'Phone', 'column' => 'phone1', 'sort' => true],
+                    ['label' => 'Emp Name', 'column' => 'emp_name', 'sort' => false],
+                    ['label' => 'Date', 'column' => 'date', 'sort' => false],
+                    ['label' => 'Phone', 'column' => 'phone1', 'sort' => false],
                     ['label' => 'Designation', 'column' => 'designation', 'sort' => true],
                     ['label' => 'Actions', 'column' => 'action', 'sort' => false],
                 ];

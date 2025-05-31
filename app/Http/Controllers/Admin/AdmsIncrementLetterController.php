@@ -22,7 +22,7 @@ class AdmsIncrementLetterController extends Controller
     public function index()
     {
 
-        $searchColumns = ['id', 'emp_name'];
+        $searchColumns = ['id', 'employee_id', 'emp_name'];
         $search = request()->search;
         $from_date = request()->from_date;
         $to_date = request()->to_date;
@@ -167,7 +167,7 @@ class AdmsIncrementLetterController extends Controller
                 'gross_salary' => $request->gross_salary,
                 'emp_esic' => $request->emp_esic,
                 'pt' => $request->pt,
-                'lwf'=>$request->lwf,
+                'lwf' => $request->lwf,
                 'total_deduction' => $request->total_deduction,
                 'employer_pf_percentage' => $request->employer_pf_percentage,
                 'employer_pf' => $request->employer_pf,
@@ -203,7 +203,7 @@ class AdmsIncrementLetterController extends Controller
                 'gross_salary' => $request->gross_salary,
                 'emp_esic' => $request->emp_esic,
                 'pt' => $request->pt,
-                'lwf'=>$request->lwf,
+                'lwf' => $request->lwf,
                 'total_deduction' => $request->total_deduction,
                 'employer_pf_percentage' => $request->employer_pf_percentage,
                 'employer_pf' => $request->employer_pf,

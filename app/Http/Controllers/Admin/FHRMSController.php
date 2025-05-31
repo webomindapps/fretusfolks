@@ -25,7 +25,7 @@ class FHRMSController extends Controller
     }
     public function index()
     {
-        $searchColumns = ['id', 'emp_name', 'joining_date', 'phone1', 'email'];
+        $searchColumns = ['id','ffi_emp_id', 'emp_name', 'joining_date', 'phone1', 'email'];
         $search = request()->search;
         $from_date = request()->from_date;
         $to_date = request()->to_date;
@@ -338,8 +338,11 @@ class FHRMSController extends Controller
 
     public function destroy($id)
     {
-        $this->model()->destroy($id);
-        return redirect()->route('admin.fhrms')->with('success', 'Employee data has been successfully deleted!');
+        $employee = $this->model()->findOrFail($id);
+        $employee->delete(); // This will not remove the record permanently
+        return redirect()->route('admin.fhrms')->with('success', 'Employee moved to trash.');
+        // $this->model()->destroy($id);
+        // return redirect()->route('admin.fhrms')->with('success', 'Employee data has been successfully deleted!');
     }
     public function bulk(Request $request)
     {
@@ -782,5 +785,45 @@ class FHRMSController extends Controller
         return view('admin.hr_management.fhrms.today_birthday', [
             'employee' => $employees,
         ]);
+    }
+    public function trashed()
+    {
+        $searchColumns = ['id', 'ffi_emp_id', 'emp_name', 'joining_date', 'phone1', 'email'];
+        $search = request()->search;
+        $from_date = request()->from_date;
+        $to_date = request()->to_date;
+        $order = request()->orderedColumn;
+        $orderBy = request()->orderBy;
+        $paginate = request()->paginate;
+
+        $query = $this->model()->onlyTrashed();
+
+        if ($from_date && $to_date) {
+            $query->whereBetween('created_at', [$from_date, $to_date]);
+        }
+        if ($search != '')
+            $query->where(function ($q) use ($search, $searchColumns) {
+                foreach ($searchColumns as $key => $value)
+                    ($key == 0) ? $q->where($value, 'LIKE', '%' . $search . '%') : $q->orWhere($value, 'LIKE', '%' . $search . '%');
+            });
+
+        ($order == '') ? $query->orderByDesc('id') : $query->orderBy($order, $orderBy);
+
+        $employee = $paginate ? $query->paginate($paginate)->appends(request()->query()) : $query->paginate(10)->appends(request()->query());
+
+        // $employee = $this->model()->onlyTrashed()->get();
+        return view('admin.hr_management.fhrms.trashed', compact('employee'));
+    }
+    public function restore($id)
+    {
+        $fhrms = $this->model()->onlyTrashed()->findOrFail($id);
+        $fhrms->restore();
+        return redirect()->back()->with('success', 'Fhrms Employees restored successfully.');
+    }
+    public function forceDelete($id)
+    {
+        $fhrms = $this->model()->onlyTrashed()->findOrFail($id);
+        $fhrms->forceDelete();
+        return redirect()->back()->with('success', 'Fhrms Employee permanently deleted.');
     }
 }

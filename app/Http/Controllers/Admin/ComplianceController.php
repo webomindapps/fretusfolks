@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\MuserMaster;
 use Exception;
 use ZipArchive;
 use App\Models\CFISModel;
+use App\Jobs\ImportBankJob;
 use App\Models\BankDetails;
 use App\Models\DCSChildren;
+use App\Models\MuserMaster;
 use Illuminate\Http\Request;
+use App\Exports\BankDownload;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Exports\CadidateDownload;
 use App\Imports\CandidatesImport;
@@ -83,7 +85,7 @@ class ComplianceController extends Controller
         if (!File::exists($tempDir)) {
             File::makeDirectory($tempDir, 0755, true, true);
         }
-// dd($tempDir);
+        // dd($tempDir);
         $pdf = Pdf::loadView('admin.adms.compliance.candidate-pdf', compact('candidate', 'children', 'bankdetails'));
         $pdfPath = $tempDir . "/candidate_details_$id.pdf";
         File::put($pdfPath, $pdf->output());
@@ -114,14 +116,14 @@ class ComplianceController extends Controller
             return response()->json(['error' => 'ZIP file not found.'], 500);
         }
 
-dd($zipPath);
+        dd($zipPath);
         File::delete($pdfPath);
 
 
         return response()->download($zipPath)->deleteFileAfterSend(true);
     }
 
-     private function addDocumentsToZip(ZipArchive $zip, $documents, $folderName)
+    private function addDocumentsToZip(ZipArchive $zip, $documents, $folderName)
     {
         foreach ($documents as $document) {
             if (isset($document->bank_document)) {
@@ -338,5 +340,61 @@ dd($zipPath);
         ]);
 
         return redirect()->route('admin.candidatemaster')->with('success', 'Successfully updated!');
+    }
+
+    public function bankimport(Request $request)
+    {
+        $file = $request->file;
+
+        try {
+            if ($file) {
+                $fileName = time() . '_' . $file->getClientOriginalName();
+                $filePath = public_path('imports');
+
+                $file->move($filePath, $fileName);
+                $fileWithPath = $filePath . '/' . $fileName;
+
+                $records = array_map('str_getcsv', file($fileWithPath));
+                $header = $records[0];
+                unset($records[0]);
+                // dd($records, $header);
+                $dataChunks = array_chunk($records, 1000);
+                foreach ($dataChunks as $chunk) {
+                    $processedData = [];
+
+                    foreach ($chunk as $record) {
+                        if (count($header) == count($record)) {
+                            $processedData[] = array_combine($header, $record);
+                        }
+                    }
+
+                    if (!empty($processedData)) {
+                        ImportBankJob::dispatch($processedData);
+                    }
+                }
+
+                if (file_exists($fileWithPath)) {
+                    unlink($fileWithPath);
+                }
+            }
+        } catch (Exception $e) {
+            return redirect()->route('admin.pendingbankapprovals')->with([
+                'error_msg' => 'Import failed: ' . $e->getMessage()
+            ]);
+        }
+
+        return redirect()->route('admin.pendingbankapprovals')->with([
+            'success' => 'File imported successfully'
+        ]);
+    }
+
+    public function bankdownload(Request $request)
+    {
+
+        $query = BankDetails::where('bank_status', 0);
+
+        $candidates = $query->get();
+
+        return Excel::download(new BankDownload($candidates), 'bankform.csv');
     }
 }

@@ -18,7 +18,7 @@ class FFIPipLetterController extends Controller
     }
     public function index()
     {
-        $searchColumns = ['id', 'date', 'emp_id'];
+        $searchColumns = ['id', 'date', 'emp_id', 'emp_name', 'phone1', 'email', 'designation'];
         $search = request()->search;
         $from_date = request()->from_date;
         $to_date = request()->to_date;
@@ -35,7 +35,15 @@ class FFIPipLetterController extends Controller
         if ($search != '') {
             $query->where(function ($q) use ($search, $searchColumns) {
                 foreach ($searchColumns as $key => $value) {
-                    $key == 0 ? $q->where($value, 'LIKE', '%' . $search . '%') : $q->orWhere($value, 'LIKE', '%' . $search . '%');
+                    if (in_array($value, ['emp_name', 'phone1', 'email', 'designation'])) {
+                        $q->orWhereHas('pip_letter', function ($q2) use ($value, $search) {
+                            $q2->where($value, 'LIKE', '%' . $search . '%');
+                        });
+                    } else {
+                        $key == 0
+                            ? $q->where($value, 'LIKE', '%' . $search . '%')
+                            : $q->orWhere($value, 'LIKE', '%' . $search . '%');
+                    }
                 }
             });
         }
@@ -112,7 +120,7 @@ class FFIPipLetterController extends Controller
 
     public function update(Request $request, $id)
     {
-         $request->validate([
+        $request->validate([
             'ffi_emp_id' => 'required',
             'status' => 'nullable|string',
             'from_name' => 'required|string',

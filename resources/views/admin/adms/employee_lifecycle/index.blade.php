@@ -98,7 +98,9 @@
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $result->entity_name }}</td>
                                 <td>{{ $result->ffi_emp_id }}</td>
-                                <td>{{ $result->emp_name }}</td>
+                                <td>
+                                    {{ trim("{$result->emp_name} {$result->middle_name} {$result->last_name}") ?: 'N/A' }}
+                                </td>
                                 <td>{{ $result->phone1 }}</td>
                                 <td>{{ $result->email }}</td>
                                 <td>

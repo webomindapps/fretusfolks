@@ -22,7 +22,7 @@ class CDMSController extends Controller
     }
     public function index()
     {
-        $searchColumns = ['id', 'client_name', 'contact_person', 'contact_person_phone', 'contact_person_email'];
+        $searchColumns = ['id', 'client_code', 'client_name', 'contact_person', 'contact_person_phone', 'contact_person_email'];
         $search = request()->search;
         $from_date = request()->from_date;
         $to_date = request()->to_date;
@@ -58,7 +58,7 @@ class CDMSController extends Controller
         // dd($request->all());
         $request->validate([
             'client_code' => 'required|string|max:255',
-            'client_ffi_id' => 'required|string|max:255',
+            'client_ffi_id' => 'nullable|string|max:255',
             'client_name' => 'required|string|max:255',
             'land_line' => 'required|string|max:15',
             'client_email' => 'required|email|max:255',
@@ -159,7 +159,7 @@ class CDMSController extends Controller
     {
         $request->validate([
             'client_code' => 'required|string|max:255',
-            'client_ffi_id' => 'required|string|max:255',
+            'client_ffi_id' => 'nullable|string|max:255',
             'client_name' => 'required|string|max:255',
             'land_line' => 'required|string|max:15',
             'client_email' => 'required|email|max:255',

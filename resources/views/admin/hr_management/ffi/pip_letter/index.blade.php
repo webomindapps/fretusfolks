@@ -8,10 +8,10 @@
                     ['label' => 'Id', 'column' => 'id', 'sort' => true],
                     ['label' => 'From Name', 'column' => 'from_name', 'sort' => true],
                     ['label' => 'Emp Id', 'column' => 'emp_id', 'sort' => true],
-                    ['label' => 'To', 'column' => 'emp_name', 'sort' => true],
-                    ['label' => 'Date', 'column' => 'date', 'sort' => true],
-                    ['label' => 'Phone', 'column' => 'phone1', 'sort' => true],
-                    ['label' => 'Designation', 'column' => 'designation', 'sort' => true],
+                    ['label' => 'To', 'column' => 'emp_name', 'sort' => false],
+                    ['label' => 'Date', 'column' => 'date', 'sort' => false],
+                    ['label' => 'Phone', 'column' => 'phone1', 'sort' => false],
+                    ['label' => 'Designation', 'column' => 'designation', 'sort' => false],
                     ['label' => 'Actions', 'column' => 'action', 'sort' => false],
                 ];
             @endphp

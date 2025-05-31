@@ -1,15 +1,16 @@
 <x-applayout>
     <x-admin.breadcrumb title=" FFI Offer Letters" :create="route('admin.ffi_offer_letter.create')" />
-   
+
     <div class="row">
         <div class="col-lg-12">
             @php
                 $columns = [
                     ['label' => 'Id', 'column' => 'id', 'sort' => true],
-                    ['label' => 'Emp Name', 'column' => 'emp_name', 'sort' => true],
+                    ['label' => 'Emp Id', 'column' => 'employee_id', 'sort' => true],
+                    ['label' => 'Emp Name', 'column' => 'emp_name', 'sort' => false],
                     ['label' => 'Offer Letter Created On', 'column' => 'date', 'sort' => true],
-                    ['label' => 'Phone', 'column' => 'phone1', 'sort' => true],
-                    ['label' => 'Email', 'column' => 'email', 'sort' => true],
+                    ['label' => 'Phone', 'column' => 'phone1', 'sort' => false],
+                    ['label' => 'Email', 'column' => 'email', 'sort' => false],
                     ['label' => 'Actions', 'column' => 'action', 'sort' => false],
                 ];
             @endphp
@@ -21,6 +22,7 @@
                                 value="{{ $item->id }}">
                         </td>
                         <td>{{ $item->id }}</td>
+                        <td>{{ $item->employee_id }}</td>
                         <td>{{ $item->employee ? $item->employee->emp_name : 'N/A' }}</td>
                         <td>{{ \Carbon\Carbon::parse($item->date)->format('d-m-Y') }}</td>
                         <td>{{ $item->employee ? $item->employee->phone1 : 'N/A' }}</td>
@@ -33,7 +35,7 @@
                                 </div>
                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                                     <li>
-                                        <a href="{{ route('admin.generate.offer.letter', ['id' => $item->id]) }}"
+                                        <a href="{{ route('admin.ffi_generate.offer.letter', ['id' => $item->id]) }}"
                                             target="_blank" class="dropdown-item">
                                             <i class="bx bx-link-alt"></i> View Details
                                         </a>

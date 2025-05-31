@@ -28,7 +28,7 @@ class DCSApprovalController extends Controller
     }
     public function index()
     {
-        $searchColumns = ['id', 'client_id', 'emp_name', 'phone1'];
+        $searchColumns = ['id', 'ffi_emp_id', 'client_id', 'emp_name', 'phone1'];
         $search = request()->search;
         $from_date = request()->from_date;
         $to_date = request()->to_date;
@@ -328,7 +328,7 @@ class DCSApprovalController extends Controller
     }
     public function rejected()
     {
-        $searchColumns = ['id', 'client_id', 'emp_name', 'phone1'];
+        $searchColumns = ['id', 'ffi_emp_id', 'client_id', 'emp_name', 'phone1'];
         $search = request()->search;
         $from_date = request()->from_date;
         $to_date = request()->to_date;
@@ -356,7 +356,7 @@ class DCSApprovalController extends Controller
 
     public function hrindex()
     {
-        $searchColumns = ['id', 'client_id', 'emp_name', 'phone1'];
+        $searchColumns = ['id', 'ffi_emp_id', 'client_id', 'emp_name', 'phone1'];
         $search = request()->search;
         $from_date = request()->from_date;
         $to_date = request()->to_date;
@@ -388,10 +388,14 @@ class DCSApprovalController extends Controller
 
         $search = request()->get('search');
         if ($search) {
-            $query->where('emp_name', 'LIKE', "%$search%");
+            $query->where(function ($q) use ($search) {
+                $q->where('emp_name', 'LIKE', "%$search%")
+                    ->orWhere('ffi_emp_id', 'LIKE', "%$search%");
+            });
         }
 
-        $orderBy = request()->get('orderBy', 'desc');
+
+        $orderBy = in_array(request()->get('orderBy'), ['asc', 'desc']) ? request()->get('orderBy') : 'desc';
         $query->orderBy('id', $orderBy);
 
         $candidates = $query->paginate(10)->appends(request()->query());
@@ -405,39 +409,11 @@ class DCSApprovalController extends Controller
             ->with(['client', 'educationCertificates', 'otherCertificates', 'candidateDocuments'])
             ->findOrFail($id);
 
-        if (!$candidate->client || !$candidate->client->client_ffi_id) {
-            return redirect()->back()->with('error', 'Client FFI ID not found. Contact Admin');
-        }
-
-        $clientFfiId = $candidate->client->client_ffi_id;
-
-        if ($candidate->ffi_emp_id) {
-            $uniqueId = $candidate->ffi_emp_id;
-        } else {
-            $lastId = $this->model()
-                ->whereHas('client', function ($query) use ($candidate) {
-                    $query->where('id', $candidate->client_id);
-                })
-                ->where('ffi_emp_id', 'LIKE', $clientFfiId . '%')
-                ->orderBy('ffi_emp_id', 'desc')
-                ->value('ffi_emp_id');
-
-            if ($lastId) {
-                $number = (int) substr($lastId, strlen($clientFfiId));
-                $newNumber = str_pad($number + 1, 4, '0', STR_PAD_LEFT);
-            } else {
-                $newNumber = '0001';
-            }
-
-            $uniqueId = $clientFfiId . $newNumber;
-
-            $candidate->update(['ffi_emp_id' => $uniqueId]);
-        }
         $bankdetails = BankDetails::where('emp_id', $candidate->id)->where('status', 1)->get();
 
         $children = DCSChildren::where('emp_id', $candidate->id)->get();
 
-        return view('admin.adms.hr.hredit', compact('candidate', 'uniqueId', 'children', 'bankdetails'));
+        return view('admin.adms.hr.hredit', compact('candidate', 'children', 'bankdetails'));
     }
 
 
@@ -1024,7 +1000,7 @@ class DCSApprovalController extends Controller
 
     public function docrejected()
     {
-        $searchColumns = ['id', 'client_id', 'emp_name', 'phone1'];
+        $searchColumns = ['id', 'ffi_emp_id', 'client_id', 'emp_name', 'phone1'];
         $search = request()->search;
         $from_date = request()->from_date;
         $to_date = request()->to_date;
@@ -1316,9 +1292,21 @@ class DCSApprovalController extends Controller
                 foreach ($dataChunks as $chunk) {
                     $processedData = [];
 
-                    foreach ($chunk as $record) {
+                    foreach ($chunk as $index => $record) {
                         if (count($header) == count($record)) {
-                            $processedData[] = array_combine($header, $record);
+                            $row = array_combine($header, $record);
+
+                            // Validate for uniqueness
+                            $exists = DB::table('backend_management') // Replace with actual table
+                                ->where('ffi_emp_id', $row['emp_id'])
+                                ->orWhere('phone1', $row['phone1'])
+                                ->exists();
+
+                            if ($exists) {
+                                $duplicates[] = "Duplicate at Row #" . ($index + 2) . " — ID: {$row['emp_id']}, Phone: {$row['phone1']}";
+                            } else {
+                                $processedData[] = $row;
+                            }
                         }
                     }
 
@@ -1331,10 +1319,16 @@ class DCSApprovalController extends Controller
                 if (file_exists($fileWithPath)) {
                     unlink($fileWithPath);
                 }
+                if (!empty($duplicates)) {
+                    return redirect()->route('admin.dcs_approval')->with([
+                        'error' => 'Some records were skipped due to duplicates:',
+                        'duplicates' => $duplicates
+                    ]);
+                }
             }
         } catch (Exception $e) {
             return redirect()->route('admin.dcs_approval')->with([
-                'error_msg' => 'Import failed: ' . $e->getMessage()
+                'error' => 'Import failed: ' . $e->getMessage()
             ]);
         }
 

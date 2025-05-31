@@ -6,6 +6,7 @@
             @php
                 $columns = [
                     ['label' => 'Id', 'column' => 'id', 'sort' => true],
+                    ['label' => 'Employee ID', 'column' => 'employee_id', 'sort' => true],
                     ['label' => 'Emp Name', 'column' => 'emp_name', 'sort' => true],
                     ['label' => 'Offer Letter Created On', 'column' => 'date', 'sort' => true],
                     ['label' => 'Phone', 'column' => 'phone1', 'sort' => true],
@@ -18,6 +19,7 @@
                     <tr>
 
                         <td>{{ $item->id }}</td>
+                        <td>{{ $item->employee_id ?? 'N/A' }}</td>
                         <td>{{ $item->emp_name }}</td>
                         <td>{{ \Carbon\Carbon::parse($item->date)->format('d-m-Y') }}</td>
                         <td>{{ $item->phone1 }}</td>

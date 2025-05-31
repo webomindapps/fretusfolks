@@ -160,7 +160,7 @@
                                         </div>
                                         <div id="max-children-message"
                                             style="display: none; color: red; margin-top: 10px;">
-                                            You can only add details for up to 2 children.
+                                            You can only add details for up to 4 children.
                                         </div>
                                     </div>
                                 </div>
@@ -487,7 +487,7 @@
                                                                     View Education Certificate {{ $loop->iteration }}
                                                                 </a>
                                                             </td>
-                                                           
+
                                                             <td>
                                                                 <div class="dropdown">
                                                                     <button class="btn btn-sm dropdown-toggle"
@@ -526,7 +526,7 @@
                                                                     View Other Certificate {{ $loop->iteration }}
                                                                 </a>
                                                             </td>
-                                                           
+
                                                             <td>
                                                                 <div class="dropdown">
                                                                     <button class="btn btn-sm dropdown-toggle"
@@ -811,7 +811,7 @@
         });
         //no of children
         document.addEventListener('DOMContentLoaded', function() {
-            const maxChildren = 2;
+            const maxChildren = 4;
             const noOfChildrenField = document.getElementById('no_of_childrens');
             const childrenDetailsContainer = document.getElementById('children-details-container');
             const childrenDetails = document.getElementById('children-details');
@@ -854,17 +854,22 @@
             <input type="text" name="child_aadhar[]" id="child_aadhar_${i}" class="form-control" 
                    value="${childData.aadhar_no || ''}" maxlength="12" inputmode="numeric">
         </div>
+           <div class="form-group col-lg-3">
+            <label for="child_gender_${i}">Child ${i} Gender:</label>
+            <input type="text" name="child_gender[]" id="child_gender_${i}" class="form-control"
+                   value="${childData.gender || ''}" >
+        </div>
         <div class="form-group col-lg-3">
             <label for="child_photo_${i}">Child ${i} Photo:</label>
             <input type="file" name="child_photo[]" id="child_photo_${i}" accept="application/pdf, image/jpg, image/png" 
                    class="form-control">
 
             ${childData.photo ? `
-                                            <div id="image-preview-container-${i}" class="d-flex mt-2">
-                                                <img src="/storage/${childData.photo}" 
-                                                     class="img-thumbnail" width="100" height="100" 
-                                                     alt="Child ${i} Uploaded Photo">
-                                            </div>` : ''}
+                                                            <div id="image-preview-container-${i}" class="d-flex mt-2">
+                                                                <img src="/storage/${childData.photo}" 
+                                                                     class="img-thumbnail" width="100" height="100" 
+                                                                     alt="Child ${i} Uploaded Photo">
+                                                            </div>` : ''}
         </div>
     `;
                         childrenDetails.appendChild(childRow);
@@ -914,6 +919,7 @@
                         return [
                             'name' => $name,
                             'dob' => old('child_dobs')[$index] ?? '',
+                            'gender' => old('child_gender')[$index] ?? '',
                             'aadhar_no' => old('child_aadhar')[$index] ?? '',
                         ];
                     })

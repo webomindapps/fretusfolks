@@ -284,6 +284,13 @@ class SideBar extends Component
                     'name' => 'ffi_birthday',
                     'roles' => ['Admin'],
                 ],
+                [
+                    'title' => 'FHRMS Trashed',
+                    'icon' => 'bx bx-chevron-right',
+                    'route' => 'admin.fhrms.trashed',
+                    'name' => 'trashed',
+                    'roles' => ['Admin'],
+                ],
             ],
 
         ],

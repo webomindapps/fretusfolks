@@ -3,8 +3,9 @@
 namespace App\Jobs;
 
 use App\Models\CFISModel;
-use Illuminate\Bus\Queueable;
 use Illuminate\Bus\Batchable;
+use Illuminate\Bus\Queueable;
+use App\Models\ClientManagement;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -31,7 +32,9 @@ class ImportCFISJob implements ShouldQueue
         $info = [];
         // dd($this->data);
         foreach ($this->data as $row) {
+            $client = ClientManagement::where('client_name', $row['client_name'])->first();
             $info[] = [
+                'entity_name' => $row['client_name'],
                 'emp_name' => $row['emp_name'],
                 'email' => $row['email'] ?? null,
                 'designation' => $row['designation'] ?? null,
@@ -42,15 +45,13 @@ class ImportCFISJob implements ShouldQueue
                 'dcs_approval' => 1,
                 'data_status' => 0,
                 'created_by' => auth()->id(),
+                'client_id' => $client?->id,
             ];
 
 
         }
 
-        // if (!empty($info)) {
-        //     // dd($info);
-        //     CFISModel::Create($info[]);
-        // }
+     
         if (!empty($info)) {
             foreach ($info as $data) {
                 CFISModel::updateOrCreate(

@@ -6,10 +6,11 @@
             @php
                 $columns = [
                     ['label' => 'Id', 'column' => 'id', 'sort' => true],
-                    ['label' => 'Emp Name', 'column' => 'emp_name', 'sort' => true],
-                    ['label' => 'Offer Letter Created On', 'column' => 'date', 'sort' => true],
-                    ['label' => 'Phone', 'column' => 'phone1', 'sort' => true],
-                    ['label' => 'Email', 'column' => 'email', 'sort' => true],
+                    ['label' => 'Emp Id', 'column' => 'employee_id', 'sort' => true],
+                    ['label' => 'Emp Name', 'column' => 'emp_name', 'sort' => false],
+                    ['label' => 'Increment Letter Created On', 'column' => 'date', 'sort' => true],
+                    ['label' => 'Phone', 'column' => 'phone1', 'sort' => false],
+                    ['label' => 'Email', 'column' => 'email', 'sort' => false],
                     ['label' => 'Actions', 'column' => 'action', 'sort' => false],
                 ];
             @endphp
@@ -21,6 +22,7 @@
                                 value="{{ $item->id }}">
                         </td>
                         <td>{{ $item->id }}</td>
+                        <td>{{ $item->employee_id }}</td>
                         <td>{{ $item->incrementletter ? $item->incrementletter->emp_name : 'N/A' }}</td>
                         <td>{{ \Carbon\Carbon::parse($item->date)->format('d-m-Y') }}</td>
                         <td>{{ $item->incrementletter ? $item->incrementletter->phone1 : 'N/A' }}</td>

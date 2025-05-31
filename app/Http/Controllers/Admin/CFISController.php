@@ -34,7 +34,7 @@ class CFISController extends Controller
     }
     public function index()
     {
-        $searchColumns = ['id', 'client_id', 'emp_name', 'joining_date', 'phone1'];
+        $searchColumns = ['id','ffi_emp_id', 'client_id', 'emp_name', 'joining_date', 'phone1'];
         $search = request()->search;
         $from_date = request()->from_date;
         $to_date = request()->to_date;
@@ -311,7 +311,7 @@ class CFISController extends Controller
                     if (!empty($processedData)) {
                         // 
                         ImportCFISJob::dispatch($processedData);
-                        dd($processedData);
+                        // dd($processedData);
                     }
                 }
                 if (file_exists($fileWithPath)) {

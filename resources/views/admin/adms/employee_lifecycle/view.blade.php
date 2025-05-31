@@ -43,10 +43,10 @@
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-md-4 mb-2"><b>Entity Name:</b>
-                                            <span>{{ $candidate?->entity_name }}</span>
+                                            <span>{{ $candidate?->entity_name ?? 'N/A' }}</span>
                                         </div>
                                         <div class="col-md-4 mb-2"><b>FFI Emp ID:</b>
-                                            <span>{{ $candidate?->ffi_emp_id }}</span>
+                                            <span>{{ $candidate?->ffi_emp_id ?? 'N/A' }}</span>
                                         </div>
                                         <div class="col-md-4 mb-2"><b>Full Name:</b>
                                             <span>{{ $candidate?->emp_name }}
@@ -59,10 +59,10 @@
                                             <span>{{ $candidate?->gender }}</span>
                                         </div>
                                         <div class="col-md-4 mb-2"><b>Designation:</b>
-                                            <span>{{ $candidate?->designation }}</span>
+                                            <span>{{ $candidate?->designation ?? 'N/A' }}</span>
                                         </div>
                                         <div class="col-md-4 mb-2"><b>Department:</b>
-                                            <span>{{ $candidate?->department }}</span>
+                                            <span>{{ $candidate?->department ?? 'N/A' }}</span>
                                         </div>
                                         <div class="col-md-4 mb-2"><b>Interview Date:</b>
                                             <span>{{ \Carbon\Carbon::parse($candidate?->interview_date)->format('d-m-Y') }}</span>
@@ -71,47 +71,47 @@
                                             <span>{{ \Carbon\Carbon::parse($candidate?->joining_date)->format('d-m-Y') }}</span>
                                         </div>
                                         <div class="col-md-4 mb-2"><b>Email:</b>
-                                            <span>{{ $candidate?->email }}</span>
+                                            <span>{{ $candidate?->email ?? 'N/A' }}</span>
                                         </div>
                                         <div class="col-md-4 mb-2"><b>Phone 1:</b>
-                                            <span>{{ $candidate?->phone1 }}</span>
+                                            <span>{{ $candidate?->phone1 ?? 'N/A' }}</span>
                                         </div>
                                         <div class="col-md-4 mb-2"><b>Location:</b>
-                                            <span>{{ $candidate?->location }}</span>
+                                            <span>{{ $candidate?->location ?? 'N/A' }}</span>
                                         </div>
                                         <div class="col-md-4 mb-2"><b>State:</b>
-                                            <span>{{ $candidate?->clientstate->state_name }}</span>
+                                            <span>{{ $candidate?->clientstate->state_name ?? 'N/A' }}</span>
                                         </div>
                                         <div class="col-md-4 mb-2"><b>Religion:</b>
-                                            <span>{{ $candidate?->religion }}</span>
+                                            <span>{{ $candidate?->religion ?? 'N/A' }}</span>
                                         </div>
                                         <div class="col-md-4 mb-2"><b>Mother Tongue:</b>
-                                            <span>{{ $candidate?->mother_tongue }}</span>
+                                            <span>{{ $candidate?->mother_tongue ?? 'N/A' }}</span>
                                         </div>
                                         <div class="col-md-4 mb-2"><b>Languages:</b>
-                                            <span>{{ $candidate?->languages }}</span>
+                                            <span>{{ $candidate?->languages ?? 'N/A' }}</span>
                                         </div>
                                         <div class="col-md-4 mb-2"><b>Blood Group:</b>
-                                            <span>{{ $candidate?->blood_group }}</span>
+                                            <span>{{ $candidate?->blood_group ?? 'N/A' }}</span>
                                         </div>
                                         <div class="col-md-4 mb-2"><b>Qualification:</b>
-                                            <span>{{ $candidate?->qualification }}</span>
+                                            <span>{{ $candidate?->qualification ?? 'N/A' }}</span>
                                         </div>
                                         <div class="col-md-4 mb-2"><b>PAN NO:</b>
-                                            <span>{{ $candidate?->pan_no }}</span>
+                                            <span>{{ $candidate?->pan_no ?? 'N/A' }}</span>
                                         </div>
                                         <div class="col-md-4 mb-2"><b>Aadhar No:</b>
-                                            <span>{{ $candidate?->aadhar_no }}</span>
+                                            <span>{{ $candidate?->aadhar_no ?? 'N/A' }}</span>
                                         </div>
                                         <div class="col-md-4 mb-2"><b>Driving License NO:</b>
-                                            <span>{{ $candidate?->driving_license_no }}</span>
+                                            <span>{{ $candidate?->driving_license_no ?? 'N/A' }}</span>
                                         </div>
 
                                         <div class="col-md-12 mb-2"><b>Permanent Address:</b>
-                                            <span>{{ $candidate?->permanent_address }}</span>
+                                            <span>{{ $candidate?->permanent_address ?? 'N/A' }}</span>
                                         </div>
                                         <div class="col-md-12 mb-2"><b>Present Address:</b>
-                                            <span>{{ $candidate?->present_address }}</span>
+                                            <span>{{ $candidate?->present_address ?? 'N/A' }}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -133,59 +133,72 @@
                                     <div class="card-body">
                                         <div class="row">
                                             <div class="col-md-4 mb-2"><b>Father Name:</b>
-                                                <span>{{ $candidate?->father_name }}</span>
+                                                <span>{{ $candidate?->father_name ?? 'N/A' }}</span>
                                             </div>
                                             <div class="col-md-4 mb-2"><b>Father DOB:</b>
                                                 <span>{{ \Carbon\Carbon::parse($candidate?->father_dob)->format('d-m-Y') }}</span>
                                             </div>
                                             <div class="col-md-4 mb-2"><b>Father Aadhar No:</b>
-                                                <span>{{ $candidate?->father_aadhar_no }}</span>
+                                                <span>{{ $candidate?->father_aadhar_no ?? 'N/A' }}</span>
                                             </div>
                                             <div class="col-md-4 mb-2"><b>Mother Name:</b>
-                                                <span>{{ $candidate?->mother_name }}</span>
+                                                <span>{{ $candidate?->mother_name ?? 'N/A' }}</span>
                                             </div>
                                             <div class="col-md-4 mb-2"><b>Mother DOB:</b>
                                                 <span>{{ \Carbon\Carbon::parse($candidate?->mother_dob)->format('d-m-Y') }}</span>
                                             </div>
                                             <div class="col-md-4 mb-2"><b>Mother Aadhar No:</b>
-                                                <span>{{ $candidate?->mother_aadhar_no }}</span>
+                                                <span>{{ $candidate?->mother_aadhar_no ?? 'N/A' }}</span>
                                             </div>
 
                                             <div class="col-md-4 mb-2"><b>Spouse Name:</b>
-                                                <span>{{ $candidate?->spouse_name }}</span>
+                                                <span>{{ $candidate?->spouse_name ?? 'N/A' }}</span>
                                             </div>
                                             <div class="col-md-4 mb-2"><b>Spouse DOB:</b>
                                                 <span>{{ \Carbon\Carbon::parse($candidate?->spouse_dob)->format('d-m-Y') }}</span>
                                             </div>
                                             <div class="col-md-4 mb-2"><b>Spouse Aadhar No:</b>
-                                                <span>{{ $candidate?->spouse_aadhar_no }}</span>
+                                                <span>{{ $candidate?->spouse_aadhar_no ?? 'N/A' }}</span>
                                             </div>
                                             <div class="col-md-4 mb-2"><b>No. of Children:</b>
-                                                <span>{{ $candidate?->no_of_childrens }}</span>
+                                                <span>{{ $candidate?->no_of_childrens ?? 'N/A' }}</span>
                                             </div>
                                             @if ($children->isNotEmpty())
                                                 @foreach ($children as $child)
-                                                    <div class="col-md-4 mb-2">
-                                                        <b>Child Name:</b> <span>{{ $child?->name }}</span>
-                                                    </div>
-                                                    <div class="col-md-4 mb-2">
-                                                        <b>Date of Birth:</b>
-                                                        <span>{{ date('d-m-Y', strtotime($child?->child_dob)) }}</span>
-                                                    </div>
-                                                    <div class="col-md-4 mb-2">
-                                                        <b>Child Aadhar:</b> <span>{{ $child?->aadhar_no }}</span>
-                                                    </div>
+                                                    @if (!empty($child->name) && $child->name !== 'N/A')
+                                                        <div class="col-md-4 mb-2">
+                                                            <b>Child Name:</b> <span>{{ $child->name }}</span>
+                                                        </div>
+                                                    @endif
+                                                    @if (!empty($child->gender) && $child->gender !== 'N/A')
+                                                        <div class="col-md-4 mb-2">
+                                                            <b>Child Gender:</b> <span>{{ $child->gender }}</span>
+                                                        </div>
+                                                    @endif
+                                                    @if (!empty($child->child_dob) && $child->child_dob !== 'N/A')
+                                                        <div class="col-md-4 mb-2">
+                                                            <b>Date of Birth:</b>
+                                                            <span>{{ date('d-m-Y', strtotime($child->child_dob)) }}</span>
+                                                        </div>
+                                                    @endif
+
+                                                    @if (!empty($child->aadhar_no) && $child->aadhar_no !== 'N/A')
+                                                        <div class="col-md-4 mb-2">
+                                                            <b>Child Aadhar:</b> <span>{{ $child->aadhar_no }}</span>
+                                                        </div>
+                                                    @endif
                                                 @endforeach
                                             @endif
 
+
                                             <div class="col-md-4 mb-2"><b>Emergency Contact:</b>
-                                                <span>{{ $candidate?->emer_contact_no }}</span>
+                                                <span>{{ $candidate?->emer_contact_no ?? 'N/A' }}</span>
                                             </div>
                                             <div class="col-md-4 mb-2"><b>Emergency Name:</b>
-                                                <span>{{ $candidate?->emer_name }}</span>
+                                                <span>{{ $candidate?->emer_name ?? 'N/A' }}</span>
                                             </div>
                                             <div class="col-md-4 mb-2"><b>Emergency Relation:</b>
-                                                <span>{{ $candidate?->emer_relation }}</span>
+                                                <span>{{ $candidate?->emer_relation ?? 'N/A' }}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -225,9 +238,9 @@
                                                         @foreach ($bankdetails as $index => $bank)
                                                             <tr>
                                                                 <td>{{ $index + 1 }}</td>
-                                                                <td>{{ $bank?->bank_name }}</td>
-                                                                <td>{{ $bank?->bank_account_no }}</td>
-                                                                <td>{{ $bank?->bank_ifsc_code }}</td>
+                                                                <td>{{ $bank?->bank_name ?? 'N/A' }}</td>
+                                                                <td>{{ $bank?->bank_account_no ?? 'N/A' }}</td>
+                                                                <td>{{ $bank?->bank_ifsc_code ?? 'N/A' }}</td>
                                                                 <td>
                                                                     @if ($bank->bank_document)
                                                                         <a href="{{ asset('storage/' . $bank?->bank_document) }}"
@@ -273,57 +286,60 @@
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-md-4 mb-2"><b>UAN NO:</b>
-                                            <span>{{ $candidate?->uan_no }}</span>
+                                            <span>{{ $candidate?->uan_no ?? 'N/A' }}</span>
                                         </div>
                                         <div class="col-md-4 mb-2"><b>ESIC No:</b>
-                                            <span>{{ $candidate?->esic_no }}</span>
+                                            <span>{{ $candidate?->esic_no ?? 'N/A' }}</span>
                                         </div>
                                         <div class="col-md-4 mb-2"><b>Basic Salary:</b>
-                                            <span>{{ $candidate?->basic_salary }}</span>
+                                            <span>{{ $candidate?->basic_salary ?? 'N/A' }}</span>
                                         </div>
                                         <div class="col-md-4 mb-2"><b>HRA:</b> <span>{{ $candidate?->hra }}</span>
                                         </div>
                                         <div class="col-md-4 mb-2"><b>Conveyance:</b>
-                                            <span>{{ $candidate?->conveyance }}</span>
+                                            <span>{{ $candidate?->conveyance ?? 'N/A' }}</span>
                                         </div>
                                         <div class="col-md-4 mb-2"><b>Medical Reimbursement:</b>
-                                            <span>{{ $candidate?->medical_reimbursement }}</span>
+                                            <span>{{ $candidate?->medical_reimbursement ?? 'N/A' }}</span>
                                         </div>
                                         <div class="col-md-4 mb-2"><b>Special Allowance:</b>
-                                            <span>{{ $candidate?->special_allowance }}</span>
+                                            <span>{{ $candidate?->special_allowance ?? 'N/A' }}</span>
                                         </div>
                                         <div class="col-md-4 mb-2"><b>Other Allowance:</b>
-                                            <span>{{ $candidate?->other_allowance }}</span>
+                                            <span>{{ $candidate?->other_allowance ?? 'N/A' }}</span>
                                         </div>
                                         <div class="col-md-4 mb-2"><b>ST Bonus:</b>
-                                            <span>{{ $candidate?->st_bonus }}</span>
+                                            <span>{{ $candidate?->st_bonus ?? 'N/A' }}</span>
                                         </div>
                                         <div class="col-md-4 mb-2"><b>Gross Salary:</b>
-                                            <span>{{ $candidate?->gross_salary }}</span>
+                                            <span>{{ $candidate?->gross_salary ?? 'N/A' }}</span>
                                         </div>
                                         <div class="col-md-4 mb-2"><b>Employee PF:</b>
-                                            <span>{{ $candidate?->emp_pf }}</span>
+                                            <span>{{ $candidate?->emp_pf ?? 'N/A' }}</span>
                                         </div>
                                         <div class="col-md-4 mb-2"><b>Employee ESIC:</b>
-                                            <span>{{ $candidate?->emp_esic }}</span>
+                                            <span>{{ $candidate?->emp_esic ?? 'N/A' }}</span>
                                         </div>
-                                        <div class="col-md-4 mb-2"><b>PT:</b> <span>{{ $candidate?->pt }}</span></div>
+                                        <div class="col-md-4 mb-2"><b>PT:</b>
+                                            <span>{{ $candidate?->pt ?? 'N/A' }}</span>
+                                        </div>
                                         <div class="col-md-4 mb-2"><b>Total Deduction:</b>
-                                            <span>{{ $candidate?->total_deduction }}</span>
+                                            <span>{{ $candidate?->total_deduction ?? 'N/A' }}</span>
                                         </div>
                                         <div class="col-md-4 mb-2"><b>Take Home:</b>
-                                            <span>{{ $candidate?->take_home }}</span>
+                                            <span>{{ $candidate?->take_home ?? 'N/A' }}</span>
                                         </div>
                                         <div class="col-md-4 mb-2"><b>Employer PF:</b>
-                                            <span>{{ $candidate?->employer_pf }}</span>
+                                            <span>{{ $candidate?->employer_pf ?? 'N/A' }}</span>
                                         </div>
                                         <div class="col-md-4 mb-2"><b>Employer ESIC:</b>
-                                            <span>{{ $candidate?->employer_esic }}</span>
+                                            <span>{{ $candidate?->employer_esic ?? 'N/A' }}</span>
                                         </div>
                                         <div class="col-md-4 mb-2"><b>Mediclaim:</b>
-                                            <span>{{ $candidate?->mediclaim }}</span>
+                                            <span>{{ $candidate?->mediclaim ?? 'N/A' }}</span>
                                         </div>
-                                        <div class="col-md-4 mb-2"><b>CTC:</b> <span>{{ $candidate?->ctc }}</span>
+                                        <div class="col-md-4 mb-2"><b>CTC:</b>
+                                            <span>{{ $candidate?->ctc ?? 'N/A' }}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -377,7 +393,7 @@
                                                             <td>{{ $candidateDocuments[$certificate->name] ?? $certificate->name }}
                                                             </td>
                                                             <td>
-                                                                <a href="{{ asset('storage/' . $certificate->path) }}"
+                                                                <a href="{{ asset($certificate->path) }}"
                                                                     target="_blank" class="btn btn-primary btn-sm">
                                                                     <i class="fas fa-eye"></i> View
                                                                 </a>
@@ -391,7 +407,7 @@
                                                         <tr>
                                                             <td>Education Certificate {{ $loop->iteration }}</td>
                                                             <td>
-                                                                <a href="{{ asset('storage/' . $certificate->path) }}"
+                                                                <a href="{{ asset($certificate->path) }}"
                                                                     target="_blank" class="btn btn-primary btn-sm">
                                                                     <i class="fas fa-eye"></i> View
                                                                 </a>
@@ -405,7 +421,7 @@
                                                         <tr>
                                                             <td>Other Certificate {{ $loop->iteration }}</td>
                                                             <td>
-                                                                <a href="{{ asset('storage/' . $certificate->path) }}"
+                                                                <a href="{{ asset($certificate->path) }}"
                                                                     target="_blank" class="btn btn-primary btn-sm">
                                                                     <i class="fas fa-eye"></i> View
                                                                 </a>
@@ -446,7 +462,7 @@
                                                         <td>{{ \Carbon\Carbon::parse($offer->date)->format('d-m-Y') }}
                                                         </td>
                                                         <td>
-                                                            <a href="{{ asset('storage/' . $offer->offer_letter_path) }}"
+                                                            <a href="{{ asset($offer->offer_letter_path) }}"
                                                                 target="_blank" class="btn btn-primary btn-sm">
                                                                 <i class="fas fa-eye"></i> View
                                                             </a>
@@ -459,7 +475,7 @@
                                                         <td>{{ \Carbon\Carbon::parse($incrementletter->date)->format('d-m-Y') }}
                                                         </td>
                                                         <td>
-                                                            <a href="{{ asset('storage/' . $incrementletter->increment_path) }}"
+                                                            <a href="{{ asset($incrementletter->increment_path) }}"
                                                                 target="_blank" class="btn btn-primary btn-sm">
                                                                 <i class="fas fa-eye"></i> View
                                                             </a>
@@ -472,7 +488,7 @@
                                                         <td>{{ \Carbon\Carbon::parse($warning->date)->format('d-m-Y') }}
                                                         </td>
                                                         <td>
-                                                            <a href="{{ asset('storage/' . $warning->warning_letter_path) }}"
+                                                            <a href="{{ asset($warning->warning_letter_path) }}"
                                                                 target="_blank" class="btn btn-primary btn-sm">
                                                                 <i class="fas fa-eye"></i> View
                                                             </a>
@@ -485,7 +501,7 @@
                                                         <td>{{ \Carbon\Carbon::parse($show->date)->format('d-m-Y') }}
                                                         </td>
                                                         <td>
-                                                            <a href="{{ asset('storage/' . $show->showcause_letter_path) }}"
+                                                            <a href="{{ asset($show->showcause_letter_path) }}"
                                                                 target="_blank" class="btn btn-primary btn-sm">
                                                                 <i class="fas fa-eye"></i> View
                                                             </a>

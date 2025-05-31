@@ -5,6 +5,7 @@
             @php
                 $columns = [
                     ['label' => 'Id', 'column' => 'id', 'sort' => true],
+                    ['label' => 'Client Code', 'column' => 'client_code', 'sort' => true],
                     ['label' => 'Client Name', 'column' => 'client_name', 'sort' => true],
                     ['label' => 'Contact Person', 'column' => 'contact_person', 'sort' => true],
                     ['label' => 'Contact Person Phone', 'column' => 'contact_person_phone', 'sort' => true],
@@ -43,6 +44,7 @@
                                 value="{{ $item->id }}">
                         </td> --}}
                         <td>{{ $item->id }}</td>
+                        <td>{{ $item->client_code }}</td>
                         <td>
                             {{ $item->client_name }}
                         </td>

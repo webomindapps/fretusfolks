@@ -11,9 +11,13 @@ use App\Models\FFIOfferLetterModel;
 use App\Models\FFITerminationModel;
 use App\Models\FFIIncrementLetterModel;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class FHRMSModel extends Model
 {
+    use SoftDeletes;
+
+    protected $dates = ['deleted_at'];
     public $table = 'fhrms';
     protected $fillable = [
         'ffi_emp_id',
@@ -85,6 +89,7 @@ class FHRMSModel extends Model
         'ref_no',
         'active_status',
     ];
+
     public function stateRelation()
     {
         return $this->belongsTo(States::class, 'state', 'id');

@@ -17,6 +17,7 @@
             @php
                 $columns = [
                     ['label' => 'Id', 'column' => 'id', 'sort' => true],
+                    ['label' => 'Employee Id', 'column' => 'ffi_emp_id', 'sort' => true],
                     ['label' => 'Emp Name', 'column' => 'emp_name', 'sort' => true],
                     ['label' => 'Joining date', 'column' => 'joining_date', 'sort' => true],
                     ['label' => 'Phone', 'column' => 'phone1', 'sort' => true],
@@ -70,7 +71,7 @@
                                 value="{{ $item->id }}">
                         </td>
                         <td>{{ $item->id }}</td>
-
+                        <td>{{ $item->ffi_emp_id }}</td>
                         <td> {{ $item->emp_name }}</td>
                         <td> {{ \Carbon\Carbon::parse($item->joining_date)->format('d-m-Y') }}</td>
                         <td> {{ $item->phone1 }}</td>
@@ -106,7 +107,7 @@
                                             Edit
                                         </a>
                                         <a class="dropdown-item"
-                                            onclick="return confirm('Are you sure to delete this ?')"
+                                            onclick="return confirm('Are you sure to move to trash ?')"
                                             href="{{ route('admin.fhrms.delete', $item) }}">
                                             <i class='bx bx-trash-alt'></i>
                                             Delete

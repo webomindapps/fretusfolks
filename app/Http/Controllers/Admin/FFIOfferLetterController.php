@@ -19,7 +19,7 @@ class FFIOfferLetterController extends Controller
     }
     public function index()
     {
-        $searchColumns = ['id', 'emp_name', 'date', 'phone1', 'email'];
+        $searchColumns = ['id','employee_id', 'emp_name', 'date', 'phone1', 'email'];
         $search = request()->search;
         $from_date = request()->from_date;
         $to_date = request()->to_date;
@@ -36,7 +36,15 @@ class FFIOfferLetterController extends Controller
         if ($search != '') {
             $query->where(function ($q) use ($search, $searchColumns) {
                 foreach ($searchColumns as $key => $value) {
-                    $key == 0 ? $q->where($value, 'LIKE', '%' . $search . '%') : $q->orWhere($value, 'LIKE', '%' . $search . '%');
+                    if (in_array($value, ['emp_name', 'phone1', 'email'])) {
+                        $q->orWhereHas('employee', function ($q2) use ($value, $search) {
+                            $q2->where($value, 'LIKE', '%' . $search . '%');
+                        });
+                    } else {
+                        $key == 0
+                            ? $q->where($value, 'LIKE', '%' . $search . '%')
+                            : $q->orWhere($value, 'LIKE', '%' . $search . '%');
+                    }
                 }
             });
         }

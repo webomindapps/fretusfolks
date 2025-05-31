@@ -12,6 +12,7 @@ class DCSChildren extends Model
         'emp_id',
         'name',
         'dob',
+        'gender',
         'photo',
         'aadhar_no'
     ];

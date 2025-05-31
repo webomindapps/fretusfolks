@@ -284,8 +284,8 @@
 
                         <div class="col-lg-12 mt-2">
                             <div class="d-flex">
-                                <input type="text" name="ademails" class="form-control" placeholder="Enter Email Addresses (Comma Separated)"
-                                    required>
+                                <input type="text" name="ademails" class="form-control"
+                                    placeholder="Enter Email Addresses (Comma Separated)" required>
                                 <button type="submit" class="btn btn-primary ms-2" id="dwnPayBtn">Download</button>
                             </div>
                         </div>
@@ -450,11 +450,19 @@
                 let fromDate = $('#from').val();
                 let toDate = $('#to').val();
 
-                if (selectedClients.length === 0 || selectedStates.length === 0) {
-                    alert("Please select at least one Client and one State.");
+                // if (selectedClients.length === 0 || selectedStates.length === 0) {
+                //     alert("Please select at least one Client and one State.");
+                //     return;
+                // }
+                if (selectedClients.length === 0 && selectedStates.length === 0 && !fromDate && !toDate) {
+                    const link = document.createElement('a');
+                    link.href = '/admin/payslip_format.csv'; // File must be in public/
+                    link.download = 'payslip_format.csv';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
                     return;
                 }
-
                 // Construct the query parameters
                 let queryParams = {
                     data: selectedClients,
@@ -473,7 +481,7 @@
         <script src="https://cdn.jsdelivr.net/npm/jquery"></script>
         <script>
             let progressInterval;
-        
+
             $("#payslipForm").on("submit", function(event) {
                 event.preventDefault();
                 $('#dwnPayBtn').prop('disabled', true);
@@ -481,7 +489,7 @@
                 $("#progress-bar").val(0);
                 $("#progress-text").text("Processing Payslips...");
                 $("#payslip-completed").text("");
-        
+
                 $.ajax({
                     url: $(this).attr("action"),
                     type: "POST",
@@ -495,20 +503,20 @@
                     }
                 });
             });
-        
+
             function startProgressCheck() {
                 progressInterval = setInterval(() => {
                     $.get("/batch-status", function(data) {
                         if (data.status !== "not_found") {
                             $("#progress-bar").val(data.status);
                             $("#progress-text").text("Processing Payslips... " + data.status + "%");
-        
+
                             if (data.status == 100) {
                                 clearInterval(progressInterval);
                                 $('#dwnPayBtn').prop('disabled', false);
                                 $("#progress-bar-container").hide();
                                 $("#payslip-completed").text("Payslip Zip has been sent to your email.");
-                            }else{
+                            } else {
                                 $("#payslip-completed").text("");
                             }
                         }

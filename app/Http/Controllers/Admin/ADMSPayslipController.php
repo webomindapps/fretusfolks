@@ -99,9 +99,18 @@ class ADMSPayslipController extends Controller
                 foreach ($datafromCsv as $index => $dataCsv) {
 
                     foreach ($dataCsv as $data) {
-                        // dd($header, $data);
+                        $row = array_combine($header, $data);
 
-                        $payslipdata[$index][] = array_combine($header, $data);
+                        // dd($header, $data);
+                        if (!empty($row['emp_id']) && !empty($month) && !empty($year)) {
+                            Payslips::where('emp_id', $row['emp_id'])
+                                ->where('month', $month)
+                                ->where('year', $year)
+                                ->delete();
+                        }
+
+                        $payslipdata[$index][] = $row;
+                        // $payslipdata[$index][] = array_combine($header, $data);
                     }
                     // dd($payslipdata[$index], $month, $year);
                     ADMSPayslipCreate::dispatch($payslipdata[$index], $month, $year);
@@ -157,7 +166,7 @@ class ADMSPayslipController extends Controller
             return back()->with('error', 'No payslips found for the selected month and year.');
         }
 
-        return $this->zipDownload($payslips,$request->ademails);
+        return $this->zipDownload($payslips, $request->ademails);
     }
     public function searchPayslip(Request $request)
     {
@@ -213,7 +222,7 @@ class ADMSPayslipController extends Controller
 
         return response()->file($filePath);
     }
-    public function zipDownload($payslips,$ademails)
+    public function zipDownload($payslips, $ademails)
     {
         if ($payslips->isEmpty()) {
             return redirect()->back()->with('error', 'No Payslips Found for the Month and Year');

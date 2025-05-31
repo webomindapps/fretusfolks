@@ -19,7 +19,7 @@ class FFITerminationController extends Controller
     }
     public function index()
     {
-        $searchColumns = ['id', 'date', 'emp_id'];
+        $searchColumns = ['id', 'date', 'emp_id', 'emp_name', 'phone1', 'designation'];
         $search = request()->search;
         $from_date = request()->from_date;
         $to_date = request()->to_date;
@@ -36,7 +36,15 @@ class FFITerminationController extends Controller
         if ($search != '') {
             $query->where(function ($q) use ($search, $searchColumns) {
                 foreach ($searchColumns as $key => $value) {
-                    $key == 0 ? $q->where($value, 'LIKE', '%' . $search . '%') : $q->orWhere($value, 'LIKE', '%' . $search . '%');
+                    if (in_array($value, ['emp_name', 'phone1', 'designation'])) {
+                        $q->orWhereHas('term_letter', function ($q2) use ($value, $search) {
+                            $q2->where($value, 'LIKE', '%' . $search . '%');
+                        });
+                    } else {
+                        $key == 0
+                            ? $q->where($value, 'LIKE', '%' . $search . '%')
+                            : $q->orWhere($value, 'LIKE', '%' . $search . '%');
+                    }
                 }
             });
         }

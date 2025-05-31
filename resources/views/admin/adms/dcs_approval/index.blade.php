@@ -22,6 +22,7 @@
             @php
                 $columns = [
                     ['label' => 'Id', 'column' => 'id', 'sort' => true],
+                    ['label' => 'FFI Employee ID', 'column' => 'ffi_emp_id', 'sort' => true],
                     ['label' => 'Client Name', 'column' => 'entity_name', 'sort' => true],
                     ['label' => 'Employee Name', 'column' => 'emp_name', 'sort' => true],
                     ['label' => 'Phone', 'column' => 'phone1', 'sort' => true],
@@ -61,10 +62,14 @@
                                 value="{{ $item->id }}">
                         </td>
                         <td>{{ $item->id }}</td>
+                        <td>{{ $item->ffi_emp_id === null || $item->ffi_emp_id === '' ? 'N/A' : $item->ffi_emp_id }}
+                        </td>
                         <td>
                             {{ $item->entity_name }}
                         </td>
-                        <td> {{ $item->emp_name }}</td>
+                        <td>
+                            {{ trim("{$item->emp_name} {$item->middle_name} {$item->last_name}") ?: 'N/A' }}
+                        </td>
                         <td> {{ $item->phone1 }}</td>
                         <td>
                             <div class="dropdown">
@@ -112,7 +117,10 @@
                                         <i class='bx bx-link-alt'></i>
                                         View Details
                                     </a> --}}
-
+                                        <a href="{{ route('admin.candidatelifecycle.view', $item) }}"
+                                            class="dropdown-item">
+                                            <i class='bx bx-link-alt'></i> View
+                                        </a>
                                         <a class="dropdown-item" href="{{ route('admin.dcs_approval.edit', $item) }}">
                                             <i class='bx bx-edit-alt'></i>
                                             Edit
