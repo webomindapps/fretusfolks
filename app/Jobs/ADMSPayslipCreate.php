@@ -41,6 +41,7 @@ class ADMSPayslipCreate implements ShouldQueue
 
             $data[] = [
                 'emp_id' => $row['emp_id'],
+                'client_emp_id' => $row['client_emp_id'],
                 'emp_name' => $row['emp_name'],
                 'designation' => $row['designation'],
                 'doj' => $row['doj'],

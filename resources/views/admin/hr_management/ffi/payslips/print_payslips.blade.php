@@ -150,8 +150,8 @@
                 </div>
             </div>
             <div class="col-md-12" style="border-left:2px solid #333;border-right:2px solid #333;">
-                <p style="text-align:center;margin: 0px 0;">M-20, 3rd Floor, UKS Heights, 10th Main, Jeevanbhima Nagar,
-                    Bangalore-560075. Ph- 080 -43726370</p>
+                <p style="text-align:center;margin: 0px 0;">VBC Tower, #39, 1st Floor, CMH Road, Indiranagar,
+                    Bangalore-560038. Ph- 080-43726370</p>
             </div>
             <div class="col-md-12" style="border-left:2px solid #333;border-right:2px solid #333;">
                 <p style="text-align:center;margin: 0px 0;">FORM XIX</p>
@@ -167,8 +167,12 @@
                         <td>UAN No.:{{ $payslip->uan_no ?? 0 }} </td>
                     </tr>
                     <tr>
-                        <td>Emp. ID: {{ $payslip->emp_id ?? 0 }}</td>
+                        <td>FFIEmp. ID: {{ $payslip->emp_id ?? 0 }}</td>
                         <td>PF No: {{ $payslip->pf_no ?? 0 }}</td>
+                    </tr>
+                    <tr>
+                        <td>Client Name:{{ $payslip->client_name ?? 0 }} </td>
+                        <td>Client Emp ID.: {{ $payslip->client_emp_id ?? 0 }}</td>
                     </tr>
                     <tr>
                         <td>Designation:{{ $payslip->designation ?? 0 }} </td>

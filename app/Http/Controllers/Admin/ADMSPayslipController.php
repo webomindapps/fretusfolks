@@ -293,6 +293,7 @@ class ADMSPayslipController extends Controller
 
             $csvHeaders = [
                 'emp_id',
+                'client_emp_id',
                 'emp_name',
                 'designation',
                 'doj',
@@ -389,6 +390,8 @@ class ADMSPayslipController extends Controller
             foreach ($candidates as $candidate) {
                 fputcsv($file, [
                     $candidate->ffi_emp_id,
+                    $candidate->client_emp_id,
+                    $candidate->client_name,
                     $candidate->emp_name,
                     $candidate->designation,
                     Carbon::parse($candidate->joining_date)->format('d-m-Y'),

@@ -10,6 +10,7 @@ class Payslips extends Model
 
     protected $fillable = [
         'emp_id',
+        'client_emp_id',
         'emp_name',
         'designation',
         'doj',
