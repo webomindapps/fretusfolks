@@ -13,7 +13,8 @@
                 <form action="{{ route('admin.candidatemaster.import') }}" method="POST" enctype="multipart/form-data"
                     class="d-flex align-items-center">
                     @csrf
-                    <input type="file" class="form-control form-control-sm me-2" name="file" required>
+                    <input type="file" class="form-control form-control-sm me-2" name="file" accept=".csv"
+                        required>
                     <button type="submit" class="add-btn bg-success text-white">Import</button>
                 </form>
             </div>
@@ -79,7 +80,7 @@
                                             <i class='bx bx-edit-alt'></i>
                                             Edit
                                         </a>
-                                       
+
                                         <a href="{{ route('admin.candidatemaster.view', $item->id) }}"
                                             class="dropdown-item">
                                             <i class='bx bx-link-alt'></i> View
@@ -98,5 +99,5 @@
             </x-table>
         </div>
     </div>
-   
+
 </x-applayout>

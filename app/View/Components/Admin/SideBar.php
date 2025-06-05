@@ -122,6 +122,28 @@ class SideBar extends Component
                     'name' => 'doc_rejected',
                     'roles' => ['Admin', 'Recruitment', 'HR Operations'],
                 ],
+
+                [
+                    'title' => 'Candidates Master',
+                    'icon' => 'bx bx-chevron-right',
+                    'route' => 'admin.candidatemaster',
+                    'name' => 'candidatemaster',
+                    'roles' => ['Admin', 'Compliance'],
+                ],
+                [
+                    'title' => 'Pending Bank Approvals',
+                    'icon' => 'bx bx-chevron-right',
+                    'route' => 'admin.pendingbankapprovals',
+                    'name' => 'pending-bank-approval',
+                    'roles' => ['Admin', 'Compliance'],
+                ],
+                [
+                    'title' => 'Candidates Lifecycle',
+                    'icon' => 'bx bx-chevron-right',
+                    'route' => 'admin.candidatelifecycle',
+                    'name' => 'candidatelifecycle',
+                    'roles' => ['Admin', 'HR Operations'],
+                ],
                 [
                     'title' => 'Offer Letter  ',
                     'icon' => 'bx bx-chevron-right',
@@ -172,33 +194,13 @@ class SideBar extends Component
                     'roles' => ['Admin', 'HR Operations'],
                 ],
                 [
-                    'title' => 'Candidates Master',
-                    'icon' => 'bx bx-chevron-right',
-                    'route' => 'admin.candidatemaster',
-                    'name' => 'candidatemaster',
-                    'roles' => ['Admin', 'Compliance'],
-                ],
-                [
-                    'title' => 'Pending Bank Approvals',
-                    'icon' => 'bx bx-chevron-right',
-                    'route' => 'admin.pendingbankapprovals',
-                    'name' => 'pending-bank-approval',
-                    'roles' => ['Admin', 'Compliance'],
-                ],
-                [
-                    'title' => 'Candidates Lifecycle',
-                    'icon' => 'bx bx-chevron-right',
-                    'route' => 'admin.candidatelifecycle',
-                    'name' => 'candidatelifecycle',
-                    'roles' => ['Admin', 'HR Operations'],
-                ],
-                [
                     'title' => 'Bulk Update',
                     'icon' => 'bx bx-chevron-right',
                     'route' => 'admin.cfisbulk',
                     'name' => 'cfisbulk',
                     'roles' => ['Admin', 'Recruitment', 'HR Operations'],
                 ],
+
             ],
 
         ],

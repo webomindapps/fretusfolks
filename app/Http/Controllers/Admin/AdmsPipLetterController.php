@@ -137,7 +137,6 @@ class AdmsPipLetterController extends Controller
 
         return $pdf->stream("pip_{$pip->emp_id}_{$pip->month}_{$pip->year}.pdf");
     }
-
     public function edit($id)
     {
         $pip = $this->model()->findOrFail($id);
@@ -193,7 +192,6 @@ class AdmsPipLetterController extends Controller
     public function delete($id)
     {
         $pip = $this->model()->findOrFail($id);
-
         if ($pip && $pip->pip_letter_path) {
             Storage::disk('public')->delete($pip->pip_letter_path);
         }

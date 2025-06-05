@@ -12,7 +12,6 @@ use App\Models\FFIEducationModel;
 use App\Exports\FHRMSReportExport;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -25,7 +24,7 @@ class FHRMSController extends Controller
     }
     public function index()
     {
-        $searchColumns = ['id','ffi_emp_id', 'emp_name', 'joining_date', 'phone1', 'email'];
+        $searchColumns = ['id', 'ffi_emp_id', 'emp_name', 'joining_date', 'phone1', 'email'];
         $search = request()->search;
         $from_date = request()->from_date;
         $to_date = request()->to_date;
@@ -153,7 +152,7 @@ class FHRMSController extends Controller
             $employee->fill($filePaths);
             $employee->modified_date = now();
             $employee->psd = $request->password;
-            $employee->password = Hash::make($request->password);
+            $employee->password = bcrypt($request->password);
             $employee->data_status = '0';
             $employee->active_status = '0';
             $employee->save();
@@ -303,7 +302,7 @@ class FHRMSController extends Controller
 
             if ($request->filled('password')) {
                 $employee->psd = $request->password;
-                $employee->password = Hash::make($request->password);
+                $employee->password = bcrypt($request->password);
             }
             $employee->save();
             if ($request->hasFile('education_certificates')) {
@@ -513,7 +512,6 @@ class FHRMSController extends Controller
         $data = $query->select($fields)->get();
         return Excel::download(new FHRMSReportExport($data, $fields), 'fhrms_report.xlsx');
     }
-
 
     public function storePendingDetails(Request $request)
     {
@@ -770,7 +768,6 @@ class FHRMSController extends Controller
             return response()->json(['success' => false, 'message' => $e->getMessage()]);
         }
     }
-
     public function todayBirthday(Request $request)
     {
         $query = $this->model()->query();
@@ -786,6 +783,7 @@ class FHRMSController extends Controller
             'employee' => $employees,
         ]);
     }
+
     public function trashed()
     {
         $searchColumns = ['id', 'ffi_emp_id', 'emp_name', 'joining_date', 'phone1', 'email'];

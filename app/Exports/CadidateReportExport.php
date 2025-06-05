@@ -19,6 +19,7 @@ class CadidateReportExport implements FromCollection, WithHeadings
     public function collection()
     {
         return $this->candidates->load('candidateDocuments')->map(function ($candidate) {
+
             $documentPaths = $candidate->candidateDocuments->pluck('path', 'name');
 
             return [
@@ -92,6 +93,7 @@ class CadidateReportExport implements FromCollection, WithHeadings
                 'Employer ESIC' => $candidate->employer_esic,
                 'Mediclaim' => $candidate->mediclaim,
                 'CTC' => $candidate->ctc,
+
 
                 'Aadhar Doc' => $documentPaths['aadhar_path'] ?? '',
                 'PAN Doc' => $documentPaths['pan_path'] ?? '',

@@ -3,14 +3,13 @@
 namespace App\Jobs;
 
 use App\Models\FFIPayslipsModel;
-use Illuminate\Bus\Batchable;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Foundation\Queue\Queueable;
+use NumberFormatter;
 
 class PayslipCreate implements ShouldQueue
 {
-    use Batchable, Queueable, Dispatchable;
+    use Queueable;
 
     protected $payslips;
     protected $month;
@@ -28,7 +27,6 @@ class PayslipCreate implements ShouldQueue
      */
     public function handle(): void
     {
-        
         foreach ($this->payslips as $key => $row) {
             $data[] = [
                 'emp_id' => $row['emp_id'],

@@ -1,7 +1,7 @@
 <x-applayout>
     <x-admin.breadcrumb title="Search">
         {{-- <div class="row text-end me-2">
-            <form id="export-form" action="{{ route('admin.fcms.cims.reports') }}" method="GET">
+            <form id="export-form" action="{{ route('admin.cdms_report.export') }}" method="POST">
                 @csrf
                 <input type="hidden" name="fields" id="export-fields">
                 <button type="submit" class="btn btn-success">Export to Excel</button>
@@ -287,7 +287,7 @@
                 }
 
                 function showClientDetails(clientId) {
-                    fetch(`/admin/cims/show/${clientId}`)
+                    fetch(`{{ url('/') }}/admin/cims/show/${clientId}`)
                         .then(response => response.json())
                         .then(data => {
                             if (data.html_content) {
@@ -307,15 +307,6 @@
                             console.error('Error fetching client details:', error);
                         });
                 }
-            //     document.getElementById('export-form').addEventListener('submit', function(e) {
-            //     const selectedFields = Array.from(document.querySelectorAll('.data-checkbox:checked'))
-            //         .map(checkbox => checkbox.value);
-            //     document.getElementById('export-fields').value = selectedFields.join(',');
-            //     if (selectedFields.length === 0) {
-            //         e.preventDefault();
-            //         alert('Please select at least one field for export.');
-            //     }
-            // });
             </script>
         @endpush
     </x-applayout>

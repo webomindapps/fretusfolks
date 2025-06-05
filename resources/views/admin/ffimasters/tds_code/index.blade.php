@@ -1,7 +1,7 @@
 <x-applayout>
     <x-admin.breadcrumb title="TDS Code" />
     <div class="content">
-        <div class="form-card px-3 mt-2">
+        <div class="form-card px-md-3 px-2 mt-2">
             <form action="{{ route('admin.tds_code.store') }}" method="POST">
                 @csrf
                 <div class="row align-items-end">

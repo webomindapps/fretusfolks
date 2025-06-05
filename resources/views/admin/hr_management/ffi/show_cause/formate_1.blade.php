@@ -141,14 +141,14 @@
                         <td colspan="3" style="font-size:12px;text-align:left;padding:0px;width:70%">
                             <p style="line-height:1.8;font-size:12px">
                                 <b>To<br>Mr./Mrs./Ms,
-                                    {{ $increment->emp_name }}</b><br>
-                                {{ $increment->emp_name }}<br>
-                                {{ $increment->location }}<br>
+                                    {{ $incrementLetter->incrementLetter?->emp_name }}</b><br>
+                                {{ $incrementLetter->incrementLetter?->emp_name }}<br>
+                                {{ $incrementLetter->incrementLetter?->location }}<br>
                             </p>
                         </td>
                         <td style="font-size:12px;text-align:left;padding:0px;">
                             <p style="line-height:1.8;font-size:12px">
-                                <b>Date : {{ \Carbon\Carbon::parse($increment->date)->format('d-m-Y') }}</b>
+                                <b>Date : {{ \Carbon\Carbon::parse($incrementLetter->date)->format('d-m-Y') }}</b>
                             </p>
                         </td>
                     </tr>
@@ -161,27 +161,12 @@
             <br>
             <div class="content" style="line-height:2;font-size:14px">
                 <p style="line-height:1.8;font-size:12px">
-                    <b>Dear {{ $increment->emp_name }},</b>
+                    <b>Dear {{ $incrementLetter->incrementLetter?->emp_name }},</b>
                 </p>
             </div>
             <br>
             <div class="content1" style="line-height:1.8;font-size:14px">
-                {{-- {!! $increment->content !!} --}}
-                <p style="text-align: justify;">In recognition of your performance and the contribution to the company,
-                    we are pleased to inform you that you have be given an increase of {{
-                    $increment->Increment_Percentage }}% on
-                    CTC(Cost to the Company) which will be effective from {{ $increment->effective_date }}.</p>
-                <p style="text-align: justify;">Current CTC (per annum): {{ $increment->current_ctc }}</p>
-                <p style="text-align: justify;">Old CTC (per annum): {{ $increment->old_ctc }}</p>
-                <p style="text-align: justify;">Current Designation: {{ $increment->designation }}</p>
-                <p style="text-align: justify;">Old Designation: {{$increment->old_designation }}</p>
-                <p style="text-align: justify;">&nbsp;</p>
-                <p style="text-align: justify;">Your commitment has been invaluable, and we look forward to your
-                    continued engagement.&nbsp; All other terms and conditions of your contract are as per the annexure
-                    attached below.</p>
-                <p style="text-align: justify;">&nbsp;</p>
-                <p style="text-align: justify;">With best wishes and warm regards.</p>
-
+                {!! $incrementLetter->content !!}
             </div>
             <br><br><br><br>
             <table style="border-collapse:collapse;width:100%;margin-bottom:20px;">
@@ -216,97 +201,92 @@
                 style="border-collapse:collapse;width:80%;margin-bottom:5px;font-size:10px; margin:20px auto;"">
                 <tbody>
                     <tr>
-                        <th style=" font-size:12px;text-align:left;padding:7px;border-top: 1px solid #000;">
-                Components</th>
-                <th style="font-size:12px;text-align:left;padding:7px;width:30%;border-top: 1px solid #000;">
-                    Monthly salary</th>
-                <th style="font-size:12px;text-align:left;padding:7px;width:30%;border-top: 1px solid #000;">
-                    Annual salary</th>
-                </tr>
-                <tr>
-                    <td>Basic</td>
-                    <td> {{ $increment->basic_salary }} </td>
-                    <td> {{ $increment->basic_salary * 12 }} </td>
-                </tr>
-                <tr>
-                    <td>HRA</td>
-                    <td> {{ $increment->hra }}</td>
-                    <td> {{ $increment->hra * 12 }} </td>
-                </tr>
-                <tr>
-                    <td>Conveyance</td>
-                    <td> {{ $increment->conveyance }}</td>
-                    <td> {{ $increment->conveyance * 12 }}</td>
-                </tr>
-                <tr>
-                    <td>Medical Reimbursement</td>
-                    <td>{{ $increment->medical_reimbursement }}</td>
-                    <td> {{ $increment->medical_reimbursement * 12 }} </td>
-                </tr>
-                <tr>
-                    <td>Special Allowance</td>
-                    <td> {{ $increment->special_allowance }}</td>
-                    <td> {{ $increment->special_allowance * 12 }} </td>
-                </tr>
-                <tr>
-                    <td>Other Allowance</td>
-                    <td> {{ $increment->other_allowance }}</td>
-                    <td> {{ $increment->other_allowance * 12 }}</td>
-                </tr>
-                <tr class="gross" style="background: #ecbfbf;">
-                    <td>Gross Salary</td>
-                    <td> {{ $increment->gross_salary }}</td>
-                    <td> {{ $increment->gross_salary * 12 }} </td>
-                </tr>
-                <tr>
-                    <td>Employee PF @ {{ $increment->pf_percentage }}%</td>
-                    <td> {{ $increment->emp_pf }}</td>
-                    <td> {{ $increment->emp_pf * 12 }}</td>
-                </tr>
-                <tr>
-                    <td>Employee ESIC PF @ {{ $increment->esic_percentage }}%
-                    </td>
-                    <td> {{ $increment->emp_esic }}</td>
-                    <td> {{ $increment->emp_esic * 12 }}</td>
-                </tr>
-                <tr>
-                    <td>PT</td>
-                    <td>{{ $increment->pt }}</td>
-                    <td> {{ $increment->pt * 12 }}</td>
-                </tr>
-                <tr>
-                    <td>LWF</td>
-                    <td>{{ $increment->lwf }}</td>
-                    <td> {{ $increment->lwf * 12 }}</td>
-                </tr>
-                <tr>
-                    <td>Total Deduction</td>
-                    <td> {{ $increment->total_deduction }}</td>
-                    <td> {{ $increment->total_deduction * 12 }} </td>
-                </tr>
-                <tr class="gross" style="background: #ecbfbf;">
-                    <td>Take-home</td>
-                    <td> {{ $increment->gross_salary }}-
-                        {{ $increment->total_deduction }}</td>
-                    <td> {{ $increment->gross_salary }} -
-                        {{ $increment->total_deduction * 12 }} </td>
-                </tr>
-                <tr>
-                    <td>Employer PF @ {{ $increment->employer_pf_percentage }}%</td>
-                    <td> {{ $increment->employer_pf }}</td>
-                    <td> {{ $increment->employer_pf * 12 }} </td>
-                </tr>
-                <tr>
-                    <td>Employer ESIC PF @ {{ $increment->employer_esic_percentage }}%
-                    </td>
-                    <td> {{ $increment->employer_esic }}</td>
-                    <td> {{ $increment->employer_esic * 12 }} </td>
-                </tr>
-                <tr class="gross" style="background: #ecbfbf;">
-                    <td>CTC</td>
-                    <td> {{ $increment->ctc }}</td>
-                    <td> {{ $increment->ctc * 12 }} </td>
-                </tr>
+                        <th style="font-size:12px;text-align:left;padding:7px;border-top: 1px solid #000;">
+                            Components</th>
+                        <th style="font-size:12px;text-align:left;padding:7px;width:30%;border-top: 1px solid #000;">
+                            Monthly salary</th>
+                        <th style="font-size:12px;text-align:left;padding:7px;width:30%;border-top: 1px solid #000;">
+                            Annual salary</th>
+                    </tr>
+                    <tr>
+                        <td>Basic</td>
+                        <td> {{ $incrementLetter->basic_salary }} </td>
+                        <td> {{ $incrementLetter->basic_salary * 12 }} </td>
+                    </tr>
+                    <tr>
+                        <td>HRA</td>
+                        <td> {{ $incrementLetter->hra }}</td>
+                        <td> {{ $incrementLetter->hra * 12 }} </td>
+                    </tr>
+                    <tr>
+                        <td>Conveyance</td>
+                        <td> {{ $incrementLetter->conveyance }}</td>
+                        <td> {{ $incrementLetter->conveyance * 12 }}</td>
+                    </tr>
+                    <tr>
+                        <td>Medical Reimbursement</td>
+                        <td>{{ $incrementLetter->medical_reimbursement }}</td>
+                        <td> {{ $incrementLetter->medical_reimbursement * 12 }} </td>
+                    </tr>
+                    <tr>
+                        <td>Special Allowance</td>
+                        <td> {{ $incrementLetter->special_allowance }}</td>
+                        <td> {{ $incrementLetter->special_allowance * 12 }} </td>
+                    </tr>
+                    <tr>
+                        <td>Other Allowance</td>
+                        <td> {{ $incrementLetter->other_allowance }}</td>
+                        <td> {{ $incrementLetter->other_allowance * 12 }}</td>
+                    </tr>
+                    <tr class="gross" style="background: #ecbfbf;">
+                        <td>Gross Salary</td>
+                        <td> {{ $incrementLetter->gross_salary }}</td>
+                        <td> {{ $incrementLetter->gross_salary * 12 }} </td>
+                    </tr>
+                    <tr>
+                        <td>Employee PF @ {{ $incrementLetter->pf_percentage }}%</td>
+                        <td> {{ $incrementLetter->emp_pf }}</td>
+                        <td> {{ $incrementLetter->emp_pf * 12 }}</td>
+                    </tr>
+                    <tr>
+                        <td>Employee ESIC PF @ {{ $incrementLetter->esic_percentage }}%
+                        </td>
+                        <td> {{ $incrementLetter->emp_esic }}</td>
+                        <td> {{ $incrementLetter->emp_esic * 12 }}</td>
+                    </tr>
+                    <tr>
+                        <td>PT</td>
+                        <td>{{ $incrementLetter->pt }}</td>
+                        <td> {{ $incrementLetter->pt * 12 }}</td>
+                    </tr>
+                    <tr>
+                        <td>Total Deduction</td>
+                        <td> {{ $incrementLetter->total_deduction }}</td>
+                        <td> {{ $incrementLetter->total_deduction * 12 }} </td>
+                    </tr>
+                    <tr class="gross" style="background: #ecbfbf;">
+                        <td>Take-home</td>
+                        <td> {{ $incrementLetter->gross_salary }}-
+                            {{ $incrementLetter->total_deduction }}</td>
+                        <td> {{ $incrementLetter->gross_salary }} -
+                            {{ $incrementLetter->total_deduction * 12 }} </td>
+                    </tr>
+                    <tr>
+                        <td>Employer PF @ {{ $incrementLetter->employer_pf_percentage }}%</td>
+                        <td> {{ $incrementLetter->employer_pf }}</td>
+                        <td> {{ $incrementLetter->employer_pf * 12 }} </td>
+                    </tr>
+                    <tr>
+                        <td>Employer ESIC PF @ {{ $incrementLetter->employer_esic_percentage }}%
+                        </td>
+                        <td> {{ $incrementLetter->employer_esic }}</td>
+                        <td> {{ $incrementLetter->employer_esic * 12 }} </td>
+                    </tr>
+                    <tr class="gross" style="background: #ecbfbf;">
+                        <td>CTC</td>
+                        <td> {{ $incrementLetter->ctc }}</td>
+                        <td> {{ $incrementLetter->ctc * 12 }} </td>
+                    </tr>
                 </tbody>
             </table>
         </center>

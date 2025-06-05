@@ -84,9 +84,7 @@
                                     </tbody>
                                 </table>
                                 <div class="content" style="line-height:2; font-size:14px">
-
                                     {!! $pipLetter->content !!}
-
                                 </div>
                                 <br>
                                 <div class="content" style="line-height:2; font-size:14px">
@@ -95,13 +93,13 @@
                                 </div>
                                 <div class="content" style="line-height:2; font-size:14px">
                                     <p><b>Improvement Goals:These are the goals related to areas of concern to be
-                                            improved and addressed:</b></p><br>
+                                        improved and addressed:</b></p><br>
                                     {!! $pipLetter->goals !!}
                                 </div>
                                 <br>
                                 <div class="content" style="line-height:2; font-size:14px">
                                     <p><b>Follow-up Updates:You will receive feedback on your progress according to the
-                                            following schedule:</b></p><br>
+                                        following schedule:</b></p><br>
                                     {!! $pipLetter->updates !!}
                                 </div>
                                 <br>
@@ -128,8 +126,9 @@
                                             <td colspan="3" style="font-size:12px; text-align:left; padding:7px">
                                                 <p>
                                                     <b>For: Fretus Folks India Pvt Ltd.</b> <br>
-                                                    <img class="abc"
-                                                        src="{{ public_path('admin/images/seal.png') }}">
+
+                                                    <img src="{{ public_path('admin/images/seal.png') }}"
+                                                        width="100"><br>
                                                     <b>Authorized Signatory</b>
                                                 </p>
                                             </td>

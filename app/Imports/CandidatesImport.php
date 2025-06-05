@@ -10,7 +10,6 @@ class CandidatesImport implements ToModel, WithHeadingRow
 {
     public function model(array $row)
     {
-        // dd('hello');
         return CFISModel::updateOrCreate(
             [
                 'ffi_emp_id' => $row['ffi_emp_id']
@@ -21,6 +20,7 @@ class CandidatesImport implements ToModel, WithHeadingRow
                 'uan_no' => $row['uan_no'],
                 'esic_no' => $row['esic_no'],
                 'comp_status' => 1,
+
             ]
         );
     }

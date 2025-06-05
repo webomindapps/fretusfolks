@@ -3,25 +3,28 @@
 namespace App\Jobs;
 
 use App\Models\CFISModel;
-use Illuminate\Bus\Batchable;
 use Illuminate\Bus\Queueable;
-use App\Models\ClientManagement;
+use Illuminate\Bus\Batchable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Laravel\Pail\ValueObjects\Origin\Console;
 
 class ImportCFISJob implements ShouldQueue
 {
     use Dispatchable, Queueable, SerializesModels, Batchable;
 
     protected $data;
+    protected $created_by;
 
     /**
      * Create a new job instance.
      */
-    public function __construct($data)
+    public function __construct($data, $created_by)
     {
+        // \Log::info('ImportCFISJob Constructor:', ['created_by' => $created_by]);
         $this->data = $data;
+        $this->created_by = $created_by;
     }
 
     /**
@@ -29,12 +32,11 @@ class ImportCFISJob implements ShouldQueue
      */
     public function handle(): void
     {
-        $info = [];
-        // dd($this->data);
+        \Log::info('Job Started. User ID:', ['created_by' => $this->created_by]);
+
+        // dd("hello");
         foreach ($this->data as $row) {
-            $client = ClientManagement::where('client_name', $row['client_name'])->first();
             $info[] = [
-                'entity_name' => $row['client_name'],
                 'emp_name' => $row['emp_name'],
                 'email' => $row['email'] ?? null,
                 'designation' => $row['designation'] ?? null,
@@ -44,20 +46,24 @@ class ImportCFISJob implements ShouldQueue
                 'status' => 1,
                 'dcs_approval' => 1,
                 'data_status' => 0,
-                'created_by' => auth()->id(),
-                'client_id' => $client?->id,
+                'created_by' => $this->created_by,
             ];
 
 
         }
-
-     
+        \Log::info('Generated data:', $info);
+        // if (!empty($info)) {
+        //     // dd($info);
+        //     CFISModel::Create($info[]);
+        // }
         if (!empty($info)) {
             foreach ($info as $data) {
-                CFISModel::updateOrCreate(
+                CFISModel::create(
                     $data
                 );
             }
         }
+        \Log::info('Job completed successfully');
+
     }
 }

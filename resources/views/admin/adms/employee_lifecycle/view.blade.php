@@ -190,7 +190,6 @@
                                                 @endforeach
                                             @endif
 
-
                                             <div class="col-md-4 mb-2"><b>Emergency Contact:</b>
                                                 <span>{{ $candidate?->emer_contact_no ?? 'N/A' }}</span>
                                             </div>
@@ -243,7 +242,7 @@
                                                                 <td>{{ $bank?->bank_ifsc_code ?? 'N/A' }}</td>
                                                                 <td>
                                                                     @if ($bank->bank_document)
-                                                                        <a href="{{ asset('storage/' . $bank?->bank_document) }}"
+                                                                        <a href="{{ asset($bank?->bank_document) }}"
                                                                             target="_blank"
                                                                             class="btn btn-sm btn-primary">
                                                                             View
@@ -514,7 +513,7 @@
                                                         <td>{{ \Carbon\Carbon::parse($term->date)->format('d-m-Y') }}
                                                         </td>
                                                         <td>
-                                                            <a href="{{ asset('storage/' . $term->termination_letter_path) }}"
+                                                            <a href="{{ asset($term->termination_letter_path) }}"
                                                                 target="_blank" class="btn btn-primary btn-sm">
                                                                 <i class="fas fa-eye"></i> View
                                                             </a>
@@ -527,7 +526,7 @@
                                                         <td>{{ \Carbon\Carbon::parse($pip->date)->format('d-m-Y') }}
                                                         </td>
                                                         <td>
-                                                            <a href="{{ asset('storage/' . $pip->pip_letter_path) }}"
+                                                            <a href="{{ asset($pip->pip_letter_path) }}"
                                                                 target="_blank" class="btn btn-primary btn-sm">
                                                                 <i class="fas fa-eye"></i> View
                                                             </a>

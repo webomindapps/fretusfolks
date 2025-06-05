@@ -124,17 +124,16 @@
                 <table style="border-collapse: collapse; width: 100%; margin-bottom: 20px;">
                     <tbody>
                         <tr>
-                            <td colspan="3"
-                                style="font-size: 12px; text-align: left; padding: 0px; width: 80%;">
+                            <td colspan="3" style="font-size: 12px; text-align: left; padding: 0px; width: 80%;">
                                 <p style="line-height: 1.8; font-size: 14px">
                                     <b>Date:
                                         {{ \Carbon\Carbon::parse($showLetter->date)->format('d-m-Y') }}</b>
                                 </p>
                                 <p style="line-height: 1.8; font-size: 14px">
                                     <b>To,<br>Mr./Mrs./Ms,
-                                        {{ $showLetter->show_letter->emp_name }}</b><br>
+                                        {{ $showLetter->show_letter?->emp_name }}</b><br>
                                     {{ $showLetter->emp_id }}<br>
-                                    {{ $showLetter->show_letter->location }}<br>
+                                    {{ $showLetter->show_letter?->location }}<br>
                                 </p>
                             </td>
                             <td style="font-size: 12px; text-align: left; padding: 0px;"></td>
@@ -148,7 +147,7 @@
                 <br>
                 <div class="content" style="line-height: 2; font-size: 14px">
                     <p style="line-height: 1.8; font-size: 14px"><b>Dear
-                            {{ $showLetter->show_letter->emp_name }},</b>
+                            {{ $showLetter->show_letter?->emp_name }},</b>
                     </p>
                 </div>
                 <br>

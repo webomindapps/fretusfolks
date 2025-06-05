@@ -11,6 +11,6 @@ class EducationCertificate extends Model
     public $fillable = [
         'emp_id',
         'path',
-        'status'
+        'status',
     ];
 }

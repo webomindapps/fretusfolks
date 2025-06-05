@@ -10,7 +10,7 @@ use App\Exports\FFIAssetExport;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Maatwebsite\Excel\Facades\Excel;
- 
+
 class FFIAssetController extends Controller
 {
     public function model()
@@ -19,7 +19,7 @@ class FFIAssetController extends Controller
     }
     public function index()
     {
-        $searchColumns = ['id', 'emp_name', 'asset_name', 'asset_code', 'issued_date', 'returned_date'];
+        $searchColumns = ['id',  'asset_name', 'asset_code', 'issued_date', 'returned_date'];
         $search = request()->search;
         $from_date = request()->from_date;
         $to_date = request()->to_date;

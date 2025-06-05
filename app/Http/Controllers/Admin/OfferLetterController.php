@@ -18,7 +18,7 @@ class OfferLetterController extends Controller
 
     public function index()
     {
-        $searchColumns = ['id', 'employee_id', 'emp_name', 'date', 'phone1', 'email'];
+        $searchColumns = ['id', 'emp_name', 'date', 'phone1', 'email'];
         $search = request()->search;
         $from_date = request()->from_date;
         $to_date = request()->to_date;
@@ -74,6 +74,7 @@ class OfferLetterController extends Controller
 
         return $pdf->stream("offer_letter_{$offerLetter->employee?->emp_id}.pdf");
     }
+
 
     public function destroy($id)
     {

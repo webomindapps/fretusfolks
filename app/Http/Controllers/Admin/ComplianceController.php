@@ -8,11 +8,11 @@ use App\Models\CFISModel;
 use App\Jobs\ImportBankJob;
 use App\Models\BankDetails;
 use App\Models\DCSChildren;
-use App\Models\MuserMaster;
 use Illuminate\Http\Request;
 use App\Exports\BankDownload;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Exports\CadidateDownload;
+use App\Exports\CandidatesExport;
 use App\Imports\CandidatesImport;
 use App\Jobs\ImportCandidatesJob;
 use Illuminate\Support\Facades\DB;
@@ -21,6 +21,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\CandidateMasterExport;
+use Illuminate\Support\Facades\Storage;
 
 class ComplianceController extends Controller
 {
@@ -63,14 +64,12 @@ class ComplianceController extends Controller
     public function viewdetail($id)
     {
 
-        // $education = FFIEducationModel::where('emp_id', $id)->get();
         $children = DCSChildren::where('emp_id', $id)->get();
         $bankdetails = BankDetails::where('emp_id', $id)->get();
         $candidate = $this->model()
             ->with(['client', 'educationCertificates', 'otherCertificates', 'candidateDocuments', 'modifiedBy', 'createdBy'])
             ->findOrFail($id);
         return view('admin.adms.compliance.view', compact('candidate', 'children', 'bankdetails'));
-        // return response()->json(['html_content' => $htmlContent]);
     }
 
     public function downloadpdf($id)
@@ -85,7 +84,7 @@ class ComplianceController extends Controller
         if (!File::exists($tempDir)) {
             File::makeDirectory($tempDir, 0755, true, true);
         }
-        // dd($tempDir);
+
         $pdf = Pdf::loadView('admin.adms.compliance.candidate-pdf', compact('candidate', 'children', 'bankdetails'));
         $pdfPath = $tempDir . "/candidate_details_$id.pdf";
         File::put($pdfPath, $pdf->output());
@@ -105,7 +104,6 @@ class ComplianceController extends Controller
             $this->addDocumentsToZip($zip, $children, 'Children_images');
             $this->addDocumentsToZip($zip, $bankdetails, 'Bank_Document');
 
-
             $zip->close();
         } else {
             return response()->json(['error' => 'Failed to create ZIP file.'], 500);
@@ -116,12 +114,13 @@ class ComplianceController extends Controller
             return response()->json(['error' => 'ZIP file not found.'], 500);
         }
 
-        dd($zipPath);
+
         File::delete($pdfPath);
 
 
         return response()->download($zipPath)->deleteFileAfterSend(true);
     }
+
 
     private function addDocumentsToZip(ZipArchive $zip, $documents, $folderName)
     {
@@ -146,14 +145,15 @@ class ComplianceController extends Controller
             }
         }
     }
-    /**
-     */
+
+
     public function export(Request $request)
     {
         $from_date = $request->from_date;
         $to_date = $request->to_date;
 
-        $query = $this->model()->query()->where('hr_approval', 1);
+        $query = $this->model()->query()->where('hr_approval', 1)
+            ->where('comp_status', 0);
 
         if ($from_date && $to_date) {
             $query->whereBetween('created_at', [$from_date, $to_date]);
@@ -183,6 +183,7 @@ class ComplianceController extends Controller
             'comp_status'
         ]);
         $validatedData = $request->all();
+
         DB::beginTransaction();
         try {
             $candidate->update($validatedData);
@@ -199,9 +200,11 @@ class ComplianceController extends Controller
         }
     }
 
+    // Import from Excel
     public function import(Request $request)
     {
         $file = $request->file;
+
 
         try {
             if ($file) {
@@ -289,7 +292,6 @@ class ComplianceController extends Controller
             'bank_document' => $filePath,
             'status' => $request->status,
             'bank_status' => 0,
-
         ]);
         return redirect()->route('admin.candidatemaster.view', $candidate->id)->with('success', 'Bank details saved successfully!');
     }
@@ -357,7 +359,7 @@ class ComplianceController extends Controller
                 $records = array_map('str_getcsv', file($fileWithPath));
                 $header = $records[0];
                 unset($records[0]);
-                // dd($records, $header);
+
                 $dataChunks = array_chunk($records, 1000);
                 foreach ($dataChunks as $chunk) {
                     $processedData = [];

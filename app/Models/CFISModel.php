@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use App\Models\States;
+use App\Models\PipLetter;
+use App\Models\MuserMaster;
 use App\Models\OfferLetter;
 use App\Models\IncrementLetter;
 use App\Models\ClientManagement;
@@ -117,6 +119,7 @@ class CFISModel extends Model
         'pan_status',
         'note',
         'comp_status',
+
     ];
 
     protected $casts = [
@@ -194,7 +197,7 @@ class CFISModel extends Model
     }
     public function pipletter()
     {
-        return $this->hasMany(Pipletter::class, 'emp_id', 'ffi_emp_id');
+        return $this->hasMany(PipLetter::class, 'emp_id', 'ffi_emp_id');
     }
     public function payslipletter()
     {

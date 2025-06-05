@@ -123,9 +123,9 @@
                                 <br>
                                 <p style="line-height: 1.8; font-size: 14px">
                                     <b>To, <br>Mr./Mrs./Ms.
-                                        {{ $warningLetter->warning_letter->emp_name }}</b>
+                                        {{ $warningLetter->warning_letter?->emp_name }}</b>
                                     <br>{{ $warningLetter->emp_id }}
-                                    <br>{{ $warningLetter->warning_letter->location }}
+                                    <br>{{ $warningLetter->warning_letter?->location }}
                                     <br>
                                 </p>
                             </td>
@@ -140,7 +140,7 @@
                 <br>
                 <div class="content" style="line-height: 2; font-size: 14px">
                     <p style="line-height: 1.8; font-size: 14px"><b>Dear
-                            {{ $warningLetter->warning_letter->emp_name }},</b>
+                            {{ $warningLetter->warning_letter?->emp_name }},</b>
                     </p>
                 </div>
                 <br>
@@ -148,10 +148,10 @@
                     {{ $warningLetter->content }}
                     You, being an employee of Fretus Folks India Pvt Ltd, bearing employee no.
                     <b>{{ $warningLetter->emp_id }}</b> Appointed on
-                    <b>{{ \Carbon\Carbon::parse($warningLetter->warning_letter->joining_date)->format('d-m-Y') }}</b>
+                    <b>{{ \Carbon\Carbon::parse($warningLetter->warning_letter?->joining_date)->format('d-m-Y') }}</b>
                     and we have been
                     deputed with Client Place as
-                    <b>{{ $warningLetter->warning_letter->designation }}</b>.
+                    <b>{{ $warningLetter->warning_letter?->designation }}</b>.
 
                     It has been found against you that you are not following standard disciplinary
                     measures and <b>{{ $warningLetter->content }}</b>. This gross misconduct and a major

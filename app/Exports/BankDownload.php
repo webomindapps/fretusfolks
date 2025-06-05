@@ -24,7 +24,7 @@ class BankDownload implements FromCollection, WithHeadings
                 'Bank Name' => $candidate->bank_name,
                 'Bank Account No' => $candidate->bank_account_no,
                 'Bank IFSC Code' => $candidate->bank_ifsc_code,
-                'Status' => $candidate->bank_status == 1 ? 'Approved' : 'Pending',
+                'Status' => $candidate->bank_status == 1 ? 'Active' : 'Pending',
             ];
         }));
     }

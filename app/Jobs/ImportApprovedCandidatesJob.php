@@ -31,11 +31,12 @@ class ImportApprovedCandidatesJob implements ShouldQueue
      */
     public function handle(): void
     {
+        \Log::info('Imported employee', $this->data);
+
         // dd($this->data);
         foreach ($this->data as $row) {
             $formatDate = function ($date) {
                 if (isset($date)) {
-
                     $date = trim($date);
                     if (strtolower($date) === 'n/a') {
                         return null;

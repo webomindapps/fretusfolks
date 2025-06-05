@@ -80,7 +80,7 @@ class FretusFolks extends Controller
     public function getMarital()
     {
         return [
-            ['label' => 'Un-Married', 'value' => 'Un-Married'],
+            ['label' => 'Single', 'value' => 'Single'],
             ['label' => 'Married', 'value' => 'Married'],
         ];
     }
@@ -304,7 +304,6 @@ class FretusFolks extends Controller
         }
         return $data;
     }
-
     public function getQualification()
     {
         $fields = [

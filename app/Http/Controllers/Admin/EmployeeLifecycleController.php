@@ -10,7 +10,6 @@ use App\Models\IncrementLetter;
 use App\Http\Controllers\Controller;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\CadidateReportExport;
-use App\Exports\CandidateMasterExport;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 
@@ -27,7 +26,7 @@ class EmployeeLifecycleController extends Controller
         $orderBy = request()->orderBy;
         $fromDate = $request->input('from_date');
         $toDate = $request->input('to_date');
-        $selectedData = $request->input('data', []);  // Get selected client IDs
+        $selectedData = $request->input('data', []);
         $search_query = $request->input('search_query');
 
         $filteredResults = $this->model()->newQuery();
@@ -35,13 +34,11 @@ class EmployeeLifecycleController extends Controller
         if ($fromDate && $toDate) {
             $filteredResults->whereBetween('created_at', ["{$fromDate} 00:00:00", "{$toDate} 23:59:59"]);
         }
-
         if ($order == '') {
             $filteredResults->orderByDesc('id');
         } else {
             $filteredResults->orderBy($order, $orderBy);
         }
-
         if (!empty($search_query)) {
             $filteredResults->where(function ($query) use ($search_query) {
                 $query->where('emp_name', 'like', "%{$search_query}%")
@@ -74,34 +71,35 @@ class EmployeeLifecycleController extends Controller
         $bankdetails = BankDetails::where('emp_id', $id)->get();
 
         $candidate = $this->model()
-            ->with(['client', 'educationCertificates', 'otherCertificates', 'candidateDocuments', 'offerletters', 'incrementletters', 'showcauseletters', 'warningletters', 'pipletter', 'terminationletter'])
+            ->with(['client', 'educationCertificates', 'otherCertificates', 'candidateDocuments', 'offerletters', 'incrementletters', 'showcauseletters', 'warningletters', 'terminationletter', 'pipletter', 'payslipletter'])
             ->findOrFail($id);
         // dd($candidate->showcauseletters);
         return view('admin.adms.employee_lifecycle.view', compact('candidate', 'children','bankdetails'));
         // return response()->json(['html_content' => $htmlContent]);
     }
 
-
     public function exportFilteredReport(Request $request)
     {
         $fromDate = $request->input('from_date');
         $toDate = $request->input('to_date');
         $selectedData = $request->input('data', []); // Selected client IDs
-        $searchQuery = $request->input('search_query');
+        $search_query = $request->input('search_query');
 
-        $query = $this->model()->query();
+        // $defaultColumns = ['id', 'ffi_emp_id', 'emp_name', 'entity_name', 'phone1', 'email',];
+
+        $query = $this->model()->newQuery();
 
         if ($fromDate && $toDate) {
             $query->whereBetween('created_at', ["{$fromDate} 00:00:00", "{$toDate} 23:59:59"]);
         }
 
-        if (!empty($searchQuery)) {
-            $query->where(function ($q) use ($searchQuery) {
-                $q->where('emp_name', 'like', "%{$searchQuery}%")
-                    ->orWhere('phone1', 'like', "%{$searchQuery}%")
-                    ->orWhere('entity_name', 'like', "%{$searchQuery}%")
-                    ->orWhere('email', 'like', "%{$searchQuery}%")
-                    ->orWhere('ffi_emp_id', 'like', "%{$searchQuery}%");
+        if (!empty($search_query)) {
+            $query->where(function ($q) use ($search_query) {
+                $q->where('emp_name', 'like', "%{$search_query}%")
+                    ->orWhere('phone1', 'like', "%{$search_query}%")
+                    ->orWhere('entity_name', 'like', "%{$search_query}%")
+                    ->orWhere('email', 'like', "%{$search_query}%")
+                    ->orWhere('ffi_emp_id', 'like', "%{$search_query}%");
             });
         }
 
@@ -113,6 +111,8 @@ class EmployeeLifecycleController extends Controller
 
         return Excel::download(new CadidateReportExport($candidates), 'filtered_report.xlsx');
     }
+
+
+
+
 }
-
-

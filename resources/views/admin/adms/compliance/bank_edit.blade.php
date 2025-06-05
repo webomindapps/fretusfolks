@@ -47,7 +47,7 @@
                                         class="form-control">
                                         @if ($bankdetails && $bankdetails->bank_document)
                                         <div id="image-preview-container" class="d-flex mt-2">
-                                            <a href="{{ asset('storage/' . $bankdetails->bank_document) }}" target="_blank"
+                                            <a href="{{ asset($bankdetails->bank_document) }}" target="_blank"
                                                class="btn btn-custom mt-2">
                                                 View
                                             </a>
@@ -61,16 +61,16 @@
                                 <x-forms.input label="Enter Bank IFSC CODE:" type="text" name="bank_ifsc_code"
                                     id="bank_ifsc_code" :required="true" size="col-lg-6 mt-2" :value="old('bank_ifsc_code', $bankdetails->bank_ifsc_code ?? '')" />
                                 <div class="form-group col-lg-6 mt-2">
-                                    <label for="bank_status">Status <span style="color: red">*</span></label>
-                                    <select id="bank_status" name="bank_status" class="form-control" required
+                                    <label for="status">Status <span style="color: red">*</span></label>
+                                    <select id="status" name="status" class="form-control" required
                                         onchange="toggleNotesField(this.value)">
                                         <option value="">Select Status</option>
                                         <option value="1"
-                                            {{ old('bank_status', $bankdetails->bank_status ?? '') == '1' ? 'selected' : '' }}>
+                                            {{ old('status', $bankdetails->status ?? '') == '1' ? 'selected' : '' }}>
                                             Active
                                         </option>
                                         <option value="0"
-                                            {{ old('bank_status', $bankdetails->bank_status ?? '') == '0' ? 'selected' : '' }}>
+                                            {{ old('status', $bankdetails->status ?? '') == '0' ? 'selected' : '' }}>
                                             Inactive
                                         </option>
                                     </select>

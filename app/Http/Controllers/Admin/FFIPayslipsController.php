@@ -2,24 +2,22 @@
 
 namespace App\Http\Controllers\Admin;
 
-use Exception;
-use ZipArchive;
 use App\Models\Payslips;
-use App\Jobs\PayslipCreate;
-use Illuminate\Http\Request;
-use Illuminate\Bus\Batchable;
-use RecursiveIteratorIterator;
-use Barryvdh\DomPDF\Facade\Pdf;
-use RecursiveDirectoryIterator;
-use App\Models\FFIPayslipsModel;
 use App\Exports\FFI_PayslipsExport;
 use App\Imports\FFI_PayslipsImport;
-use Illuminate\Support\Facades\Bus;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Http\Request;
+use App\Models\FFIPayslipsModel;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
-use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Response;
-use Illuminate\Pagination\LengthAwarePaginator;
+use Maatwebsite\Excel\Facades\Excel;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
+use ZipArchive;
+use App\Jobs\PayslipCreate;
+use Exception;
+use Illuminate\Support\Facades\Artisan;
 
 class FFIPayslipsController extends Controller
 {
@@ -62,7 +60,6 @@ class FFIPayslipsController extends Controller
 
         return view("admin.hr_management.ffi.payslips.index", compact("payslip"));
     }
-
     public function bulkUpload(Request $request)
     {
         $request->validate([
@@ -91,8 +88,9 @@ class FFIPayslipsController extends Controller
                         $datafromCsv[] = $record;
                     }
                 }
-                $datafromCsv = array_chunk($datafromCsv, 10);
+                $datafromCsv = array_chunk($datafromCsv, 1000);
                 foreach ($datafromCsv as $index => $dataCsv) {
+
                     foreach ($dataCsv as $data) {
                         $row = array_combine($header, $data);
 
@@ -106,9 +104,9 @@ class FFIPayslipsController extends Controller
 
                         $payslipdata[$index][] = $row;
                     }
-
-                    // Dispatch job after chunk preparation
-                    PayslipCreate::dispatch($payslipdata[$index], $month, $year);
+                    // dd($payslipdata[$index], $month, $year);
+                    $payslips = PayslipCreate::dispatch($payslipdata[$index], $month, $year);
+                    // dd($payslips);
                 }
                 if (file_exists($fileWithPath)) {
                     unlink($fileWithPath);
@@ -117,14 +115,24 @@ class FFIPayslipsController extends Controller
         } catch (Exception $e) {
             dd($e);
         }
+        // $import = new FFI_PayslipsImport($month, $year);
 
+        // try {
+        //     Excel::import($import, $file);
+        // } catch (Exception $e) {
+        //     return redirect()->route('admin.ffi_payslips')->with('error', 'There was an error during the import process: ' . $e->getMessage());
+        // }
+
+        // $error = '';
+        // foreach ($import->failures() as $failure) {
+        //     $error .= 'Row no: ' . $failure->row() . ', Column: ' . $failure->attribute() . ', Error: ' . implode(', ', $failure->errors()) . '<br>';
+        // }
         $error = '';
         return redirect()->route('admin.ffi_payslips')->with([
             'success' => 'Payslips added successfully',
             'error_msg' => $error
         ]);
     }
-
     public function export(Request $request)
     {
         $request->validate([
@@ -140,6 +148,7 @@ class FFIPayslipsController extends Controller
 
     public function searchPayslip(Request $request)
     {
+        // Artisan::call('queue:work');
         $searchColumns = ['id', 'emp_id', 'month', 'year', 'employee_name', 'designation', 'department'];
         $search = request()->search;
         $emp_id = $request->input('emp_id');
@@ -168,9 +177,6 @@ class FFIPayslipsController extends Controller
 
         return view('admin.hr_management.ffi.payslips.index', compact('payslips'));
     }
-
-
-
     public function destroy($id)
     {
         $this->model()->destroy($id);
@@ -179,15 +185,12 @@ class FFIPayslipsController extends Controller
     public function generatePayslipsPdf($id)
     {
         $payslip = $this->model()->findOrFail($id);
+
         $data = [
             'payslip' => $payslip,
         ];
 
-        $pdf = PDF::loadView('admin.hr_management.ffi.payslips.print_payslips', $data)
-            ->setPaper('A4', 'portrait')
-            ->setOptions(['margin-top' => 10, 'margin-bottom' => 10, 'margin-left' => 15, 'margin-right' => 15]);
-
-
+        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true, 'chroot' => public_path()])->loadView('admin.hr_management.ffi.payslips.print_payslips', $data);
         return $pdf->stream('payslip' . $payslip->id . '.pdf');
     }
     public function zipDownload($payslips)

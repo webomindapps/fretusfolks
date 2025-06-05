@@ -22,5 +22,4 @@ class MuserMaster extends Authenticatable
     {
         return $this->belongsTo(ClientManagement::class, 'id');
     }
-    
 }

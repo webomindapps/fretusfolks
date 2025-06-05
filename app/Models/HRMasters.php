@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\MuserMaster;
+use App\Models\ClientManagement;
 use Illuminate\Database\Eloquent\Model;
 
 class HRMasters extends Model

@@ -75,16 +75,16 @@ class CDMSController extends Controller
             'gstn' => 'nullable',
             'website_url' => 'required|url',
             'mode_agreement' => 'required|string|in:1,2',
-            'agreement_type' => 'required|string|in:1,2,3',
+            'agreement_type' => 'nullable|string|in:1,2,3',
             'other_agreement' => 'nullable',
             'agreement_doc' => 'nullable|file|max:5000',
-            'region' => 'required|string|max:255',
-            'service_state' => 'required|integer',
-            'contract_start' => 'required|date',
-            'contract_end' => 'required|date',
-            'rate' => 'required|string|max:255',
-            'commercial_type' => 'required|integer',
-            'remark' => 'required|string',
+            'region' => 'nullable|string|max:255',
+            'service_state' => 'nullable|integer',
+            'contract_start' => 'nullable|date',
+            'contract_end' => 'nullable|date',
+            'rate' => 'nullable|string|max:255',
+            'commercial_type' => 'nullable|integer',
+            'remark' => 'nullable|string',
         ]);
         $validatedData = $request->all();
         $validatedData['status'] = $request->input('status', 1);
@@ -145,7 +145,7 @@ class CDMSController extends Controller
         $client = $this->model()->findOrFail($id);
         $request->validate([
             'state' => 'exists:states,id',
-            'gstn_no' => 'required|string',
+            'gstn_no' => 'nullable|string',
         ]);
         ClientGstn::create([
             'client_id' => $client->id,
@@ -176,16 +176,16 @@ class CDMSController extends Controller
             'gstn' => 'nullable',
             'website_url' => 'required|url',
             'mode_agreement' => 'required|string|in:1,2',
-            'agreement_type' => 'required|string|in:1,2,3',
+            'agreement_type' => 'nullable|string|in:1,2,3',
             'other_agreement' => 'nullable',
             'agreement_doc' => 'nullable|file|max:5000',
-            'region' => 'required|string|max:255',
-            'service_state' => 'required|integer',
-            'contract_start' => 'required|date',
-            'contract_end' => 'required|date',
-            'rate' => 'required|string|max:255',
-            'commercial_type' => 'required|integer',
-            'remark' => 'required|string',
+            'region' => 'nullable|string|max:255',
+            'service_state' => 'nullable|integer',
+            'contract_start' => 'nullable|date',
+            'contract_end' => 'nullable|date',
+            'rate' => 'nullable|string|max:255',
+            'commercial_type' => 'nullable|integer',
+            'remark' => 'nullable|string',
             'status' => 'required|integer',
         ]);
 
@@ -280,26 +280,20 @@ class CDMSController extends Controller
         }
         $query = $this->model()->newQuery();
 
-        // dd($query = $this->model()->newQuery());
         if ($fromDate && $toDate) {
             $query->whereBetween('modify_date', ["{$fromDate} 00:00:00", "{$toDate} 23:59:59"]);
         }
-        // dd($fromDate, $toDate);
         if ($states) {
             $query->whereIn('service_state', explode(',', $states));
         }
-        // dd($states);
         if ($region) {
             $query->where('region', $region);
         }
-        // dd($region);
         if ($status) {
             $query->where('status', $status);
         }
-        // dd($status);
         $data = $query->select($fields)->get();
 
-        // dd($data);
         return Excel::download(new ClientExport($data, $fields), 'cdmsreport.xlsx');
     }
     public function showCodeReport(Request $request)

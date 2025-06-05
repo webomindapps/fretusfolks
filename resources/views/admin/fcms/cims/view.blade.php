@@ -4,7 +4,7 @@
             <div class="modal-title">
                 <h5 class="" id="invoiceDetailsLabel">{{ $invoice->client?->client_name }}</h5>
             </div>
-            <button type="button" class="close" id="closeModalButton">×</button>
+            <!-- <button type="button" class="close" id="closeModalButton">×</button> -->
         </div>
         <div class="modal-body">
             <div class="row">
@@ -55,8 +55,8 @@
                 </div>
             </div>
         </div>
-        {{-- <div class="modal-footer">
+        <div class="modal-footer">
             <button type="button" class="btn bg-primary" id="closeModalButton">Close</button>
-        </div> --}}
+        </div>
     </div>
 </div>

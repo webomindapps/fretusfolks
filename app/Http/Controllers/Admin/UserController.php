@@ -123,7 +123,7 @@ class UserController extends Controller
         $status = $request->status;
 
         foreach ($selectedItems as $item) {
-            $category = $this->model()->find($item);
+            $category = MuserMaster::find($item);
             if ($type == 1) {
                 $category->delete();
             } else if ($type == 2) {
@@ -136,12 +136,11 @@ class UserController extends Controller
     public function edit($id)
     {
         $roles = Role::all();
-        $user = $this->model()->findorfail($id);
+        $user = MuserMaster::findorfail($id);
         $clients = ClientManagement::all();
         $assignedClients = HRMasters::where('user_id', $user->id)
             ->pluck('client_id')
             ->toArray();
-
         return view('admin.ffimasters.usermasters.edit', compact('roles', 'user', 'clients', 'assignedClients'));
     }
     public function update(Request $request, $id)
@@ -152,21 +151,12 @@ class UserController extends Controller
                 'emp_id' => 'required',
                 'name' => 'required',
                 'username' => 'required',
-                'email' => 'required|email',
-            ]
+                'email' => 'required',
+            ],
         );
-
         $user = MuserMaster::findOrFail($id);
-
-        $user->update([
-            'emp_id' => $request->emp_id,
-            'name' => $request->name,
-            'username' => $request->username,
-            'email' => $request->email,
-        ]);
-
+        $user->update($request->all());
         $user->syncRoles($request->role);
-
         if ($request->role === 'HR Operations') {
             HRMasters::where('user_id', $user->id)->delete();
 
@@ -182,20 +172,19 @@ class UserController extends Controller
         } else {
             HRMasters::where('user_id', $user->id)->delete();
         }
-
         return redirect()->route('admin.usermasters')->with('success', 'User Masters updated successfully');
     }
     public function delete($id)
     {
-        $user = $this->model()->findOrFail($id);
+        $user = MuserMaster::findOrFail($id);
         $user->delete();
         return redirect()->route('admin.usermasters')->with('success', 'User Masters deleted successfully');
     }
     public function toggleStatus($id)
     {
-        $user = $this->model()->findOrFail($id);
-        $user->status = !$user->status;
-        $user->save();
+        $tdsCode = $this->model()->findOrFail($id);
+        $tdsCode->status = !$tdsCode->status;
+        $tdsCode->save();
         return redirect()->back()->with('success', 'Status updated successfully.');
     }
 }

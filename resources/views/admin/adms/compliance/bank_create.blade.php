@@ -42,14 +42,14 @@
                                     id="bank_ifsc_code" :required="true" size="col-lg-6 mt-2" :value="old('bank_ifsc_code')" />
 
                                 <div class="form-group col-lg-6 mt-2">
-                                    <label for="bank_status">Status <span style="color: red">*</span></label>
-                                    <select id="bank_status" name="bank_status" class="form-control" required
+                                    <label for="status">Status <span style="color: red">*</span></label>
+                                    <select id="status" name="status" class="form-control" required
                                         onchange="toggleNotesField(this.value)">
                                         <option value="">Select Status</option>
-                                        <option value="1" {{ old('bank_status') == '1' ? 'selected' : '' }}>
+                                        <option value="1" {{ old('status') == '1' ? 'selected' : '' }}>
                                             Active
                                         </option>
-                                        <option value="0" {{ old('bank_status') == '0' ? 'selected' : '' }}>
+                                        <option value="0" {{ old('status') == '0' ? 'selected' : '' }}>
                                             Inactive
                                         </option>
                                     </select>

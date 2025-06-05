@@ -1,41 +1,27 @@
 <table>
     <thead>
         <tr>
-            @if (!empty($fields) && is_array($fields))
-                @foreach ($fields as $field)
-                    <th>{{ ucwords(str_replace('_', ' ', $field)) }}</th>
-                @endforeach
-            @else
-                <th>No Fields Available</th>
-            @endif
+            @foreach ($fields as $field)
+                <th>{{ ucwords(str_replace('_', ' ', $field)) }}</th>
+            @endforeach
         </tr>
     </thead>
     <tbody>
-        @if (!empty($clients) && is_iterable($clients))
-            @foreach ($clients as $client)
-                <tr>
-                    @if (!empty($fields) && is_array($fields))
-                        @foreach ($fields as $field)
-                            <td style="white-space: nowrap;">
-                                @switch($field)
-                                    @case('state')
-                                        {{ $client->stateRelation?->state_name }}
-                                    @break
-
-                                    @default
-                                        {{ $client->$field ?? 'N/A' }}
-                                @endswitch
-                            </td>
-                        @endforeach
-                    @else
-                        <td>No Data</td>
-                    @endif
-                </tr>
-            @endforeach
-        @else
+        @foreach ($clients as $client)
             <tr>
-                <td colspan="{{ !empty($fields) && is_array($fields) ? count($fields) : 1 }}">No Clients Available</td>
+                @foreach ($fields as $field)
+                    <td style="white-space: nowrap;">
+                        @switch($field)
+                            @case('state')
+                                {{ $client->stateRelation?->state_name }}
+                            @break
+
+                            @default
+                                {{ $client->$field ?? 'N/A' }}
+                        @endswitch
+                    </td>
+                @endforeach
             </tr>
-        @endif
+        @endforeach
     </tbody>
 </table>

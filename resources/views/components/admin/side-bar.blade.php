@@ -15,20 +15,6 @@
                 @endif
             </a>
 
-            {{-- @if ($menu['isSubMenu'])
-                <ul class="dropdown_menu">
-                    @foreach ($menu['subMenus'] as $subMenu)
-                        @if (isset($subMenu['roles']) && array_intersect($subMenu['roles'], auth()->user()->getRoleNames()->toArray()))
-                            <li>
-                                <a href="{{ route($subMenu['route'], $subMenu['params'] ?? []) }}">
-                                    <i class='bx bx-chevron-right'></i>
-                                    {{ $subMenu['title'] }}
-                                </a>
-                            </li>
-                        @endif
-                    @endforeach
-                </ul>
-            @endif --}}
             @if ($menu['isSubMenu'])
                 <ul class="dropdown_menu @if (auth()->user()->hasRole('HR Operations') || auth()->user()->hasRole('Recruitment')) open @endif">
                     @foreach ($menu['subMenus'] as $subMenu)

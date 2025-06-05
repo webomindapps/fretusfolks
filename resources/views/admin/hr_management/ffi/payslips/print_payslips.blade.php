@@ -167,12 +167,8 @@
                         <td>UAN No.:{{ $payslip->uan_no ?? 0 }} </td>
                     </tr>
                     <tr>
-                        <td>FFIEmp. ID: {{ $payslip->emp_id ?? 0 }}</td>
+                        <td>Emp. ID: {{ $payslip->emp_id ?? 0 }}</td>
                         <td>PF No: {{ $payslip->pf_no ?? 0 }}</td>
-                    </tr>
-                    <tr>
-                        <td>Client Name:{{ $payslip->client_name ?? 0 }} </td>
-                        <td>Client Emp ID.: {{ $payslip->client_emp_id ?? 0 }}</td>
                     </tr>
                     <tr>
                         <td>Designation:{{ $payslip->designation ?? 0 }} </td>

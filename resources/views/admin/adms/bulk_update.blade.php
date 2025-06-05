@@ -27,7 +27,6 @@
             </div>
         </div>
     </div>
-
     <div class="row">
         <div class="col-lg-12">
             @php
@@ -94,6 +93,7 @@
             </x-table>
         </div>
     </div>
+
     <!-- Modal -->
     <div class="modal fade" id="downloadModal" tabindex="-1" aria-labelledby="downloadModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -114,7 +114,7 @@
                             </select>
                         </div>
                         <div class="mb-3">
-                            <label for="date">Select Date</label>
+                            <label for="date">Select Date OF leave</label>
                             <input type="date" name="date" class="form-control" required>
                         </div>
                     </div>

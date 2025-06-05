@@ -2,29 +2,25 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Log;
 use Exception;
 use ZipArchive;
 use App\Models\CFISModel;
 use App\Exports\CDMSExport;
 use App\Exports\CFISExport;
 use App\Jobs\ImportCFISJob;
-use App\Models\BankDetails;
-use App\Models\DCSChildren;
 use Illuminate\Http\Request;
 use RecursiveIteratorIterator;
 use App\Exports\EmployeeExport;
-use Barryvdh\DomPDF\Facade\Pdf;
 use RecursiveDirectoryIterator;
 use App\Models\ClientManagement;
 use App\Jobs\ImportBulkUpdateJob;
 use App\Models\CandidateDocuments;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
-
 
 class CFISController extends Controller
 {
@@ -63,7 +59,7 @@ class CFISController extends Controller
         ($order == '') ? $query->orderByDesc('id') : $query->orderBy($order, $orderBy);
 
         $candidate = $paginate ? $query->paginate($paginate)->appends(request()->query()) : $query->paginate(10)->appends(request()->query());
-
+        // dd(auth()->id());
         return view("admin.adms.cfis.index", compact("candidate"));
 
     }
@@ -106,7 +102,7 @@ class CFISController extends Controller
                 }
             ],
             'driving_license_no' => 'nullable|string|max:255',
-            'photo' => 'required|file|mimes:jpg,jpeg,png|max:2048',
+            'photo' => 'required|file|mimes:jpg,jpeg,png',
             'resume' => 'nullable',
         ]);
         $validatedData = $request->all();
@@ -157,7 +153,6 @@ class CFISController extends Controller
     public function update(Request $request, $id)
     {
         $candidate = $this->model()->findOrFail($id);
-
         $request->only([
             'client_id',
             'emp_name',
@@ -173,9 +168,9 @@ class CFISController extends Controller
             'photo',
             'resume',
         ]);
+        $validatedData = $request->all();
 
         // $validatedData['created_by'] = auth()->id();
-        $validatedData = $request->all();
         $validatedData['dcs_approval'] = $request->input('dcs_approval', 1);
         $validatedData['data_status'] = $request->input('data_status', 0);
 
@@ -273,55 +268,39 @@ class CFISController extends Controller
 
     public function import(Request $request)
     {
-        // dd($request->all());
-
-        // dd($request->file());
-        // $request->validate([
-        //     'file' => 'required|file|mimes:csv',
-        // ]);
-
+        $created_by = auth()->id();
+        Log::info('Auth ID:', ['created_by' => $created_by]);
         $file = $request->file;
-        // dd($file);
-        try {
-            if ($file) {
-                $fileName = time() . '_' . $file->getClientOriginalName();
-                $filePath = public_path('imports');
+        if ($file) {
+            $fileName = time() . '_' . $file->getClientOriginalName();
+            $filePath = public_path('imports');
 
-                $file->move($filePath, $fileName);
-                $fileWithPath = $filePath . '/' . $fileName;
+            $file->move($filePath, $fileName);
+            $fileWithPath = $filePath . '/' . $fileName;
 
-                $header = null;
+            $records = array_map('str_getcsv', file($fileWithPath));
+            $header = $records[0];
+            unset($records[0]);
 
-                $records = array_map('str_getcsv', file($fileWithPath));
-                $header = $records[0]; // First row as header
-                unset($records[0]); // Remove header from data
-                // dd($header, $records);
+            $dataChunks = array_chunk($records, 1000);
+            foreach ($dataChunks as $chunk) {
+                $processedData = [];
 
-                $dataChunks = array_chunk($records, 1000);
-                // dd($dataChunks);
-                foreach ($dataChunks as $chunk) {
-                    $processedData = [];
-
-                    foreach ($chunk as $record) {
-                        if (count($header) == count($record)) {
-                            $processedData[] = array_combine($header, $record);
-                        }
-                    }
-
-                    if (!empty($processedData)) {
-                        // 
-                        ImportCFISJob::dispatch($processedData);
-                        // dd($processedData);
+                foreach ($chunk as $record) {
+                    if (count($header) == count($record)) {
+                        $processedData[] = array_combine($header, $record);
                     }
                 }
-                if (file_exists($fileWithPath)) {
-                    unlink($fileWithPath);
+
+                if (!empty($processedData)) {
+                    Log::info('Dispatching Job with User ID:', ['created_by' => $created_by]); // Debugging log
+                    ImportCFISJob::dispatch($processedData, $created_by);
                 }
             }
-        } catch (Exception $e) {
-            return redirect()->route('admin.cfis')->with([
-                'error_msg' => 'Import failed: ' . $e->getMessage()
-            ]);
+
+            if (file_exists($fileWithPath)) {
+                unlink($fileWithPath);
+            }
         }
 
         return redirect()->route('admin.cfis')->with([
@@ -367,6 +346,8 @@ class CFISController extends Controller
     }
     public function bulkimport(Request $request)
     {
+
+
         $file = $request->file;
         // dd($file);
         try {
@@ -417,7 +398,6 @@ class CFISController extends Controller
         ]);
     }
 
-
     public function bulkdownload(Request $request)
     {
         $clientId = $request->client_id;
@@ -433,7 +413,7 @@ class CFISController extends Controller
         }
 
         $timestamp = time();
-        $baseTempPath = storage_path("app/temp_bulk_{$timestamp}");
+        $baseTempPath = public_path("app/temp_bulk_{$timestamp}");
         File::makeDirectory($baseTempPath, 0755, true);
 
         foreach ($employees as $employee) {
@@ -461,7 +441,7 @@ class CFISController extends Controller
         }
 
         $zipFileName = "bulk_employees_{$timestamp}.zip";
-        $zipPath = storage_path("app/{$zipFileName}");
+        $zipPath = public_path("app/{$zipFileName}");
 
         $zip = new ZipArchive;
         if ($zip->open($zipPath, ZipArchive::CREATE) === TRUE) {
@@ -496,7 +476,7 @@ class CFISController extends Controller
             $docPath = $document->bank_document ?? $document->path ?? $document->photo ?? null;
 
             if ($docPath) {
-                $originalStoragePath = public_path("storage/" . ltrim($docPath, '/'));
+                $originalStoragePath = public_path(ltrim($docPath, '/'));
                 $fileName = basename($docPath);
                 $destinationFilePath = "{$destPath}/{$fileName}";
 
@@ -510,6 +490,3 @@ class CFISController extends Controller
         }
     }
 }
-
-
-

@@ -17,9 +17,8 @@ class BankDetails extends Model
         'bank_status',
         'status',
     ];
-
     public function clients()
     {
-        return $this->belongsTo(CFISModel::class, 'emp_id', 'ffi_emp_id');
+        return $this->belongsTo(CFISModel::class, 'emp_id', 'id');
     }
 }

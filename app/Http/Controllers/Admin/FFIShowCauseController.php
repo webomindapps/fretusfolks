@@ -55,6 +55,7 @@ class FFIShowCauseController extends Controller
             $query->orderBy($order, $orderBy);
         }
 
+
         $show = $paginate ? $query->paginate($paginate)->appends(request()->query()) : $query->paginate(10)->appends(request()->query());
 
         return view("admin.hr_management.ffi.show_cause.index", compact("show"));
@@ -73,6 +74,7 @@ class FFIShowCauseController extends Controller
             'content' => 'required|string',
         ]);
         $validatedData = $request->all();
+
         DB::beginTransaction();
         try {
             $show = $this->model()->create($validatedData);
@@ -161,6 +163,7 @@ class FFIShowCauseController extends Controller
             'content' => 'required|string',
         ]);
         $validatedData = $request->all();
+
         DB::beginTransaction();
         try {
             $show = $this->model()->findOrFail($id);

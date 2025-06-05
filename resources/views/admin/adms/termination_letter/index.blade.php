@@ -14,7 +14,7 @@
                     ['label' => 'Actions', 'column' => 'action', 'sort' => false],
                 ];
             @endphp
-            <x-table :columns="$columns" :data="$termination" :checkAll=false :bulk="route('admin.ffi_warning.bulk')" :route="route('admin.showcause_letter')">
+            <x-table :columns="$columns" :data="$termination" :checkAll=false :bulk="route('admin.ffi_warning.bulk')" :route="route('admin.termination_letter')">
                 @foreach ($termination as $key => $item)
                     <tr>
                         {{-- <td>

@@ -7,15 +7,10 @@
             padding: 10px 20px;
             border-radius: 5px;
             text-decoration: none;
-            min-width: 220px;
         }
 
         .btn-custom:hover {
             background-color: #0056b3;
-        }
-
-        .rejected {
-            background-color: #f8d7da;
         }
     </style>
     @if ($errors->any())
@@ -29,37 +24,35 @@
             </div>
         </div>
     @endif
-    <div class="col-lg-12 px-3 mt-2">
-        @foreach ($candidate->candidateDocuments as $doc)
-            @if ($doc->status == 2)
-                <div class="alert alert-danger">
-                    <strong>Note:</strong> The <b>{{ $doc->name }}</b> has been rejected.
-                </div>
-            @endif
-        @endforeach
-        @foreach ($candidate->otherCertificates as $doc)
-            @if ($doc->status == 2)
-                <div class="alert alert-danger">
-                    <strong>Note:</strong> One odf the Other Certificate has been rejected.
-                </div>
-            @endif
-        @endforeach
-        @foreach ($candidate->educationCertificates as $doc)
-            @if ($doc->status == 2)
-                <div class="alert alert-danger">
-                    <strong>Note:</strong> One odf the Education Certificate has been rejected.
-                </div>
-            @endif
-        @endforeach
-        @if (old('note', $candidate->note))
-            <div class="alert alert-danger text-danger font-weight-bold">
-                <strong>Rejected Field:</strong> {{ old('note', $candidate->note) }}
+    @foreach ($candidate->candidateDocuments as $doc)
+        @if ($doc->status == 2)
+            <div class="alert alert-danger">
+                <strong>Note:</strong> The document <b>{{ $doc->name }}</b> has been rejected.
             </div>
         @endif
-    </div>
+    @endforeach
+    @foreach ($candidate->otherCertificates as $doc)
+        @if ($doc->status == 2)
+            <div class="alert alert-danger">
+                <strong>Note:</strong> One odf the Other Certificate has been rejected.
+            </div>
+        @endif
+    @endforeach
+    @foreach ($candidate->educationCertificates as $doc)
+        @if ($doc->status == 2)
+            <div class="alert alert-danger">
+                <strong>Note:</strong> One odf the Education Certificate has been rejected.
+            </div>
+        @endif
+    @endforeach
+    @if (old('note', $candidate->note))
+        <div class="alert alert-danger text-danger font-weight-bold">
+            <strong>Rejected Field:</strong> {{ old('note', $candidate->note) }}
+        </div>
+    @endif
 
     <div class="col-lg-12 pb-4">
-        <div class="form-card px-md-3 px-2">
+        <div class="form-card px-3">
             <form action="{{ route('admin.dcs_approval.docedit', $candidate->id) }}" method="POST"
                 enctype="multipart/form-data">
                 @csrf
@@ -128,7 +121,7 @@
                                         </div>
 
                                         <div class="form-group col-lg-3 mt-2">
-                                            <label for="spouse_aadhar_no">Enter Spouse Adhar Card No: </label>
+                                            <label for="spouse_aadhar_no">Enter Spouse Adhar Card No:</label>
                                             <input type="text" name="spouse_aadhar_no" id="spouse_aadhar_no"
                                                 class="form-control" maxlength="12" inputmode="numeric"
                                                 value="{{ old('spouse_aadhar_no', $candidate->spouse_aadhar_no) }}">
@@ -145,9 +138,8 @@
                                                         ->first();
                                                 @endphp
                                                 <div id="image-preview-container" class="d-flex mt-2">
-                                                    <img src="{{ asset('storage/' . $spouse_photo->path) }}"
-                                                        class="img-thumbnail" width="100" height="100"
-                                                        alt="Uploaded image">
+                                                    <img src="{{ asset($spouse_photo->path) }}" class="img-thumbnail"
+                                                        width="100" height="100" alt="Uploaded image">
                                                 </div>
                                             @endif
                                         </div>
@@ -165,8 +157,6 @@
                                     </div>
                                 </div>
 
-
-
                                 <x-forms.input label="Father Name:  " type="text" name="father_name"
                                     id="father_name" :required="false" size="col-lg-3 mt-2" :value="old('father_name', $candidate->father_name)" />
                                 <x-forms.input label="Father's DOB: " type="date" name="father_dob"
@@ -175,7 +165,7 @@
                                     <label for="father_aadhar_no">Father's Adhar Card No: </label>
                                     <input type="text" name="father_aadhar_no" id="father_aadhar_no"
                                         class="form-control" maxlength="12" inputmode="numeric"
-                                        value="{{ old('father_aadhar_no', $candidate->father_aadhar_no) }}" required>
+                                        value="{{ old('father_aadhar_no', $candidate->father_aadhar_no) }}">
                                 </div>
                                 <div class="form-group col-lg-3 mt-2">
                                     <label for="father_photo">Father Photo: </label>
@@ -189,9 +179,8 @@
                                                 ->first();
                                         @endphp
                                         <div id="image-preview-container" class="d-flex mt-2">
-                                            <img src="{{ asset('storage/' . $father_photo->path) }}"
-                                                class="img-thumbnail" width="100" height="100"
-                                                alt="Uploaded image">
+                                            <img src="{{ asset($father_photo->path) }}" class="img-thumbnail"
+                                                width="100" height="100" alt="Uploaded image">
                                         </div>
                                     @endif
                                 </div>
@@ -203,7 +192,7 @@
                                     <label for="mother_aadhar_no">Mother's Adhar Card No: </label>
                                     <input type="text" name="mother_aadhar_no" id="mother_aadhar_no"
                                         class="form-control" maxlength="12" inputmode="numeric"
-                                        value="{{ old('mother_aadhar_no', $candidate->mother_aadhar_no) }}" required>
+                                        value="{{ old('mother_aadhar_no', $candidate->mother_aadhar_no) }}">
                                 </div>
                                 <div class="form-group col-lg-3 mt-2">
                                     <label for="mother_photo">Mother Photo: </label>
@@ -217,9 +206,8 @@
                                                 ->first();
                                         @endphp
                                         <div id="image-preview-container" class="d-flex mt-2">
-                                            <img src="{{ asset('storage/' . $mother_photo->path) }}"
-                                                class="img-thumbnail" width="100" height="100"
-                                                alt="Uploaded image">
+                                            <img src="{{ asset($mother_photo->path) }}" class="img-thumbnail"
+                                                width="100" height="100" alt="Uploaded image">
                                         </div>
                                     @endif
                                 </div>
@@ -238,7 +226,7 @@
                                     <input type="text" name="emer_contact_no" id="emer_contact_no"
                                         class="form-control" maxlength="10" inputmode="numeric"
                                         value="{{ old('emer_contact_no', $candidate->emer_contact_no) }}" required>
-                                </div><x-forms.input label="Emergency Contact Person Name:" type="text"
+                                </div> <x-forms.input label="Emergency Contact Person Name:" type="text"
                                     name="emer_name" id="emer_name" :required="true" size="col-lg-6 mt-2"
                                     :value="old('emer_name', $candidate->emer_name)" />
                                 <x-forms.input label="Emergency Contact Person Relation:" type="text"
@@ -272,10 +260,15 @@
                                     <label for="pan_status">Do you have a PAN Card? <span
                                             style="color: red">*</span></label>
                                     <select name="pan_status" id="pan_status" class="form-control">
-                                        <option value="1">Yes</option>
-                                        <option value="0">No</option>
+                                        <option value="1"
+                                            {{ old('pan_status', $candidate->pan_status) == '1' ? 'selected' : '' }}>
+                                            Yes</option>
+                                        <option value="0"
+                                            {{ old('pan_status', $candidate->pan_status) == '0' ? 'selected' : '' }}>No
+                                        </option>
                                     </select>
                                 </div>
+
 
                                 <!-- PAN Card Input Fields (Initially Hidden) -->
                                 <div id="panFields" style="display: none;">
@@ -288,16 +281,6 @@
                                             <input type="file" name="pan_path" id="pan_path"
                                                 accept=".doc, .docx, .pdf, .jpg, .png" class="form-control"
                                                 value="{{ old('pan_path', $candidate->pan_path) }}">
-                                        </div>
-                                        <div class="col-lg-6">
-                                            @if (!empty($child->photo))
-                                                <!-- Check if the child has a photo -->
-                                                <div id="image-preview-container" class="d-flex mt-2">
-                                                    <img src="{{ asset('storage/' . $child->photo) }}"
-                                                        class="img-thumbnail" width="100" height="100"
-                                                        alt="Child photo">
-                                                </div>
-                                            @endif
                                         </div>
                                     </div>
                                 </div>
@@ -360,9 +343,8 @@
                                                 ->first();
                                         @endphp
                                         <div id="image-preview-container" class="d-flex mt-2">
-                                            <img src="{{ asset('storage/' . $family_photo->path) }}"
-                                                class="img-thumbnail" width="100" height="100"
-                                                alt="Uploaded image">
+                                            <img src="{{ asset($family_photo->path) }}" class="img-thumbnail"
+                                                width="100" height="100" alt="Uploaded image">
                                         </div>
                                     @endif
                                 </div>
@@ -390,7 +372,6 @@
                                     :required="false" size="col-lg-6 mt-2" :value="old('uan_no', $candidate->uan_no)" />
                                 <x-forms.input label="ESIC No:" type="text" name="esic_no" id="esic_no"
                                     :required="false" size="col-lg-6 mt-2" :value="old('esic_no', $candidate->esic_no)" />
-
                                 <label class="col-lg-12 mt-4"><strong>Current Uploaded Documents</strong></label>
                                 <div style="border: 1px solid #d6c8c8; padding: 2%; margin-bottom: 1%;">
                                     <div class="table-responsive">
@@ -482,12 +463,17 @@
                                                         <tr>
                                                             <td>Education Certificate {{ $loop->iteration }}</td>
                                                             <td>
-                                                                <a href="{{ asset('storage/' . $certificate->path) }}"
+                                                                <a href="{{ asset($certificate->path) }}"
                                                                     target="_blank" class="btn btn-custom">
-                                                                    View Education Certificate {{ $loop->iteration }}
+                                                                    View
                                                                 </a>
                                                             </td>
-
+                                                            <td>
+                                                                <input type="file"
+                                                                    accept="application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/pdf"
+                                                                    name="document_file[education_certificate_{{ $loop->iteration }}]"
+                                                                    class="form-control">
+                                                            </td>
                                                             <td>
                                                                 <div class="dropdown">
                                                                     <button class="btn btn-sm dropdown-toggle"
@@ -521,12 +507,17 @@
                                                         <tr>
                                                             <td>Other Certificate {{ $loop->iteration }}</td>
                                                             <td>
-                                                                <a href="{{ asset('storage/' . $certificate->path) }}"
+                                                                <a href="{{ asset($certificate->path) }}"
                                                                     target="_blank" class="btn btn-custom">
-                                                                    View Other Certificate {{ $loop->iteration }}
+                                                                    View
                                                                 </a>
                                                             </td>
-
+                                                            <td>
+                                                                <input type="file"
+                                                                    accept="application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/pdf"
+                                                                    name="document_file[other_certificate_{{ $loop->iteration }}]"
+                                                                    class="form-control">
+                                                            </td>
                                                             <td>
                                                                 <div class="dropdown">
                                                                     <button class="btn btn-sm dropdown-toggle"
@@ -560,7 +551,7 @@
                                                             <tr>
                                                                 <td>Bank Document</td>
                                                                 <td>
-                                                                    <a href="{{ asset('storage/' . $bank->bank_document) }}"
+                                                                    <a href="{{ asset($bank->bank_document) }}"
                                                                         target="_blank" class="btn btn-custom">
                                                                         View
                                                                     </a>
@@ -583,8 +574,8 @@
                                                                                     href="{{ route('admin.document.status', ['id' => $bank->id, 'newStatus' => 2]) }}">Rejected</a>
                                                                             </li>
                                                                             {{-- <li><a class="dropdown-item"
-                                                                            href="{{ route('admin.document.status', ['id' => $bank->id, 'newStatus' => 1]) }}">Approved</a>
-                                                                    </li> --}}
+                                                                        href="{{ route('admin.document.status', ['id' => $bank->id, 'newStatus' => 1]) }}">Approved</a>
+                                                                </li> --}}
                                                                         </ul>
                                                                     </div>
                                                                 </td>
@@ -592,7 +583,6 @@
                                                         @endif
                                                     @endforeach
                                                 @endif
-
                                             </tbody>
                                         </table>
 
@@ -694,6 +684,11 @@
                                             Rejected</option>
                                     </select>
                                 </div>
+                                {{-- <div class="form-group col-lg-12 mt-2" id="notesField"
+                                    style="display: none; margin-top: 10px;">
+                                    <label for="note">Mention Rejected Field Names:</label>
+                                    <textarea name="note" id="note" class="form-control"></textarea>
+                                </div> --}}
                             </div>
                             <div class="row">
                                 <div class="col-lg-12 mt-4">
@@ -706,75 +701,76 @@
             </form>
         </div>
     </div>
-    <script>
-        //maritial_status
-        document.addEventListener('DOMContentLoaded', function() {
-            const maritalStatus = document.getElementById('maritial_status');
-            const marriedFields = document.getElementById('married-fields');
+    @push('scripts')
+        <script>
+            //maritial_status
+            document.addEventListener('DOMContentLoaded', function() {
+                const maritalStatus = document.getElementById('maritial_status');
+                const marriedFields = document.getElementById('married-fields');
 
-            function toggleMarriedFields() {
-                if (maritalStatus.value === 'Married') {
-                    marriedFields.style.display = 'block';
-                    // $('#spouse_aadhar_no').on('blur input', function() {
-                    //     $(this).next('.error').remove();
-                    //     var aadharPattern = /^\d{12}$/;
-                    //     $(' #spouse_aadhar_no').each(function() {
-                    //         var aadharNumber = $(this).val();
-                    //         if (!aadharNumber) {
-                    //             isValid = false;
-                    //             $(this).after(
-                    //                 "<span class='error' style='color:red; font-size: 13px;'>Please enter the Aadhar number.</span>"
-                    //             );
-                    //         } else if (!aadharPattern.test(aadharNumber)) {
-                    //             isValid = false;
-                    //             $(this).after(
-                    //                 "<span class='error' style='color:red; font-size: 13px;'>Aadhar number must be a 12-digit numeric value.</span>"
-                    //             );
-                    //         }
-                    //     });
-                    // });
+                function toggleMarriedFields() {
+                    if (maritalStatus.value === 'Married') {
+                        marriedFields.style.display = 'block';
+                        // $('#spouse_aadhar_no').on('blur input', function() {
+                        //     $(this).next('.error').remove();
+                        //     var aadharPattern = /^\d{12}$/;
+                        //     $(' #spouse_aadhar_no').each(function() {
+                        //         var aadharNumber = $(this).val();
+                        //         if (!aadharNumber) {
+                        //             isValid = false;
+                        //             $(this).after(
+                        //                 "<span class='error' style='color:red; font-size: 13px;'>Please enter the Aadhar number.</span>"
+                        //             );
+                        //         } else if (!aadharPattern.test(aadharNumber)) {
+                        //             isValid = false;
+                        //             $(this).after(
+                        //                 "<span class='error' style='color:red; font-size: 13px;'>Aadhar number must be a 12-digit numeric value.</span>"
+                        //             );
+                        //         }
+                        //     });
+                        // });
 
-                } else {
-                    marriedFields.style.display = 'none';
-                    document.getElementById('spouse_name').value = '';
-                    document.getElementById('spouse_dob').value = '';
-                    document.getElementById('spouse_aadhar_no').value = '';
-                    document.getElementById('spouse_photo').value = '';
-                    document.getElementById('no_of_childrens').value = '';
+                    } else {
+                        marriedFields.style.display = 'none';
+                        document.getElementById('spouse_name').value = '';
+                        document.getElementById('spouse_dob').value = '';
+                        document.getElementById('spouse_aadhar_no').value = '';
+                        document.getElementById('spouse_photo').value = '';
+                        document.getElementById('no_of_childrens').value = '';
+                    }
                 }
-            }
 
 
-            toggleMarriedFields();
-            maritalStatus.addEventListener('change', toggleMarriedFields);
-        });
-        //uan
-        document.addEventListener('DOMContentLoaded', function() {
-            const uanStatus = document.getElementById('uan_status');
-            const uanNumberField = document.getElementById('uan-number-field');
-            const uanNumberInput = document.getElementById('uan_no');
+                toggleMarriedFields();
+                maritalStatus.addEventListener('change', toggleMarriedFields);
+            });
+            //uan
+            // document.addEventListener('DOMContentLoaded', function() {
+            //     const uanStatus = document.getElementById('uan_status');
+            //     const uanNumberField = document.getElementById('uan-number-field');
+            //     const uanNumberInput = document.getElementById('uan_no');
 
-            function toggleUANField() {
-                if (uanStatus.value === 'Yes') {
-                    uanNumberField.style.display = 'block';
-                    uanNumberInput.required = true;
-                } else {
-                    uanNumberField.style.display = 'none';
-                    uanNumberInput.required = false;
-                    uanNumberInput.value = '';
-                }
-            }
-            toggleUANField();
-            uanStatus.addEventListener('change', toggleUANField);
-        });
-        //documents
-        document.addEventListener('DOMContentLoaded', function() {
-            const documentRowsContainer = document.getElementById('document-rows');
-            documentRowsContainer.addEventListener('click', function(event) {
-                if (event.target.classList.contains('add-row')) {
-                    const newRow = document.createElement('div');
-                    newRow.className = 'document-row d-flex align-items-center mb-3';
-                    newRow.innerHTML = `
+            //     function toggleUANField() {
+            //         if (uanStatus.value === 'Yes') {
+            //             uanNumberField.style.display = 'block';
+            //             uanNumberInput.required = true;
+            //         } else {
+            //             uanNumberField.style.display = 'none';
+            //             uanNumberInput.required = false;
+            //             uanNumberInput.value = '';
+            //         }
+            //     }
+            //     toggleUANField();
+            //     uanStatus.addEventListener('change', toggleUANField);
+            // });
+            //documents
+            document.addEventListener('DOMContentLoaded', function() {
+                const documentRowsContainer = document.getElementById('document-rows');
+                documentRowsContainer.addEventListener('click', function(event) {
+                    if (event.target.classList.contains('add-row')) {
+                        const newRow = document.createElement('div');
+                        newRow.className = 'document-row d-flex align-items-center mb-3';
+                        newRow.innerHTML = `
                 <select name="document_type[]" class="col-lg-5 me-3 " >
                     <option value="">Select Document Type</option>
                     <option value="voter_id">Voter ID/ PVC/ UL</option>
@@ -785,60 +781,60 @@
                     <option value="payslip">Payslip/Fitness doc</option>
                     <option value="exp_letter">Exp Letter</option>
                 </select>
-                <input type="file" accept="application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/pdf"
+                <input type="file"  accept="application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/pdf"
                 name="document_file[]" class="col-lg-5 me-3 " >
                 <button type="button" class="btn btn-success me-2 add-row">+</button>
                 <button type="button" class="btn btn-danger me-2 remove-row">-</button>
             `;
-                    documentRowsContainer.appendChild(newRow);
-                    document.querySelectorAll('.remove-row').forEach(button => {
-                        button.style.display = 'inline-block';
-                    });
-                }
-            });
-            documentRowsContainer.addEventListener('click', function(event) {
-                if (event.target.classList.contains('remove-row')) {
-                    const row = event.target.closest('.document-row');
-                    row.remove();
-                    if (document.querySelectorAll('.document-row').length === 1) {
-                        document.querySelector('.remove-row').style.display = 'none';
+                        documentRowsContainer.appendChild(newRow);
+                        document.querySelectorAll('.remove-row').forEach(button => {
+                            button.style.display = 'inline-block';
+                        });
                     }
+                });
+                documentRowsContainer.addEventListener('click', function(event) {
+                    if (event.target.classList.contains('remove-row')) {
+                        const row = event.target.closest('.document-row');
+                        row.remove();
+                        if (document.querySelectorAll('.document-row').length === 1) {
+                            document.querySelector('.remove-row').style.display = 'none';
+                        }
+                    }
+                });
+                if (document.querySelectorAll('.document-row').length === 1) {
+                    document.querySelector('.remove-row').style.display = 'none';
                 }
             });
-            if (document.querySelectorAll('.document-row').length === 1) {
-                document.querySelector('.remove-row').style.display = 'none';
-            }
-        });
-        //no of children
-        document.addEventListener('DOMContentLoaded', function() {
-            const maxChildren = 4;
-            const noOfChildrenField = document.getElementById('no_of_childrens');
-            const childrenDetailsContainer = document.getElementById('children-details-container');
-            const childrenDetails = document.getElementById('children-details');
-            const maxChildrenMessage = document.getElementById('max-children-message');
+            //no of children
+            document.addEventListener('DOMContentLoaded', function() {
+                const maxChildren = 4;
+                const noOfChildrenField = document.getElementById('no_of_childrens');
+                const childrenDetailsContainer = document.getElementById('children-details-container');
+                const childrenDetails = document.getElementById('children-details');
+                const maxChildrenMessage = document.getElementById('max-children-message');
 
-            function calculateAge(dob) {
-                if (!dob) return 0;
-                const birthDate = new Date(dob);
-                const today = new Date();
-                return (today.getFullYear() - birthDate.getFullYear()) * 12 + (today.getMonth() - birthDate
-                    .getMonth());
-            }
+                function calculateAge(dob) {
+                    if (!dob) return 0;
+                    const birthDate = new Date(dob);
+                    const today = new Date();
+                    return (today.getFullYear() - birthDate.getFullYear()) * 12 + (today.getMonth() - birthDate
+                        .getMonth());
+                }
 
-            function updateChildDetails(existingChildren = []) {
-                const noOfChildren = parseInt(noOfChildrenField.value) || 0;
-                childrenDetails.innerHTML = '';
+                function updateChildDetails(existingChildren = []) {
+                    const noOfChildren = parseInt(noOfChildrenField.value) || 0;
+                    childrenDetails.innerHTML = '';
 
-                if (noOfChildren > 0) {
-                    childrenDetailsContainer.style.display = 'block';
-                    maxChildrenMessage.style.display = 'none';
+                    if (noOfChildren > 0) {
+                        childrenDetailsContainer.style.display = 'block';
+                        maxChildrenMessage.style.display = 'none';
 
-                    for (let i = 1; i <= noOfChildren && i <= maxChildren; i++) {
-                        let childData = existingChildren[i - 1] || {};
+                        for (let i = 1; i <= noOfChildren && i <= maxChildren; i++) {
+                            let childData = existingChildren[i - 1] || {};
 
-                        const childRow = document.createElement('div');
-                        childRow.className = 'row align-items-center mb-2 child-row';
-                        childRow.innerHTML = `
+                            const childRow = document.createElement('div');
+                            childRow.className = 'row align-items child-row';
+                            childRow.innerHTML = `
         <div class="form-group col-lg-3">
             <label for="child_name_${i}">Child ${i} Name:</label>
             <input type="text" name="child_names[]" id="child_name_${i}" class="form-control" 
@@ -865,71 +861,72 @@
                    class="form-control">
 
             ${childData.photo ? `
-                                                            <div id="image-preview-container-${i}" class="d-flex mt-2">
-                                                                <img src="/storage/${childData.photo}" 
-                                                                     class="img-thumbnail" width="100" height="100" 
-                                                                     alt="Child ${i} Uploaded Photo">
-                                                            </div>` : ''}
+                                                                                        <div id="image-preview-container-${i}" class="d-flex mt-2">
+                                                                                            <img src="{{ url('/') }}/${childData.photo}" 
+                                                                                                 class="img-thumbnail" width="100" height="100" 
+                                                                                                 alt="Child ${i} Uploaded Photo">
+                                                                                        </div>` : ''}
         </div>
     `;
-                        childrenDetails.appendChild(childRow);
+                            childrenDetails.appendChild(childRow);
 
-                        let dobField = document.getElementById(`child_dob_${i}`);
-                        dobField.addEventListener('input', function() {
-                            checkChildAge(i);
-                        });
+                            let dobField = document.getElementById(`child_dob_${i}`);
+                            dobField.addEventListener('input', function() {
+                                checkChildAge(i);
+                            });
 
-                        if (childData.dob) {
-                            checkChildAge(i);
+                            if (childData.dob) {
+                                checkChildAge(i);
+                            }
+                        }
+
+                        if (noOfChildren > maxChildren) {
+                            maxChildrenMessage.style.display = 'block';
+                        }
+                    } else {
+                        childrenDetailsContainer.style.display = 'none';
+                    }
+                }
+
+                function checkChildAge(index) {
+                    const dobField = document.getElementById(`child_dob_${index}`);
+                    const aadharField = document.getElementById(`child_aadhar_field_${index}`);
+                    const aadharInput = document.getElementById(`child_aadhar_${index}`);
+
+                    if (dobField.value) {
+                        const ageInMonths = calculateAge(dobField.value);
+                        if (ageInMonths > 6) {
+                            aadharField.style.display = 'block';
+                            aadharInput.setAttribute('required', 'required');
+                        } else {
+                            aadharField.style.display = 'none';
+                            aadharInput.removeAttribute('required');
                         }
                     }
-
-                    if (noOfChildren > maxChildren) {
-                        maxChildrenMessage.style.display = 'block';
-                    }
-                } else {
-                    childrenDetailsContainer.style.display = 'none';
                 }
-            }
 
-            function checkChildAge(index) {
-                const dobField = document.getElementById(`child_dob_${index}`);
-                const aadharField = document.getElementById(`child_aadhar_field_${index}`);
-                const aadharInput = document.getElementById(`child_aadhar_${index}`);
+                noOfChildrenField.addEventListener('input', function() {
+                    updateChildDetails();
+                });
 
-                if (dobField.value) {
-                    const ageInMonths = calculateAge(dobField.value);
-                    if (ageInMonths > 6) {
-                        aadharField.style.display = 'block';
-                        aadharInput.setAttribute('required', 'required');
-                    } else {
-                        aadharField.style.display = 'none';
-                        aadharInput.removeAttribute('required');
-                    }
+                let existingChildren = {!! json_encode(
+                    old('child_names')
+                        ? collect(old('child_names'))->map(function ($name, $index) {
+                            return [
+                                'name' => $name,
+                                'dob' => old('child_dobs')[$index] ?? '',
+                                'gender' => old('child_gender')[$index] ?? '',
+                                'aadhar_no' => old('child_aadhar')[$index] ?? '',
+                            ];
+                        })
+                        : $children ?? [],
+                ) !!};
+
+                if (existingChildren.length > 0) {
+                    noOfChildrenField.value = existingChildren.length;
+                    updateChildDetails(existingChildren);
                 }
-            }
-
-            noOfChildrenField.addEventListener('input', function() {
-                updateChildDetails();
             });
-
-            let existingChildren = {!! json_encode(
-                old('child_names')
-                    ? collect(old('child_names'))->map(function ($name, $index) {
-                        return [
-                            'name' => $name,
-                            'dob' => old('child_dobs')[$index] ?? '',
-                            'gender' => old('child_gender')[$index] ?? '',
-                            'aadhar_no' => old('child_aadhar')[$index] ?? '',
-                        ];
-                    })
-                    : $children ?? [],
-            ) !!};
-
-            if (existingChildren.length > 0) {
-                noOfChildrenField.value = existingChildren.length;
-                updateChildDetails(existingChildren);
-            }
-        });
-    </script>
+        </script>
+    @endpush
 </x-applayout>

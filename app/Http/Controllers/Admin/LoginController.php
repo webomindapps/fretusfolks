@@ -5,15 +5,15 @@ namespace App\Http\Controllers\Admin;
 use Carbon\Carbon;
 use App\Models\CFISModel;
 use App\Models\CMSLabour;
+use App\Models\HRMasters;
 use App\Models\FHRMSModel;
+use App\Models\OfferLetter;
 use Illuminate\Http\Request;
 use App\Models\ClientManagement;
+use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
-use App\Models\HRMasters;
-use App\Models\OfferLetter;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 
 class LoginController extends Controller
 {
@@ -37,7 +37,7 @@ class LoginController extends Controller
             if (auth()->user()->hasRole($request->role)) {
                 return to_route('admin.dashboard')->with('success', 'You have successfully logged in.');
             }
-            return back()->with('danger', 'User is not active');
+            return back()->with('danger', 'You do not have permission');
         }
         return back()->with('danger', 'Invalid credentials.');
     }
@@ -199,8 +199,6 @@ class LoginController extends Controller
 
 
     }
-
-
     public function logout()
     {
         Auth::logout();

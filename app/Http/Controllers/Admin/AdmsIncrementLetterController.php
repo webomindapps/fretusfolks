@@ -240,17 +240,13 @@ class AdmsIncrementLetterController extends Controller
 
         return $pdf->stream("increment_{$increment->emp_id}_{$increment->month}_{$increment->year}.pdf");
     }
-
     public function destroy($id)
     {
         $increment = $this->model()->find($id);
-
         if ($increment && $increment->increment_path) {
             Storage::disk('public')->delete($increment->increment_path);
         }
-
         $increment->delete();
-
         return redirect()->route('admin.increment_letter')->with('success', 'Increment Letter has been deleted');
     }
 }

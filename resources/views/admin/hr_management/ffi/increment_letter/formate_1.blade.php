@@ -219,14 +219,9 @@
                         <td> {{ $incrementLetter->hra * 12 }} </td>
                     </tr>
                     <tr>
-                        <td>Conveyance</td>
-                        <td> {{ $incrementLetter->conveyance }}</td>
-                        <td> {{ $incrementLetter->conveyance * 12 }}</td>
-                    </tr>
-                    <tr>
-                        <td>Medical Reimbursement</td>
-                        <td>{{ $incrementLetter->medical_reimbursement }}</td>
-                        <td> {{ $incrementLetter->medical_reimbursement * 12 }} </td>
+                        <td>ST Bonous</td>
+                        <td>{{ $offerLetter->st_bonus }}</td>
+                        <td>{{ $offerLetter->st_bonus * 12 }}</td>
                     </tr>
                     <tr>
                         <td>Special Allowance</td>

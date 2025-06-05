@@ -54,7 +54,6 @@ class FFIIncrementLetterController extends Controller
         } else {
             $query->orderBy($order, $orderBy);
         }
-
         $increment = $paginate ? $query->paginate($paginate)->appends(request()->query()) : $query->paginate(10)->appends(request()->query());
 
         return view("admin.hr_management.ffi.increment_letter.index", compact("increment"));
@@ -73,11 +72,11 @@ class FFIIncrementLetterController extends Controller
             'status' => 'nullable|string',
             'basic_salary' => 'required|numeric|min:0',
             'hra' => 'required|numeric|min:0',
-            'conveyance' => 'required|numeric|min:0',
-            'medical_reimbursement' => 'required|numeric|min:0',
+            'conveyance' => 'nullable|numeric|min:0',
+            'medical_reimbursement' => 'nullable|numeric|min:0',
             'special_allowance' => 'required|numeric|min:0',
             'other_allowance' => 'nullable|numeric|min:0',
-            'st_bonus' => 'nullable|numeric|min:0',
+            'st_bonus' => 'required|numeric|min:0',
             'pf_percentage' => 'required|numeric|min:0|max:100',
             'emp_pf' => 'nullable|numeric|min:0',
             'esic_percentage' => 'required|numeric|min:0|max:100',
@@ -96,6 +95,7 @@ class FFIIncrementLetterController extends Controller
 
         ]);
         $validatedData = $request->all();
+
         DB::beginTransaction();
         try {
             $increment = $this->model()->create($validatedData);

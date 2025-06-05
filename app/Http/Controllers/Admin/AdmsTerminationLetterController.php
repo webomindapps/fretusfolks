@@ -111,23 +111,22 @@ class AdmsTerminationLetterController extends Controller
     public function viewpdf($id)
     {
         $termination = $this->model()->findOrFail($id);
-    
+
         if (!empty($termination->termination_letter_path)) {
             $filePath = storage_path('app/public/' . str_replace('storage/', '', $termination->termination_letter_path));
-    
+
             if (file_exists($filePath)) {
                 return response()->file($filePath);
             }
         }
-    
+
         $data = ['termLetter' => $termination];
-    
+
         $pdf = PDF::loadView('admin.adms.termination_letter.format', $data)
             ->setPaper('A4', 'portrait');
-            
+
         return $pdf->stream("termination_{$termination->emp_id}_{$termination->month}_{$termination->year}.pdf");
     }
-    
     public function edit($id)
     {
         $termination = $this->model()->findOrFail($id);
@@ -144,7 +143,7 @@ class AdmsTerminationLetterController extends Controller
 
         DB::beginTransaction();
         try {
-            $termLetter  = $this->model()->findOrFail($id);
+            $termLetter = $this->model()->findOrFail($id);
 
             if ($termLetter->termination_letter_path && Storage::disk('public')->exists($termLetter->termination_letter_path)) {
                 Storage::disk('public')->delete($termLetter->termination_letter_path);

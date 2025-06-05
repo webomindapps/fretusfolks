@@ -3,21 +3,25 @@
 namespace App\Http\Controllers\Admin;
 
 use Exception;
+use Throwable;
 use ZipArchive;
 use Carbon\Carbon;
 use App\Models\Payslips;
 use App\Models\CFISModel;
+use Illuminate\Bus\Batch;
 use Illuminate\Http\Request;
+use App\Imports\PayslipImport;
 use App\Jobs\ADMSPayslipCreate;
+use App\Jobs\CreateZipAndEmail;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Jobs\GeneratePayslipPDFs;
 use Illuminate\Support\Facades\Bus;
 use App\Http\Controllers\Controller;
-use App\Jobs\CreateZipAndEmail;
-use App\Jobs\GeneratePayslipPDFs;
-use Illuminate\Bus\Batch;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
-use Throwable;
+
 
 class ADMSPayslipController extends Controller
 {
@@ -78,43 +82,15 @@ class ADMSPayslipController extends Controller
         $year = $request->input('year');
         try {
             if ($request->has('file')) {
+                // dd($request->file);
                 $fileName = $request->file->getClientOriginalName();
                 $fileWithPath = public_path('uploads') . '/' . $fileName;
+                // dd($fileWithPath);
                 if (!file_exists($fileWithPath)) {
                     $request->file->move(public_path('uploads'), $fileName);
                 }
-                $header = null;
-                $datafromCsv = array();
                 // dd($fileWithPath);
-                $records = array_map('str_getcsv', file($fileWithPath));
-                // dd($records);
-                foreach ($records as $key => $record) {
-                    if (!$header) {
-                        $header = $record;
-                    } else {
-                        $datafromCsv[] = $record;
-                    }
-                }
-                $datafromCsv = array_chunk($datafromCsv, 1000);
-                foreach ($datafromCsv as $index => $dataCsv) {
-
-                    foreach ($dataCsv as $data) {
-                        $row = array_combine($header, $data);
-
-                        // dd($header, $data);
-                        if (!empty($row['emp_id']) && !empty($month) && !empty($year)) {
-                            Payslips::where('emp_id', $row['emp_id'])
-                                ->where('month', $month)
-                                ->where('year', $year)
-                                ->delete();
-                        }
-
-                        $payslipdata[$index][] = $row;
-                        // $payslipdata[$index][] = array_combine($header, $data);
-                    }
-                    // dd($payslipdata[$index], $month, $year);
-                    ADMSPayslipCreate::dispatch($payslipdata[$index], $month, $year);
-                }
+                Excel::import(new PayslipImport($month, $year), $fileWithPath);
                 if (file_exists($fileWithPath)) {
                     unlink($fileWithPath);
                 }
@@ -122,18 +98,6 @@ class ADMSPayslipController extends Controller
         } catch (Exception $e) {
             dd($e);
         }
-        // $import = new FFI_PayslipsImport($month, $year);
-
-        // try {
-        //     Excel::import($import, $file);
-        // } catch (Exception $e) {
-        //     return redirect()->route('admin.ffi_payslips')->with('error', 'There was an error during the import process: ' . $e->getMessage());
-        // }
-
-        // $error = '';
-        // foreach ($import->failures() as $failure) {
-        //     $error .= 'Row no: ' . $failure->row() . ', Column: ' . $failure->attribute() . ', Error: ' . implode(', ', $failure->errors()) . '<br>';
-        // }
         $error = '';
         return redirect()->route('admin.payslips')->with([
             'success' => 'Payslips added successfully',
@@ -202,25 +166,14 @@ class ADMSPayslipController extends Controller
     public function generatePayslipsPdf($id)
     {
         $payletter = $this->model()->findOrFail($id);
-
+        // dd($payletter->payslips_letter_path);
         if (!$payletter->payslips_letter_path) {
-            $data = [
-                'payslip' => $payletter,
-            ];
-
-            $pdf = PDF::loadView('admin.adms.payslip.formate', $data)
-                ->setPaper('A4', 'portrait')
-                ->setOptions(['margin-top' => 10, 'margin-bottom' => 10, 'margin-left' => 15, 'margin-right' => 15]);
-
-            return $pdf->stream("payslip_{$payletter->id}.pdf");
-        }
-        $filePath = storage_path("app/public/" . str_replace('storage/', '', $payletter->payslips_letter_path));
-
-        if (!file_exists($filePath)) {
-            return redirect()->back()->with('error', 'Payslip file not found.');
+            abort(404, 'PDF not found');
         }
 
-        return response()->file($filePath);
+        $filePath = str_replace('storage/', '', $payletter->payslips_letter_path);
+
+        return response()->file(public_path($filePath));
     }
     public function zipDownload($payslips, $ademails)
     {
@@ -237,51 +190,46 @@ class ADMSPayslipController extends Controller
 
             foreach ($payslips as $payslip) {
                 $batch->add(new GeneratePayslipPDFs($payslip));
+                // dump($batch->id);
             }
+            // dd("end");
             $emails = explode(',', $ademails);
             $emails = array_map('trim', $emails);
+            // dd("end");
             $batch->add(new CreateZipAndEmail($payslips, $emails));
-
             // Store batch ID in session to track progress
             session(['batch_id' => $batch->id]);
-
             return redirect()->back()->with('success', 'Payslips are being processed. You will receive an email when ready.');
         } catch (Throwable $e) {
             dd($e);
             return redirect()->back()->with('error', 'An error occurred while processing payslips.');
         }
-    }
 
+    }
     public function downloadfiltered(Request $request)
     {
 
         $clients = $request->input('data', []);
-        $states = $request->input('service_state', []);
-        $fromDate = $request->input('from');
-        $toDate = $request->input('to');
 
-        if (empty($clients) || empty($states)) {
+
+        if (empty($clients)) {
             return response()->json(['message' => 'Invalid parameters'], 400);
         }
         $query = CFISModel::query()
             ->whereIn('client_id', $clients)
-            ->whereIn('state', $states)
             ->where('status', 1);
 
 
-        if (!empty($fromDate) && !empty($toDate)) {
-            $query->whereBetween('created_at', [$fromDate, $toDate]);
-        }
 
-        $candidates = $query->where('hr_approval', 1)
-            ->where('comp_status', 1)->get();
+        $candidates = $query->where('hr_approval', 1)->get();
+        // ->where('comp_status', 1)->get();
 
         if ($candidates->isEmpty()) {
             return redirect()->back()->with('error', 'No records found');
         }
 
 
-        $fileName = "payslip_format.csv";
+        $fileName = "payslip_format.xlsx";
 
         $headers = [
             "Content-Type" => "text/csv",
@@ -298,11 +246,8 @@ class ADMSPayslipController extends Controller
                 'designation',
                 'doj',
                 'department',
-                'vertical',
                 'location',
                 'client_name',
-                'month',
-                'year',
                 'uan_no',
                 'pf_no',
                 'esi_no',
@@ -316,63 +261,38 @@ class ADMSPayslipController extends Controller
                 'arrears_days',
                 'ot_hours',
                 'leave_balance',
-                'notice_period_days',
                 'fixed_basic_da',
                 'fixed_hra',
                 'fixed_conveyance',
+                'fix_education_allowance',
                 'fixed_medical_reimbursement',
                 'fixed_special_allowance',
                 'fixed_other_allowance',
-                'fixed_ot_wages',
-                'fixed_attendance_bonus',
                 'fixed_st_bonus',
-                'fixed_holiday_wages',
-                'fixed_other_wages',
-                'fixed_total_earnings',
-                'fix_education_allowance',
                 'fix_leave_wages',
+                'fixed_holiday_wages',
+                'fixed_attendance_bonus',
+                'fixed_ot_wages',
                 'fix_incentive_wages',
                 'fix_arrear_wages',
+                'fixed_other_wages',
+                'fixed_total_earnings',
                 'earn_basic',
                 'earn_hr',
                 'earn_conveyance',
+                'earn_education_allowance',
                 'earn_medical_allowance',
                 'earn_special_allowance',
                 'earn_other_allowance',
-                'earn_ot_wages',
-                'earn_attendance_bonus',
                 'earn_st_bonus',
-                'earn_holiday_wages',
-                'earn_other_wages',
-                'earn_total_gross',
-                'earn_education_allowance',
                 'earn_leave_wages',
+                'earn_holiday_wages',
+                'earn_attendance_bonus',
+                'earn_ot_wages',
                 'earn_incentive_wages',
                 'earn_arrear_wages',
-                'arr_basic',
-                'arr_hra',
-                'arr_conveyance',
-                'arr_medical_reimbursement',
-                'arr_special_allowance',
-                'arr_other_allowance',
-                'arr_ot_wages',
-                'arr_attendance_bonus',
-                'arr_st_bonus',
-                'arr_holiday_wages',
-                'arr_other_wages',
-                'arr_total_gross',
-                'total_basic',
-                'total_hra',
-                'total_conveyance',
-                'total_medical_reimbursement',
-                'total_special_allowance',
-                'total_other_allowance',
-                'total_ot_wages',
-                'total_attendance_bonus',
-                'total_st_bonus',
-                'total_holiday_wages',
-                'total_other_wages',
-                'total_total_gross',
+                'earn_other_wages',
+                'earn_total_gross',
                 'epf',
                 'esic',
                 'pt',
@@ -382,6 +302,8 @@ class ADMSPayslipController extends Controller
                 'other_deduction',
                 'total_deduction',
                 'net_salary',
+                'in_words'
+
             ];
 
 

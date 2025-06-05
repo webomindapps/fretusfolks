@@ -104,16 +104,15 @@
                 <table style="border-collapse:collapse;width:100%;margin-bottom:20px;">
                     <tbody>
                         <tr>
-                            <td colspan="3"
-                                style="font-size:12px;text-align:left;padding:0px;width:80%">
+                            <td colspan="3" style="font-size:12px;text-align:left;padding:0px;width:80%">
                                 <p style="line-height:1.8;font-size:14px"><b>Date :
                                         {{ \Carbon\Carbon::parse($termLetter->date)->format('d-m-Y') }}</b>
                                 </p>
                                 <p style="line-height:1.8;font-size:14px">
                                     <b>To,
-                                        <br>Mr./Mrs./Ms, {{ $termLetter->term_letter->emp_name }}</b>
-                                    <br> {{ $termLetter->emp_id }}
-                                    <br> {{ $termLetter->term_letter->location }} <br>
+                                        <br>Mr./Mrs./Ms, {{ $termLetter->term_letter?->emp_name }}</b>
+                                    <br> {{ $termLetter?->emp_id }}
+                                    <br> {{ $termLetter->term_letter?->location }} <br>
                                 </p>
                             </td>
                             <td style="font-size:12px;text-align:left;padding:0px;"></td>
@@ -127,7 +126,7 @@
                 <br>
                 <div class="content" style="line-height:2;font-size:14px">
                     <p style="line-height:1.8;font-size:14px"><b>Dear
-                            {{ $termLetter->term_letter->emp_name }},</b></p>
+                            {{ $termLetter->term_letter?->emp_name }},</b></p>
                 </div>
                 <br>
                 <div class="content1" style="line-height:2;font-size:14px">
@@ -179,4 +178,5 @@
         </div>
         <br>
     </div>
+
 </html>

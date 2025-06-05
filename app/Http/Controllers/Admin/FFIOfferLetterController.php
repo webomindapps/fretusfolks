@@ -19,7 +19,7 @@ class FFIOfferLetterController extends Controller
     }
     public function index()
     {
-        $searchColumns = ['id','employee_id', 'emp_name', 'date', 'phone1', 'email'];
+        $searchColumns = ['id', 'employee_id', 'emp_name', 'date', 'phone1', 'email'];
         $search = request()->search;
         $from_date = request()->from_date;
         $to_date = request()->to_date;
@@ -32,6 +32,7 @@ class FFIOfferLetterController extends Controller
         if ($from_date && $to_date) {
             $query->whereBetween('created_at', [$from_date, $to_date]);
         }
+
 
         if ($search != '') {
             $query->where(function ($q) use ($search, $searchColumns) {
@@ -55,6 +56,7 @@ class FFIOfferLetterController extends Controller
             $query->orderBy($order, $orderBy);
         }
 
+
         $offer = $paginate ? $query->paginate($paginate)->appends(request()->query()) : $query->paginate(10)->appends(request()->query());
 
         return view("admin.hr_management.ffi.offer_letter.index", compact("offer"));
@@ -73,11 +75,11 @@ class FFIOfferLetterController extends Controller
             'status' => 'nullable|string',
             'basic_salary' => 'required|numeric|min:0',
             'hra' => 'required|numeric|min:0',
-            'conveyance' => 'required|numeric|min:0',
-            'medical_reimbursement' => 'required|numeric|min:0',
+            'conveyance' => 'nullable|numeric|min:0',
+            'medical_reimbursement' => 'nullable|numeric|min:0',
             'special_allowance' => 'required|numeric|min:0',
             'other_allowance' => 'nullable|numeric|min:0',
-            'st_bonus' => 'nullable|numeric|min:0',
+            'st_bonus' => 'required|numeric|min:0',
             'pf_percentage' => 'required|numeric|min:0|max:100',
             'emp_pf' => 'nullable|numeric|min:0',
             'esic_percentage' => 'required|numeric|min:0|max:100',
@@ -93,6 +95,7 @@ class FFIOfferLetterController extends Controller
             'employee_id' => 'nullable',
         ]);
         $validatedData = $request->all();
+
         DB::beginTransaction();
         try {
             $offer = $this->model()->create($validatedData);

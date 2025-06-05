@@ -27,9 +27,13 @@ class ImportCandidatesJob implements ShouldQueue
      */
     public function handle(): void
     {
-        
         foreach ($this->data as $row) {
-            $info[] = [
+            if (!isset($row['ffi_emp_id'])) {
+                \Log::error('Missing ffi_emp_id:', $row);
+                continue; // Skip this record if ffi_emp_id is missing
+            }
+
+            $info = [
                 'ffi_emp_id' => $row['ffi_emp_id'],
                 'emp_name' => $row['emp_name'],
                 'email' => $row['email'] ?? null,
@@ -38,19 +42,16 @@ class ImportCandidatesJob implements ShouldQueue
                 'comp_status' => 1,
             ];
 
+            \Log::info('Processing record:', $info);
 
+            // ✅ Correct usage of updateOrCreate
+            CFISModel::updateOrCreate(
+                ['ffi_emp_id' => $info['ffi_emp_id']], // Condition to find the record
+                $info // Data to update or insert
+            );
         }
-        \Log::info('Generated data:', $info);
 
-        if (!empty($info)) {
-            foreach ($info as $data) {
-                CFISModel::updateOrCreate(
-                    ['ffi_emp_id' => $data['ffi_emp_id']],
-                    $data
-                );
-            }
-        }
         \Log::info('Job completed successfully');
-
     }
 }
+

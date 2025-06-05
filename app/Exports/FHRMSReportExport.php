@@ -7,6 +7,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
 
+
 class FHRMSReportExport implements FromView
 {
     protected $data;
@@ -27,4 +28,3 @@ class FHRMSReportExport implements FromView
         ]);
     }
 }
-

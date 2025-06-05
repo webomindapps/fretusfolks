@@ -39,12 +39,13 @@
                                 <input type="hidden" name="id" id="candidate_id"
                                     value="{{ $candidate->id ?? '' }}">
 
-                                {{-- <x-forms.input label="Entity Name: " type="text" name="entity_name" id="entity_name"
-                                    :required="true" size="col-lg-6 mt-2" :value="old('entity_name', $candidate->entity_name)" /> --}}
+                                {{-- <x-forms.input label="Entity Name: " type="text" name="entity_name"
+                                    id="entity_name" :required="true" size="col-lg-6 mt-2"
+                                    :value="old('entity_name', $candidate->entity_name)" /> --}}
                                 <x-forms.select label="Enter Client Name:" name="client_id" id="client_id"
                                     :required="true" size="col-lg-6 mt-2" :options="FretusFolks::getClientname()" :value="old('client_id', $candidate->client_id)" />
-                                {{-- <x-forms.input label="FFI Employee ID:" type="text" name="ffi_emp_id" id="ffi_emp_id"
-                                    :required="true" size="col-lg-6 mt-2" :value="$uniqueId" /> --}}
+                                {{-- <x-forms.input label="FFI Employee ID:" type="text" name="ffi_emp_id"
+                                    id="ffi_emp_id" :required="true" size="col-lg-6 mt-2" :value="$uniqueId" /> --}}
                                 <x-forms.input label="Console ID: " type="text" name="console_id" id="console_id"
                                     :required="false" size="col-lg-6 mt-2" :value="old('console_id', $candidate->console_id)" />
                                 <x-forms.input label="Enter Client Employee ID: " type="text" name="client_emp_id"
@@ -53,10 +54,12 @@
                                     :required="false" size="col-lg-6 mt-2" :value="old('grade', $candidate->grade)" />
                                 <x-forms.input label="Enter Employee Name: " type="text" name="emp_name"
                                     id="emp_name" :required="true" size="col-lg-6 mt-2" :value="old('emp_name', $candidate->emp_name)" />
-                                {{-- <x-forms.input label="Middle Name: " type="text" name="middle_name" id="middle_name"
-                                    :required="false" size="col-lg-4 mt-2" :value="old('middle_name', $candidate->middle_name)" />
+                                {{-- <x-forms.input label="Middle Name: " type="text" name="middle_name"
+                                    id="middle_name" :required="false" size="col-lg-4 mt-2"
+                                    :value="old('middle_name', $candidate->middle_name)" />
                                 <x-forms.input label="Last Name: " type="text" name="last_name" id="last_name"
-                                    :required="false" size="col-lg-4 mt-2" :value="old('last_name', $candidate->last_name)" /> --}}
+                                    :required="false" size="col-lg-4 mt-2"
+                                    :value="old('last_name', $candidate->last_name)" /> --}}
                                 <x-forms.input label="Interview Date:  " type="date" name="interview_date"
                                     id="interview_date" :required="true" size="col-lg-6 mt-2"
                                     value="{{ old('interview_date', $candidate->interview_date ? $candidate->interview_date->format('Y-m-d') : '') }}" />
@@ -66,7 +69,8 @@
                                     value="{{ old('joining_date', $candidate->joining_date ? $candidate->joining_date->format('Y-m-d') : '') }}" />
                                 {{-- <x-forms.input label="DOL " type="date" name="contract_date" id="contract_date"
                                     :required="false" size="col-lg-4 mt-2"
-                                    value="{{ old('contract_date', $candidate->contract_date ? $candidate->contract_date->format('Y-m-d') : '') }}" /> --}}
+                                    value="{{ old('contract_date', $candidate->contract_date ? $candidate->contract_date->format('Y-m-d') : '') }}" />
+                                --}}
 
                                 <x-forms.input label="Enter Designation: " type="text" name="designation"
                                     id="designation" :required="true" size="col-lg-6 mt-2" :value="old('designation', $candidate->designation)" />
@@ -123,9 +127,8 @@
                                                         ->first();
                                                 @endphp
                                                 <div id="image-preview-container" class="d-flex mt-2">
-                                                    <img src="{{ asset('storage/' . $spouse_photo->path) }}"
-                                                        class="img-thumbnail" width="100" height="100"
-                                                        alt="Uploaded image">
+                                                    <img src="{{ asset($spouse_photo->path) }}" class="img-thumbnail"
+                                                        width="100" height="100" alt="Uploaded image">
                                                 </div>
                                             @endif
 
@@ -166,9 +169,8 @@
                                                 ->first();
                                         @endphp
                                         <div id="image-preview-container" class="d-flex mt-2">
-                                            <img src="{{ asset('storage/' . $father_photo->path) }}"
-                                                class="img-thumbnail" width="100" height="100"
-                                                alt="Uploaded image">
+                                            <img src="{{ asset($father_photo->path) }}" class="img-thumbnail"
+                                                width="100" height="100" alt="Uploaded image">
                                         </div>
                                     @endif
                                 </div>
@@ -194,9 +196,8 @@
                                                 ->first();
                                         @endphp
                                         <div id="image-preview-container" class="d-flex mt-2">
-                                            <img src="{{ asset('storage/' . $mother_photo->path) }}"
-                                                class="img-thumbnail" width="100" height="100"
-                                                alt="Uploaded image">
+                                            <img src="{{ asset($mother_photo->path) }}" class="img-thumbnail"
+                                                width="100" height="100" alt="Uploaded image">
                                         </div>
                                     @endif
                                 </div>
@@ -216,6 +217,7 @@
                                         class="form-control" maxlength="10" inputmode="numeric"
                                         value="{{ old('emer_contact_no', $candidate->emer_contact_no) }}" required>
                                 </div>
+
                                 <x-forms.input label="Emergency Contact Person Name:" type="text" name="emer_name"
                                     id="emer_name" :required="true" size="col-lg-6 mt-2" :value="old('emer_name', $candidate->emer_name)" />
                                 <x-forms.input label="Emergency Contact Person Relation:" type="text"
@@ -230,7 +232,8 @@
                                         value="{{ old('phone1', $candidate->phone1) }}" required>
                                 </div>
                                 {{-- <x-forms.input label="Phone 2:" type="number" name="phone2" id="phone2"
-                                    :required="false" size="col-lg-4 mt-2" :value="old('phone2', $candidate->phone2)" /> --}}
+                                    :required="false" size="col-lg-4 mt-2" :value="old('phone2', $candidate->phone2)" />
+                                --}}
                                 <x-forms.input label="Employee Email ID: " type="email" name="email"
                                     id="email" :required="true" size="col-lg-4 mt-2" :value="old('email', $candidate->email)" />
                                 <x-forms.input label="Official Email ID: " type="email" name="official_mail_id"
@@ -247,13 +250,17 @@
                                             style="color: red">*</span></label>
                                     <textarea name="present_address" id="present_address" class="form-control" required>{{ old('present_address', $candidate->present_address) }}</textarea>
                                 </div>
-
                                 <div class="form-group col-lg-6 mt-2">
                                     <label for="pan_status">Do you have a PAN Card? <span
                                             style="color: red">*</span></label>
                                     <select name="pan_status" id="pan_status" class="form-control">
-                                        <option value="1">Yes</option>
-                                        <option value="0">No</option>
+                                        <option value="1"
+                                            {{ old('pan_status', $candidate->pan_status) == '1' ? 'selected' : '' }}>
+                                            Yes</option>
+                                        <option value="0"
+                                            {{ old('pan_status', $candidate->pan_status) == '0' ? 'selected' : '' }}>
+                                            No
+                                        </option>
                                     </select>
                                 </div>
 
@@ -282,22 +289,9 @@
                                                 style="cursor: pointer;width: 30%;display: block;">Download</a>
                                         </div>
                                         <div class="form-group col-lg-6 mt-2">
-                                            <label for="pan_declaration">Upload Signed Document:</label>
+                                            <label for="pan_declaration">Upload Signed Document: </label>
                                             <input type="file" name="pan_declaration" id="pan_declaration"
                                                 accept=".doc, .docx, .pdf, .jpg, .png" class="form-control">
-
-                                            @if ($candidate->candidateDocuments->where('name', 'pan_declaration')->isNotEmpty())
-                                                @php
-                                                    $pan_declaration = $candidate->candidateDocuments
-                                                        ->where('name', 'pan_declaration')
-                                                        ->first();
-                                                @endphp
-                                                <div id="image-preview-container" class="d-flex mt-2">
-                                                    <img src="{{ asset('storage/' . $pan_declaration->path) }}"
-                                                        class="img-thumbnail" width="100" height="100"
-                                                        alt="Uploaded image">
-                                                </div>
-                                            @endif
                                         </div>
                                     </div>
 
@@ -315,7 +309,7 @@
                                 </div>
                                 <div class="form-group col-lg-6 mt-2">
                                     <label for="aadhar_path">Attach Aadhar Card: <span
-                                            style="color: red;">*</span></label>
+                                            style="color: red">*</span></label>
                                     <input type="file" name="aadhar_path" id="aadhar_path"
                                         accept="application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/pdf, image/jpg, image/png"
                                         class="form-control"
@@ -341,21 +335,21 @@
                                 <div class="form-group col-lg-4 mt-2">
                                     <label for="photo">Photo:</label>
                                     <input type="file" name="photo" id="photo"
-                                        accept="image/jpg, image/png" class="form-control">
+                                        accept="image/jpg, image/png, image/jpeg" class="form-control">
 
                                     @if ($candidate->candidateDocuments->where('name', 'photo')->isNotEmpty())
                                         @php
                                             $photo = $candidate->candidateDocuments->where('name', 'photo')->first();
                                         @endphp
                                         <div id="image-preview-container" class="d-flex mt-2">
-                                            <img src="{{ asset('storage/' . $photo->path) }}" class="img-thumbnail"
+                                            <img src="{{ asset($photo->path) }}" class="img-thumbnail"
                                                 width="100" height="100" alt="Uploaded image">
                                         </div>
                                     @endif
                                 </div>
 
                                 <div class="form-group col-lg-4 mt-2">
-                                    <label for="resume">Resume:</label>
+                                    <label for="resume">Resume: </label>
                                     <input type="file" name="resume" id="resume"
                                         accept="application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/pdf"
                                         class="form-control">
@@ -364,9 +358,9 @@
                                         @php
                                             $resume = $candidate->candidateDocuments->where('name', 'resume')->first();
                                         @endphp
-                                        <a href="{{ asset('storage/' . $resume->path) }}" target="_blank"
+                                        <a href="{{ asset($resume->path) }}" target="_blank"
                                             class="btn btn-custom mt-2">
-                                            View Resume
+                                            View
                                         </a>
                                     @endif
                                 </div>
@@ -383,9 +377,8 @@
                                                 ->first();
                                         @endphp
                                         <div id="image-preview-container" class="d-flex mt-2">
-                                            <img src="{{ asset('storage/' . $family_photo->path) }}"
-                                                class="img-thumbnail" width="100" height="100"
-                                                alt="Uploaded image">
+                                            <img src="{{ asset($family_photo->path) }}" class="img-thumbnail"
+                                                width="100" height="100" alt="Uploaded image">
                                         </div>
                                     @endif
                                 </div>
@@ -394,8 +387,7 @@
                                     <label for="resume">Resume: <span style="color: red;">*</span></label>
                                     <input type="file" name="resume" id="resume"
                                         accept="application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/pdf"
-                                        class="form-control" value="{{ old('resume', $candidate->resume) }}"
-                                        required>
+                                        class="form-control" value="{{ old('resume', $candidate->resume) }}" required>
                                 </div> --}}
                                 <x-forms.input label="Enter Bank Name:" type="text" name="bank_name"
                                     id="bank_name" :required="true" size="col-lg-6 mt-2" :value="old('bank_name', $bankdetails->bank_name ?? '')" />
@@ -410,8 +402,7 @@
                                 <x-forms.input label="Enter Bank Account No::" type="text" name="bank_account_no"
                                     id="bank_account_no" :required="true" size="col-lg-6 mt-2" :value="old('bank_account_no', $bankdetails->bank_account_no ?? '')" />
                                 <x-forms.input label="Repeat Bank Account No:" type="text" name="bank_account_no"
-                                    id="repeat_bank_account_no" :required="true" size="col-lg-6 mt-2"
-                                    :value="old('bank_account_no', $bankdetails->bank_account_no ?? '')" />
+                                    id="bank_account_no" :required="true" size="col-lg-6 mt-2" :value="old('bank_account_no', $bankdetails->bank_account_no ?? '')" />
                                 <x-forms.input label="Enter Bank IFSC CODE:" type="text" name="bank_ifsc_code"
                                     id="bank_ifsc_code" :required="true" size="col-lg-6 mt-2" :value="old('bank_ifsc_code', $bankdetails->bank_ifsc_code ?? '')" />
                                 <x-forms.select label="Do you Have UAN No? " :options="[['value' => '0', 'label' => 'No'], ['value' => '1', 'label' => 'Yes']]" id="uan_status"
@@ -429,44 +420,48 @@
                                         id="esic_no" :required="true" size="col-lg-6" :value="old('esic_no', $candidate->esic_no)" />
                                 </div>
                                 {{-- <x-forms.input label="ESIC No:" type="text" name="esic_no" id="esic_no"
-                                    :required="false" size="col-lg-6 mt-2" :value="old('esic_no', $candidate->esic_no)" /> --}}
+                                    :required="false" size="col-lg-6 mt-2"
+                                    :value="old('esic_no', $candidate->esic_no)" /> --}}
                                 {{-- <x-forms.select label="Status:" name="status" id="status" :required="false"
-                                    size="col-lg-6 mt-2" :options="FretusFolks::getStatus()" :value="old('status', $candidate->status)" /> --}}
+                                    size="col-lg-6 mt-2" :options="FretusFolks::getStatus()"
+                                    :value="old('status', $candidate->status)" /> --}}
                                 {{-- <label size="col-lg-12 mt-4"><strong>Salary Details</strong></label>
-                                <div
-                                    style="border:
+                                <div style="border:
                                     1px solid #d6c8c8;padding: 2%;margin-bottom: 1%;">
                                     <div class="row">
                                         <x-forms.input label="Basic Salary: " type="number" name="basic_salary"
                                             id="basic_salary" :required="true" size="col-lg-3 mt-1"
                                             :value="old('basic_salary', $candidate->basic_salary)" />
-                                        <x-forms.input label="HRA: " type="number" name="hra" id="hra"
-                                            :required="true" size="col-lg-3 mt-1" :value="old('hra', $candidate->hra)" />
+                                        <x-forms.input label="HRA: " type="number" name="hra" id="hra" :required="true"
+                                            size="col-lg-3 mt-1" :value="old('hra', $candidate->hra)" />
                                         <x-forms.input label="Conveyance: " type="number" name="conveyance"
                                             id="conveyance" :required="true" size="col-lg-3 mt-1"
                                             :value="old('conveyance', $candidate->conveyance)" />
                                         <x-forms.input label="Medical Reimbursement:  " type="number"
-                                            name="medical_reimbursement" id="medical_reimbursement"
-                                            :required="true" size="col-lg-3 mt-2" :value="old('medical_reimbursement', $candidate->medical_reimbursement)" />
+                                            name="medical_reimbursement" id="medical_reimbursement" :required="true"
+                                            size="col-lg-3 mt-2"
+                                            :value="old('medical_reimbursement', $candidate->medical_reimbursement)" />
                                         <x-forms.input label="Special Allowance: " type="number"
                                             name="special_allowance" id="special_allowance" :required="true"
-                                            size="col-lg-3 mt-2" :value="old('special_allowance', $candidate->special_allowance)" />
+                                            size="col-lg-3 mt-2"
+                                            :value="old('special_allowance', $candidate->special_allowance)" />
                                         <x-forms.input label="ST:" type="number" name="st_bonus" id="st_bonus"
-                                            :required="true" size="col-lg-3 mt-2" :value="old('st_bonus', $candidate->st_bonus)" />
-                                        <x-forms.input label="Other Allowance:  " type="number"
-                                            name="other_allowance" id="other_allowance" :required="true"
-                                            size="col-lg-3 mt-2" :value="old('other_allowance', $candidate->other_allowance)" />
+                                            :required="true" size="col-lg-3 mt-2"
+                                            :value="old('st_bonus', $candidate->st_bonus)" />
+                                        <x-forms.input label="Other Allowance:  " type="number" name="other_allowance"
+                                            id="other_allowance" :required="true" size="col-lg-3 mt-2"
+                                            :value="old('other_allowance', $candidate->other_allowance)" />
                                         <x-forms.input label="Gross Salary: " type="number" name="gross_salary"
                                             id="gross_salary" :required="true" size="col-lg-3 mt-2"
                                             :value="old('gross_salary', $candidate->gross_salary)" />
-                                        <x-forms.input label="Employee PF: " type="number" name="emp_pf"
-                                            id="emp_pf" :required="true" size="col-lg-2 mt-2"
+                                        <x-forms.input label="Employee PF: " type="number" name="emp_pf" id="emp_pf"
+                                            :required="true" size="col-lg-2 mt-2"
                                             :value="old('emp_pf', $candidate->emp_pf)" />
                                         <x-forms.input label="Employee ESIC :" type="number" name="emp_esic"
                                             id="emp_esic" :required="true" size="col-lg-2 mt-2"
                                             :value="old('emp_esic', $candidate->emp_esic)" />
-                                        <x-forms.input label="PT: " type="number" name="pt" id="pt"
-                                            :required="true" size="col-lg-2 mt-2" :value="old('pt', $candidate->pt)" />
+                                        <x-forms.input label="PT: " type="number" name="pt" id="pt" :required="true"
+                                            size="col-lg-2 mt-2" :value="old('pt', $candidate->pt)" />
                                         <x-forms.input label="Total Deduction:" type="number" name="total_deduction"
                                             id="total_deduction" :required="true" size="col-lg-3 mt-2"
                                             :value="old('total_deduction', $candidate->total_deduction)" />
@@ -482,12 +477,12 @@
                                         <x-forms.input label="Mediclaim Insurance:  " type="number" name="mediclaim"
                                             id="mediclaim" :required="true" size="col-lg-3 mt-2"
                                             :value="old('mediclaim', $candidate->mediclaim)" />
-                                        <x-forms.input label="Grand Total:  " type="number" name="ctc"
-                                            id="ctc" :required="true" size="col-lg-3 mt-2"
+                                        <x-forms.input label="Grand Total:  " type="number" name="ctc" id="ctc"
+                                            :required="true" size="col-lg-3 mt-2"
                                             :value="old('basic_salary', $candidate->ctc)" />
                                     </div>
                                 </div> --}}
-                                <label size="col-lg-6 mt-4"><strong>Upload Documents</strong></label>
+                                <label size="col-lg-6 mt-4"><strong>Upload Documents</strong> </label>
                                 <div style="border: 1px solid #d6c8c8; padding: 2%; margin-bottom: 1%;">
                                     <div id="document-rows">
                                         <div class="row ">
@@ -528,12 +523,13 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-
+                                            {{-- Direct File Fields --}}
                                             @php
                                                 $candidateDocuments = [
                                                     'pan_path' => 'PAN Document',
                                                     'aadhar_path' => 'Aadhar Document',
                                                     'driving_license_path' => 'Driving License',
+                                                    'bank_document' => 'Bank Document',
                                                     'voter_id' => 'Voter ID/ PVC/ UL',
                                                     'emp_form' => 'Employee Form',
                                                     'pf_esic_form' => 'PF Form / ESIC',
@@ -549,7 +545,7 @@
 
                                             @if ($candidate->candidateDocuments->isNotEmpty())
                                                 @php
-                                                    $documents = $candidate->candidateDocuments->keyBy('name');
+                                                    $documents = $candidate->candidateDocuments->keyBy('name'); // Optimized lookup
                                                 @endphp
 
                                                 @foreach ($candidateDocuments as $key => $label)
@@ -557,7 +553,7 @@
                                                         <tr>
                                                             <td>{{ $label }}</td>
                                                             <td>
-                                                                <a href="{{ asset('storage/' . $documents[$key]->path) }}"
+                                                                <a href="{{ asset($documents[$key]->path) }}"
                                                                     target="_blank" class="btn btn-custom">
                                                                     View
                                                                 </a>
@@ -573,12 +569,14 @@
                                                     <tr>
                                                         <td>Education Certificate {{ $loop->iteration }}</td>
                                                         <td>
-                                                            <a href="{{ asset('storage/' . $certificate->path) }}"
-                                                                target="_blank" class="btn btn-custom">
-                                                                View
+                                                            <a href="{{ asset($certificate->path) }}" target="_blank"
+                                                                class="btn btn-custom">
+                                                                View {{ $loop->iteration }}
                                                             </a>
                                                         </td>
+                                                        <td>
 
+                                                        </td>
                                                     </tr>
                                                 @endforeach
                                             @endif
@@ -589,35 +587,27 @@
                                                     <tr>
                                                         <td>Other Certificate {{ $loop->iteration }}</td>
                                                         <td>
-                                                            <a href="{{ asset('storage/' . $certificate->path) }}"
-                                                                target="_blank" class="btn btn-custom">
-                                                                View
+                                                            <a href="{{ asset($certificate->path) }}" target="_blank"
+                                                                class="btn btn-custom">
+                                                                View {{ $loop->iteration }}
                                                             </a>
+                                                        </td>
+                                                        <td>
+
                                                         </td>
                                                     </tr>
                                                 @endforeach
-                                            @endif
-                                            @if (!is_null($bankdetails) && $bankdetails->bank_document)
-                                                <tr>
-                                                    <td>
-                                                        Bank Document </td>
-                                                    <td>
-                                                        <a href="{{ asset('storage/' . $bankdetails->bank_document) }}"
-                                                            target="_blank" class="btn btn-custom">
-                                                            View
-                                                        </a>
-                                                    </td>
-                                                </tr>
                                             @endif
                                         </tbody>
                                     </table>
                                 </div>
 
 
-                                {{-- <x-forms.input label="Password:" type="text" name="psd" id="psd"
-                                    :required="true" size="col-lg-6 mt-2" :value="old('psd', 'ffemp@123')" /> --}}
+                                {{-- <x-forms.input label="Password:" type="text" name="psd" id="psd" :required="true"
+                                    size="col-lg-6 mt-2" :value="old('psd', 'ffemp@123')" /> --}}
                                 {{-- <x-forms.select label="Active Status:" name="active_status" id="active_status"
-                                    :required="true" size="col-lg-6 mt-2" :options="FretusFolks::getStatus()" :value="old('active_status', $candidate->active_status)" /> --}}
+                                    :required="true" size="col-lg-6 mt-2" :options="FretusFolks::getStatus()"
+                                    :value="old('active_status', $candidate->active_status)" /> --}}
                             </div>
                             <div class="row">
                                 <div class="col-lg-12 mt-4">
@@ -634,6 +624,7 @@
     </div>
     @push('scripts')
         <script src="{{ asset('admin/js/dcsvalidation.js') }}"></script>
+
         <script>
             //maritial_status
             document.addEventListener('DOMContentLoaded', function() {
@@ -671,6 +662,7 @@
                         document.getElementById('no_of_childrens').value = '';
                     }
                 }
+
                 toggleMarriedFields();
                 maritalStatus.addEventListener('change', toggleMarriedFields);
             });
@@ -756,7 +748,7 @@
                     </select>
                     <input type="file" name="document_file[]" 
                      accept="application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/pdf"
-class="col-lg-5 me-3 " >
+                    class="col-lg-5 me-3 " >
                     <button type="button" class="btn btn-success me-2 add-row">+</button>
                     <button type="button" class="btn btn-danger me-2 remove-row">-</button>
                 `;
@@ -807,24 +799,24 @@ class="col-lg-5 me-3 " >
                             let childData = existingChildren[i - 1] || {};
 
                             const childRow = document.createElement('div');
-                            childRow.className = 'row align-items-center mb-2 child-row';
+                            childRow.className = 'row align-items child-row';
                             childRow.innerHTML = `
         <div class="form-group col-lg-3">
             <label for="child_name_${i}">Child ${i} Name:</label>
             <input type="text" name="child_names[]" id="child_name_${i}" class="form-control" 
-                   value="${childData.name || ''}" >
+                   value="${childData.name || ''}"  >
         </div>
         <div class="form-group col-lg-3">
             <label for="child_dob_${i}">Child ${i} DOB:</label>
             <input type="date" name="child_dobs[]" id="child_dob_${i}" class="form-control"
-                   value="${childData.dob || ''}" >
+                   value="${childData.dob || ''}"  >
         </div>
         <div class="form-group col-lg-3 child-aadhar" id="child_aadhar_field_${i}" style="display: none;">
             <label for="child_aadhar_${i}">Child ${i} Aadhar No:</label>
             <input type="text" name="child_aadhar[]" id="child_aadhar_${i}" class="form-control" 
                    value="${childData.aadhar_no || ''}" maxlength="12" inputmode="numeric">
         </div>
-          <div class="form-group col-lg-3">
+           <div class="form-group col-lg-3">
             <label for="child_gender_${i}">Child ${i} Gender:</label>
             <input type="text" name="child_gender[]" id="child_gender_${i}" class="form-control"
                    value="${childData.gender || ''}" >
@@ -835,11 +827,11 @@ class="col-lg-5 me-3 " >
                    class="form-control">
 
             ${childData.photo ? `
-                                                                            <div id="image-preview-container-${i}" class="d-flex mt-2">
-                                                                                <img src="/storage/${childData.photo}" 
-                                                                                     class="img-thumbnail" width="100" height="100" 
-                                                                                     alt="Child ${i} Uploaded Photo">
-                                                                            </div>` : ''}
+                                                                                            <div id="image-preview-container-${i}" class="d-flex mt-2">
+                                                                                                <img src="{{ url('/') }}/${childData.photo}" 
+                                                                                                     class="img-thumbnail" width="100" height="100" 
+                                                                                                     alt="Child ${i} Uploaded Photo">
+                                                                                            </div>` : ''}
         </div>
     `;
                             childrenDetails.appendChild(childRow);
@@ -902,11 +894,11 @@ class="col-lg-5 me-3 " >
                 }
             });
 
+
+
             //pending update
             function pending_update() {
                 var formData = new FormData(document.getElementById('pendingDetailsForm'));
-                console.log(formData);
-
                 fetch('{{ route('admin.dcs_approval.pending.update') }}', {
                         method: 'POST',
                         headers: {

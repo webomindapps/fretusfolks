@@ -143,15 +143,15 @@
                 <div class="col-md-12" style="margin-left:40px;">
                     <img src="{{ public_path('admin/images/main_logo.png') }}" width="200" />
                     <h4 style="text-decoration:none;font-size:12px">Payslip
-                        {{ substr(date('F', mktime(0, 0, 0, $payslip->month, 3)), 0, 3) . ' - ' . $payslip->year }}
+                        {{-- {{ substr(date('F', mktime(0, 0, 0, $payslip->month, 3)), 0, 3) . ' - ' . $payslip->year }} --}}
                     </h4>
                 </div>
                 <div class="col-md-6">
                 </div>
             </div>
             <div class="col-md-12" style="border-left:2px solid #333;border-right:2px solid #333;">
-                <p style="text-align:center;margin: 0px 0;">M-20, 3rd Floor, UKS Heights, 10th Main, Jeevanbhima Nagar,
-                    Bangalore-560075. Ph- 080 -43726370</p>
+                <p style="text-align:center;margin: 0px 0;">VBC Tower, #39, 1st Floor, CMH Road, Indiranagar,
+                    Bangalore-560038. Ph- 080-43726370</p>
             </div>
             <div class="col-md-12" style="border-left:2px solid #333;border-right:2px solid #333;">
                 <p style="text-align:center;margin: 0px 0;">FORM XIX</p>
@@ -163,33 +163,37 @@
             <table>
                 <tbody>
                     <tr>
-                        <td style="width: 50%;">Employee Name: {{ $payslip->emp_name }}</td>
-                        <td>UAN No.:{{ $payslip->uan_no ?? 0 }} </td>
+                        <td style="width: 50%;">Employee Name: {{ $payslip['emp_name'] ?? '' }}</td>
+                        <td>UAN No.:{{ $payslip['uan_no'] ?? 0 }} </td>
                     </tr>
                     <tr>
-                        <td>Emp. ID: {{ $payslip->emp_id ?? 0 }}</td>
-                        <td>PF No: {{ $payslip->pf_no ?? 0 }}</td>
+                        <td>FFIEmp. ID: {{ $payslip['emp_id'] ?? 0 }}</td>
+                        <td>Client Name:{{ $payslip['client_name'] ?? 0 }} </td>
                     </tr>
                     <tr>
-                        <td>Designation:{{ $payslip->designation ?? 0 }} </td>
-                        <td>ESI No.: {{ $payslip->esi_no ?? 0 }}</td>
+                        <td>Client Emp ID.: {{ $payslip['client_emp_id'] ?? 0 }}</td>
+                        <td>PF No: {{ $payslip['pf_no'] ?? 0 }}</td>
+                    </tr>
+                    <tr>
+                        <td>Designation:{{ $payslip['designation'] ?? 0 }} </td>
+                        <td>ESI No.: {{ $payslip['esi_no'] ?? 0 }}</td>
                     </tr>
                     <tr>
                         <td>
                             Date of Joining:
-                            @if ($payslip->date_of_joining != '0000-00-00')
-                                {{ date('d-m-Y', strtotime($payslip->date_of_joining)) ?? 0 }}
+                            @if ($payslip['doj'] != '0000-00-00')
+                                {{ date('d-m-Y', strtotime($payslip['doj'])) ?? 0 }}
                             @endif
                         </td>
-                        <td>Bank Name: {{ $payslip->bank_name ?? 0 }}</td>
+                        <td>Bank Name: {{ $payslip['bank_name'] ?? 0 }}</td>
                     </tr>
                     <tr>
-                        <td>Department: {{ $payslip->department ?? 0 }}</td>
-                        <td>Account No.:{{ $payslip->account_no ?? 0 }} </td>
+                        <td>Department: {{ $payslip['department'] ?? 0 }}</td>
+                        <td>Account No.:{{ $payslip['account_no'] ?? 0 }} </td>
                     </tr>
                     <tr>
                         <td>Location: Bangalore</td>
-                        <td>IFSC Code: {{ $payslip->ifsc_code ?? 0 }}</td>
+                        <td>IFSC Code: {{ $payslip['ifsc_code'] ?? 0 }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -197,14 +201,14 @@
             <table style="margin-top: 3px;">
                 <tbody>
                     <tr>
-                        <td style="width: 38%;">Month Days: {{ $payslip->month_days ?? 0 }}</td>
-                        <td>Leave Days: {{ $payslip->leave_days ?? 0 }}</td>
-                        <td>Arrears Days:{{ $payslip->arrear_days ?? 0 }} </td>
+                        <td style="width: 38%;">Month Days: {{ $payslip['month_days'] ?? 0 }}</td>
+                        <td>Leave Days: {{ $payslip['leave_days'] ?? 0 }}</td>
+                        <td>Arrears Days:{{ $payslip['arrears_days'] ?? 0 }} </td>
                     </tr>
                     <tr>
-                        <td>Payable Days: {{ $payslip->pay_days ?? 0 }}</td>
-                        <td>LOP Days:{{ $payslip->lop_days ?? 0 }} </td>
-                        <td>OT Hours:{{ $payslip->ot_hours ?? 0 }} </td>
+                        <td>Payable Days: {{ $payslip['payable_days'] ?? 0 }}</td>
+                        <td>LOP Days:{{ $payslip['lop_days'] ?? 0 }} </td>
+                        <td>OT Hours:{{ $payslip['ot_hours'] ?? 0 }} </td>
                     </tr>
                 </tbody>
             </table>
@@ -222,117 +226,126 @@
                 <tbody>
                     <tr>
                         <td>Basic + DA</td>
-                        <td>{{ $payslip->fixed_basic ?? 0 }}</td>
-                        <td>{{ $payslip->earned_basic ?? 0 }}</td>
+                        <td>{{ $payslip['fixed_basic_da'] ?? 0 }}</td>
+                        <td>{{ $payslip['earn_basic'] ?? 0 }}</td>
                         <td>EPF</td>
-                        <td>{{ $payslip->epf ?? 0 }}</td>
+                        <td>{{ $payslip['epf'] ?? 0 }}</td>
                     </tr>
                     <tr>
                         <td>HRA</td>
-                        <td>{{ $payslip->fixed_hra ?? 0 }}</td>
-                        <td>{{ $payslip->earned_hra ?? 0 }}</td>
+                        <td>{{ $payslip['fixed_hra'] ?? 0 }}</td>
+                        <td>{{ $payslip['earn_hr'] ?? 0 }}</td>
                         <td>ESIC</td>
-                        <td>{{ empty($payslip->esic) ? 0 : $payslip->esic }}</td>
+                        <td>{{ empty($payslip['esic']) ? 0 : $payslip['esic'] }}</td>
                     </tr>
                     <tr>
                         <td>Conveyance Allowance</td>
-                        <td>{{ empty($payslip->fixed_con_allow) ? 0 : $payslip->fixed_con_allow }}</td>
-                        <td>{{ empty($payslip->earned_con_allow) ? 0 : $payslip->earned_con_allow }}</td>
+                        <td>{{ empty($payslip['fixed_conveyance']) ? 0 : $payslip['fixed_conveyance'] }}</td>
+                        <td>{{ empty($payslip['earn_conveyance']) ? 0 : $payslip['earn_conveyance'] }}</td>
                         <td>PT</td>
-                        <td>{{ empty($payslip->pt) ? 0 : $payslip->pt }}</td>
+                        <td>{{ empty($payslip['pt']) ? 0 : $payslip['pt'] }}</td>
                     </tr>
                     <tr>
                         <td>Education Allowance</td>
-                        <td>{{ empty($payslip->fixed_edu_allowance) ? 0 : $payslip->fixed_edu_allowance }}</td>
-                        <td>{{ empty($payslip->earned_education_allowance) ? 0 : $payslip->earned_education_allowance }}
+                        <td>{{ empty($payslip['fix_education_allowance']) ? 0 : $payslip['fix_education_allowance'] }}
+                        </td>
+                        <td>{{ empty($payslip['earn_education_allowance']) ? 0 : $payslip['earn_education_allowance'] }}
                         </td>
                         <td>IT</td>
-                        <td>{{ empty($payslip->it) ? 0 : $payslip->it }}</td>
+                        <td>{{ empty($payslip['it']) ? 0 : $payslip['it'] }}</td>
 
                     </tr>
                     <tr>
                         <td>Medical Reimbursement</td>
-                        <td>{{ empty($payslip->fixed_med_reim) ? 0 : $payslip->fixed_med_reim }}</td>
-                        <td>{{ empty($payslip->earned_med_reim) ? 0 : $payslip->earned_med_reim }}</td>
+                        <td>{{ empty($payslip['fixed_medical_reimbursement']) ? 0 : $payslip['fixed_medical_reimbursement'] }}
+                        </td>
+                        <td>{{ empty($payslip['earn_medical_allowance']) ? 0 : $payslip['earn_medical_allowance'] }}
+                        </td>
                         <td>LWF</td>
-                        <td>{{ empty($payslip->lwf) ? 0 : $payslip->lwf }}</td>
+                        <td>{{ empty($payslip['lwf']) ? 0 : $payslip['lwf'] }}</td>
                     </tr>
                     <tr>
                         <td>Special Allowance</td>
-                        <td>{{ empty($payslip->fixed_spec_allow) ? 0 : $payslip->fixed_spec_allow }}</td>
-                        <td>{{ empty($payslip->earned_spec_allow) ? 0 : $payslip->earned_spec_allow }}</td>
+                        <td>{{ empty($payslip['fixed_special_allowance']) ? 0 : $payslip['fixed_special_allowance'] }}
+                        </td>
+                        <td>{{ empty($payslip['earn_special_allowance']) ? 0 : $payslip['earn_special_allowance'] }}
+                        </td>
                         <td>Salary Advance</td>
-                        <td>{{ empty($payslip->salary_advance) ? 0 : $payslip->salary_advance }}</td>
+                        <td>{{ empty($payslip['salary_advance']) ? 0 : $payslip['salary_advance'] }}</td>
                     </tr>
                     <tr>
                         <td>Other Allowance</td>
-                        <td>{{ empty($payslip->fixed_oth_allow) ? 0 : $payslip->fixed_oth_allow }}</td>
-                        <td>{{ empty($payslip->earned_oth_allow) ? 0 : $payslip->earned_oth_allow }}</td>
+                        <td>{{ empty($payslip['fixed_other_allowance']) ? 0 : $payslip['fixed_other_allowance'] }}
+                        </td>
+                        <td>{{ empty($payslip['earn_other_allowance']) ? 0 : $payslip['earn_other_allowance'] }}
+                        </td>
                         <td>Other Deduction</td>
-                        <td>{{ empty($payslip->other_deduction) ? 0 : $payslip->other_deduction }}</td>
+                        <td>{{ empty($payslip['other_deduction']) ? 0 : $payslip['other_deduction'] }}</td>
                     </tr>
                     <tr>
                         <td>St. Bonus</td>
-                        <td>{{ empty($payslip->fixed_st_bonus) ? 0 : $payslip->fixed_st_bonus }}</td>
-                        <td>{{ empty($payslip->earned_st_bonus) ? 0 : $payslip->earned_st_bonus }}</td>
+                        <td>{{ empty($payslip['fixed_st_bonus']) ? 0 : $payslip['fixed_st_bonus'] }}</td>
+                        <td>{{ empty($payslip['earn_st_bonus']) ? 0 : $payslip['earn_st_bonus'] }}</td>
                         <td></td>
                         <td></td>
                     </tr>
                     <tr>
                         <td>Leave Wages</td>
-                        <td>{{ empty($payslip->fixed_leave_wages) ? 0 : $payslip->fixed_leave_wages }}</td>
-                        <td>{{ empty($payslip->earned_leave_wages) ? 0 : $payslip->earned_leave_wages }}</td>
+                        <td>{{ empty($payslip['fix_leave_wages']) ? 0 : $payslip['fix_leave_wages'] }}</td>
+                        <td>{{ empty($payslip['earn_leave_wages']) ? 0 : $payslip['earn_leave_wages'] }}</td>
                         <td></td>
                         <td></td>
                     </tr>
                     <tr>
                         <td>Holiday Wages</td>
-                        <td>{{ empty($payslip->fixed_holidays_wages) ? 0 : $payslip->fixed_holidays_wages }}</td>
-                        <td>{{ empty($payslip->earned_holiday_wages) ? 0 : $payslip->earned_holiday_wages }}</td>
+                        <td>{{ empty($payslip['fixed_holiday_wages']) ? 0 : $payslip['fixed_holiday_wages'] }}</td>
+                        <td>{{ empty($payslip['earn_holiday_wages']) ? 0 : $payslip['earn_holiday_wages'] }}</td>
                         <td></td>
                         <td></td>
                     </tr>
                     <tr>
                         <td>Attendance Bonus</td>
-                        <td>{{ empty($payslip->fixed_attendance_bonus) ? 0 : $payslip->fixed_attendance_bonus }}</td>
-                        <td>{{ empty($payslip->earned_attendance_bonus) ? 0 : $payslip->earned_attendance_bonus }}</td>
+                        <td>{{ empty($payslip['fixed_attendance_bonus']) ? 0 : $payslip['fixed_attendance_bonus'] }}
+                        </td>
+                        <td>{{ empty($payslip['earn_attendance_bonus']) ? 0 : $payslip['earn_attendance_bonus'] }}
+                        </td>
                         <td></td>
                         <td></td>
                     </tr>
                     <tr>
                         <td>OT Wage</td>
-                        <td>{{ empty($payslip->fixed_ot_wages) ? 0 : $payslip->fixed_ot_wages }}</td>
-                        <td>{{ empty($payslip->earned_ot_wages) ? 0 : $payslip->earned_ot_wages }}</td>
+                        <td>{{ empty($payslip['fixed_ot_wages']) ? 0 : $payslip['fixed_ot_wages'] }}</td>
+                        <td>{{ empty($payslip['earn_ot_wages']) ? 0 : $payslip['earn_ot_wages'] }}</td>
                         <td></td>
                         <td></td>
                     </tr>
                     <tr>
                         <td>Incentive</td>
-                        <td>{{ empty($payslip->fixed_incentive) ? 0 : $payslip->fixed_incentive }}</td>
-                        <td>{{ empty($payslip->earned_incentive) ? 0 : $payslip->earned_incentive }}</td>
+                        <td>{{ empty($payslip['fix_incentive_wages']) ? 0 : $payslip['fix_incentive_wages'] }}</td>
+                        <td>{{ empty($payslip['earn_incentive_wages']) ? 0 : $payslip['earn_incentive_wages'] }}</td>
                         <td></td>
                         <td></td>
                     </tr>
                     <tr>
                         <td>Arrear Wages</td>
-                        <td>{{ empty($payslip->fixed_arrear_wages) ? 0 : $payslip->fixed_arrear_wages }}</td>
-                        <td>{{ empty($payslip->earned_arrear_wages) ? 0 : $payslip->earned_arrear_wages }}</td>
+                        <td>{{ empty($payslip['fix_arrear_wages']) ? 0 : $payslip['fix_arrear_wages'] }}</td>
+                        <td>{{ empty($payslip['earn_arrear_wages']) ? 0 : $payslip['earn_arrear_wages'] }}</td>
                         <td></td>
                         <td></td>
                     </tr>
                     <tr>
                         <td>Other Wages</td>
-                        <td>{{ empty($payslip->fixed_other_wages) ? 0 : $payslip->fixed_other_wages }}</td>
-                        <td>{{ empty($payslip->earned_other_wages) ? 0 : $payslip->earned_other_wages }}</td>
+                        <td>{{ empty($payslip['fixed_other_wages']) ? 0 : $payslip['fixed_other_wages'] }}</td>
+                        <td>{{ empty($payslip['earn_other_wages']) ? 0 : $payslip['earn_other_wages'] }}</td>
                         <td></td>
                         <td></td>
                     </tr>
                     <tr>
                         <th style="width: 20%;">Total Gross</th>
-                        <th style="width: 134px;">{{ $payslip->fixed_gross ?? 0 }}</th>
-                        <th style="width: 151px;">{{ $payslip->earned_gross ?? 0 }}</th>
+                        <th style="width: 134px;">{{ $payslip['fixed_total_earnings'] ?? 0 }}</th>
+                        <th style="width: 151px;">{{ $payslip['earn_total_gross'] ?? 0 }}</th>
                         <th>Total Deduction</th>
-                        <th style="width: 13%;">{{ $payslip->total_deductions ?? 0 }}</th>
+                        <th style="width: 13%;">{{ $payslip['total_deduction'] ?? 0 }}</th>
                     </tr>
                 </tbody>
             </table>
@@ -341,11 +354,11 @@
                 <tbody>
                     <tr>
                         <td class="bold" style="border-right:none;">Net Salary:</td>
-                        <td colspan="6" class="bold">{{ $payslip->net_salary ?? 0 }}</td>
+                        <td colspan="6" class="bold">{{ $payslip['net_salary'] ?? 0 }}</td>
                     </tr>
                     <tr style="border-top: 2px solid;">
                         <td class="bold" style="border-right:none;">In Words:</td>
-                        <td colspan="6" class="bold">{{ $payslip->in_words ?? 0 }}</td>
+                        <td colspan="6" class="bold">{{ $payslip['in_words'] ?? 0 }}</td>
                     </tr>
                 </tbody>
             </table>

@@ -71,7 +71,7 @@
         </div>
     </div>
     <div class="row text-center">
-        <div class="col-lg-3">
+        <div class="col-lg-12">
             {{ $data->onEachSide(0)->withQueryString()->links() }}
         </div>
     </div>

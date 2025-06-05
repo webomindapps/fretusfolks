@@ -9,8 +9,8 @@
                     </button>
                 </form>
 
-                <form action="{{ route('admin.candidatemaster.bankimport') }}" method="POST" enctype="multipart/form-data"
-                    class="d-flex align-items-center">
+                <form action="{{ route('admin.candidatemaster.bankimport') }}" method="POST"
+                    enctype="multipart/form-data" class="d-flex align-items-center">
                     @csrf
                     <input type="file" class="form-control form-control-sm me-2" name="file" required>
                     <button type="submit" class="add-btn bg-success text-white">Import</button>
@@ -21,16 +21,17 @@
     <div class="row">
         <div class="col-lg-12">
             @php
-                $columns = [
-                    ['label' => 'Id', 'column' => 'id', 'sort' => true],
-                    ['label' => 'Bank Name', 'column' => 'bank_name', 'sort' => true],
-                    ['label' => 'Bank Account Number', 'column' => 'bank_account_no', 'sort' => true],
-                    ['label' => 'Bank IFSC Code', 'column' => 'bank_ifsc_code', 'sort' => true],
-                    ['label' => 'Approval Status', 'column' => 'bank_status', 'sort' => true],
-                    ['label' => 'Actions', 'column' => 'action', 'sort' => false],
-                ];
+            $columns = [
+            ['label' => 'Id', 'column' => 'id', 'sort' => true],
+            ['label' => 'Bank Name', 'column' => 'bank_name', 'sort' => true],
+            ['label' => 'Bank Account Number', 'column' => 'bank_account_no', 'sort' => true],
+            ['label' => 'Bank IFSC Code', 'column' => 'bank_ifsc_code', 'sort' => true],
+            ['label' => 'Approval Status', 'column' => 'bank_status', 'sort' => true],
+            ['label' => 'Actions', 'column' => 'action', 'sort' => false],
+            ];
             @endphp
-            <x-table :columns="$columns" :data="$pendingbank" :checkAll=false :bulk="route('admin.cfis.bulk')" :route="route('admin.pendingbankapprovals')">
+            <x-table :columns="$columns" :data="$pendingbank" :checkAll=false :bulk="route('admin.cfis.bulk')"
+                :route="route('admin.pendingbankapprovals')">
 
                 <x-slot:filters>
 
@@ -51,42 +52,43 @@
 
                 </x-slot:filters>
                 @foreach ($pendingbank as $key => $item)
-                    <tr>
+                <tr>
 
-                        <td>{{ $item->id }}</td>
-                        <td>
-                            {{ $item->bank_name }}
-                        </td>
-                        <td> {{ $item->bank_account_no }}</td>
-                        <td> {{ $item->bank_ifsc_code }}</td>
-                        <td>
-                            @if ($item->bank_status == 0)
-                                <span class="badge rounded-pill deactive">Pending</span>
-                            @else
-                                <span class="badge rounded-pill sactive">Complected</span>
-                            @endif
-                        </td>
+                    <td>{{ $item->id }}</td>
 
-                        <td>
-                            <div class="dropdown pop_Up dropdown_bg">
-                                <div class="dropdown-toggle" id="dropdownMenuButton-{{ $item->id }}"
-                                    data-bs-toggle="dropdown" aria-expanded="true">
-                                    Action
-                                </div>
-                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1"
-                                    style="position: absolute; inset: auto auto 0px 0px; margin: 0px; transform: translate(-95px, -25.4219px);"
-                                    data-popper-placement="top-end">
-                                    <li>
-                                        <a class="dropdown-item"
-                                            href="{{ route('admin.pendingbankapprovals.edit', $item->id) }}">
-                                            <i class='bx bx-edit-alt'></i>
-                                            Edit
-                                        </a>
-                                    </li>
-                                </ul>
+                    <td>
+                        {{ $item->bank_name }}
+                    </td>
+                    <td> {{ $item->bank_account_no }}</td>
+                    <td> {{ $item->bank_ifsc_code }}</td>
+                    <td>
+                        @if ($item->bank_status == 0)
+                        <span class="badge rounded-pill deactive">Pending</span>
+                        @else
+                        <span class="badge rounded-pill sactive">Complected</span>
+                        @endif
+                    </td>
+
+                    <td>
+                        <div class="dropdown pop_Up dropdown_bg">
+                            <div class="dropdown-toggle" id="dropdownMenuButton-{{ $item->id }}"
+                                data-bs-toggle="dropdown" aria-expanded="true">
+                                Action
                             </div>
-                        </td>
-                    </tr>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1"
+                                style="position: absolute; inset: auto auto 0px 0px; margin: 0px; transform: translate(-95px, -25.4219px);"
+                                data-popper-placement="top-end">
+                                <li>
+                                    <a class="dropdown-item"
+                                        href="{{ route('admin.pendingbankapprovals.edit', $item->id) }}">
+                                        <i class='bx bx-edit-alt'></i>
+                                        Edit
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
                 @endforeach
             </x-table>
         </div>

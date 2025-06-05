@@ -21,7 +21,7 @@
     <div class="content">
         <div class="row">
             <div class="col-lg-12 pb-4 ">
-                <div class="form-card px-md-3 px-2">
+                <div class="form-card px-3">
                     <div class="header  text-white" style="background-color: #517bb9;">
                         <h4 class="modal-title">Candidate Details
                             <div>
@@ -220,7 +220,7 @@
                                     </div>
                                     <div class="row mt-2">
                                         @if ($bankdetails->isNotEmpty())
-                                            <div class="table-responsive">
+                                            <div class="table-responsive mt-2">
                                                 <table class="table table-bordered">
                                                     <thead class="table-light">
                                                         <tr>
@@ -229,7 +229,7 @@
                                                             <th>Account No</th>
                                                             <th>IFSC Code</th>
                                                             <th>Bank Document</th>
-                                                            <th>compliance Approval</th>
+                                                            <th>Compliance Approval</th>
                                                             <th>Status</th>
                                                             <th>Action</th>
                                                         </tr>
@@ -244,7 +244,7 @@
                                                                 <td>{{ $bank->bank_ifsc_code }}</td>
                                                                 <td>
                                                                     @if ($bank->bank_document)
-                                                                        <a href="{{ asset('storage/' . $bank->bank_document) }}"
+                                                                        <a href="{{ asset($bank->bank_document) }}"
                                                                             target="_blank"
                                                                             class="btn btn-sm btn-primary">
                                                                             View
@@ -425,7 +425,7 @@
                                                             <td>{{ $candidateDocuments[$certificate->name] ?? $certificate->name }}
                                                             </td>
                                                             <td>
-                                                                <a href="{{ asset('storage/' . $certificate->path) }}"
+                                                                <a href="{{ asset($certificate->path) }}"
                                                                     target="_blank" class="btn btn-primary btn-sm">
                                                                     <i class="fas fa-eye"></i> View
                                                                 </a>
@@ -439,7 +439,7 @@
                                                         <tr>
                                                             <td>Education Certificate {{ $loop->iteration }}</td>
                                                             <td>
-                                                                <a href="{{ asset('storage/' . $certificate->path) }}"
+                                                                <a href="{{ asset($certificate->path) }}"
                                                                     target="_blank" class="btn btn-primary btn-sm">
                                                                     <i class="fas fa-eye"></i> View
                                                                 </a>
@@ -453,7 +453,7 @@
                                                         <tr>
                                                             <td>Other Certificate {{ $loop->iteration }}</td>
                                                             <td>
-                                                                <a href="{{ asset('storage/' . $certificate->path) }}"
+                                                                <a href="{{ asset($certificate->path) }}"
                                                                     target="_blank" class="btn btn-primary btn-sm">
                                                                     <i class="fas fa-eye"></i> View
                                                                 </a>
@@ -467,157 +467,10 @@
                                 </div>
                             </div>
                             <hr>
-                            {{-- <div class="card custom-card">
-                                <div class="custom-header d-flex justify-content-between align-items-center"
-                                    data-bs-toggle="collapse" data-bs-target="#internalDocuments"
-                                    aria-expanded="false" aria-controls="internalDocuments">
-                                    <span>Internal Documents</span>
-                                    <i class="bx bx-chevron-down chevron-icon"></i>
-                                </div>
 
-
-                                <div id="internalDocuments" class="accordion-collapse collapse"
-                                    aria-labelledby="headinginternal" data-bs-parent="#accordionExample">
-                                    <div class="card-body">
-                                        <table class="table table-bordered table-striped">
-                                            <thead class="table-dark">
-                                                <tr>
-                                                    <th>Document Type</th>
-                                                    <th>Issued Date</th>
-                                                    <th>Action</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach ($candidate->offerletters as $offer)
-                                                    <tr>
-                                                        <td>Offer Letter</td>
-                                                        <td>{{ \Carbon\Carbon::parse($offer->date)->format('d-m-Y') }}
-                                                        </td>
-                                                        <td>
-                                                            <a href="{{ asset('storage/' . $offer->offer_letter_path) }}"
-                                                                target="_blank" class="btn btn-primary btn-sm">
-                                                                <i class="fas fa-eye"></i> View
-                                                            </a>
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
-                                                @foreach ($candidate->incrementletters as $incrementletter)
-                                                    <tr>
-                                                        <td>Increment Letter</td>
-                                                        <td>{{ \Carbon\Carbon::parse($incrementletter->date)->format('d-m-Y') }}
-                                                        </td>
-                                                        <td>
-                                                            <a href="{{ asset('storage/' . $incrementletter->increment_path) }}"
-                                                                target="_blank" class="btn btn-primary btn-sm">
-                                                                <i class="fas fa-eye"></i> View
-                                                            </a>
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
-                                                @foreach ($candidate->warningletters as $warning)
-                                                    <tr>
-                                                        <td>Warning Letter</td>
-                                                        <td>{{ \Carbon\Carbon::parse($warning->date)->format('d-m-Y') }}
-                                                        </td>
-                                                        <td>
-                                                            <a href="{{ asset('storage/' . $warning->warning_letter_path) }}"
-                                                                target="_blank" class="btn btn-primary btn-sm">
-                                                                <i class="fas fa-eye"></i> View
-                                                            </a>
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
-                                                @foreach ($candidate->showcauseletters as $show)
-                                                    <tr>
-                                                        <td>Show Cause Letter</td>
-                                                        <td>{{ \Carbon\Carbon::parse($show->date)->format('d-m-Y') }}
-                                                        </td>
-                                                        <td>
-                                                            <a href="{{ asset('storage/' . $show->showcause_letter_path) }}"
-                                                                target="_blank" class="btn btn-primary btn-sm">
-                                                                <i class="fas fa-eye"></i> View
-                                                            </a>
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
-                                                @foreach ($candidate->terminationletter as $term)
-                                                    <tr>
-                                                        <td>Show Cause Letter</td>
-                                                        <td>{{ \Carbon\Carbon::parse($term->date)->format('d-m-Y') }}
-                                                        </td>
-                                                        <td>
-                                                            <a href="{{ asset('storage/' . $term->termination_letter_path) }}"
-                                                                target="_blank" class="btn btn-primary btn-sm">
-                                                                <i class="fas fa-eye"></i> View
-                                                            </a>
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
-                                                @foreach ($candidate->pipletter as $pip)
-                                                    <tr>
-                                                        <td>Show Cause Letter</td>
-                                                        <td>{{ \Carbon\Carbon::parse($pip->date)->format('d-m-Y') }}
-                                                        </td>
-                                                        <td>
-                                                            <a href="{{ asset('storage/' . $pip->pip_letter_path) }}"
-                                                                target="_blank" class="btn btn-primary btn-sm">
-                                                                <i class="fas fa-eye"></i> View
-                                                            </a>
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div> --}}
                         </div>
                         <hr>
-                        {{-- <div class="card custom-card">
-                            <div class="custom-header d-flex justify-content-between align-items-center"
-                                data-bs-toggle="collapse" data-bs-target="#payslip" aria-expanded="false"
-                                aria-controls="payslip">
-                                <span>Payslips</span>
-                                <i class="bx bx-chevron-down chevron-icon"></i>
-                            </div>
 
-
-                            <div id="payslip" class="accordion-collapse collapse" aria-labelledby="headingpayslip"
-                                data-bs-parent="#accordionExample">
-                                <div class="card-body">
-                                    <table class="table table-bordered table-striped">
-                                        <thead class="table-dark">
-                                            <tr>
-                                                <th>Document</th>
-                                                <th>Month</th>
-                                                <th>year</th>
-                                                <th>date</th>
-                                                <th>Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-
-                                            @foreach ($candidate->payslipletter as $payslip)
-                                                <tr>
-                                                    <td>Payslips</td>
-                                                    <td>{{ DateTime::createFromFormat('!m', $payslip->month)->format('F') }}
-                                                    </td>
-                                                    <td>{{ $payslip->year }}</td>
-                                                    <td>{{ \Carbon\Carbon::parse($payslip->date_upload)->format('d-m-Y') }}
-                                                    </td>
-                                                    <td>
-                                                        <a href="{{ asset($payslip->payslips_letter_path) }}"
-                                                            target="_blank" class="btn btn-primary btn-sm">
-                                                            <i class="fas fa-eye"></i> View
-                                                        </a>
-                                                    </td>
-                                                </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div> --}}
                     </div>
 
                 </div>

@@ -48,9 +48,11 @@
                 <td>
                     <a href="{{ route('admin.user.status', $item->id) }}">
                         @if ($item->status)
-                            <i class="fa fa-toggle-off text-danger" aria-hidden="true" style="font-size: 24px;"></i>
+                            <i class="fa fa-toggle-off text-danger" aria-hidden="true"
+                                style="font-size: 24px;"></i>
                         @else
-                            <i class="fa fa-toggle-on text-success" aria-hidden="true" style="font-size: 24px;"></i>
+                            <i class="fa fa-toggle-on text-success" aria-hidden="true"
+                                style="font-size: 24px;"></i>
                         @endif
                     </a>
                 </td>

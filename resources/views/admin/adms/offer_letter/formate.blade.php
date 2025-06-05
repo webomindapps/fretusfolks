@@ -96,7 +96,9 @@
                             <td style="font-size:12px;text-align:left;padding:7px;width:30%">
                                 <p style="line-height:1.8;font-size:14px">
                                     <b>Date
-                                        :{{ \Carbon\Carbon::parse($offerLetter->employee?->joining_date)->format('d-m-Y') }}</b>
+                                        :{{
+                                        \Carbon\Carbon::parse($offerLetter->employee?->joining_date)->format('d-m-Y')
+                                        }}</b>
                                 </p>
                             </td>
                         </tr>
@@ -409,11 +411,11 @@
                                     </p>
                                 </td>
                                 {{-- <td style="font-size:12px; text-align:left; padding:7px; width:40%">
-                                <p style="line-height:1.8; font-size:14px;">
-                                    <b>I accept:</b><br><br><br>
-                                    <b>(Signature of an Employee)</b>
-                                </p>
-                            </td> --}}
+                                    <p style="line-height:1.8; font-size:14px;">
+                                        <b>I accept:</b><br><br><br>
+                                        <b>(Signature of an Employee)</b>
+                                    </p>
+                                </td> --}}
                             </tr>
                         </tbody>
                     </table>

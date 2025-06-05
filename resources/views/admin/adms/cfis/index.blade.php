@@ -1,12 +1,12 @@
 <x-applayout>
     <x-admin.breadcrumb title="  Candidate First Information System" :create="route('admin.cfis.create')" />
-    <div class="row">
+    <div class="row mt-2">
         <div class="d-flex justify-content-end align-items-center">
             <div class="d-flex gap-3">
-                <button onclick="window.location.href='{{ asset('admin/cfis_formate.csv') }}'"
+                <a href="{{ asset('admin/cfis_formate.csv') }}" download="cfis_format.csv"
                     class="btn btn-primary text-white">
                     <i class='bx bxs-download'></i> Download Sample
-                </button>
+                </a>
 
                 <form action="{{ route('admin.cfis.import') }}" method="POST" enctype="multipart/form-data"
                     class="d-flex align-items-center">
@@ -18,7 +18,6 @@
             </div>
         </div>
     </div>
-
     <div class="row">
         <div class="col-lg-12">
             @php
@@ -34,7 +33,7 @@
                     ['label' => 'Actions', 'column' => 'action', 'sort' => false],
                 ];
             @endphp
-            <x-table :columns="$columns" :data="$candidate" :checkAll=false :bulk="route('admin.cfis.bulk')" :route="route('admin.cfis')">
+            <x-table :columns="$columns" :data="$candidate" :checkAll=true :bulk="route('admin.cfis.bulk')" :route="route('admin.cfis')">
                 {{-- <x-slot:filters>
                     <form action="{{ route('admin.cfis.export') }}" method="POST">
                         @csrf
@@ -60,10 +59,10 @@
                 </x-slot:filters> --}}
                 @foreach ($candidate as $key => $item)
                     <tr>
-                        {{-- <td>
+                        <td>
                             <input type="checkbox" name="selected_items[]" class="single-item-check"
                                 value="{{ $item->id }}">
-                        </td> --}}
+                        </td>
                         <td>{{ $item->id }}</td>
                         <td>{{ $item->ffi_emp_id === null || $item->ffi_emp_id === '' ? 'N/A' : $item->ffi_emp_id }}
                         </td>
@@ -117,6 +116,7 @@
                                         <i class='bx bx-link-alt'></i>
                                         View Details
                                     </a> --}}
+
                                         <a href="{{ route('admin.candidatelifecycle.view', $item) }}"
                                             class="dropdown-item">
                                             <i class='bx bx-link-alt'></i> View

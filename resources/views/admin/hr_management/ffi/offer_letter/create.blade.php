@@ -43,7 +43,7 @@
                                     :required="false" size="col-lg-6 mt-2" readonly />
                                 <x-forms.input label="Location: " type="text" name="location" id="location"
                                     :required="true" size="col-lg-6 mt-2" readonly />
-                               
+
                                 <x-forms.select label="Offer Letter For:" name="offer_letter_type"
                                     id="offer_letter_type" :required="true" class="form-control" size="col-lg-6 mt-2"
                                     :options="FretusFolks::getLetterFormate()" />
@@ -60,10 +60,10 @@
                                         <x-forms.input label="HRA: " type="number" name="hra" id="hra"
                                             :required="true" size="col-lg-3 mt-2" :value="old('hra')" />
                                         <x-forms.input label="Conveyance: " type="number" name="conveyance"
-                                            id="conveyance" :required="true" size="col-lg-3 mt-2"
+                                            id="conveyance" :required="false" size="col-lg-3 mt-2"
                                             :value="old('conveyance')" />
                                         <x-forms.input label="Medical Reimbursement: " type="number"
-                                            name="medical_reimbursement" id="medical_reimbursement" :required="true"
+                                            name="medical_reimbursement" id="medical_reimbursement" :required="false"
                                             size="col-lg-3 mt-2" :value="old('medical_reimbursement')" />
                                         <x-forms.input label="Special Allowance: " type="number"
                                             name="special_allowance" id="special_allowance" :required="true"

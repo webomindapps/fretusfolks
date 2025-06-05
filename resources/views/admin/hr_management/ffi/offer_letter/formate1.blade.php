@@ -366,15 +366,11 @@
                         <td>{{ $offerLetter->hra * 12 }}</td>
                     </tr>
                     <tr>
-                        <td>Conveyance</td>
-                        <td>{{ $offerLetter->conveyance }}</td>
-                        <td>{{ $offerLetter->conveyance * 12 }}</td>
+                        <td>ST Bonous</td>
+                        <td>{{ $offerLetter->st_bonus }}</td>
+                        <td>{{ $offerLetter->st_bonus * 12 }}</td>
                     </tr>
-                    <tr>
-                        <td>Medical Reimbursement</td>
-                        <td>{{ $offerLetter->medical_reimbursement }}</td>
-                        <td>{{ $offerLetter->medical_reimbursement * 12 }}</td>
-                    </tr>
+
                     <tr>
                         <td>Special Allowance</td>
                         <td>{{ $offerLetter->special_allowance }}</td>

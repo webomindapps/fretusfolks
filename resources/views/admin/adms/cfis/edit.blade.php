@@ -75,7 +75,8 @@
                                 <div class="form-group col-lg-6 mt-2">
                                     <label for="driving_license_no">Enter Driving License No:</label>
                                     <input type="text" name="driving_license_no" id="driving_license_no"
-                                        class="form-control"
+                                        class="form-control" accept=" application/pdf,image/jpg, image/png"
+
                                         value="{{ old('driving_license_no', $candidate->driving_license_no) }}">
                                 </div>
                                 {{-- <x-forms.input label="Attach Driving License:" type="file"
@@ -91,7 +92,7 @@
                                             $photo = $candidate->candidateDocuments->where('name', 'photo')->first();
                                         @endphp
                                         <div id="image-preview-container" class="d-flex mt-2">
-                                            <img src="{{ asset('storage/' .$photo->path) }}" class="img-thumbnail" width="100"
+                                            <img src="{{ asset($photo->path) }}" class="img-thumbnail" width="100"
                                                 height="100" alt="Uploaded image">
                                         </div>
                                     @endif
@@ -107,7 +108,7 @@
                                         @php
                                             $resume = $candidate->candidateDocuments->where('name', 'resume')->first();
                                         @endphp
-                                        <a href="{{ asset('storage/' .$resume->path) }}" target="_blank"
+                                        <a href="{{ asset($resume->path) }}" target="_blank"
                                             class="btn btn-custom mt-2">
                                             View Resume
                                         </a>

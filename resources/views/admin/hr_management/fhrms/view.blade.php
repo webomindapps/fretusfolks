@@ -173,6 +173,8 @@
             </div>
         </div>
 
-       
+        {{-- <div class="modal-footer">
+            <button type="button" class="btn bg-primary" id="closeModalButton">Close</button>
+        </div> --}}
     </div>
 </div>

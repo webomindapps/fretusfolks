@@ -14,8 +14,8 @@
     @endif
     <div class="col-lg-12 pb-4">
         <div class="form-card px-md-3 px-2">
-            <form action="{{ route('admin.fhrms.edit', $employee->id) }}" method="POST" id="pendingDetailsForm"
-                enctype="multipart/form-data">
+            <form action="{{ route('admin.fhrms.edit', $employee->id) }}" method="POST" enctype="multipart/form-data"
+                id="pendingDetailsForm">
                 @csrf
                 <div class="card mt-3">
                     <div class="card-header header-elements-inline d-flex justify-content-between align-items-center">
@@ -25,6 +25,7 @@
                         <div class="form-contents">
                             <div class="row">
                                 <input type="hidden" name="id" id="employee_id" value="{{ $employee->id ?? '' }}">
+
                                 <x-forms.input label="Enter FFI Employee ID: " type="text" name="ffi_emp_id"
                                     id="ffi_emp_id" :required="true" size="col-lg-6 mt-2" :value="old('ffi_emp_id', $employee->ffi_emp_id)" />
                                 <x-forms.input label="Enter Employee Name: " type="text" name="emp_name"
@@ -319,5 +320,4 @@
             }
         </script>
     @endpush
-
 </x-applayout>

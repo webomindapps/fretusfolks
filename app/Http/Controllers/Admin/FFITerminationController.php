@@ -61,6 +61,7 @@ class FFITerminationController extends Controller
     }
     public function create()
     {
+        // $content = LetterContent::where('type', 2)->first();
         return view("admin.hr_management.ffi.termination.create");
     }
     public function store(Request $request)
