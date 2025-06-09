@@ -61,6 +61,7 @@ class ADMSPayslipCreate implements ShouldQueue
                         ? Carbon::createFromFormat('d-m-Y', $row['Date_of_Joining'])->format('Y-m-d')
                         : null)
                 ) : null,
+                // 'doj' => Date::excelToDateTimeObject($row['Date_of_Joining']),
                 'department' => isset($row['Department']) ? $row['Department'] : 'N/A',
                 'vertical' => isset($row['Vertical']) ? $row['Vertical'] : 'N/A',
                 'location' => isset($row['Location']) ? $row['Location'] : 'N/A',
