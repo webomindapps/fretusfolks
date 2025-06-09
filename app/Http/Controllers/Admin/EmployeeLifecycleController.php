@@ -74,7 +74,7 @@ class EmployeeLifecycleController extends Controller
             ->with(['client', 'educationCertificates', 'otherCertificates', 'candidateDocuments', 'offerletters', 'incrementletters', 'showcauseletters', 'warningletters', 'terminationletter', 'pipletter', 'payslipletter'])
             ->findOrFail($id);
         // dd($candidate->showcauseletters);
-        return view('admin.adms.employee_lifecycle.view', compact('candidate', 'children','bankdetails'));
+        return view('admin.adms.employee_lifecycle.view', compact('candidate', 'children', 'bankdetails'));
         // return response()->json(['html_content' => $htmlContent]);
     }
 
@@ -86,6 +86,10 @@ class EmployeeLifecycleController extends Controller
         $search_query = $request->input('search_query');
 
         // $defaultColumns = ['id', 'ffi_emp_id', 'emp_name', 'entity_name', 'phone1', 'email',];
+
+        if (empty($fromDate) && empty($toDate) && empty($search_query) && empty($selectedData)) {
+            return redirect()->back()->with('error', 'Please apply at least one filter search before exporting.');
+        }
 
         $query = $this->model()->newQuery();
 

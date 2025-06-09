@@ -70,7 +70,7 @@ class FretusFolks extends Controller
     }
     public function getClientname()
     {
-        $clientnames = ClientManagement::all();
+        $clientnames = ClientManagement::where('active_status', 0)->get();
         $clientname_arr = [];
         foreach ($clientnames as $clientname) {
             $clientname_arr[] = ['label' => $clientname->client_name, 'value' => $clientname->id];

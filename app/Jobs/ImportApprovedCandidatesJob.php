@@ -5,6 +5,7 @@ namespace App\Jobs;
 use App\Models\CFISModel;
 use App\Models\BankDetails;
 use App\Models\DCSChildren;
+use App\Models\States;
 use Illuminate\Bus\Batchable;
 use Illuminate\Bus\Queueable;
 use App\Models\ClientManagement;
@@ -17,13 +18,15 @@ class ImportApprovedCandidatesJob implements ShouldQueue
     use Dispatchable, Queueable, SerializesModels, Batchable;
 
     protected $data;
+    protected $created_by;
 
     /**
      * Create a new job instance.
      */
-    public function __construct($data)
+    public function __construct($data, $created_by)
     {
         $this->data = $data;
+        $this->created_by = $created_by;
     }
 
     /**
@@ -35,123 +38,128 @@ class ImportApprovedCandidatesJob implements ShouldQueue
 
         // dd($this->data);
         foreach ($this->data as $row) {
-            $formatDate = function ($date) {
-                if (isset($date)) {
-                    $date = trim($date);
-                    if (strtolower($date) === 'n/a') {
-                        return null;
-                    }
-                    if (strpos($date, '/') !== false) {
-                        $parts = explode('/', $date);
-                        if (count($parts) === 3) {
-                            return $parts[2] . '-' . $parts[1] . '-' . $parts[0];
-                        }
-                    } elseif (strpos($date, '-') !== false) {
-                        $parts = explode('-', $date);
-                        if (count($parts) === 3) {
-                            return $parts[2] . '-' . $parts[1] . '-' . $parts[0];
-                        }
-                    }
-                }
-                return $date;
-            };
-            $client = ClientManagement::where('client_name', $row['client_name'])->first();
+
+            $state = States::where('state_name', $row['State'])->first();
+            $client = ClientManagement::where('client_name', $row['Client_Name'])->first();
 
             $employee = CFISModel::create([
-                'entity_name' => $row['client_name'],
-                'ffi_emp_id' => $row['emp_id'] ?? null,
+                'entity_name' => $row['Client_Name'],
+                'ffi_emp_id' => $row['FFI_EMP_ID'] ?? null,
+                'client_emp_id' => $row['Client_ID'] ?? null,
                 'console_id' => $row['console_id'] ?? null,
-                'grade' => $row['grade'] ?? null,
-                'emp_name' => $row['emp_name'],
-                'email' => $row['email'] ?? null,
-                'interview_date' => $formatDate($row['interview_date'] ?? null),
-                'joining_date' => $formatDate($row['joining_date'] ?? null),
-                'contract_date' => $formatDate($row['contract_date'] ?? null),
-                'designation' => $row['designation'] ?? null,
-                'department' => $row['department'] ?? null,
-                'location' => $row['location'] ?? null,
-                'branch' => $row['branch'] ?? null,
-                'gender' => $row['gender'] ?? null,
-                'dob' => $formatDate($row['dob'] ?? null),
-                'father_name' => $row['father_name'] ?? null,
-                'father_dob' => $formatDate($row['father_dob'] ?? null),
-                'father_aadhar' => $row['father_aadhar'] ?? null,
-                'mother_name' => $row['mother_name'] ?? null,
-                'mother_dob' => $formatDate($row['mother_dob'] ?? null),
-                'mother_aadhar' => $row['mother_aadhar'] ?? null,
-                'religion' => $row['religion'] ?? null,
-                'languages' => $row['languages'] ?? null,
-                'mother_tongue' => $row['mother_tongue'] ?? null,
-                'maritial_status' => $row['maritial_status'] ?? null,
-                'spouse_name' => $row['spouse_name'] ?? null,
-                'spouse_dob' => $formatDate($row['spouse_dob'] ?? null),
-                'spouse_aadhar' => $row['spouse_aadhar'] ?? null,
-                'no_of_childrens' => $row['no_of_childrens'] ?? null,
-                'emer_contact_no' => $row['emer_contact_no'] ?? null,
-                'emer_name' => $row['emer_name'] ?? null,
-                'emer_relation' => $row['emer_relation'] ?? null,
-                'blood_group' => $row['blood_group'] ?? null,
-                'phone1' => $row['phone1'] ?? null,
-                'official_mail_id' => $row['official_mail_id'] ?? null,
-                'permanent_address' => $row['permanent_address'] ?? null,
-                'present_address' => $row['present_address'] ?? null,
-                'pan_no' => $row['pan_no'] ?? null,
-                'aadhar_no' => $row['aadhar_no'] ?? null,
-                'driving_license_no' => $row['driving_license_no'] ?? null,
-                'uan_no' => $row['uan_no'] ?? null,
-                'esic_no' => $row['esic_no'] ?? null,
-                'basic_salary' => $row['basic_salary'] ?? null,
-                'hra' => $row['hra'] ?? null,
-                'lwf' => $row['lwf'] ?? null,
+                'grade' => $row['Grade'] ?? null,
+                'emp_name' => $row['Emp_Name'],
+                'email' => $row['Email'] ?? null,
+                'interview_date' => isset($row['Interview_Date']) && is_numeric($row['Interview_Date'])
+                    ? \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row['Interview_Date'])->format('Y-m-d')
+                    : null,
+                'joining_date' => isset($row['Joining_Date']) && is_numeric($row['Joining_Date'])
+                    ? \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row['Joining_Date'])->format('Y-m-d')
+                    : null,
+                'contract_date' => isset($row['Contract_End_Date']) && is_numeric($row['Contract_End_Date'])
+                    ? \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row['Contract_End_Date'])->format('Y-m-d')
+                    : null,
+
+                'designation' => $row['Designation'] ?? null,
+                'department' => $row['Department'] ?? null,
+                'location' => $row['Location'] ?? null,
+                'branch' => $row['Branch'] ?? null,
+                'gender' => $row['Gender'] ?? null,
+                'dob' => isset($row['Date_of_Birth']) && is_numeric($row['Date_of_Birth'])
+                    ? \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row['Date_of_Birth'])->format('Y-m-d')
+                    : null,
+                'qualification' => $row['Qualification'] ?? null,
+                'father_name' => $row['Father_Name'] ?? null,
+                'father_dob' => isset($row['Father_DOB']) && is_numeric($row['Father_DOB'])
+                    ? \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row['Father_DOB'])->format('Y-m-d')
+                    : null,
+                'father_aadhar_no' => $row['Father_Aadhar'] ?? null,
+                'mother_name' => $row['Mother_Name'] ?? null,
+                'mother_dob' => isset($row['Mother_DOB']) && is_numeric($row['Mother_DOB'])
+                    ? \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row['Mother_DOB'])->format('Y-m-d')
+                    : null,
+                'mother_aadhar_no' => $row['Mother_Aadhar'] ?? null,
+                'religion' => $row['Religion'] ?? null,
+                'languages' => $row['Languages'] ?? null,
+                'mother_tongue' => $row['Mother_Tongue'] ?? null,
+                'maritial_status' => $row['Maritial_Status'] ?? null,
+                'spouse_name' => $row['Spouse_Name'] ?? null,
+                'spouse_dob' => isset($row['Spouse_DOB']) && is_numeric($row['Spouse_DOB'])
+                    ? \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row['Spouse_DOB'])->format('Y-m-d')
+                    : null,
+                'spouse_aadhar_no' => $row['Spouse_Aadhar'] ?? null,
+                'no_of_childrens' => $row['No_of_Childrens'] ?? null,
+                'emer_contact_no' => $row['Emer_Contact_No'] ?? null,
+                'emer_name' => $row['Emer_Name'] ?? null,
+                'emer_relation' => $row['Emer_Relation'] ?? null,
+                'blood_group' => $row['Blood_Group'] ?? null,
+                'phone1' => $row['Phone_No'] ?? null,
+                'official_mail_id' => $row['Official_Mail_ID'] ?? null,
+                'permanent_address' => $row['Permanent_Address'] ?? null,
+                'present_address' => $row['Present_Address'] ?? null,
+                'pan_no' => $row['Pan_No'] ?? null,
+                'aadhar_no' => $row['Aadhar_No'] ?? null,
+                'driving_license_no' => $row['Driving_License_No'] ?? null,
+                'uan_no' => $row['UAN_No'] ?? null,
+                'esic_no' => $row['ESIC_No'] ?? null,
+                'basic_salary' => $row['Basic_Salary'] ?? null,
+                'hra' => $row['HRA'] ?? null,
                 'conveyance' => $row['conveyance'] ?? null,
                 'medical_reimbursement' => $row['medical_reimbursement'] ?? null,
-                'special_allowance' => $row['special_allowance'] ?? null,
-                'other_allowance' => $row['other_allowance'] ?? null,
-                'st_bonus' => $row['st_bonus'] ?? null,
-                'gross_salary' => $row['gross_salary'] ?? null,
-                'emp_pf' => $row['emp_pf'] ?? null,
-                'emp_esic' => $row['emp_esic'] ?? null,
-                'pt' => $row['pt'] ?? null,
-                'total_deduction' => $row['total_deduction'] ?? null,
-                'take_home' => $row['take_home'] ?? null,
-                'employer_pf' => $row['employer_pf'] ?? null,
-                'employer_esic' => $row['employer_esic'] ?? null,
-                'mediclaim' => $row['mediclaim'] ?? null,
-                'ctc' => $row['ctc'] ?? null,
-                'dcs_approval' => match (strtolower(trim($row['dcs_approval'] ?? ''))) {
+                'special_allowance' => $row['Special_Allowance'] ?? null,
+                'other_allowance' => $row['Other_Allowance'] ?? null,
+                'st_bonus' => $row['ST_Bonus'] ?? null,
+                'gross_salary' => $row['Gross_Salary'] ?? null,
+                'emp_pf' => $row['Emp_PF'] ?? null,
+                'emp_esic' => $row['Emp_ESIC'] ?? null,
+                'pt' => $row['PT'] ?? null,
+                'lwf' => $row['Emp_LWF'] ?? null,
+                'total_deduction' => $row['Total_Deduction'] ?? null,
+                'take_home' => $row['Take_Home'] ?? null,
+                'employer_pf' => $row['Employer_PF'] ?? null,
+                'employer_esic' => $row['Employer_ESIC'] ?? null,
+                'employee_lwf' => $row['Employer_LWF'] ?? null,
+                'mediclaim' => $row['Mediclaim'] ?? null,
+                'ctc' => $row['CTC'] ?? null,
+                'psd' => $row['Password'] ?? null,
+                'password' => isset($row['Password']) ? bcrypt($row['Password']) : null,
+                'dcs_approval' => match (strtolower(trim($row['DCS_Approval'] ?? ''))) {
                     'Approved' => 1,
                     'Pending' => 0,
-                    'Reject' => 2,
+                    'Rejected' => 2,
                     default => null,
                 },
                 'hr_approval' => 0,
                 'status' => 1,
                 // 'dcs_approval' => 0,
                 'data_status' => 0,
-                'created_by' => auth()->id(),
+                'created_by' => $this->created_by,
                 'client_id' => $client?->id,
+                'state' => $state?->id,
 
             ]);
-            \Log::info('Imported employee', $employee->toArray());
+            \Log::info('Imported employee last', $employee->toArray());
             for ($i = 1; $i <= 4; $i++) {
-                $childNameKey = "child_{$i}_name";
-                $childDobKey = "child_{$i}_dob";
-                $childGenderKey = "child_{$i}_gender";
+                $childNameKey = "Child_{$i}_Name";
+                $childDobKey = "Child_{$i}_DOB";
+                $childGenderKey = "Child_{$i}_Gender";
 
                 if (!empty($row[$childNameKey])) {
                     DCSChildren::create([
                         'emp_id' => $employee->id,
                         'name' => $row[$childNameKey],
-                        'dob' => $formatDate($row[$childDobKey] ?? null),
+                        'dob' => isset($row[$childDobKey]) && is_numeric($row[$childDobKey])
+                            ? \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[$childDobKey])->format('Y-m-d')
+                            : null,
                         'gender' => $row[$childGenderKey] ?? null,
                     ]);
                 }
             }
             BankDetails::create([
                 'emp_id' => $employee->id,
-                'bank_name' => $row['bank_name'] ?? null,
-                'bank_account_no' => $row['bank_account_no'] ?? null,
-                'bank_ifsc_code' => $row['bank_ifsc_code'] ?? null,
+                'bank_name' => $row['Bank_Name'] ?? null,
+                'bank_account_no' => $row['Bank_Account_No'] ?? null,
+                'bank_ifsc_code' => $row['Bank_IFSC_Code'] ?? null,
                 'bank_status' => 0,
             ]);
         }

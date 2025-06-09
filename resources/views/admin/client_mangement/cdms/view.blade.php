@@ -26,7 +26,8 @@
                     <p><b>Contact Email (Comm) :</b> <span>{{ $client->contact_email_comm }}</span></p>
                     <p><b>TAN No :</b> <span>{{ $client->tan }}</span></p>
                     <p><b>Agreement Type :</b>
-                        <span>{{ $client->agreement_type == 1 ? 'One Time Sourcing' : ($client->agreement_type == 2 ? 'Contractual' : 'Other') }}</span>
+                        <span>{{ $client->agreement_type == 1 ? 'One Time Sourcing' : ($client->agreement_type == 2 ?
+                            'Contractual' : 'Other') }}</span>
                     </p>
                     <p><b>Communication Address :</b> <span>{{ $client->communication_address }}</span></p>
                 </div>
@@ -66,7 +67,7 @@
 
             <div class="row">
                 <div class="col-md-4 col-sm-6">
-                    <a href="{{ $client->agreement_doc }}"target="_blank">
+                    <a href="https://newapp.fretusfolks.com/{{ $client->agreement_doc }}" target="_blank">
                         <i class="fa fa-book"></i>
                         Agreement Document
                     </a>
@@ -80,32 +81,32 @@
             <div class="row">
                 <div class="col-md-12 col-sm-12">
                     @if ($clientgstn->isNotEmpty())
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>Si No</th>
-                                    <th>State</th>
-                                    <th>GSTN No</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($clientgstn as $gst)
-                                    <tr>
-                                        <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $gst->states->state_name }}</td>
-                                        <td>{{ $gst->gstn_no }}</td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Si No</th>
+                                <th>State</th>
+                                <th>GSTN No</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($clientgstn as $gst)
+                            <tr>
+                                <td>{{ $loop->iteration }}</td>
+                                <td>{{ $gst->states->state_name }}</td>
+                                <td>{{ $gst->gstn_no }}</td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                     @else
-                        <p>No GSTN details available for this client.</p>
+                    <p>No GSTN details available for this client.</p>
                     @endif
                 </div>
             </div>
         </div>
-        <div class="modal-footer">
+        <!-- <div class="modal-footer">
             <button type="button" class="btn bg-primary" id="closeModalButton">Close</button>
-        </div>
+        </div> -->
     </div>
 </div>

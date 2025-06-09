@@ -2,11 +2,13 @@
 
 namespace App\Jobs;
 
+use Carbon\Carbon;
 use NumberFormatter;
 use App\Models\Payslips;
 use Illuminate\Bus\Batchable;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Storage;
+use PhpOffice\PhpSpreadsheet\Shared\Date;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -36,110 +38,118 @@ class ADMSPayslipCreate implements ShouldQueue
         $paypdf = [];
         $data = [];
         // dd($this->payslips);
+        \Log::info('Generated data:', $this->payslips);
+
         foreach ($this->payslips as $key => $row) {
 
             $uniqueId = time() . '_' . uniqid(); // Generates a unique identifier
-            $fileName = 'payslip_' . $row['emp_id'] . '_' . $this->month . '_' . $this->year . '_' . $uniqueId . '.pdf';
+            $fileName = 'payslip_' . $row['Employee_ID'] . '_' . $this->month . '_' . $this->year . '_' . $uniqueId . '.pdf';
 
 
 
             $filePath = 'payslips/' . $fileName;
 
             $data[] = [
-                'emp_id' => isset($row['emp_id']) ? $row['emp_id'] : 0,
-                'client_emp_id' => isset($row['client_emp_id']) ? $row['client_emp_id'] : 0,
-                'emp_name' => isset($row['emp_name']) ? $row['emp_name'] : 'N/A',
-                'designation' => isset($row['designation']) ? $row['designation'] : 'N/A',
-                'doj' => !empty($row['doj']) ? \Carbon\Carbon::parse($row['doj']) : null,
-                'department' => isset($row['department']) ? $row['department'] : 'N/A',
-                'vertical' => isset($row['vertical']) ? $row['vertical'] : 'N/A',
-                'location' => isset($row['location']) ? $row['location'] : 'N/A',
-                'client_name' => isset($row['client_name']) ? $row['client_name'] : 'N/A',
-                'uan_no' => isset($row['uan_no']) ? $row['uan_no'] : 'N/A',
-                'pf_no' => isset($row['pf_no']) ? $row['pf_no'] : 'N/A',
-                'esi_no' => isset($row['esi_no']) ? $row['esi_no'] : 'N/A',
-                'bank_name' => isset($row['bank_name']) ? $row['bank_name'] : 'N/A',
-                'account_no' => isset($row['account_no']) ? $row['account_no'] : 'N/A',
-                'ifsc_code' => isset($row['ifsc_code']) ? $row['ifsc_code'] : 'N/A',
-                'month_days' => isset($row['month_days']) ? $row['month_days'] : 0,
-                'payable_days' => isset($row['payable_days']) ? $row['payable_days'] : 0,
-                'leave_days' => isset($row['leave_days']) ? $row['leave_days'] : 0,
-                'lop_days' => isset($row['lop_days']) ? $row['lop_days'] : 0,
-                'arrears_days' => isset($row['arrears_days']) ? $row['arrears_days'] : 0,
-                'ot_hours' => isset($row['ot_hours']) ? $row['ot_hours'] : 0,
-                'leave_balance' => isset($row['leave_balance']) ? $row['leave_balance'] : 0,
-                'notice_period_days' => isset($row['notice_period_days']) ? $row['notice_period_days'] : 0,
+                'emp_id' => isset($row['Employee_ID']) ? $row['Employee_ID'] : 0,
+                'client_emp_id' => isset($row['Client_Employee_ID']) ? $row['Client_Employee_ID'] : 0,
+                'emp_name' => isset($row['Employee_Name']) ? $row['Employee_Name'] : 'N/A',
+                'designation' => isset($row['Designation']) ? $row['Designation'] : 'N/A',
+                'doj' => isset($row['Date_of_Joining']) ? (
+                    is_numeric($row['Date_of_Joining'])
+                    ? Date::excelToDateTimeObject($row['Date_of_Joining'])->format('Y-m-d')
+                    : (Carbon::hasFormat($row['Date_of_Joining'], 'd-m-Y')
+                        ? Carbon::createFromFormat('d-m-Y', $row['Date_of_Joining'])->format('Y-m-d')
+                        : null)
+                ) : null,
+                'department' => isset($row['Department']) ? $row['Department'] : 'N/A',
+                'vertical' => isset($row['Vertical']) ? $row['Vertical'] : 'N/A',
+                'location' => isset($row['Location']) ? $row['Location'] : 'N/A',
+                'client_name' => isset($row['Client_Name']) ? $row['Client_Name'] : 'N/A',
+                'uan_no' => isset($row['UAN_Number']) ? $row['UAN_Number'] : 'N/A',
+                'pf_no' => isset($row['PF_Number']) ? $row['PF_Number'] : 'N/A',
+                'esi_no' => isset($row['ESI_Number']) ? $row['ESI_Number'] : 'N/A',
+                'bank_name' => isset($row['Bank_Name']) ? $row['Bank_Name'] : 'N/A',
+                'account_no' => isset($row['Account_Number']) ? $row['Account_Number'] : 'N/A',
+                'ifsc_code' => isset($row['IFSC_Code']) ? $row['IFSC_Code'] : 'N/A',
+                'month_days' => isset($row['Month_Days']) ? $row['Month_Days'] : 0,
+                'payable_days' => isset($row['Payable_Days']) ? $row['Payable_Days'] : 0,
+                'leave_days' => isset($row['Leave_Days']) ? $row['Leave_Days'] : 0,
+                'lop_days' => isset($row['LOP_Days']) ? $row['LOP_Days'] : 0,
+                'arrears_days' => isset($row['Arrears_Days']) ? $row['Arrears_Days'] : 0,
+                'ot_hours' => isset($row['OT_Hours']) ? $row['OT_Hours'] : 0,
+                'leave_balance' => isset($row['Leave_Balance']) ? $row['Leave_Balance'] : 0,
+                'notice_period_days' => isset($row['Notice_Period_Days']) ? $row['Notice_Period_Days'] : 0,
 
-                'fixed_basic_da' => isset($row['fixed_basic_da']) ? $row['fixed_basic_da'] : 0,
-                'fixed_hra' => isset($row['fixed_hra']) ? $row['fixed_hra'] : 0,
-                'fixed_conveyance' => isset($row['fixed_conveyance']) ? $row['fixed_conveyance'] : 0,
-                'fixed_medical_reimbursement' => isset($row['fixed_medical_reimbursement']) ? $row['fixed_medical_reimbursement'] : 0,
-                'fixed_special_allowance' => isset($row['fixed_special_allowance']) ? $row['fixed_special_allowance'] : 0,
-                'fixed_other_allowance' => isset($row['fixed_other_allowance']) ? $row['fixed_other_allowance'] : 0,
-                'fixed_ot_wages' => isset($row['fixed_ot_wages']) ? $row['fixed_ot_wages'] : 0,
-                'fixed_attendance_bonus' => isset($row['fixed_attendance_bonus']) ? $row['fixed_attendance_bonus'] : 0,
-                'fixed_st_bonus' => isset($row['fixed_st_bonus']) ? $row['fixed_st_bonus'] : 0,
-                'fixed_holiday_wages' => isset($row['fixed_holiday_wages']) ? $row['fixed_holiday_wages'] : 0,
-                'fixed_other_wages' => isset($row['fixed_other_wages']) ? $row['fixed_other_wages'] : 0,
-                'fixed_total_earnings' => isset($row['fixed_total_earnings']) ? $row['fixed_total_earnings'] : 0,
-                'fix_education_allowance' => isset($row['fix_education_allowance']) ? $row['fix_education_allowance'] : 0,
-                'fix_leave_wages' => isset($row['fix_leave_wages']) ? $row['fix_leave_wages'] : 0,
-                'fix_incentive_wages' => isset($row['fix_incentive_wages']) ? $row['fix_incentive_wages'] : 0,
-                'fix_arrear_wages' => isset($row['fix_arrear_wages']) ? $row['fix_arrear_wages'] : 0,
+                'fixed_basic_da' => isset($row['Fixed_Basic_DA']) ? $row['Fixed_Basic_DA'] : 0,
+                'fixed_hra' => isset($row['Fixed_HRA']) ? $row['Fixed_HRA'] : 0,
+                'fixed_conveyance' => isset($row['Fixed_Conveyance']) ? $row['Fixed_Conveyance'] : 0,
+                'fixed_medical_reimbursement' => isset($row['Fixed_Medical_Reimbursement']) ? $row['Fixed_Medical_Reimbursement'] : 0,
+                'fixed_special_allowance' => isset($row['Fixed_Special_Allowance']) ? $row['Fixed_Special_Allowance'] : 0,
+                'fixed_other_allowance' => isset($row['Fixed_Other_Allowance']) ? $row['Fixed_Other_Allowance'] : 0,
+                'fixed_ot_wages' => isset($row['Fixed_OT_Wages']) ? $row['Fixed_OT_Wages'] : 0,
+                'fixed_attendance_bonus' => isset($row['Fixed_Attendance_Bonus']) ? $row['Fixed_Attendance_Bonus'] : 0,
+                'fixed_st_bonus' => isset($row['Fixed_ST_Bonus']) ? $row['Fixed_ST_Bonus'] : 0,
+                'fixed_holiday_wages' => isset($row['Fixed_Holiday_Wages']) ? $row['Fixed_Holiday_Wages'] : 0,
+                'fixed_other_wages' => isset($row['Fixed_Other_Wages']) ? $row['Fixed_Other_Wages'] : 0,
+                'fixed_total_earnings' => isset($row['Fixed_Total_Earnings']) ? $row['Fixed_Total_Earnings'] : 0,
+                'fix_education_allowance' => isset($row['Fixed_Education_Allowance']) ? $row['Fixed_Education_Allowance'] : 0,
+                'fix_leave_wages' => isset($row['Fixed_Leave_Wages']) ? $row['Fixed_Leave_Wages'] : 0,
+                'fix_incentive_wages' => isset($row['Fixed_Incentive_Wages']) ? $row['Fixed_Incentive_Wages'] : 0,
+                'fix_arrear_wages' => isset($row['Fixed_Arrear_Wages']) ? $row['Fixed_Arrear_Wages'] : 0,
 
-                'earn_basic' => isset($row['earn_basic']) ? $row['earn_basic'] : 0,
-                'earn_hr' => isset($row['earn_hr']) ? $row['earn_hr'] : 0,
-                'earn_conveyance' => isset($row['earn_conveyance']) ? $row['earn_conveyance'] : 0,
-                'earn_medical_allowance' => isset($row['earn_medical_allowance']) ? $row['earn_medical_allowance'] : 0,
-                'earn_special_allowance' => isset($row['earn_special_allowance']) ? $row['earn_special_allowance'] : 0,
-                'earn_other_allowance' => isset($row['earn_other_allowance']) ? $row['earn_other_allowance'] : 0,
-                'earn_ot_wages' => isset($row['earn_ot_wages']) ? $row['earn_ot_wages'] : 0,
-                'earn_attendance_bonus' => isset($row['earn_attendance_bonus']) ? $row['earn_attendance_bonus'] : 0,
-                'earn_st_bonus' => isset($row['earn_st_bonus']) ? $row['earn_st_bonus'] : 0,
-                'earn_holiday_wages' => isset($row['earn_holiday_wages']) ? $row['earn_holiday_wages'] : 0,
-                'earn_other_wages' => isset($row['earn_other_wages']) ? $row['earn_other_wages'] : 0,
-                'earn_total_gross' => isset($row['earn_total_gross']) ? $row['earn_total_gross'] : 0,
-                'earn_education_allowance' => isset($row['earn_education_allowance']) ? $row['earn_education_allowance'] : 0,
-                'earn_leave_wages' => isset($row['earn_leave_wages']) ? $row['earn_leave_wages'] : 0,
-                'earn_incentive_wages' => isset($row['earn_incentive_wages']) ? $row['earn_incentive_wages'] : 0,
-                'earn_arrear_wages' => isset($row['earn_arrear_wages']) ? $row['earn_arrear_wages'] : 0,
+                'earn_basic' => isset($row['Earned_Basic']) ? $row['Earned_Basic'] : 0,
+                'earn_hr' => isset($row['Earned_HRA']) ? $row['Earned_HRA'] : 0,
+                'earn_conveyance' => isset($row['Earned_Conveyance']) ? $row['Earned_Conveyance'] : 0,
+                'earn_medical_allowance' => isset($row['Earned_Medical_Allowance']) ? $row['Earned_Medical_Allowance'] : 0,
+                'earn_special_allowance' => isset($row['Earned_Special_Allowance']) ? $row['Earned_Special_Allowance'] : 0,
+                'earn_other_allowance' => isset($row['Earned_Other_Allowance']) ? $row['Earned_Other_Allowance'] : 0,
+                'earn_ot_wages' => isset($row['Earned_OT_Wages']) ? $row['Earned_OT_Wages'] : 0,
+                'earn_attendance_bonus' => isset($row['Earned_Attendance_Bonus']) ? $row['Earned_Attendance_Bonus'] : 0,
+                'earn_st_bonus' => isset($row['Earned_ST_Bonus']) ? $row['Earned_ST_Bonus'] : 0,
+                'earn_holiday_wages' => isset($row['Earned_Holiday_Wages']) ? $row['Earned_Holiday_Wages'] : 0,
+                'earn_other_wages' => isset($row['Earned_Other_Wages']) ? $row['Earned_Other_Wages'] : 0,
+                'earn_total_gross' => isset($row['Earned_Total_Gross']) ? $row['Earned_Total_Gross'] : 0,
+                'earn_education_allowance' => isset($row['Earned_Education_Allowance']) ? $row['Earned_Education_Allowance'] : 0,
+                'earn_leave_wages' => isset($row['Earned_Leave_Wages']) ? $row['Earned_Leave_Wages'] : 0,
+                'earn_incentive_wages' => isset($row['Earned_Incentive_Wages']) ? $row['Earned_Incentive_Wages'] : 0,
+                'earn_arrear_wages' => isset($row['Earned_Arrear_Wages']) ? $row['Earned_Arrear_Wages'] : 0,
 
-                'arr_basic' => isset($row['arr_basic']) ? $row['arr_basic'] : 0,
-                'arr_hra' => isset($row['arr_hra']) ? $row['arr_hra'] : 0,
-                'arr_conveyance' => isset($row['arr_conveyance']) ? $row['arr_conveyance'] : 0,
-                'arr_medical_reimbursement' => isset($row['arr_medical_reimbursement']) ? $row['arr_medical_reimbursement'] : 0,
-                'arr_special_allowance' => isset($row['arr_special_allowance']) ? $row['arr_special_allowance'] : 0,
-                'arr_other_allowance' => isset($row['arr_other_allowance']) ? $row['arr_other_allowance'] : 0,
-                'arr_ot_wages' => isset($row['arr_ot_wages']) ? $row['arr_ot_wages'] : 0,
-                'arr_attendance_bonus' => isset($row['arr_attendance_bonus']) ? $row['arr_attendance_bonus'] : 0,
-                'arr_st_bonus' => isset($row['arr_st_bonus']) ? $row['arr_st_bonus'] : 0,
-                'arr_holiday_wages' => isset($row['arr_holiday_wages']) ? $row['arr_holiday_wages'] : 0,
-                'arr_other_wages' => isset($row['arr_other_wages']) ? $row['arr_other_wages'] : 0,
-                'arr_total_gross' => isset($row['arr_total_gross']) ? $row['arr_total_gross'] : 0,
+                'arr_basic' => isset($row['Arrears_Basic']) ? $row['Arrears_Basic'] : 0,
+                'arr_hra' => isset($row['Arrears_HRA']) ? $row['Arrears_HRA'] : 0,
+                'arr_conveyance' => isset($row['Arrears_Conveyance']) ? $row['Arrears_Conveyance'] : 0,
+                'arr_medical_reimbursement' => isset($row['Arrears_Medical_Reimbursement']) ? $row['Arrears_Medical_Reimbursement'] : 0,
+                'arr_special_allowance' => isset($row['Arrears_Special_Allowance']) ? $row['Arrears_Special_Allowance'] : 0,
+                'arr_other_allowance' => isset($row['Arrears_Other_Allowance']) ? $row['Arrears_Other_Allowance'] : 0,
+                'arr_ot_wages' => isset($row['Arrears_OT_Wages']) ? $row['Arrears_OT_Wages'] : 0,
+                'arr_attendance_bonus' => isset($row['Arrears_Attendance_Bonus']) ? $row['Arrears_Attendance_Bonus'] : 0,
+                'arr_st_bonus' => isset($row['Arrears_ST_Bonus']) ? $row['Arrears_ST_Bonus'] : 0,
+                'arr_holiday_wages' => isset($row['Arrears_Holiday_Wages']) ? $row['Arrears_Holiday_Wages'] : 0,
+                'arr_other_wages' => isset($row['Arrears_Other_Wages']) ? $row['Arrears_Other_Wages'] : 0,
+                'arr_total_gross' => isset($row['Arrears_Total_Gross']) ? $row['Arrears_Total_Gross'] : 0,
 
-                'total_basic' => isset($row['total_basic']) ? $row['total_basic'] : 0,
-                'total_hra' => isset($row['total_hra']) ? $row['total_hra'] : 0,
-                'total_conveyance' => isset($row['total_conveyance']) ? $row['total_conveyance'] : 0,
-                'total_medical_reimbursement' => isset($row['total_medical_reimbursement']) ? $row['total_medical_reimbursement'] : 0,
-                'total_special_allowance' => isset($row['total_special_allowance']) ? $row['total_special_allowance'] : 0,
-                'total_other_allowance' => isset($row['total_other_allowance']) ? $row['total_other_allowance'] : 0,
-                'total_ot_wages' => isset($row['total_ot_wages']) ? $row['total_ot_wages'] : 0,
-                'total_attendance_bonus' => isset($row['total_attendance_bonus']) ? $row['total_attendance_bonus'] : 0,
-                'total_st_bonus' => isset($row['total_st_bonus']) ? $row['total_st_bonus'] : 0,
-                'total_holiday_wages' => isset($row['total_holiday_wages']) ? $row['total_holiday_wages'] : 0,
-                'total_other_wages' => isset($row['total_other_wages']) ? $row['total_other_wages'] : 0,
-                'total_total_gross' => isset($row['total_total_gross']) ? $row['total_total_gross'] : 0,
+                'total_basic' => isset($row['Total_Basic']) ? $row['Total_Basic'] : 0,
+                'total_hra' => isset($row['Total_HRA']) ? $row['Total_HRA'] : 0,
+                'total_conveyance' => isset($row['Total_Conveyance']) ? $row['Total_Conveyance'] : 0,
+                'total_medical_reimbursement' => isset($row['Total_Medical_Reimbursement']) ? $row['Total_Medical_Reimbursement'] : 0,
+                'total_special_allowance' => isset($row['Total_Special_Allowance']) ? $row['Total_Special_Allowance'] : 0,
+                'total_other_allowance' => isset($row['Total_Other_Allowance']) ? $row['Total_Other_Allowance'] : 0,
+                'total_ot_wages' => isset($row['Total_OT_Wages']) ? $row['Total_OT_Wages'] : 0,
+                'total_attendance_bonus' => isset($row['Total_Attendance_Bonus']) ? $row['Total_Attendance_Bonus'] : 0,
+                'total_st_bonus' => isset($row['Total_ST_Bonus']) ? $row['Total_ST_Bonus'] : 0,
+                'total_holiday_wages' => isset($row['Total_Holiday_Wages']) ? $row['Total_Holiday_Wages'] : 0,
+                'total_other_wages' => isset($row['Total_Other_Wages']) ? $row['Total_Other_Wages'] : 0,
+                'total_total_gross' => isset($row['Total_Total_Gross']) ? $row['Total_Total_Gross'] : 0,
 
-                'epf' => isset($row['epf']) ? $row['epf'] : 0,
-                'esic' => isset($row['esic']) ? $row['esic'] : 0,
-                'pt' => isset($row['pt']) ? $row['pt'] : 0,
-                'it' => isset($row['it']) ? $row['it'] : 0,
-                'lwf' => isset($row['lwf']) ? $row['lwf'] : 0,
-                'salary_advance' => isset($row['salary_advance']) ? $row['salary_advance'] : 0,
-                'other_deduction' => isset($row['other_deduction']) ? $row['other_deduction'] : 0,
-                'total_deduction' => isset($row['total_deduction']) ? $row['total_deduction'] : 0,
-                'net_salary' => (float) (isset($row['net_salary']) ? $row['net_salary'] : 0),
-                'in_words' => ucfirst($formatter->format(isset($row['net_salary']) ? $row['net_salary'] : 0)),
+                'epf' => isset($row['EPF']) ? $row['EPF'] : 0,
+                'esic' => isset($row['ESIC']) ? $row['ESIC'] : 0,
+                'pt' => isset($row['PT']) ? $row['PT'] : 0,
+                'it' => isset($row['IT']) ? $row['IT'] : 0,
+                'lwf' => isset($row['LWF']) ? $row['LWF'] : 0,
+                'salary_advance' => isset($row['Salary_Advance']) ? $row['Salary_Advance'] : 0,
+                'other_deduction' => isset($row['Other_Deduction']) ? $row['Other_Deduction'] : 0,
+                'total_deduction' => isset($row['Total_Deduction']) ? $row['Total_Deduction'] : 0,
+                'net_salary' => isset($row['Net_Salary']) ? $row['Net_Salary'] : 0,
+                'in_words' => $row['In_Words'],
                 'month' => $this->month,
                 'year' => $this->year,
                 'date_upload' => now(),
@@ -147,7 +157,10 @@ class ADMSPayslipCreate implements ShouldQueue
                 'payslips_letter_path' => $filePath,
             ];
             $paypdf[] = [
-                'row' => $row,
+                'row' => array_merge($row, [
+                    'month' => $this->month,
+                    'year' => $this->year,
+                ]),
                 'payslips_letter_path' => $filePath
             ];
         }
@@ -155,7 +168,9 @@ class ADMSPayslipCreate implements ShouldQueue
 
         // Perform bulk insert
         foreach ($paypdf as $pdfData) {
-            $pdf = Pdf::loadView('admin.adms.payslip.formate', ['payslip' => $pdfData['row']]);
+            $pdf = Pdf::loadView('admin.adms.payslip.formate', [
+                'payslip' => $pdfData['row']
+            ]);
             Storage::disk('public')->put($pdfData['payslips_letter_path'], $pdf->output());
         }
         // dd($data);

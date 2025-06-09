@@ -4,7 +4,53 @@
 <head>
     <meta charset="utf-8">
     <meta name="format-detection" content="telephone=no">
-    <title>Pay Slip</title>
+    @php
+        $monthName = '';
+        switch ($payslip['month']) {
+            case 1:
+                $monthName = 'January';
+                break;
+            case 2:
+                $monthName = 'February';
+                break;
+            case 3:
+                $monthName = 'March';
+                break;
+            case 4:
+                $monthName = 'April';
+                break;
+            case 5:
+                $monthName = 'May';
+                break;
+            case 6:
+                $monthName = 'June';
+                break;
+            case 7:
+                $monthName = 'July';
+                break;
+            case 8:
+                $monthName = 'August';
+                break;
+            case 9:
+                $monthName = 'September';
+                break;
+            case 10:
+                $monthName = 'October';
+                break;
+            case 11:
+                $monthName = 'November';
+                break;
+            case 12:
+                $monthName = 'December';
+                break;
+            default:
+                $monthName = '';
+                break;
+        }
+    @endphp
+    <title> Payslip -{{ $payslip->employee_name }} - {{ $payslip->emp_id ?? 0 }}
+        -{{ $monthName }}-{{ $payslip->year ?? 0 }}
+    </title>
 
     <!-- Bootstrap CSS -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
@@ -13,61 +59,67 @@
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
 
     <style>
+        /* General Styling */
+        body,
+        p,
+        ul,
+        ol,
+        li,
+        h4,
+        table,
+        th,
+        td {
+            font-family: 'Open Sans', sans-serif;
+        }
+
         p {
             font-size: 10px !important;
             margin-bottom: 1%;
             text-align: justify;
             line-height: 1.7;
-            font-family: 'Open Sans', sans-serif;
         }
 
-        ol,
-        ul {
+        ul,
+        ol {
             font-size: 16px !important;
             margin-bottom: 1%;
             text-align: justify;
-            font-family: 'Open Sans', sans-serif;
         }
 
         li {
             margin-bottom: 1%;
             text-align: justify;
-            font-family: 'Open Sans', sans-serif;
         }
 
         h4 {
             padding-top: 1%;
-            font-family: 'Open Sans', sans-serif;
             text-decoration: underline;
             font-weight: bold;
         }
 
-        /* Styling for table */
+        /* Table Styling */
         table {
             width: 100%;
             border: 2px solid #333;
             border-collapse: collapse;
-            font-family: 'Open Sans', sans-serif;
             font-size: 10px !important;
+        }
+
+        th,
+        td {
+            padding: 3px;
+            border-right: 2px solid #333;
+            text-align: left;
+            font-size: 8px !important;
         }
 
         th {
             color: #333;
             font-weight: bold;
             border-bottom: 2px solid #333;
-            font-family: 'Open Sans', sans-serif;
-            font-size: 10px !important;
         }
 
-        td,
-        th {
-            padding: 0 3px;
-            border-right: 2px solid #333;
-            font-family: 'Open Sans', sans-serif;
-            text-align: left;
-            font-size: 8px !important;
-        }
-
+        /* Print Styling */
         @media print {
             body {
                 padding: 0 !important;
@@ -87,22 +139,17 @@
             h3 a {
                 color: #1f1f1f;
                 text-decoration: none;
-                font-family: times;
             }
 
             .text2 a {
                 color: #ea4261;
                 text-decoration: none;
-                font-family: times;
             }
 
-            p {
+            p,
+            ol {
                 padding: 0 !important;
                 margin: 0 !important;
-                font-family: times;
-            }
-
-            ol {
                 font-family: times;
             }
 
@@ -122,15 +169,29 @@
             }
 
             @page {
-                margin-top: 0;
-                margin-bottom: 0;
-                margin-left: 0;
-                margin-right: 0;
+                margin: 0;
             }
 
             .container {
                 margin-left: 2%;
                 margin-right: 2%;
+            }
+
+            .payslip-header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                border: 2px solid #333;
+                padding: 10px;
+            }
+
+            .payslip-header .logo img {
+                width: 200px;
+            }
+
+            .payslip-header .title h5 {
+                margin: 0;
+                font-size: 14px;
             }
         }
     </style>
@@ -139,14 +200,17 @@
 <body>
     <div class="container">
         <div class="row">
-            <div class="col-md-12" style="border:2px solid #333;">
-                <div class="col-md-12" style="margin-left:40px;">
-                    <img src="{{ public_path('admin/images/main_logo.png') }}" width="200" />
-                    <h4 style="text-decoration:none;font-size:12px">Payslip
-                        {{ substr(date('F', mktime(0, 0, 0, $payslip->month, 3)), 0, 3) . ' - ' . $payslip->year }}
-                    </h4>
-                </div>
-                <div class="col-md-6">
+            <div class="col-md-12" style="border:2px solid #333; padding: 10px;">
+                <div class="payslip-header">
+                    <div class="logo">
+                        <img src="{{ public_path('admin/images/main_logo.png') }}" alt="Logo" />
+                        <h5 style="float:right;">Payslip - {{ $monthName }} -
+                            {{ $payslip['year'] ?? '' }}
+                        </h5>
+
+                    </div>
+                    <div class="title">
+                    </div>
                 </div>
             </div>
             <div class="col-md-12" style="border-left:2px solid #333;border-right:2px solid #333;">

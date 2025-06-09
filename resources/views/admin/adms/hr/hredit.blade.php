@@ -56,6 +56,9 @@
                                 <x-forms.input label="Joining Date: " type="date" name="joining_date"
                                     id="joining_date" :required="true" size="col-lg-6 mt-2"
                                     value="{{ old('joining_date', $candidate->joining_date ? $candidate->joining_date->format('Y-m-d') : '') }}" />
+                                <x-forms.input label="Contract End Date " type="date" name="contract_date"
+                                    id="contract_date" :required="false" size="col-lg-4 mt-2"
+                                    value="{{ old('contract_date', $candidate->contract_date ? $candidate->contract_date->format('Y-m-d') : '') }}" />
 
                                 <x-forms.input label="Enter Designation: " type="text" name="designation"
                                     id="designation" :required="true" size="col-lg-6 mt-2" :value="old('designation', $candidate->designation)" />
@@ -557,20 +560,21 @@
                                             :value="old('basic_salary', $candidate->basic_salary)" />
                                         <x-forms.input label="HRA: " type="number" name="hra" id="hra"
                                             :required="false" size="col-lg-3 mt-1" :value="old('hra', $candidate->hra)" />
-                                        <x-forms.input label="Conveyance: " type="number" name="conveyance"
+                                        {{-- <x-forms.input label="Conveyance: " type="number" name="conveyance"
                                             id="conveyance" :required="false" size="col-lg-3 mt-1"
                                             :value="old('conveyance', $candidate->conveyance)" />
                                         <x-forms.input label="Medical Reimbursement:  " type="number"
                                             name="medical_reimbursement" id="medical_reimbursement" :required="false"
-                                            size="col-lg-3 mt-2" :value="old('medical_reimbursement', $candidate->medical_reimbursement)" />
+                                            size="col-lg-3 mt-2" :value="old('medical_reimbursement', $candidate->medical_reimbursement)" /> --}}
+                                        <x-forms.input label="Other Allowance:  " type="number"
+                                            name="other_allowance" id="other_allowance" :required="false"
+                                            size="col-lg-3 mt-2" :value="old('other_allowance', $candidate->other_allowance)" />
+
                                         <x-forms.input label="Special Allowance: " type="number"
                                             name="special_allowance" id="special_allowance" :required="false"
                                             size="col-lg-3 mt-2" :value="old('special_allowance', $candidate->special_allowance)" />
                                         <x-forms.input label="ST:" type="number" name="st_bonus" id="st_bonus"
                                             :required="false" size="col-lg-3 mt-2" :value="old('st_bonus', $candidate->st_bonus)" />
-                                        <x-forms.input label="Other Allowance:  " type="number"
-                                            name="other_allowance" id="other_allowance" :required="false"
-                                            size="col-lg-3 mt-2" :value="old('other_allowance', $candidate->other_allowance)" />
                                         <x-forms.input label="Gross Salary: " type="number" name="gross_salary"
                                             id="gross_salary" :required="false" size="col-lg-3 mt-2"
                                             :value="old('gross_salary', $candidate->gross_salary)" />
@@ -582,8 +586,9 @@
                                             :value="old('emp_esic', $candidate->emp_esic)" />
                                         <x-forms.input label="PT: " type="number" name="pt" id="pt"
                                             :required="false" size="col-lg-3 mt-2" :value="old('pt', $candidate->pt)" />
-                                        <x-forms.input label="LWF: " type="number" name="lwf" id="lwf"
-                                            :required="false" size="col-lg-3 mt-2" :value="old('lwf', $candidate->lwf)" />
+                                        <x-forms.input label="EMP LWF: " type="number" name="lwf"
+                                            id="lwf" :required="false" size="col-lg-3 mt-2"
+                                            :value="old('lwf', $candidate->lwf)" />
                                         <x-forms.input label="Total Deduction:" type="number" name="total_deduction"
                                             id="total_deduction" :required="false" size="col-lg-3 mt-2"
                                             :value="old('total_deduction', $candidate->total_deduction)" />
@@ -596,6 +601,10 @@
                                         <x-forms.input label="Employer ESIC: " type="number" name="employer_esic"
                                             id="employer_esic" :required="false" size="col-lg-3 mt-2"
                                             :value="old('employer_esic', $candidate->employer_esic)" />
+                                        <x-forms.input label="Employer LWF: " type="number" name="employee_lwf"
+                                            id="employee_lwf" :required="false" size="col-lg-3 mt-2"
+                                            :value="old('employee_lwf', $candidate->employee_lwf)" />
+
                                         <x-forms.input label="Mediclaim Insurance:  " type="number" name="mediclaim"
                                             id="mediclaim" :required="false" size="col-lg-3 mt-2"
                                             :value="old('mediclaim', $candidate->mediclaim)" />
@@ -633,8 +642,9 @@
                                     </div>
                                 </div>
 
-                                {{-- <x-forms.input label="Password:" type="text" name="psd" id="psd"
-                                    :required="true" size="col-lg-6 mt-2" :value="old('psd', 'ffemp@123')" /> --}}
+                                <x-forms.input label="Password:" type="text" name="psd" id="psd"
+                                    :required="true" size="col-lg-6 mt-2" :value="old('psd') ?? ($candidate->psd ?? 'ffemp@123')" />
+
                                 <div class="form-group col-lg-6 mt-2 mr-2">
                                     <label for="hr_approval">Status<span style="color: red">*</span></label>
                                     <select id="hr_approval" name="hr_approval" class="form-control" required
@@ -672,7 +682,7 @@
         </div>
     </div>
     @push('scripts')
-        <script>
+        {{-- <script>
             //salary calculation
             document.addEventListener("DOMContentLoaded", function() {
                 function calculateSalary() {
@@ -758,7 +768,7 @@
 
                 calculateSalary();
             });
-        </script>
+        </script> --}}
         <script>
             document.getElementById('submitBtn').addEventListener('click', function(e) {
                 e.preventDefault();
@@ -1105,11 +1115,11 @@
                    class="form-control">
 
             ${childData.photo ? `
-                                                                                                                                                                    <div id="image-preview-container-${i}" class="d-flex mt-2">
-                                                                                                                                                                        <img src="{{ url('/') }}/${childData.photo}" 
-                                                                                                                                                                             class="img-thumbnail" width="100" height="100" 
-                                                                                                                                                                             alt="Child ${i} Uploaded Photo">
-                                                                                                                                                                    </div>` : ''}
+                                                                                                                                                                                                                                    <div id="image-preview-container-${i}" class="d-flex mt-2">
+                                                                                                                                                                                                                                        <img src="{{ url('/') }}/${childData.photo}" 
+                                                                                                                                                                                                                                             class="img-thumbnail" width="100" height="100" 
+                                                                                                                                                                                                                                             alt="Child ${i} Uploaded Photo">
+                                                                                                                                                                                                                                    </div>` : ''}
         </div>
     `;
                             childrenDetails.appendChild(childRow);

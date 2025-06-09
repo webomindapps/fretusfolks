@@ -2,22 +2,23 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Exception;
+use ZipArchive;
 use App\Models\Payslips;
+use App\Jobs\PayslipCreate;
+use Illuminate\Http\Request;
+use RecursiveIteratorIterator;
+use Barryvdh\DomPDF\Facade\Pdf;
+use RecursiveDirectoryIterator;
+use App\Models\FFIPayslipsModel;
+use App\Imports\FFIPayslipImport;
 use App\Exports\FFI_PayslipsExport;
 use App\Imports\FFI_PayslipsImport;
-use Barryvdh\DomPDF\Facade\Pdf;
-use Illuminate\Http\Request;
-use App\Models\FFIPayslipsModel;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Response;
 use Maatwebsite\Excel\Facades\Excel;
-use RecursiveDirectoryIterator;
-use RecursiveIteratorIterator;
-use ZipArchive;
-use App\Jobs\PayslipCreate;
-use Exception;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Response;
 
 class FFIPayslipsController extends Controller
 {
@@ -71,68 +72,32 @@ class FFIPayslipsController extends Controller
         $file = $request->file('file');
         $month = $request->input('month');
         $year = $request->input('year');
+
         try {
-            if ($request->has('file')) {
-                $fileName = $request->file->getClientOriginalName();
-                $fileWithPath = public_path('uploads') . '/' . $fileName;
-                if (!file_exists($fileWithPath)) {
-                    $request->file->move(public_path('uploads'), $fileName);
-                }
-                $header = null;
-                $datafromCsv = array();
-                $records = array_map('str_getcsv', file($fileWithPath));
-                foreach ($records as $key => $record) {
-                    if (!$header) {
-                        $header = $record;
-                    } else {
-                        $datafromCsv[] = $record;
-                    }
-                }
-                $datafromCsv = array_chunk($datafromCsv, 1000);
-                foreach ($datafromCsv as $index => $dataCsv) {
+            $fileName = $file->getClientOriginalName();
+            $filePath = public_path('uploads') . '/' . $fileName;
 
-                    foreach ($dataCsv as $data) {
-                        $row = array_combine($header, $data);
-
-                        // Delete existing record before adding new
-                        if (!empty($row['emp_id']) && !empty($month) && !empty($year)) {
-                            FFIPayslipsModel::where('emp_id', $row['emp_id'])
-                                ->where('month', $month)
-                                ->where('year', $year)
-                                ->delete();
-                        }
-
-                        $payslipdata[$index][] = $row;
-                    }
-                    // dd($payslipdata[$index], $month, $year);
-                    $payslips = PayslipCreate::dispatch($payslipdata[$index], $month, $year);
-                    // dd($payslips);
-                }
-                if (file_exists($fileWithPath)) {
-                    unlink($fileWithPath);
-                }
+            // Move the file to public/uploads if not already there
+            if (!file_exists($filePath)) {
+                $file->move(public_path('uploads'), $fileName);
             }
-        } catch (Exception $e) {
+
+            // Import using Laravel Excel with custom import logic
+            Excel::import(new FFIPayslipImport($month, $year), $filePath);
+
+            if (file_exists($filePath)) {
+                unlink($filePath);
+            }
+        } catch (\Exception $e) {
             dd($e);
         }
-        // $import = new FFI_PayslipsImport($month, $year);
 
-        // try {
-        //     Excel::import($import, $file);
-        // } catch (Exception $e) {
-        //     return redirect()->route('admin.ffi_payslips')->with('error', 'There was an error during the import process: ' . $e->getMessage());
-        // }
-
-        // $error = '';
-        // foreach ($import->failures() as $failure) {
-        //     $error .= 'Row no: ' . $failure->row() . ', Column: ' . $failure->attribute() . ', Error: ' . implode(', ', $failure->errors()) . '<br>';
-        // }
-        $error = '';
         return redirect()->route('admin.ffi_payslips')->with([
             'success' => 'Payslips added successfully',
-            'error_msg' => $error
+            'error_msg' => '',
         ]);
     }
+
     public function export(Request $request)
     {
         $request->validate([
@@ -179,9 +144,15 @@ class FFIPayslipsController extends Controller
     }
     public function destroy($id)
     {
-        $this->model()->destroy($id);
-        return redirect()->route('admin.ffi_payslips')->with('success', 'Successfully deleted!');
+        try {
+            $this->model()->destroy($id);
+
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
     }
+
     public function generatePayslipsPdf($id)
     {
         $payslip = $this->model()->findOrFail($id);

@@ -42,11 +42,14 @@
                                 aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                                 <div class="card-body">
                                     <div class="row">
-                                        <div class="col-md-4 mb-2"><b>Entity Name:</b>
+                                        <div class="col-md-4 mb-2"><b>CLient Name:</b>
                                             <span>{{ $candidate?->entity_name ?? 'N/A' }}</span>
                                         </div>
                                         <div class="col-md-4 mb-2"><b>FFI Emp ID:</b>
                                             <span>{{ $candidate?->ffi_emp_id ?? 'N/A' }}</span>
+                                        </div>
+                                        <div class="col-md-4 mb-2"><b>Client Emp ID:</b>
+                                            <span>{{ $candidate?->client_emp_id ?? 'N/A' }}</span>
                                         </div>
                                         <div class="col-md-4 mb-2"><b>Full Name:</b>
                                             <span>{{ $candidate?->emp_name }}
@@ -106,13 +109,16 @@
                                         <div class="col-md-4 mb-2"><b>Driving License NO:</b>
                                             <span>{{ $candidate?->driving_license_no ?? 'N/A' }}</span>
                                         </div>
-
+                                        <div class="col-md-4 mb-2"><b>Password:</b>
+                                            <span>{{ $candidate?->psd ?? 'N/A' }}</span>
+                                        </div>
                                         <div class="col-md-12 mb-2"><b>Permanent Address:</b>
                                             <span>{{ $candidate?->permanent_address ?? 'N/A' }}</span>
                                         </div>
                                         <div class="col-md-12 mb-2"><b>Present Address:</b>
                                             <span>{{ $candidate?->present_address ?? 'N/A' }}</span>
                                         </div>
+
                                     </div>
                                 </div>
                             </div>
@@ -367,7 +373,7 @@
                                             </thead>
                                             <tbody>
                                                 @php
-                                                    $candidateDocuments = [
+                                                    $candidateDocumentsMap = [
                                                         'pan_path' => 'PAN Document',
                                                         'aadhar_path' => 'Aadhar Document',
                                                         'driving_license_path' => 'Driving License',
@@ -386,20 +392,37 @@
                                                     ];
                                                 @endphp
 
-                                                @if ($candidate->candidateDocuments->isNotEmpty())
-                                                    @foreach ($candidate->candidateDocuments as $certificate)
+                                                @foreach ($candidateDocumentsMap as $field => $label)
+                                                    @php
+                                                        // Check if document exists in relation table
+                                                        $docFromRelation = $candidate->candidateDocuments->firstWhere(
+                                                            'name',
+                                                            $field,
+                                                        );
+                                                        $docPath = null;
+
+                                                        if ($docFromRelation && $docFromRelation->path) {
+                                                            $docPath = $docFromRelation->path;
+                                                        } elseif (!empty($candidate->$field)) {
+                                                            // If not in relation, fallback to backend field in candidate
+                                                            $docPath = $candidate->$field;
+                                                        }
+                                                    @endphp
+
+                                                    @if (!empty($docPath))
                                                         <tr>
-                                                            <td>{{ $candidateDocuments[$certificate->name] ?? $certificate->name }}
-                                                            </td>
+                                                            <td>{{ $label }}</td>
                                                             <td>
-                                                                <a href="{{ asset($certificate->path) }}"
-                                                                    target="_blank" class="btn btn-primary btn-sm">
+                                                                <a href="{{ asset($docPath) }}" target="_blank"
+                                                                    class="btn btn-primary btn-sm">
                                                                     <i class="fas fa-eye"></i> View
                                                                 </a>
                                                             </td>
                                                         </tr>
-                                                    @endforeach
-                                                @endif
+                                                    @endif
+                                                @endforeach
+
+
 
                                                 @if ($candidate->educationCertificates->isNotEmpty())
                                                     @foreach ($candidate->educationCertificates as $certificate)
@@ -540,7 +563,7 @@
                             </div>
                         </div>
                         <hr>
-                        <div class="card custom-card">
+                        {{-- <div class="card custom-card">
                             <div class="custom-header d-flex justify-content-between align-items-center"
                                 data-bs-toggle="collapse" data-bs-target="#payslip" aria-expanded="false"
                                 aria-controls="payslip">
@@ -584,7 +607,7 @@
                                     </table>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
 
                 </div>

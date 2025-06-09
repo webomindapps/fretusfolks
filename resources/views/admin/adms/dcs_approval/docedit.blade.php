@@ -65,6 +65,8 @@
                             <div class="row">
                                 <x-forms.select label="Enter Client Name:" name="client_id" id="client_id"
                                     :required="true" size="col-lg-6 mt-2" :options="FretusFolks::getClientname()" :value="old('client_id', $candidate->client_id)" />
+                                <x-forms.input label="FFI Employee ID:" type="text" name="ffi_emp_id" id="ffi_emp_id"
+                                    :required="true" size="col-lg-6 mt-2" :value="old('ffi_emp_id', $candidate->ffi_emp_id)" />
 
                                 <x-forms.input label="Console ID: " type="text" name="console_id" id="console_id"
                                     :required="false" size="col-lg-6 mt-2" :value="old('console_id', $candidate->console_id)" />
@@ -861,11 +863,11 @@
                    class="form-control">
 
             ${childData.photo ? `
-                                                                                        <div id="image-preview-container-${i}" class="d-flex mt-2">
-                                                                                            <img src="{{ url('/') }}/${childData.photo}" 
-                                                                                                 class="img-thumbnail" width="100" height="100" 
-                                                                                                 alt="Child ${i} Uploaded Photo">
-                                                                                        </div>` : ''}
+                                                                                                <div id="image-preview-container-${i}" class="d-flex mt-2">
+                                                                                                    <img src="{{ url('/') }}/${childData.photo}" 
+                                                                                                         class="img-thumbnail" width="100" height="100" 
+                                                                                                         alt="Child ${i} Uploaded Photo">
+                                                                                                </div>` : ''}
         </div>
     `;
                             childrenDetails.appendChild(childRow);

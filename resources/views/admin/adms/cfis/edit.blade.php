@@ -76,7 +76,6 @@
                                     <label for="driving_license_no">Enter Driving License No:</label>
                                     <input type="text" name="driving_license_no" id="driving_license_no"
                                         class="form-control" accept=" application/pdf,image/jpg, image/png"
-
                                         value="{{ old('driving_license_no', $candidate->driving_license_no) }}">
                                 </div>
                                 {{-- <x-forms.input label="Attach Driving License:" type="file"
@@ -84,8 +83,7 @@
                                     size="col-lg-6 mt-2" :value="old('driving_license_path')" /> --}}
                                 <div class="form-group col-lg-6 mt-2">
                                     <label for="photo">Photo:</label>
-                                    <input type="file" name="photo" id="photo" accept="image/jpg, image/png"
-                                        class="form-control">
+                                    <input type="file" name="photo" id="photo" class="form-control">
 
                                     @if ($candidate->candidateDocuments->where('name', 'photo')->isNotEmpty())
                                         @php

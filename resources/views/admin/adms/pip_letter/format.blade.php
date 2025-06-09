@@ -5,142 +5,146 @@
     <meta charset="UTF-8">
     <meta name="format-detection" content="telephone=no">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Performance Improvement Plan (PIP)</title>
+    <title>Fretus Folks - PIP Letter</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+
     <style>
+        @page {
+            size: A4;
+            margin: 2.5cm;
+        }
+
         body {
-            padding: 0 !important;
-            margin: 0 !important;
+            margin: 0;
+            padding: 0;
             background: #ffffff;
-            -webkit-text-size-adjust: none;
             font-family: Times, serif;
+            font-size: 14px;
+            color: #000;
+            line-height: 1.6;
         }
 
-        a {
-            color: #00b8e4;
-            text-decoration: underline;
-            font-family: Times, serif;
+        h1,
+        h2 {
+            text-align: center;
+            margin: 0;
         }
 
-        h3 a {
-            color: #1f1f1f;
-            text-decoration: none;
-            font-family: Times, serif;
+        h1 {
+            font-size: 22px;
+            margin-top: 10px;
+        }
+
+        h2 {
+            font-size: 18px;
+            margin-bottom: 20px;
         }
 
         p {
-            padding: 0 !important;
-            margin: 0 !important;
-            font-family: Times, serif;
+            margin: 6px 0;
         }
 
-        .table1 td,
-        .table1 th {
-            border: 1px solid black;
+        .section {
+            margin-bottom: 20px;
         }
 
-        table td,
-        th {
-            font-family: Times, serif;
-            font-size: 10px;
-            padding: 0%;
-            text-align: left;
+        .section-title {
+            font-weight: bold;
+            text-decoration: underline;
+            margin-bottom: 6px;
         }
 
-        @media print {
-            .gross td {
-                background: #ecbfbf !important;
-            }
+        .signature-block {
+            margin-top: 20px;
+        }
+
+        .signature-block p {
+            margin: 4px 0;
+        }
+
+        table.meta-info {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        table.meta-info td {
+            padding: 6px 0;
+        }
+
+        .seal {
+            margin-top: 10px;
+        }
+
+        .content-block {
+            text-align: justify;
         }
     </style>
 </head>
 
 <body>
-    <br>
-    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="page-break-before: always;">
-        <tbody>
-            <tr>
-                <td style="padding-left:5%; padding-right:5%;">
-                    <div>
-                        <h1 style="font-size:16px; text-align:center;">Performance Improvement Plan (PIP)</h1>
-                        <h2 style="font-size:14px; text-align:center;">Confidential</h2>
+    <h1>Performance Improvement Plan (PIP)</h1>
+    <h2>Confidential</h2>
 
-                        <table style="border-collapse:collapse; width:100%; margin-bottom:20px;">
-                            <tbody>
-                                <tr>
-                                    <td colspan="3" style="font-size:10px; text-align:left; padding:7px">
-                                        <p style="line-height:1.8; font-size:14px">
-                                            <b>To: {{ $pipLetter->pip_letters->emp_name }}</b> <br>
-                                            <b>From: {{ $pipLetter->from_name }}</b> <br>
-                                            <b>Date: {{ \Carbon\Carbon::parse($pipLetter->date)->format('d-m-Y') }}</b>
-                                        </p>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+    <table class="meta-info">
+        <tr>
+            <td><strong>To:</strong> {{ $pipLetter->pip_letters->emp_name ?? 'N/A' }}</td>
+        </tr>
+        <tr>
+            <td><strong>From:</strong> {{ $pipLetter->from_name }}</td>
+        </tr>
+        <tr>
+            <td><strong>Date:</strong> {{ \Carbon\Carbon::parse($pipLetter->date)->format('d-m-Y') }}</td>
+        </tr>
+    </table>
 
-                        <div class="content" style="line-height:2; font-size:12px">
-                            {!! $pipLetter->content !!}
-                        </div>
+    <div class="section content-block">
+        {!! $pipLetter->content !!}
+    </div>
 
-                        <br>
-                        <div class="content" style="line-height:2; font-size:12px">
-                            <p><b>Observations, Previous Discussions or Counseling:</b></p>
-                            {!! $pipLetter->observation !!}
-                        </div>
+    <div class="section content-block">
+        <p class="section-title">Observations, Previous Discussions or Counseling:</p>
+        {!! $pipLetter->observation !!}
+    </div>
 
-                        <br>
-                        <div class="content" style="line-height:2; font-size:12px">
-                            <p><b>Improvement Goals:</b> These are the goals related to areas of concern to be improved
-                                and addressed:</p>
-                            {!! $pipLetter->goals !!}
-                        </div>
+    <div class="section content-block">
+        <p class="section-title">Improvement Goals:</p>
+        <p>These are the goals related to areas of concern to be improved and addressed:</p>
+        {!! $pipLetter->goals !!}
+    </div>
 
-                        <br>
-                        <div class="content" style="line-height:2; font-size:12px">
-                            <p><b>Follow-up Updates:</b> You will receive feedback on your progress according to the
-                                following schedule:</p>
-                            {!! $pipLetter->updates !!}
-                        </div>
+    <div class="section content-block">
+        <p class="section-title">Follow-up Updates:</p>
+        <p>You will receive feedback on your progress according to the following schedule:</p>
+        {!! $pipLetter->updates !!}
+    </div>
 
-                        <br>
-                        <div class="content" style="line-height:2; font-size:12px">
-                            <p><b>Timeline for Improvement, Consequences & Expectations:</b></p>
-                            {!! $pipLetter->timeline !!}
-                        </div>
+    <div class="section content-block">
+        <p class="section-title">Timeline for Improvement, Consequences & Expectations:</p>
+        {!! $pipLetter->timeline !!}
+    </div>
 
-                        <br>
-                        <div class="content" style="line-height:2; font-size:12px">
-                            <p><b>Signatures:</b></p>
-                            <p>Employee Name: {{ $pipLetter->pip_letters->emp_name }}</p>
-                            <p>Employee Signature: __________________</p>
-                            <p>Date: {{ \Carbon\Carbon::parse($pipLetter->date)->format('d-m-Y') }}</p>
-                        </div>
+    <div class="signature-block">
+        <p><strong>Employee Name:</strong> {{ $pipLetter->pip_letters->emp_name ?? 'N/A' }}</p>
+        <p><strong>Employee Signature:</strong> __________________</p>
+        <p><strong>Date:</strong> {{ \Carbon\Carbon::parse($pipLetter->date)->format('d-m-Y') }}</p>
+    </div>
 
-                        <br>
-                        <div class="content" style="line-height:2; font-size:12px">
-                            <p>Supervisor/Manager Name: {{ $pipLetter->from_name }}</p>
-                            <p>Supervisor/Manager Signature: __________________</p>
-                            <p>Date: {{ \Carbon\Carbon::parse($pipLetter->date)->format('d-m-Y') }}</p>
-                        </div>
+    <div class="signature-block">
+        <p><strong>Supervisor/Manager Name:</strong> {{ $pipLetter->from_name }}</p>
+        <p><strong>Supervisor/Manager Signature:</strong> __________________</p>
+        <p><strong>Date:</strong> {{ \Carbon\Carbon::parse($pipLetter->date)->format('d-m-Y') }}</p>
+    </div>
 
-                        <table style="border-collapse:collapse; width:100%; margin-bottom:20px;">
-                            <tbody>
-                                <tr>
-                                    <td colspan="3" style="font-size:12px; text-align:left; padding:7px">
-                                        <p>
-                                            <b>For: Fretus Folks India Pvt Ltd.</b> <br>
-                                            <img src="{{ public_path('admin/images/seal.png') }}" width="50"><br>
-                                            <b>Authorized Signatory</b>
-                                        </p>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </td>
-            </tr>
-        </tbody>
+    <table>
+        <tr>
+            <td>
+                <p><strong>For: Fretus Folks India Pvt Ltd.</strong></p>
+                <img src="https://newapp.fretusfolks.com/admin/images/seal.png" width="100">
+                <p style="line-height:1.8; font-size:14px;">
+                    <b>Authorized Signatory</b>
+                </p>
+            </td>
+        </tr>
     </table>
 </body>
 

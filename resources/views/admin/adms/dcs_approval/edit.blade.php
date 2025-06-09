@@ -44,11 +44,11 @@
                                     :value="old('entity_name', $candidate->entity_name)" /> --}}
                                 <x-forms.select label="Enter Client Name:" name="client_id" id="client_id"
                                     :required="true" size="col-lg-6 mt-2" :options="FretusFolks::getClientname()" :value="old('client_id', $candidate->client_id)" />
-                                {{-- <x-forms.input label="FFI Employee ID:" type="text" name="ffi_emp_id"
-                                    id="ffi_emp_id" :required="true" size="col-lg-6 mt-2" :value="$uniqueId" /> --}}
+                                <x-forms.input label="FFI Employee ID:" type="text" name="ffi_emp_id" id="ffi_emp_id"
+                                    :required="true" size="col-lg-6 mt-2" :value="old('ffi_emp_id', $candidate->ffi_emp_id)" />
                                 <x-forms.input label="Console ID: " type="text" name="console_id" id="console_id"
                                     :required="false" size="col-lg-6 mt-2" :value="old('console_id', $candidate->console_id)" />
-                                <x-forms.input label="Enter Client Employee ID: " type="text" name="client_emp_id"
+                                <x-forms.input label="Client Employee ID: " type="text" name="client_emp_id"
                                     id="client_emp_id" :required="false" size="col-lg-6 mt-2" :value="old('client_emp_id', $candidate->client_emp_id)" />
                                 <x-forms.input label="Grade: " type="text" name="grade" id="grade"
                                     :required="false" size="col-lg-6 mt-2" :value="old('grade', $candidate->grade)" />
@@ -67,10 +67,10 @@
                                 <x-forms.input label="Joining Date: " type="date" name="joining_date"
                                     id="joining_date" :required="true" size="col-lg-6 mt-2"
                                     value="{{ old('joining_date', $candidate->joining_date ? $candidate->joining_date->format('Y-m-d') : '') }}" />
-                                {{-- <x-forms.input label="DOL " type="date" name="contract_date" id="contract_date"
-                                    :required="false" size="col-lg-4 mt-2"
+                                <x-forms.input label="Contract End Date " type="date" name="contract_date"
+                                    id="contract_date" :required="false" size="col-lg-4 mt-2"
                                     value="{{ old('contract_date', $candidate->contract_date ? $candidate->contract_date->format('Y-m-d') : '') }}" />
-                                --}}
+
 
                                 <x-forms.input label="Enter Designation: " type="text" name="designation"
                                     id="designation" :required="true" size="col-lg-6 mt-2" :value="old('designation', $candidate->designation)" />
@@ -236,7 +236,7 @@
                                 --}}
                                 <x-forms.input label="Employee Email ID: " type="email" name="email"
                                     id="email" :required="true" size="col-lg-4 mt-2" :value="old('email', $candidate->email)" />
-                                <x-forms.input label="Official Email ID: " type="email" name="official_mail_id"
+                                <x-forms.input label="Official Email ID: " type="text" name="official_mail_id"
                                     id="official_mail_id" :required="false" size="col-lg-4 mt-2"
                                     :value="old('official_mail_id', $candidate->official_mail_id)" />
                                 <div class="form-group col-lg-6 mt-2">
@@ -334,8 +334,7 @@
                                 </div> --}}
                                 <div class="form-group col-lg-4 mt-2">
                                     <label for="photo">Photo:</label>
-                                    <input type="file" name="photo" id="photo"
-                                        accept="image/jpg, image/png, image/jpeg" class="form-control">
+                                    <input type="file" name="photo" id="photo" class="form-control">
 
                                     @if ($candidate->candidateDocuments->where('name', 'photo')->isNotEmpty())
                                         @php
@@ -402,7 +401,8 @@
                                 <x-forms.input label="Enter Bank Account No::" type="text" name="bank_account_no"
                                     id="bank_account_no" :required="true" size="col-lg-6 mt-2" :value="old('bank_account_no', $bankdetails->bank_account_no ?? '')" />
                                 <x-forms.input label="Repeat Bank Account No:" type="text" name="bank_account_no"
-                                    id="bank_account_no" :required="true" size="col-lg-6 mt-2" :value="old('bank_account_no', $bankdetails->bank_account_no ?? '')" />
+                                    id="repeat_bank_account_no" :required="true" size="col-lg-6 mt-2"
+                                    :value="old('bank_account_no', $bankdetails->bank_account_no ?? '')" />
                                 <x-forms.input label="Enter Bank IFSC CODE:" type="text" name="bank_ifsc_code"
                                     id="bank_ifsc_code" :required="true" size="col-lg-6 mt-2" :value="old('bank_ifsc_code', $bankdetails->bank_ifsc_code ?? '')" />
                                 <x-forms.select label="Do you Have UAN No? " :options="[['value' => '0', 'label' => 'No'], ['value' => '1', 'label' => 'Yes']]" id="uan_status"
@@ -603,8 +603,9 @@
                                 </div>
 
 
-                                {{-- <x-forms.input label="Password:" type="text" name="psd" id="psd" :required="true"
-                                    size="col-lg-6 mt-2" :value="old('psd', 'ffemp@123')" /> --}}
+                                <x-forms.input label="Password:" type="text" name="psd" id="psd"
+                                    :required="true" size="col-lg-6 mt-2" :value="old('psd') ?? ($candidate->psd ?? 'ffemp@123')" />
+
                                 {{-- <x-forms.select label="Active Status:" name="active_status" id="active_status"
                                     :required="true" size="col-lg-6 mt-2" :options="FretusFolks::getStatus()"
                                     :value="old('active_status', $candidate->active_status)" /> --}}
@@ -827,11 +828,11 @@
                    class="form-control">
 
             ${childData.photo ? `
-                                                                                            <div id="image-preview-container-${i}" class="d-flex mt-2">
-                                                                                                <img src="{{ url('/') }}/${childData.photo}" 
-                                                                                                     class="img-thumbnail" width="100" height="100" 
-                                                                                                     alt="Child ${i} Uploaded Photo">
-                                                                                            </div>` : ''}
+                                                                                                                                                    <div id="image-preview-container-${i}" class="d-flex mt-2">
+                                                                                                                                                        <img src="{{ url('/') }}/${childData.photo}" 
+                                                                                                                                                             class="img-thumbnail" width="100" height="100" 
+                                                                                                                                                             alt="Child ${i} Uploaded Photo">
+                                                                                                                                                    </div>` : ''}
         </div>
     `;
                             childrenDetails.appendChild(childRow);

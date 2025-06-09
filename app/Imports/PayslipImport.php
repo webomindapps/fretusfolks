@@ -8,7 +8,7 @@ use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
-class PayslipImport implements ToCollection, WithHeadingRow
+class PayslipImport implements ToCollection
 {
     protected $month;
     protected $year;
@@ -21,27 +21,37 @@ class PayslipImport implements ToCollection, WithHeadingRow
 
     public function collection(Collection $rows)
     {
-        $chunked = $rows->chunk(1000);
+        $header = $rows->first()->toArray();
+        $data = $rows->slice(1);
+
+        $chunked = $data->chunk(1000);
         // dd($chunked);
-
         foreach ($chunked as $chunk) {
-            $validChunk = $chunk->filter(function ($row) {
-                return isset($row['emp_id']) && !is_null($row['emp_id']) && trim($row['emp_id']) !== '';
-            });
+            $processedData = [];
 
-            $validChunk->each(function ($row) {
-                if ($this->month && $this->year) {
-                    Payslips::where('emp_id', $row['emp_id'])
-                        ->where('month', $this->month)
-                        ->where('year', $this->year)
-                        ->delete();
+            foreach ($chunk as $row) {
+                $rowArray = $row->toArray();
+
+                if (count($rowArray) === count($header)) {
+                    $combined = array_combine($header, $rowArray);
+
+                    if (!empty($combined['Employee_ID'])) {
+                        Payslips::where('emp_id', $combined['Employee_ID'])
+                            ->where('month', $this->month)
+                            ->where('year', $this->year)
+                            ->delete();
+
+                        $processedData[] = $combined;
+                    }
                 }
-            });
+            }
 
-            if ($validChunk->isNotEmpty()) {
-                ADMSPayslipCreate::dispatch($validChunk->toArray(), $this->month, $this->year);
+            if (!empty($processedData)) {
+                // dd($processedData);
+                ADMSPayslipCreate::dispatch($processedData, $this->month, $this->year);
             }
         }
-
     }
+
+
 }

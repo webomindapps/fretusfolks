@@ -21,6 +21,8 @@ use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 
 class ADMSPayslipController extends Controller
@@ -66,9 +68,17 @@ class ADMSPayslipController extends Controller
     }
     public function destroy($id)
     {
-        $this->model()->destroy($id);
-        return redirect()->route('admin.payslips')->with('success', 'Successfully deleted!');
+        $payslip = Payslips::find($id);
+
+        if (!$payslip) {
+            return response()->json(['success' => false, 'message' => 'Payslip not found.']);
+        }
+
+        $payslip->delete();
+
+        return response()->json(['success' => true, 'message' => 'Payslip deleted successfully.']);
     }
+
     public function bulkUpload(Request $request)
     {
         $request->validate([
@@ -134,7 +144,7 @@ class ADMSPayslipController extends Controller
     }
     public function searchPayslip(Request $request)
     {
-        $searchColumns = ['id', 'emp_id', 'month', 'year', 'emp_name', 'designation', 'department'];
+        $searchColumns = ['id', 'emp_id', 'month', 'year', 'emp_name', 'designation', 'department', 'client_name'];
         $search = request()->search;
         $emp_id = $request->input('emp_id');
         $month = $request->input('month');
@@ -163,17 +173,28 @@ class ADMSPayslipController extends Controller
         return view('admin.adms.payslip.index', compact('payslips'));
     }
 
+    // public function generatePayslipsPdf($id)
+    // {
+    //     $payletter = $this->model()->findOrFail($id);
+    //     // dd($payletter->payslips_letter_path);
+    //     if (!$payletter->payslips_letter_path) {
+    //         abort(404, 'PDF not found');
+    //     }
+
+    //     $filePath = str_replace('storage/', '', $payletter->payslips_letter_path);
+
+    //     return response()->file(public_path($filePath));
+    // }
     public function generatePayslipsPdf($id)
     {
-        $payletter = $this->model()->findOrFail($id);
-        // dd($payletter->payslips_letter_path);
-        if (!$payletter->payslips_letter_path) {
-            abort(404, 'PDF not found');
-        }
+        $payslip = $this->model()->findOrFail($id);
 
-        $filePath = str_replace('storage/', '', $payletter->payslips_letter_path);
+        $data = [
+            'payslip' => $payslip,
+        ];
 
-        return response()->file(public_path($filePath));
+        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true, 'chroot' => public_path()])->loadView('admin.adms.payslip.formate', $data);
+        return $pdf->stream('payslip' . $payslip->id . '.pdf');
     }
     public function zipDownload($payslips, $ademails)
     {
@@ -206,135 +227,311 @@ class ADMSPayslipController extends Controller
         }
 
     }
+    // public function downloadfiltered(Request $request)
+    // {
+
+    //     $clients = $request->input('data', []);
+
+
+    //     if (empty($clients)) {
+    //         return response()->json(['message' => 'Invalid parameters'], 400);
+    //     }
+    //     $query = CFISModel::query()
+    //         ->whereIn('client_id', $clients)
+    //         ->where('status', 1);
+
+
+
+    //     $candidates = $query->where('hr_approval', 1)->get();
+    //     // ->where('comp_status', 1)->get();
+
+    //     if ($candidates->isEmpty()) {
+    //         return redirect()->back()->with('error', 'No records found');
+    //     }
+
+
+    //     $fileName = "payslip_format.xlsx";
+
+    //     $headers = [
+    //         "Content-Type" => "text/csv",
+    //         "Content-Disposition" => "attachment; filename=$fileName",
+    //     ];
+
+    //     $callback = function () use ($candidates) {
+    //         $file = fopen('php://output', 'w');
+
+    //         $csvHeaders = [
+    //             'emp_id',
+    //             'client_emp_id',
+    //             'emp_name',
+    //             'designation',
+    //             'doj',
+    //             'department',
+    //             'location',
+    //             'client_name',
+    //             'uan_no',
+    //             'pf_no',
+    //             'esi_no',
+    //             'bank_name',
+    //             'account_no',
+    //             'ifsc_code',
+    //             'month_days',
+    //             'payable_days',
+    //             'leave_days',
+    //             'lop_days',
+    //             'arrears_days',
+    //             'ot_hours',
+    //             'leave_balance',
+    //             'fixed_basic_da',
+    //             'fixed_hra',
+    //             'fixed_conveyance',
+    //             'fix_education_allowance',
+    //             'fixed_medical_reimbursement',
+    //             'fixed_special_allowance',
+    //             'fixed_other_allowance',
+    //             'fixed_st_bonus',
+    //             'fix_leave_wages',
+    //             'fixed_holiday_wages',
+    //             'fixed_attendance_bonus',
+    //             'fixed_ot_wages',
+    //             'fix_incentive_wages',
+    //             'fix_arrear_wages',
+    //             'fixed_other_wages',
+    //             'fixed_total_earnings',
+    //             'earn_basic',
+    //             'earn_hr',
+    //             'earn_conveyance',
+    //             'earn_education_allowance',
+    //             'earn_medical_allowance',
+    //             'earn_special_allowance',
+    //             'earn_other_allowance',
+    //             'earn_st_bonus',
+    //             'earn_leave_wages',
+    //             'earn_holiday_wages',
+    //             'earn_attendance_bonus',
+    //             'earn_ot_wages',
+    //             'earn_incentive_wages',
+    //             'earn_arrear_wages',
+    //             'earn_other_wages',
+    //             'earn_total_gross',
+    //             'epf',
+    //             'esic',
+    //             'pt',
+    //             'it',
+    //             'lwf',
+    //             'salary_advance',
+    //             'other_deduction',
+    //             'total_deduction',
+    //             'net_salary',
+    //             'in_words'
+
+    //         ];
+
+
+    //         fputcsv($file, $csvHeaders);
+
+    //         foreach ($candidates as $candidate) {
+    //             fputcsv($file, [
+    //                 $candidate->ffi_emp_id,
+    //                 $candidate->client_emp_id,
+    //                 $candidate->client_name,
+    //                 $candidate->emp_name,
+    //                 $candidate->designation,
+    //                 Carbon::parse($candidate->joining_date)->format('d-m-Y'),
+    //                 $candidate->department,
+    //                 '',
+    //                 $candidate->location,
+    //                 $candidate->entity_name,
+    //                 '',
+    //                 '',
+    //                 $candidate->uan_no,
+    //                 '',
+    //                 $candidate->esic_no,
+    //                 $candidate->bank_name,
+    //                 $candidate->bank_account_no,
+    //                 $candidate->bank_ifsc_code,
+    //             ]);
+    //         }
+
+    //         fclose($file);
+    //     };
+
+    //     return response()->stream($callback, 200, $headers);
+    // }
+
     public function downloadfiltered(Request $request)
     {
-
         $clients = $request->input('data', []);
-
 
         if (empty($clients)) {
             return response()->json(['message' => 'Invalid parameters'], 400);
         }
-        $query = CFISModel::query()
+
+        $candidates = CFISModel::query()
             ->whereIn('client_id', $clients)
-            ->where('status', 1);
-
-
-
-        $candidates = $query->where('hr_approval', 1)->get();
-        // ->where('comp_status', 1)->get();
+            ->where('status', 1)
+            // ->where('hr_approval', 1)
+            ->get();
 
         if ($candidates->isEmpty()) {
             return redirect()->back()->with('error', 'No records found');
         }
 
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
 
-        $fileName = "payslip_format.xlsx";
-
+        // Set header
         $headers = [
-            "Content-Type" => "text/csv",
-            "Content-Disposition" => "attachment; filename=$fileName",
+            'Employee_ID',
+            'Client_Employee_ID',
+            'Employee_Name',
+            'Designation',
+            'Date_of_Joining',
+            'Department',
+            'Location',
+            'Client_Name',
+            'UAN_Number',
+            'PF_Number',
+            'ESI_Number',
+            'Bank_Name',
+            'Account_Number',
+            'IFSC_Code',
+            'Month_Days',
+            'Payable_Days',
+            'Leave_Days',
+            'LOP_Days',
+            'Arrears_Days',
+            'OT_Hours',
+            'Leave_Balance',
+            'Fixed_Basic_DA',
+            'Fixed_HRA',
+            'Fixed_Conveyance',
+            'Fixed_Education_Allowance',
+            'Fixed_Medical_Reimbursement',
+            'Fixed_Special_Allowance',
+            'Fixed_Other_Allowance',
+            'Fixed_ST_Bonus',
+            'Fixed_Leave_Wages',
+            'Fixed_Holiday_Wages',
+            'Fixed_Attendance_Bonus',
+            'Fixed_OT_Wages',
+            'Fixed_Incentive_Wages',
+            'Fixed_Arrear_Wages',
+            'Fixed_Other_Wages',
+            'Fixed_Total_Earnings',
+            'Earned_Basic',
+            'Earned_HRA',
+            'Earned_Conveyance',
+            'Earned_Education_Allowance',
+            'Earned_Medical_Allowance',
+            'Earned_Special_Allowance',
+            'Earned_Other_Allowance',
+            'Earned_ST_Bonus',
+            'Earned_Leave_Wages',
+            'Earned_Holiday_Wages',
+            'Earned_Attendance_Bonus',
+            'Earned_OT_Wages',
+            'Earned_Incentive_Wages',
+            'Earned_Arrear_Wages',
+            'Earned_Other_Wages',
+            'Earned_Total_Gross',
+            'EPF',
+            'ESIC',
+            'PT',
+            'IT',
+            'LWF',
+            'Salary_Advance',
+            'Other_Deduction',
+            'Total_Deduction',
+            'Net_Salary',
+            'In_Words'
+
+
         ];
 
-        $callback = function () use ($candidates) {
-            $file = fopen('php://output', 'w');
+        $sheet->fromArray($headers, null, 'A1');
 
-            $csvHeaders = [
-                'emp_id',
-                'client_emp_id',
-                'emp_name',
-                'designation',
-                'doj',
-                'department',
-                'location',
-                'client_name',
-                'uan_no',
-                'pf_no',
-                'esi_no',
-                'bank_name',
-                'account_no',
-                'ifsc_code',
-                'month_days',
-                'payable_days',
-                'leave_days',
-                'lop_days',
-                'arrears_days',
-                'ot_hours',
-                'leave_balance',
-                'fixed_basic_da',
-                'fixed_hra',
-                'fixed_conveyance',
-                'fix_education_allowance',
-                'fixed_medical_reimbursement',
-                'fixed_special_allowance',
-                'fixed_other_allowance',
-                'fixed_st_bonus',
-                'fix_leave_wages',
-                'fixed_holiday_wages',
-                'fixed_attendance_bonus',
-                'fixed_ot_wages',
-                'fix_incentive_wages',
-                'fix_arrear_wages',
-                'fixed_other_wages',
-                'fixed_total_earnings',
-                'earn_basic',
-                'earn_hr',
-                'earn_conveyance',
-                'earn_education_allowance',
-                'earn_medical_allowance',
-                'earn_special_allowance',
-                'earn_other_allowance',
-                'earn_st_bonus',
-                'earn_leave_wages',
-                'earn_holiday_wages',
-                'earn_attendance_bonus',
-                'earn_ot_wages',
-                'earn_incentive_wages',
-                'earn_arrear_wages',
-                'earn_other_wages',
-                'earn_total_gross',
-                'epf',
-                'esic',
-                'pt',
-                'it',
-                'lwf',
-                'salary_advance',
-                'other_deduction',
-                'total_deduction',
-                'net_salary',
-                'in_words'
-
+        // Fill data
+        $rowNumber = 2;
+        foreach ($candidates as $candidate) {
+            $row = [
+                $candidate->ffi_emp_id,
+                $candidate->client_emp_id,
+                $candidate->emp_name,
+                $candidate->designation,
+                $candidate->joining_date ? Carbon::parse($candidate->joining_date)->format('d-m-Y') : '',
+                $candidate->department,
+                $candidate->location,
+                $candidate->client_name,
+                $candidate->uan_no,
+                $candidate->pf_no,
+                $candidate->esic_no,
+                $candidate->bank_name,
+                $candidate->bank_account_no,
+                $candidate->bank_ifsc_code,
+                $candidate->month_days,
+                $candidate->payable_days,
+                $candidate->leave_days,
+                $candidate->lop_days,
+                $candidate->arrears_days,
+                $candidate->ot_hours,
+                $candidate->leave_balance,
+                $candidate->fixed_basic_da,
+                $candidate->fixed_hra,
+                $candidate->fixed_conveyance,
+                $candidate->fix_education_allowance,
+                $candidate->fixed_medical_reimbursement,
+                $candidate->fixed_special_allowance,
+                $candidate->fixed_other_allowance,
+                $candidate->fixed_st_bonus,
+                $candidate->fix_leave_wages,
+                $candidate->fixed_holiday_wages,
+                $candidate->fixed_attendance_bonus,
+                $candidate->fixed_ot_wages,
+                $candidate->fix_incentive_wages,
+                $candidate->fix_arrear_wages,
+                $candidate->fixed_other_wages,
+                $candidate->fixed_total_earnings,
+                $candidate->earn_basic,
+                $candidate->earn_hr,
+                $candidate->earn_conveyance,
+                $candidate->earn_education_allowance,
+                $candidate->earn_medical_allowance,
+                $candidate->earn_special_allowance,
+                $candidate->earn_other_allowance,
+                $candidate->earn_st_bonus,
+                $candidate->earn_leave_wages,
+                $candidate->earn_holiday_wages,
+                $candidate->earn_attendance_bonus,
+                $candidate->earn_ot_wages,
+                $candidate->earn_incentive_wages,
+                $candidate->earn_arrear_wages,
+                $candidate->earn_other_wages,
+                $candidate->earn_total_gross,
+                $candidate->epf,
+                $candidate->esic,
+                $candidate->pt,
+                $candidate->it,
+                $candidate->lwf,
+                $candidate->salary_advance,
+                $candidate->other_deduction,
+                $candidate->total_deduction,
+                $candidate->net_salary,
+                $candidate->in_words
             ];
 
+            $sheet->fromArray($row, null, 'A' . $rowNumber);
+            $rowNumber++;
+        }
 
-            fputcsv($file, $csvHeaders);
+        // Write to temporary file
+        $writer = new Xlsx($spreadsheet);
+        $fileName = 'payslip_format.xlsx';
+        $tempFile = tempnam(sys_get_temp_dir(), 'xlsx');
+        $writer->save($tempFile);
 
-            foreach ($candidates as $candidate) {
-                fputcsv($file, [
-                    $candidate->ffi_emp_id,
-                    $candidate->client_emp_id,
-                    $candidate->client_name,
-                    $candidate->emp_name,
-                    $candidate->designation,
-                    Carbon::parse($candidate->joining_date)->format('d-m-Y'),
-                    $candidate->department,
-                    '',
-                    $candidate->location,
-                    $candidate->entity_name,
-                    '',
-                    '',
-                    $candidate->uan_no,
-                    '',
-                    $candidate->esic_no,
-                    $candidate->bank_name,
-                    $candidate->bank_account_no,
-                    $candidate->bank_ifsc_code,
-                ]);
-            }
-
-            fclose($file);
-        };
-
-        return response()->stream($callback, 200, $headers);
+        // Return response as download
+        return response()->download($tempFile, $fileName)->deleteFileAfterSend(true);
     }
+
 }

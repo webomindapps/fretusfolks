@@ -12,7 +12,9 @@ use App\Jobs\ImportCFISJob;
 use Illuminate\Http\Request;
 use RecursiveIteratorIterator;
 use App\Exports\EmployeeExport;
+use App\Imports\CfisBulkImport;
 use RecursiveDirectoryIterator;
+use App\Imports\CFISBasicImport;
 use App\Models\ClientManagement;
 use App\Jobs\ImportBulkUpdateJob;
 use App\Models\CandidateDocuments;
@@ -30,7 +32,7 @@ class CFISController extends Controller
     }
     public function index()
     {
-        $searchColumns = ['id','ffi_emp_id', 'client_id', 'emp_name', 'joining_date', 'phone1'];
+        $searchColumns = ['id', 'ffi_emp_id', 'client_id', 'emp_name', 'joining_date', 'phone1'];
         $search = request()->search;
         $from_date = request()->from_date;
         $to_date = request()->to_date;
@@ -102,7 +104,7 @@ class CFISController extends Controller
                 }
             ],
             'driving_license_no' => 'nullable|string|max:255',
-            'photo' => 'required|file|mimes:jpg,jpeg,png',
+            'photo' => 'required|file|mimes:jpg,jpeg,png,gif,bmp,webp,pdf,doc,docx',
             'resume' => 'nullable',
         ]);
         $validatedData = $request->all();
@@ -268,49 +270,47 @@ class CFISController extends Controller
 
     public function import(Request $request)
     {
-        $created_by = auth()->id();
-        Log::info('Auth ID:', ['created_by' => $created_by]);
-        $file = $request->file;
-        if ($file) {
-            $fileName = time() . '_' . $file->getClientOriginalName();
-            $filePath = public_path('imports');
-
-            $file->move($filePath, $fileName);
-            $fileWithPath = $filePath . '/' . $fileName;
-
-            $records = array_map('str_getcsv', file($fileWithPath));
-            $header = $records[0];
-            unset($records[0]);
-
-            $dataChunks = array_chunk($records, 1000);
-            foreach ($dataChunks as $chunk) {
-                $processedData = [];
-
-                foreach ($chunk as $record) {
-                    if (count($header) == count($record)) {
-                        $processedData[] = array_combine($header, $record);
-                    }
-                }
-
-                if (!empty($processedData)) {
-                    Log::info('Dispatching Job with User ID:', ['created_by' => $created_by]); // Debugging log
-                    ImportCFISJob::dispatch($processedData, $created_by);
-                }
-            }
-
-            if (file_exists($fileWithPath)) {
-                unlink($fileWithPath);
-            }
-        }
-
-        return redirect()->route('admin.cfis')->with([
-            'success' => 'File imported successfully'
+        $request->validate([
+            'file' => 'required|file|mimes:xlsx,csv,txt',
         ]);
+
+        $created_by = auth()->id();
+
+        try {
+            $file = $request->file('file');
+
+            if ($file) {
+                $fileName = time() . '_' . $file->getClientOriginalName();
+                $filePath = public_path('imports');
+
+                if (!File::exists($filePath)) {
+                    File::makeDirectory($filePath, 0777, true);
+                }
+
+                $file->move($filePath, $fileName);
+                $fileWithPath = $filePath . '/' . $fileName;
+
+                Excel::import(new CFISBasicImport($created_by), $fileWithPath);
+
+                if (file_exists($fileWithPath)) {
+                    unlink($fileWithPath);
+                }
+
+                return redirect()->route('admin.cfis')->with([
+                    'success' => 'File imported successfully'
+                ]);
+            }
+        } catch (Exception $e) {
+            return redirect()->route('admin.cfis')->with([
+                'error' => 'Import failed: ' . $e->getMessage()
+            ]);
+        }
     }
+
 
     public function bulkindex()
     {
-        $searchColumns = ['id', 'client_id', 'emp_name', 'joining_date', 'phone1'];
+        $searchColumns = ['id', 'client_id', 'ffi_emp_id', 'employee_last_date', 'phone1'];
         $search = request()->search;
         $from_date = request()->from_date;
         $to_date = request()->to_date;
@@ -346,43 +346,23 @@ class CFISController extends Controller
     }
     public function bulkimport(Request $request)
     {
+        $request->validate([
 
-
-        $file = $request->file;
+            'file' => 'required|file|mimes:xlsx,csv,txt',
+        ]);
+        $file = $request->file('file');
         // dd($file);
         try {
-            if ($file) {
-                $fileName = time() . '_' . $file->getClientOriginalName();
-                $filePath = public_path('imports');
+            if ($request->hasFile('file')) {
+                $fileName = $file->getClientOriginalName();
+                $fileWithPath = public_path('imports') . '/' . $fileName;
 
-                $file->move($filePath, $fileName);
-                $fileWithPath = $filePath . '/' . $fileName;
-
-                $header = null;
-                $datafromCsv = [];
-
-                $records = array_map('str_getcsv', file($fileWithPath));
-                $header = $records[0]; // First row as header
-                unset($records[0]); // Remove header from data
-                // dd($header, $records);
-
-                $dataChunks = array_chunk($records, 1000);
-                // dd($dataChunks);
-                foreach ($dataChunks as $chunk) {
-                    $processedData = [];
-
-                    foreach ($chunk as $record) {
-                        if (count($header) == count($record)) {
-                            $processedData[] = array_combine($header, $record);
-                        }
-                    }
-
-                    if (!empty($processedData)) {
-                        // 
-                        ImportBulkUpdateJob::dispatch($processedData);
-                        // dd($processedData);
-                    }
+                if (!file_exists($fileWithPath)) {
+                    $file->move(public_path('imports'), $fileName);
                 }
+
+                Excel::import(new CfisBulkImport(), $fileWithPath);
+
                 if (file_exists($fileWithPath)) {
                     unlink($fileWithPath);
                 }
@@ -405,7 +385,7 @@ class CFISController extends Controller
 
         $employees = CFISModel::with(['candidateDocuments', 'educationCertificates', 'otherCertificates'])
             ->where('client_id', $clientId)
-            ->where('contract_date', $contractDate)
+            ->where('employee_last_date', $contractDate)
             ->get();
 
         if ($employees->isEmpty()) {

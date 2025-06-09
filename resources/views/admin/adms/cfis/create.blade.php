@@ -71,13 +71,12 @@
                                     size="col-lg-6 mt-2" :value="old('driving_license_path')" /> --}}
                                 <div class="form-group col-lg-6 mt-2">
                                     <label for="photo">Photo:<span style="color: red;">*</span></label>
-                                    <input type="file" name="photo" id="photo" accept="image/jpg, image/png"
-                                        required class="form-control" value="{{ old('photo') }}">
+                                    <input type="file" name="photo" id="photo" required class="form-control"
+                                        value="{{ old('photo') }}">
 
                                 </div>
                                 <div class="form-group col-lg-6 mt-2">
-                                    <label for="resume">Resume: <span
-                                        style="color: red">*</span></label>
+                                    <label for="resume">Resume: <span style="color: red">*</span></label>
                                     <input type="file" name="resume" id="resume"
                                         accept="application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/pdf"
                                         required class="form-control">

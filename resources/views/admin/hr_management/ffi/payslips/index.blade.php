@@ -67,8 +67,8 @@
 
                         <div>
                             <button type="submit" class="btn btn-primary">Upload</button>
-                            <a href="{{ asset('admin/fffi_payslip_format.csv') }}"
-                                class="btn btn-info text-white ms-3" download="fffi_payslip_format.csv">
+                            <a href="{{ asset('admin/fffi_payslip_format.xlsx') }}" class="btn btn-info text-white ms-3"
+                                download="fffi_payslip_format.xlsx">
                                 Download Sample
                             </a>
                         </div>
@@ -208,9 +208,14 @@
                                             <i class='bx bx-link-alt'></i>
                                             View Details
                                         </a>
-                                        <a class="dropdown-item"
+                                        {{-- <a class="dropdown-item"
                                             onclick="return confirm('Are you sure to delete this ?')"
                                             href="{{ route('admin.ffi_payslips.delete', $item) }}">
+                                            <i class='bx bx-trash-alt'></i>
+                                            Delete
+                                        </a> --}}
+                                        <a href="javascript:void(0);" class="dropdown-item delete-btn"
+                                            data-id="{{ $item->id }}">
                                             <i class='bx bx-trash-alt'></i>
                                             Delete
                                         </a>
@@ -232,6 +237,37 @@
 
 
     @push('scripts')
+    <script>
+        $(function () {
+            $('.delete-btn').on('click', function (event) {
+                event.preventDefault(); // ⛔ prevent page navigation
+
+                if (!confirm('Are you sure to delete this?')) {
+                    return;
+                }
+
+                const id = $(this).data('id');
+                const row = $('#row-' + id);
+
+                $.ajax({
+                    url: 'https://newapp.fretusfolks.com/admin/ffi_payslips/' + id + '/delete',
+                    method: 'GET',
+                    success: function (response) {
+                        if (response.success) {
+                            row.fadeOut(300, () => row.remove());
+                            alert('Deleted successfully!');
+                            window.location.reload();
+                        } else {
+                            alert('Failed to delete.');
+                        }
+                    },
+                    error: function () {
+                        alert('Error occurred while deleting.');
+                    }
+                });
+            });
+        });
+    </script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const tabs = document.querySelectorAll('#myTab .nav-link');

@@ -92,7 +92,7 @@ class SideBar extends Component
                     'icon' => 'bx bx-chevron-right',
                     'route' => 'admin.cfis',
                     'name' => 'cfis',
-                    'roles' => ['Admin', 'Recruitment', 'HR Operations'],
+                    'roles' => ['Admin', 'Recruitment'],
                 ],
                 [
                     'title' => 'Approved Candidates',
@@ -106,7 +106,7 @@ class SideBar extends Component
                     'icon' => 'bx bx-chevron-right',
                     'route' => 'admin.dcs_rejected',
                     'name' => 'dcs_rejected',
-                    'roles' => ['Admin', 'Recruitment', 'HR Operations'],
+                    'roles' => ['Admin', 'Recruitment'],
                 ],
                 [
                     'title' => 'Hr Approved Candidates',
@@ -194,7 +194,7 @@ class SideBar extends Component
                     'roles' => ['Admin', 'HR Operations'],
                 ],
                 [
-                    'title' => 'Bulk Update',
+                    'title' => 'Bulk Exit Update',
                     'icon' => 'bx bx-chevron-right',
                     'route' => 'admin.cfisbulk',
                     'name' => 'cfisbulk',

@@ -31,27 +31,39 @@
                             <div class="col-lg-3 mt-2">
                                 <label for="data">Client Name</label>
                                 <div class="dropdown">
-                                    <input type="text" class="btn dropdown-toggle" id="dropdownMenuButton"
+                                    <input type="text" class="btn dropdown-toggle text-start" id="dropdownMenuButton"
                                         data-bs-toggle="dropdown" aria-expanded="false" readonly
                                         value="Select Client" />
-                                    <ul class="dropdown-menu ps-3" aria-labelledby="dropdownMenuButton">
+
+                                    <ul class="dropdown-menu p-2" aria-labelledby="dropdownMenuButton"
+                                        style="max-height: 300px; overflow-y: auto; min-width: 250px;">
+                                        {{-- Search box --}}
+                                        <li class="mb-2">
+                                            <input type="text" class="form-control" placeholder="Search..."
+                                                onkeyup="filterClientList(this)">
+                                        </li>
+
+                                        {{-- Select All --}}
                                         <li>
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox" id="select_all_data"
-                                                    onchange="toggleSelectAll(this, '.data-checkbox', '#dropdownMenuButton', 'Select Data')">
+                                                    onchange="toggleSelectAll(this, '.data-checkbox', '#dropdownMenuButton', 'Select Client')">
                                                 <label class="form-check-label" for="select_all_data">Select All</label>
                                             </div>
                                         </li>
+
                                         <li>
                                             <hr class="dropdown-divider">
                                         </li>
+
+                                        {{-- Client list --}}
                                         @foreach (FretusFolks::getClientname() as $option)
-                                        <li>
+                                        <li class="client-option">
                                             <div class="form-check">
                                                 <input class="form-check-input data-checkbox" type="checkbox"
                                                     name="data[]" value="{{ $option['value'] }}"
-                                                    id="data_{{ $loop->index }}"
-                                                    onchange="updateSelectedCount('.data-checkbox', '#dropdownMenuButton', 'Select Data')">
+                                                    id="data_{{ $loop->index }}" data-name="{{ $option['label'] }}"
+                                                    onchange="updateSelectedNames('.data-checkbox', '#dropdownMenuButton', 'Select Client')">
                                                 <label class="form-check-label" for="data_{{ $loop->index }}">{{
                                                     $option['label'] }}</label>
                                             </div>
@@ -61,49 +73,6 @@
                                 </div>
                             </div>
 
-                            <!-- <div class="col-lg-3 mt-2">
-                                <label for="service_state">State</label>
-                                <div class="dropdown">
-                                    <input type="text" class="btn btn-secondary dropdown-toggle"
-                                        id="dropdownMenuButtonState" data-bs-toggle="dropdown" aria-expanded="false"
-                                        readonly value="Select State" />
-                                    <ul class="dropdown-menu ps-3" aria-labelledby="dropdownMenuButtonState">
-                                        <li>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="select_all_states"
-                                                    onchange="toggleSelectAll(this, '.state-checkbox', '#dropdownMenuButtonState', 'Select State')">
-                                                <label class="form-check-label" for="select_all_states">Select
-                                                    All</label>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <hr class="dropdown-divider">
-                                        </li>
-                                        @foreach (FretusFolks::getStates() as $option)
-                                            <li>
-                                                <div class="form-check">
-                                                    <input class="form-check-input state-checkbox" type="checkbox"
-                                                        name="service_state[]" value="{{ $option['value'] }}"
-                                                        id="service_state_{{ $loop->index }}"
-                                                        onchange="updateSelectedCount('.state-checkbox', '#dropdownMenuButtonState', 'Select State')">
-                                                    <label class="form-check-label"
-                                                        for="service_state_{{ $loop->index }}">{{ $option['label'] }}</label>
-                                                </div>
-                                            </li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                            </div>
-
-                            <div class="col-lg-2 mt-2">
-                                <label for="from">From Date</label>
-                                <input type="date" class="form-control" id="from" name="from">
-                            </div>
-
-                            <div class="col-lg-2 mt-2">
-                                <label for="to">To Date</label>
-                                <input type="date" class="form-control" id="to" name="to">
-                            </div> -->
 
                             <div class="col-lg-2 mt-4">
                                 <a class="btn btn-info  w-20 text-white mt-3" id="downloadFilteredCSV"
@@ -180,28 +149,41 @@
                             <div class="col-lg-3">
                                 <label for="data">Client Name (Multi-Select)</label>
                                 <div class="dropdown">
-                                    <input type="text" class="btn dropdown-toggle" id="dropdownMenuButtonclient"
-                                        data-bs-toggle="dropdown" aria-expanded="false" readonly
-                                        value="Select Client" />
-                                    <ul class="dropdown-menu ps-3" aria-labelledby="dropdownMenuButtonclient">
+                                    <input type="text" class="btn dropdown-toggle text-start"
+                                        id="dropdownMenuButtonclient" data-bs-toggle="dropdown" aria-expanded="false"
+                                        readonly value="Select Client" />
+
+                                    <ul class="dropdown-menu p-2" aria-labelledby="dropdownMenuButtonclient"
+                                        style="max-height: 300px; overflow-y: auto; min-width: 250px;">
+
+                                        <!-- Search Box -->
+                                        <li class="mb-2">
+                                            <input type="text" class="form-control" placeholder="Search..."
+                                                onkeyup="filterClientList(this, '.client-option')">
+                                        </li>
+
+                                        <!-- Select All Option -->
                                         <li>
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox" id="select_all_client"
-                                                    onchange="toggleSelectAll(this, '.client-checkbox', '#dropdownMenuButtonclient', 'Select client')">
+                                                    onchange="toggleSelectAll(this, '.client-checkbox', '#dropdownMenuButtonclient', 'Select Client')">
                                                 <label class="form-check-label" for="select_all_client">Select
                                                     All</label>
                                             </div>
                                         </li>
+
                                         <li>
                                             <hr class="dropdown-divider">
                                         </li>
+
+                                        <!-- Client Options -->
                                         @foreach (FretusFolks::getClientname() as $option)
-                                        <li>
+                                        <li class="client-option">
                                             <div class="form-check">
                                                 <input class="form-check-input client-checkbox" type="checkbox"
                                                     name="client[]" value="{{ $option['value'] }}"
-                                                    id="client_{{ $loop->index }}"
-                                                    onchange="updateSelectedCount('.client-checkbox', '#dropdownMenuButtonclient', 'Select client')">
+                                                    id="client_{{ $loop->index }}" data-name="{{ $option['label'] }}"
+                                                    onchange="updateSelectedNames('.client-checkbox', '#dropdownMenuButtonclient', 'Select Client')">
                                                 <label class="form-check-label" for="client_{{ $loop->index }}">{{
                                                     $option['label'] }}</label>
                                             </div>
@@ -211,7 +193,8 @@
                                 </div>
                             </div>
 
-                            <!-- Single-Select State Dropdown -->
+
+                            {{-- <!-- Single-Select State Dropdown -->
                             <div class="col-lg-3">
                                 <label for="service_state">State</label>
                                 <div class="dropdown">
@@ -244,7 +227,7 @@
                                         @endforeach
                                     </ul>
                                 </div>
-                            </div>
+                            </div> --}}
 
                             <!-- Select Month -->
                             <div class="col-md-3">
@@ -338,6 +321,7 @@
                 $columns = [
                 ['label' => 'Id', 'column' => 'id', 'sort' => true],
                 ['label' => 'EMP ID', 'column' => 'emp_id', 'sort' => false],
+                ['label' => 'Client Name', 'column' => 'client_name', 'sort' => false],
                 ['label' => 'EMP Name', 'column' => 'emp_name', 'sort' => false],
                 ['label' => 'Designation', 'column' => 'designation', 'sort' => true],
                 ['label' => 'Department', 'column' => 'department', 'sort' => true],
@@ -352,6 +336,7 @@
                     <tr>
                         <td>{{ $item->id }}</td>
                         <td>{{ $item->emp_id }}</td>
+                        <td>{{ $item->client_name }}</td>
                         <td>{{ $item->emp_name }}</td>
                         <td>{{ $item->designation }}</td>
                         <td>{{ $item->department }}</td>
@@ -362,8 +347,8 @@
                                 class="btn btn-sm btn-info">
                                 View Details
                             </a>
-                            <a href="{{ route('admin.payslips.delete', $item) }}" class="btn btn-sm btn-danger"
-                                onclick="return confirm('Are you sure to delete this?')">
+                            <a href="javascript:void(0);" class="btn btn-sm btn-danger delete-btn"
+                                data-id="{{ $item->id }}">
                                 Delete
                             </a>
                         </td>
@@ -380,6 +365,39 @@
     @endif
 
     @push('scripts')
+    <script>
+        $(function () {
+            $('.delete-btn').on('click', function (event) {
+                event.preventDefault(); // ⛔ prevent page navigation
+
+                if (!confirm('Are you sure to delete this?')) {
+                    return;
+                }
+
+                const id = $(this).data('id');
+                const row = $('#row-' + id);
+
+                $.ajax({
+                    url: 'https://newapp.fretusfolks.com/admin/payslips/' + id + '/delete',
+                    method: 'GET',
+                    success: function (response) {
+                        if (response.success) {
+                            row.fadeOut(300, () => row.remove());
+                            alert('Deleted successfully!');
+                            window.location.reload();
+                        } else {
+                            alert('Failed to delete.');
+                        }
+                    },
+                    error: function () {
+                        alert('Error occurred while deleting.');
+                    }
+                });
+            });
+        });
+    </script>
+
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const tabs = document.querySelectorAll('#myTab .nav-link');
@@ -400,17 +418,21 @@
                 });
             });
         });
-
     </script>
     <script>
-        function updateSelectedCount(checkboxClass, dropdownInputId, defaultText) {
+        function updateSelectedNames(checkboxClass, dropdownInputId, defaultText) {
             const checkboxes = document.querySelectorAll(checkboxClass);
             const dropdownInput = document.querySelector(dropdownInputId);
-            const selectedCount = Array.from(checkboxes).filter(cb => cb.checked).length;
 
-            dropdownInput.value = selectedCount > 0 ? `${selectedCount} selected` : defaultText;
+            const selectedLabels = Array.from(checkboxes)
+                .filter(cb => cb.checked)
+                .map(cb => cb.getAttribute('data-name'));
+
+            dropdownInput.value = selectedLabels.length > 0 ? selectedLabels.join(', ') : defaultText;
+
+            // Handle Select All
             const selectAllCheckbox = document.querySelector('#select_all_data');
-            selectAllCheckbox.checked = selectedCount === checkboxes.length;
+            selectAllCheckbox.checked = selectedLabels.length === checkboxes.length;
         }
 
         function toggleSelectAll(selectAllCheckbox, checkboxClass, dropdownInputId, defaultText) {
@@ -419,9 +441,20 @@
             const isChecked = selectAllCheckbox.checked;
 
             checkboxes.forEach(cb => cb.checked = isChecked);
-            updateSelectedCount(checkboxClass, dropdownInputId, defaultText);
+            updateSelectedNames(checkboxClass, dropdownInputId, defaultText);
+        }
+
+        function filterClientList(input) {
+            const filter = input.value.toLowerCase();
+            const items = document.querySelectorAll('.client-option');
+
+            items.forEach(item => {
+                const label = item.textContent.toLowerCase();
+                item.style.display = label.includes(filter) ? '' : 'none';
+            });
         }
     </script>
+
     <script>
         $(document).on('click', '#downloadFilteredCSV', function () {
             let selectedClients = [];
@@ -429,10 +462,6 @@
             $('.data-checkbox:checked').each(function () {
                 selectedClients.push($(this).val());
             });
-
-
-
-
 
             if (selectedClients.length === 0) {
                 const link = document.createElement('a');
@@ -449,8 +478,6 @@
             let queryParams = {
                 data: selectedClients,
             };
-
-
 
             let queryString = $.param(queryParams);
 

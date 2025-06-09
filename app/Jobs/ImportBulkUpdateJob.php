@@ -32,10 +32,11 @@ class ImportBulkUpdateJob implements ShouldQueue
         // dd($this->data);
         foreach ($this->data as $row) {
             $info[] = [
-                'ffi_emp_id' => $row['ffi_emp_id'],
-                'emp_name' => $row['emp_name'],
-                'contract_date' => isset($row['contract_date']) ? str_replace('/', '-', $row['contract_date']) : null,
-
+                'ffi_emp_id' => $row['FFI_EMP_ID'],
+                'emp_name' => $row['Employee_Name'],
+                'employee_last_date' => isset($row['Employee_Last_date']) && is_numeric($row['Employee_Last_date'])
+                    ? \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row['Employee_Last_date'])->format('Y-m-d')
+                    : null,
             ];
 
 

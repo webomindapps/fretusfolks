@@ -1,5 +1,5 @@
 <x-applayout>
-    <x-admin.breadcrumb title="  Bulk Update">
+    <x-admin.breadcrumb title="  Bulk Exit Date">
         <button type="button" class="add-btn bg-success text-white" data-bs-toggle="modal" data-bs-target="#downloadModal"
             style="
         height: 40px;
@@ -12,16 +12,15 @@
     <div class="row">
         <div class="d-flex justify-content-end align-items-center">
             <div class="d-flex gap-3">
-                <a href='{{ asset('admin/cfis_bulkupdate.csv') }}' class="btn btn-primary text-white"
-                    download="cfis_bulkupdate.csv">
+                <a href='{{ asset('admin/cfis_bulkupdate.xlsx') }}' class="btn btn-primary text-white"
+                    download="cfis_bulkupdate.xlsx">
                     <i class='bx bxs-download'></i> Download Sample
                 </a>
 
                 <form action="{{ route('admin.cfis.bulkimport') }}" method="POST" enctype="multipart/form-data"
                     class="d-flex align-items-center">
                     @csrf
-                    <input type="file" class="form-control form-control-sm me-2" name="file" accept=".csv"
-                        required>
+                    <input type="file" class="form-control form-control-sm me-2" name="file" required>
                     <button type="submit" class="add-btn bg-success text-white">Import</button>
                 </form>
             </div>
@@ -35,7 +34,8 @@
                     ['label' => 'Client Name', 'column' => 'client_id', 'sort' => true],
                     ['label' => 'Employee ID', 'column' => 'ffi_emp_id', 'sort' => true],
                     ['label' => 'Employee Name', 'column' => 'emp_name', 'sort' => true],
-                    ['label' => 'Date OF leave', 'column' => 'contract_date', 'sort' => true],
+                    ['label' => 'Contract End Daate', 'column' => 'contract_date', 'sort' => true],
+                    ['label' => 'Date OF leave', 'column' => 'employee_last_date', 'sort' => true],
                     // ['label' => 'Approval Status', 'column' => 'dcs_approval', 'sort' => true],
                     // ['label' => 'Status', 'column' => 'data_status', 'sort' => true],
                     // ['label' => 'Actions', 'column' => 'action', 'sort' => false],
@@ -77,7 +77,12 @@
                         </td>
                         <td> {{ $item->ffi_emp_id }}</td>
                         <td> {{ $item->emp_name }}</td>
-                        <td> {{ \Carbon\Carbon::parse(time: $item->contract_date)->format('d-m-Y') }}</td>
+                        <td>
+                            {{ $item->contract_date ? \Carbon\Carbon::parse($item->contract_date)->format('d-m-Y') : '' }}
+                        </td>
+                        <td>
+                            {{ $item->employee_last_date ? \Carbon\Carbon::parse($item->employee_last_date)->format('d-m-Y') : '' }}
+                        </td>
 
 
                         {{-- <td>

@@ -95,16 +95,16 @@ class CadidateReportExport implements FromCollection, WithHeadings
                 'CTC' => $candidate->ctc,
 
 
-                'Aadhar Doc' => $documentPaths['aadhar_path'] ?? '',
-                'PAN Doc' => $documentPaths['pan_path'] ?? '',
-                'Driving License Doc' => $documentPaths['driving_license_path'] ?? '',
-                'Resume Doc' => $documentPaths['resume'] ?? '',
-                'Voter ID Doc' => $documentPaths['voter_id'] ?? '',
-                'Employee Form Doc' => $documentPaths['emp_form'] ?? '',
-                'PF/ESIC Form Doc' => $documentPaths['pf_esic_form'] ?? '',
-                'Payslip Doc' => $documentPaths['payslip'] ?? '',
-                'Experience Letter Doc' => $documentPaths['exp_letter'] ?? '',
-                'PAN Declaration Doc' => $documentPaths['pan_declaration'] ?? '',
+                'Aadhar Doc' => $documentPaths['aadhar_path'] ?? $candidate->aadhar_path ?? '',
+                'PAN Doc' => $documentPaths['pan_path'] ?? $candidate->pan_path ?? '',
+                'Driving License Doc' => $documentPaths['driving_license_path'] ?? $candidate->driving_license_path ?? '',
+                'Resume Doc' => $documentPaths['resume'] ?? $candidate->resume ?? '',
+                'Voter ID Doc' => $documentPaths['voter_id'] ?? $candidate->voter_id ?? '',
+                'Employee Form Doc' => $documentPaths['emp_form'] ?? $candidate->emp_form ?? '',
+                'PF/ESIC Form Doc' => $documentPaths['pf_esic_form'] ?? $candidate->pf_esic_form ?? '',
+                'Payslip Doc' => $documentPaths['payslip'] ?? $candidate->payslip ?? '',
+                'Experience Letter Doc' => $documentPaths['exp_letter'] ?? $candidate->exp_letter ?? '',
+                'PAN Declaration Doc' => $documentPaths['pan_declaration'] ?? $candidate->pan_declaration ?? '',
             ];
         });
     }

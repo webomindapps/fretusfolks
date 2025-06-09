@@ -16,7 +16,9 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\EducationCertificate;
 use Illuminate\Support\Facades\Mail;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
+use App\Imports\ApprovedCandidateImport;
 use App\Jobs\ImportApprovedCandidatesJob;
 
 class DCSApprovalController extends Controller
@@ -129,7 +131,7 @@ class DCSApprovalController extends Controller
             'aadhar_path' => 'nullable',
             'driving_license_no' => 'nullable|string|max:255',
             'driving_license_path' => 'nullable',
-            'photo' => 'nullable|file|mimes:jpg,png,pdf',
+            'photo' => 'nullable|file|mimes:jpg,jpeg,png,gif,bmp,webp,pdf,doc,docx',
             'family_photo' => 'nullable|file|mimes:jpg,png,pdf',
             'resume' => 'nullable|file',
             // 'bank_document' => 'nullable',
@@ -160,7 +162,7 @@ class DCSApprovalController extends Controller
             'modify_by' => 'nullable|integer',
             'password' => 'nullable|string|max:255',
             'refresh_code' => 'nullable|string|max:255',
-            'psd' => 'nullable|string|max:255',
+            'psd' => 'required|string|max:255',
             'document_type.*' => 'nullable|string',
             'document_file.*' => 'nullable',
             'child_names.*' => 'nullable|string|max:255',
@@ -172,8 +174,9 @@ class DCSApprovalController extends Controller
         $validatedData = $request->all();
         DB::beginTransaction();
         try {
-            $validatedData['password'] = $request->input('dcs_approval', 'ffemp@123');
-            $validatedData['psd'] = $request->input('dcs_approval', 'ffemp@123');
+            $plainPassword = $request->input('psd');
+            $validatedData['psd'] = $plainPassword;
+            $validatedData['password'] = bcrypt($plainPassword);
             $validatedData['dcs_approval'] = $request->input('dcs_approval', 0);
             $validatedData['data_status'] = $request->input('data_status', 1);
             $validatedData['hr_approval'] = $request->input('hr_approval', 0);
@@ -360,7 +363,8 @@ class DCSApprovalController extends Controller
         if (auth()->user()->hasRole('Admin')) {
             $query = $this->model()->query()
                 ->whereIn('data_status', [1])
-                ->whereIn('hr_approval', [0, 1]);
+                ->whereIn('hr_approval', [0, 1])
+                ->whereIn('dcs_approval', [0]); //with out dcs approval it should not come to hr approvl
         } else {
             $query = $this->model()->query()
                 // ->whereIn('data_status', [0, 1])
@@ -463,7 +467,7 @@ class DCSApprovalController extends Controller
             'aadhar_path' => 'nullable|file',
             'driving_license_no' => 'nullable|string|max:255',
             'driving_license_path' => 'nullable|file',
-            'photo' => 'nullable|file',
+            'photo' => 'nullable|file|mimes:jpg,jpeg,png,gif,bmp,webp,pdf,doc,docx',
             'family_photo' => 'nullable|file',
             'resume' => 'nullable|file',
             // 'bank_document' => 'nullable|file',
@@ -484,6 +488,7 @@ class DCSApprovalController extends Controller
             'emp_esic' => 'nullable|numeric',
             'pt' => 'nullable|numeric',
             'lwf' => 'nullable|numeric',
+            'employee_lwf' => 'nullable|numeric',
             'total_deduction' => 'nullable|numeric',
             'take_home' => 'nullable|numeric',
             'employer_pf' => 'nullable|numeric',
@@ -494,7 +499,7 @@ class DCSApprovalController extends Controller
             'modify_by' => 'nullable|integer',
             'password' => 'nullable|string|max:255',
             'refresh_code' => 'nullable|string|max:255',
-            'psd' => 'nullable|string|max:255',
+            'psd' => 'required|string|max:255',
             'pan_status' => 'nullable|boolean',
             'document_type.*' => 'nullable|string',
             'document_file.*' => 'nullable|file',
@@ -508,6 +513,9 @@ class DCSApprovalController extends Controller
         $validatedData = $request->all();
         DB::beginTransaction();
         try {
+            $plainPassword = $request->input('psd');
+            $validatedData['psd'] = $plainPassword;
+            $validatedData['password'] = bcrypt($plainPassword);
             $validatedData['data_status'] = $request->input('data_status', 1);
             $validatedData['dcs_approval'] = $request->input('dcs_approval', 0);
             $validatedData['comp_status'] = $request->input('comp_status', 0);
@@ -681,6 +689,7 @@ class DCSApprovalController extends Controller
                     'emp_esic' => $candidate->emp_esic ?? 0,
                     'pt' => $candidate->pt ?? 0,
                     'lwf' => $candidate->lwf ?? 0,
+                    'employee_lwf' => $candidate->employee_lwf ?? 0,
                     'total_deduction' => $candidate->total_deduction ?? 0,
                     'take_home' => $candidate->take_home ?? 0,
                     'employer_pf' => $candidate->employer_pf ?? 0,
@@ -780,7 +789,7 @@ class DCSApprovalController extends Controller
             'aadhar_path' => 'nullable|file|',
             'driving_license_no' => 'nullable|string|max:255',
             'driving_license_path' => 'nullable|file|',
-            'photo' => 'nullable|file|mimes:jpg,png,pdf|',
+            'photo' => 'nullable|file|mimes:jpg,jpeg,png,gif,bmp,webp,pdf,doc,docx',
             'family_photo' => 'nullable|file|mimes:jpg,png,pdf',
             'resume' => 'nullable|file',
             // 'bank_document' => 'nullable|file',
@@ -1078,7 +1087,7 @@ class DCSApprovalController extends Controller
             'aadhar_path' => 'nullable|file|',
             'driving_license_no' => 'nullable|string|max:255',
             'driving_license_path' => 'nullable|file|',
-            'photo' => 'nullable|file|mimes:jpg,png,pdf|',
+            'photo' => 'nullable|file|mimes:jpg,jpeg,png,gif,bmp,webp,pdf,doc,docx',
             'family_photo' => 'nullable|file|mimes:jpg,png,pdf',
             'resume' => 'nullable|file',
             // 'bank_document' => 'nullable|file',
@@ -1257,77 +1266,116 @@ class DCSApprovalController extends Controller
         }
     }
 
+    // public function import(Request $request)
+    // {
+    //     $created_by = auth()->id();
+    //     // dd($request->all());
+    //     $file = $request->file;
+    //     // dd($file);
+    //     try {
+    //         if ($file) {
+    //             $fileName = time() . '_' . $file->getClientOriginalName();
+    //             $filePath = public_path('imports');
+
+    //             $file->move($filePath, $fileName);
+    //             $fileWithPath = $filePath . '/' . $fileName;
+
+    //             $header = null;
+
+    //             $records = array_map('str_getcsv', file($fileWithPath));
+    //             $header = $records[0];
+    //             unset($records[0]);
+    //             // dd($header, $records);
+
+    //             $dataChunks = array_chunk($records, 1000);
+    //             // dd($dataChunks);
+    //             foreach ($dataChunks as $chunk) {
+    //                 $processedData = [];
+
+    //                 foreach ($chunk as $index => $record) {
+    //                     if (count($header) == count($record)) {
+    //                         $row = array_combine($header, $record);
+
+    //                         $exists = DB::table('backend_management')
+    //                             ->where('ffi_emp_id', $row['emp_id'])
+    //                             ->orWhere('phone1', $row['phone1'])
+    //                             ->exists();
+
+    //                         if ($exists) {
+    //                             $duplicates[] = "Duplicate at Row #" . ($index + 2) . " — ID: {$row['emp_id']}, Phone: {$row['phone1']}";
+    //                         } else {
+    //                             $processedData[] = $row;
+    //                         }
+    //                     }
+    //                 }
+
+    //                 if (!empty($processedData)) {
+    //                     ImportApprovedCandidatesJob::dispatch($processedData, $created_by);
+    //                     // dd($processedData);
+    //                 }
+    //             }
+    //             if (file_exists($fileWithPath)) {
+    //                 unlink($fileWithPath);
+    //             }
+    //             if (!empty($duplicates)) {
+    //                 $message = "Some records were skipped due to duplicates:\n";
+
+    //                 foreach ($duplicates as $d) {
+    //                     $message .= $d . "\n";
+    //                 }
+
+    //                 return redirect()->route('admin.dcs_approval')->with('error', nl2br($message));
+    //             }
+    //         }
+    //     } catch (Exception $e) {
+    //         return redirect()->route('admin.dcs_approval')->with([
+    //             'error' => 'Import failed: ' . $e->getMessage()
+    //         ]);
+    //     }
+
+    //     return redirect()->route('admin.dcs_approval')->with([
+    //         'success' => 'File imported successfully'
+    //     ]);
+    // }
+
+
     public function import(Request $request)
     {
+        $request->validate([
+            'file' => 'required|file|mimes:xlsx,csv,txt',
+        ]);
+
         $created_by = auth()->id();
-        // dd($request->all());
-        $file = $request->file;
-        // dd($file);
+
         try {
+            $file = $request->file('file');
+
             if ($file) {
                 $fileName = time() . '_' . $file->getClientOriginalName();
                 $filePath = public_path('imports');
 
+                if (!file_exists($filePath)) {
+                    mkdir($filePath, 0777, true);
+                }
+
                 $file->move($filePath, $fileName);
                 $fileWithPath = $filePath . '/' . $fileName;
 
-                $header = null;
+                // Excel Import using Maatwebsite
+                Excel::import(new ApprovedCandidateImport($created_by), $fileWithPath);
 
-                $records = array_map('str_getcsv', file($fileWithPath));
-                $header = $records[0];
-                unset($records[0]);
-                // dd($header, $records);
-
-                $dataChunks = array_chunk($records, 1000);
-                // dd($dataChunks);
-                foreach ($dataChunks as $chunk) {
-                    $processedData = [];
-
-                    foreach ($chunk as $index => $record) {
-                        if (count($header) == count($record)) {
-                            $row = array_combine($header, $record);
-
-                            $exists = DB::table('backend_management')
-                                ->where('ffi_emp_id', $row['emp_id'])
-                                ->orWhere('phone1', $row['phone1'])
-                                ->exists();
-
-                            if ($exists) {
-                                $duplicates[] = "Duplicate at Row #" . ($index + 2) . " — ID: {$row['emp_id']}, Phone: {$row['phone1']}";
-                            } else {
-                                $processedData[] = $row;
-                            }
-                        }
-                    }
-
-                    if (!empty($processedData)) {
-                        // 
-                        ImportApprovedCandidatesJob::dispatch($processedData, $created_by);
-                        // dd($processedData);
-                    }
-                }
                 if (file_exists($fileWithPath)) {
                     unlink($fileWithPath);
                 }
-                if (!empty($duplicates)) {
-                    $message = "Some records were skipped due to duplicates:\n";
 
-                    foreach ($duplicates as $d) {
-                        $message .= $d . "\n";
-                    }
-
-                    return redirect()->route('admin.dcs_approval')->with('error', nl2br($message));
-                }
+                return redirect()->route('admin.dcs_approval')->with([
+                    'success' => 'File imported successfully'
+                ]);
             }
         } catch (Exception $e) {
             return redirect()->route('admin.dcs_approval')->with([
                 'error' => 'Import failed: ' . $e->getMessage()
             ]);
         }
-
-        return redirect()->route('admin.dcs_approval')->with([
-            'success' => 'File imported successfully'
-        ]);
     }
-
 }

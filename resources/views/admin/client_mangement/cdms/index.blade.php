@@ -10,6 +10,7 @@
                     ['label' => 'Contact Person', 'column' => 'contact_person', 'sort' => true],
                     ['label' => 'Contact Person Phone', 'column' => 'contact_person_phone', 'sort' => true],
                     ['label' => 'Contact Person Email', 'column' => 'contact_person_email', 'sort' => true],
+                    ['label' => 'Status', 'column' => 'active_status', 'sort' => true],
                     ['label' => 'Actions', 'column' => 'action', 'sort' => false],
                 ];
             @endphp
@@ -51,7 +52,13 @@
                         <td> {{ $item->contact_person }}</td>
                         <td>{{ $item->contact_person_phone }}</td>
                         <td> {{ $item->contact_person_email }}</td>
-
+                        <td>
+                            @if ($item->active_status)
+                                <span class="badge rounded-pill deactive">In-Active</span>
+                            @else
+                                <span class="badge rounded-pill sactive">Active</span>
+                            @endif
+                        </td>
                         <td>
                             <div class="dropdown pop_Up dropdown_bg">
                                 <div class="dropdown-toggle" id="dropdownMenuButton-{{ $item->id }}"

@@ -7,7 +7,7 @@
                 <input type="hidden" name="to_date" value="{{ $toDate }}">
                 <input type="hidden" name="search_query" value="{{ $search_query }}">
                 @foreach ($selectedData as $id)
-                <input type="hidden" name="data[]" value="{{ $id }}">
+                    <input type="hidden" name="data[]" value="{{ $id }}">
                 @endforeach
                 <button type="submit" class="btn btn-success">Export to Excel</button>
             </form>
@@ -24,37 +24,48 @@
                         <div class="row">
                             <x-forms.input label="From Date" type="date" name="from_date" id="from-date"
                                 :required="false" size="col-lg-3 mt-2" :value="request()->from_date" />
-                            <x-forms.input label="To Date" type="date" name="to_date" id="to-date" :required="false"
-                                size="col-lg-3 mt-2" :value="request()->to_date" />
+                            <x-forms.input label="To Date" type="date" name="to_date" id="to-date"
+                                :required="false" size="col-lg-3 mt-2" :value="request()->to_date" />
                             <div class="col-lg-3 mt-2">
                                 <label for="data">Client Name</label>
                                 <div class="dropdown">
-                                    <input type="text" class="btn dropdown-toggle" id="dropdownMenuButton"
+                                    <input type="text" class="btn dropdown-toggle text-start" id="dropdownMenuButton"
                                         data-bs-toggle="dropdown" aria-expanded="false" readonly
                                         value="Select Client" />
-                                    <ul class="dropdown-menu ps-3" aria-labelledby="dropdownMenuButton">
+
+                                    <ul class="dropdown-menu p-2" aria-labelledby="dropdownMenuButton"
+                                        style="max-height: 300px; overflow-y: auto; min-width: 250px;">
+                                        {{-- Search box --}}
+                                        <li class="mb-2">
+                                            <input type="text" class="form-control" placeholder="Search..."
+                                                onkeyup="filterClientList(this)">
+                                        </li>
+
+                                        {{-- Select All --}}
                                         <li>
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox" id="select_all_data"
-                                                    onchange="toggleSelectAll(this, '.data-checkbox', '#dropdownMenuButton', 'Select Data')">
-                                                <label class="form-check-label" for="select_all_data">Select
-                                                    All</label>
+                                                    onchange="toggleSelectAll(this, '.data-checkbox', '#dropdownMenuButton', 'Select Client')">
+                                                <label class="form-check-label" for="select_all_data">Select All</label>
                                             </div>
                                         </li>
+
                                         <li>
                                             <hr class="dropdown-divider">
                                         </li>
+
+                                        {{-- Client list --}}
                                         @foreach (FretusFolks::getClientname() as $option)
-                                        <li>
-                                            <div class="form-check">
-                                                <input class="form-check-input data-checkbox" type="checkbox"
-                                                    name="data[]" value="{{ $option['value'] }}"
-                                                    id="data_{{ $loop->index }}"
-                                                    onchange="updateSelectedCount('.data-checkbox', '#dropdownMenuButton', 'Select Data')">
-                                                <label class="form-check-label" for="data_{{ $loop->index }}">{{
-                                                    $option['label'] }}</label>
-                                            </div>
-                                        </li>
+                                            <li class="client-option">
+                                                <div class="form-check">
+                                                    <input class="form-check-input data-checkbox" type="checkbox"
+                                                        name="data[]" value="{{ $option['value'] }}"
+                                                        id="data_{{ $loop->index }}" data-name="{{ $option['label'] }}"
+                                                        onchange="updateSelectedNames('.data-checkbox', '#dropdownMenuButton', 'Select Client')">
+                                                    <label class="form-check-label"
+                                                        for="data_{{ $loop->index }}">{{ $option['label'] }}</label>
+                                                </div>
+                                            </li>
                                         @endforeach
                                     </ul>
                                 </div>
@@ -94,26 +105,26 @@
                     </thead>
                     <tbody>
                         @forelse ($results as $result)
-                        <tr>
-                            <td>{{ $loop->iteration }}</td>
-                            <td>{{ $result->entity_name }}</td>
-                            <td>{{ $result->ffi_emp_id }}</td>
-                            <td>
-                                {{ trim("{$result->emp_name} {$result->middle_name} {$result->last_name}") ?: 'N/A' }}
-                            </td>
-                            <td>{{ $result->phone1 }}</td>
-                            <td>{{ $result->email }}</td>
-                            <td>
-                                <a href="{{ route('admin.candidatelifecycle.view', $result->id) }}"
-                                    class="btn btn-info">
-                                    <i class='bx bx-link-alt'></i> View
-                                </a>
-                            </td>
-                        </tr>
+                            <tr>
+                                <td>{{ $loop->iteration }}</td>
+                                <td>{{ $result->entity_name }}</td>
+                                <td>{{ $result->ffi_emp_id }}</td>
+                                <td>
+                                    {{ trim("{$result->emp_name} {$result->middle_name} {$result->last_name}") ?: 'N/A' }}
+                                </td>
+                                <td>{{ $result->phone1 }}</td>
+                                <td>{{ $result->email }}</td>
+                                <td>
+                                    <a href="{{ route('admin.candidatelifecycle.view', $result->id) }}"
+                                        class="btn btn-info">
+                                        <i class='bx bx-link-alt'></i> View
+                                    </a>
+                                </td>
+                            </tr>
                         @empty
-                        <tr>
-                            <td colspan="7" class="text-center">No records found.</td>
-                        </tr>
+                            <tr>
+                                <td colspan="7" class="text-center">No records found.</td>
+                            </tr>
                         @endforelse
                     </tbody>
 
@@ -127,58 +138,73 @@
     </div>
     <x-model1 />
     @push('scripts')
-    <script>
-        function updateSelectedCount(checkboxClass, dropdownInputId, defaultText) {
-            const checkboxes = document.querySelectorAll(checkboxClass);
-            const dropdownInput = document.querySelector(dropdownInputId);
-            const selectedCount = Array.from(checkboxes).filter(cb => cb.checked).length;
+        <script>
+            function updateSelectedNames(checkboxClass, dropdownInputId, defaultText) {
+                const checkboxes = document.querySelectorAll(checkboxClass);
+                const dropdownInput = document.querySelector(dropdownInputId);
 
-            dropdownInput.value = selectedCount > 0 ? `${selectedCount} selected` : defaultText;
-            const selectAllCheckbox = document.querySelector('#select_all_data');
-            selectAllCheckbox.checked = selectedCount === checkboxes.length;
-        }
+                const selectedLabels = Array.from(checkboxes)
+                    .filter(cb => cb.checked)
+                    .map(cb => cb.getAttribute('data-name'));
 
-        function toggleSelectAll(selectAllCheckbox, checkboxClass, dropdownInputId, defaultText) {
-            const dropdown = selectAllCheckbox.closest('.dropdown-menu');
-            const checkboxes = dropdown.querySelectorAll(checkboxClass);
-            const isChecked = selectAllCheckbox.checked;
+                dropdownInput.value = selectedLabels.length > 0 ? selectedLabels.join(', ') : defaultText;
 
-            checkboxes.forEach(cb => cb.checked = isChecked);
-            updateSelectedCount(checkboxClass, dropdownInputId, defaultText);
-        }
+                // Handle Select All
+                const selectAllCheckbox = document.querySelector('#select_all_data');
+                selectAllCheckbox.checked = selectedLabels.length === checkboxes.length;
+            }
+
+            function toggleSelectAll(selectAllCheckbox, checkboxClass, dropdownInputId, defaultText) {
+                const dropdown = selectAllCheckbox.closest('.dropdown-menu');
+                const checkboxes = dropdown.querySelectorAll(checkboxClass);
+                const isChecked = selectAllCheckbox.checked;
+
+                checkboxes.forEach(cb => cb.checked = isChecked);
+                updateSelectedNames(checkboxClass, dropdownInputId, defaultText);
+            }
+
+            function filterClientList(input) {
+                const filter = input.value.toLowerCase();
+                const items = document.querySelectorAll('.client-option');
+
+                items.forEach(item => {
+                    const label = item.textContent.toLowerCase();
+                    item.style.display = label.includes(filter) ? '' : 'none';
+                });
+            }
 
 
-        // function showCandidateDetails(employeeId) {
-        //     fetch(`/admin/candidatelifecycle/view/${employeeId}`)
-        //         .then(response => response.json())
-        //         .then(data => {
-        //             if (data.html_content) {
-        //                 document.querySelector('#client_details').innerHTML = data.html_content;
-        //                 $('#client_details').modal('show');
-        //                 const closeButton = document.querySelector('#closeModalButton');
-        //                 if (closeButton) {
-        //                     closeButton.addEventListener('click', function() {
-        //                         $('#client_details').modal('hide');
-        //                     });
-        //                 }
-        //             } else {
-        //                 console.error('No HTML content found in the response');
-        //             }
-        //         })
-        //         .catch(error => {
-        //             console.error('Error fetching client details:', error);
-        //         });
-        // }
+            // function showCandidateDetails(employeeId) {
+            //     fetch(`/admin/candidatelifecycle/view/${employeeId}`)
+            //         .then(response => response.json())
+            //         .then(data => {
+            //             if (data.html_content) {
+            //                 document.querySelector('#client_details').innerHTML = data.html_content;
+            //                 $('#client_details').modal('show');
+            //                 const closeButton = document.querySelector('#closeModalButton');
+            //                 if (closeButton) {
+            //                     closeButton.addEventListener('click', function() {
+            //                         $('#client_details').modal('hide');
+            //                     });
+            //                 }
+            //             } else {
+            //                 console.error('No HTML content found in the response');
+            //             }
+            //         })
+            //         .catch(error => {
+            //             console.error('Error fetching client details:', error);
+            //         });
+            // }
 
-        document.getElementById('export-form').addEventListener('submit', function (e) {
-            const selectedFields = Array.from(document.querySelectorAll('.data-checkbox:checked'))
-                .map(checkbox => checkbox.value);
-            document.getElementById('export-fields').value = selectedFields.join(',');
+            document.getElementById('export-form').addEventListener('submit', function(e) {
+                const selectedFields = Array.from(document.querySelectorAll('.data-checkbox:checked'))
+                    .map(checkbox => checkbox.value);
+                document.getElementById('export-fields').value = selectedFields.join(',');
 
-            document.getElementById('export-from-date').value = document.querySelector('#from-date').value;
-            document.getElementById('export-to-date').value = document.querySelector('#to-date').value;
+                document.getElementById('export-from-date').value = document.querySelector('#from-date').value;
+                document.getElementById('export-to-date').value = document.querySelector('#to-date').value;
 
-        });
-    </script>
+            });
+        </script>
     @endpush
 </x-applayout>

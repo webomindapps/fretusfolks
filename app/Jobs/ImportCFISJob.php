@@ -2,9 +2,11 @@
 
 namespace App\Jobs;
 
+use App\Models\States;
 use App\Models\CFISModel;
-use Illuminate\Bus\Queueable;
 use Illuminate\Bus\Batchable;
+use Illuminate\Bus\Queueable;
+use App\Models\ClientManagement;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -36,26 +38,31 @@ class ImportCFISJob implements ShouldQueue
 
         // dd("hello");
         foreach ($this->data as $row) {
+
+            $state = States::where('state_name', $row['State'])->first();
+            $client = ClientManagement::where('client_name', $row['Client_Name'])->first();
             $info[] = [
-                'emp_name' => $row['emp_name'],
-                'email' => $row['email'] ?? null,
-                'designation' => $row['designation'] ?? null,
-                'department' => $row['department'] ?? null,
-                'location' => $row['location'] ?? null,
-                'interview_date' => isset($row['interview_date']) ? str_replace('/', '-', $row['interview_date']) : null,
+                'entity_name' => $row['Client_Name'],
+                'emp_name' => $row['Emp_Name'],
+                'email' => $row['Email'] ?? null,
+                'designation' => $row['Designation'] ?? null,
+                'department' => $row['Department'] ?? null,
+                'location' => $row['Location'] ?? null,
+                'interview_date' => isset($row['Interview_Date']) && is_numeric($row['Interview_Date'])
+                    ? \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row['Interview_Date'])->format('Y-m-d')
+                    : null,
                 'status' => 1,
                 'dcs_approval' => 1,
                 'data_status' => 0,
                 'created_by' => $this->created_by,
+                'client_id' => $client?->id,
+                'state' => $state?->id,
             ];
 
 
         }
         \Log::info('Generated data:', $info);
-        // if (!empty($info)) {
-        //     // dd($info);
-        //     CFISModel::Create($info[]);
-        // }
+
         if (!empty($info)) {
             foreach ($info as $data) {
                 CFISModel::create(

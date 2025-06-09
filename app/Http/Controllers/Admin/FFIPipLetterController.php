@@ -179,8 +179,8 @@ class FFIPipLetterController extends Controller
         ];
 
         $pdf = PDF::loadView('admin.hr_management.ffi.pip_letter.print_pip', $data)
-            ->setPaper('A4', 'portrait')
-            ->setOptions(['margin-top' => 10, 'margin-bottom' => 10, 'margin-left' => 15, 'margin-right' => 15]);
+            ->setPaper('A4', 'portrait');
+        // ->setOptions(['margin-top' => 10, 'margin-bottom' => 10, 'margin-left' => 15, 'margin-right' => 15]);
 
 
         return $pdf->stream('pip_letter_' . $pipLetter->id . '.pdf');

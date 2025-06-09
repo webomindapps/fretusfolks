@@ -123,8 +123,8 @@
                                     <input type="date" class="form-control" id="contract_end" name="contract_end"
                                         required value="{{ old('contract_end', $client->contract_end) }}">
                                 </div>
-                                <x-forms.select label="Status:" name="status" id="status" :required="true"
-                                    size="col-lg-6 mt-2" :options="FretusFolks::getStatus()" :value="old('status', $client->status)" />
+                                <x-forms.select label="Status:" name="active_status" id="active_status"
+                                    :required="true" size="col-lg-6 mt-2" :options="FretusFolks::getStatus()" :value="old('active_status', $client->active_status)" />
 
                                 <div class="form-group col-md-12">
                                     <h5 class="card-title">Commercial</h5>

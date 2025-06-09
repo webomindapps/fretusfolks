@@ -317,7 +317,7 @@ Route::prefix('admin')->group(function () {
         Route::post('ffi_payslips/export', [FFIPayslipsController::class, 'export'])->name('ffi_payslips.export');
         Route::get('ffi_payslips/search-payslip', [FFIPayslipsController::class, 'searchPayslip'])->name('search.ffi_payslips');
         Route::get('/ffi_generate-payslips/{id}', [FFIPayslipsController::class, 'generatePayslipsPdf'])->name('ffi_generate.payslips');
-        Route::get('/ffi_payslips/delete/{id}', [FFIPayslipsController::class, 'destroy'])->name('ffi_payslips.delete');
+        Route::get('/ffi_payslips/{id}/delete', [FFIPayslipsController::class, 'destroy'])->name('ffi_payslips.delete');
 
         //tds_report
         Route::get('/fcms/tds_report', [PaymentController::class, 'tdsReports'])->name('fcms.tds_report');
@@ -430,7 +430,7 @@ Route::prefix('admin')->group(function () {
         Route::get('payslips/download-filtered', [ADMSPayslipController::class, 'downloadfiltered'])->name('payslips.downloadformat');
         Route::get('payslips/search-payslip', [ADMSPayslipController::class, 'searchPayslip'])->name('search.payslips');
         Route::get('/generate-payslips/{id}', [ADMSPayslipController::class, 'generatePayslipsPdf'])->name('generate.payslips');
-        Route::get('/payslips/delete/{id}', [ADMSPayslipController::class, 'destroy'])->name('payslips.delete');
+        Route::get('/payslips/{id}/delete', [ADMSPayslipController::class, 'destroy'])->name('payslips.delete');
 
         //Pending Bank Approvals
         Route::get('/pending-bank-approval', [ComplainceBankAccountController::class, 'index'])->name('pendingbankapprovals');
