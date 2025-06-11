@@ -16,7 +16,7 @@
             </a>
 
             @if ($menu['isSubMenu'])
-                <ul class="dropdown_menu @if (auth()->user()->hasRole('HR Operations') || auth()->user()->hasRole('Recruitment')) open @endif">
+                <ul class="dropdown_menu ">
                     @foreach ($menu['subMenus'] as $subMenu)
                         @if (isset($subMenu['roles']) && array_intersect($subMenu['roles'], auth()->user()->getRoleNames()->toArray()))
                             <li>

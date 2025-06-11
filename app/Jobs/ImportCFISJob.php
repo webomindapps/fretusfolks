@@ -48,9 +48,7 @@ class ImportCFISJob implements ShouldQueue
                 'designation' => $row['Designation'] ?? null,
                 'department' => $row['Department'] ?? null,
                 'location' => $row['Location'] ?? null,
-                'interview_date' => isset($row['Interview_Date']) && is_numeric($row['Interview_Date'])
-                    ? \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row['Interview_Date'])->format('Y-m-d')
-                    : null,
+                'interview_date' => date('Y-m-d', strtotime($row['Interview_Date'])),
                 'status' => 1,
                 'dcs_approval' => 1,
                 'data_status' => 0,

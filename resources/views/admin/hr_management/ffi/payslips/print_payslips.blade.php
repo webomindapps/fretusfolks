@@ -48,8 +48,8 @@
                 break;
         }
     @endphp
-    <title> Payslip -{{ $payslip->employee_name }} - {{ $payslip->emp_id ?? 0 }}
-        -{{ $monthName }}-{{ $payslip->year ?? 0 }}
+    <title> Payslip - {{ $payslip->employee_name }} - {{ $payslip->emp_id ?? 0 }}
+        - {{ $monthName }} - {{ $payslip->year ?? 0 }}
     </title>
 
     <!-- Bootstrap CSS -->
@@ -227,33 +227,33 @@
             <table>
                 <tbody>
                     <tr>
-                        <td style="width: 50%;">Employee Name: {{ $payslip->employee_name }}</td>
-                        <td>UAN No.:{{ $payslip->uan_no ?? 0 }} </td>
+                        <td style="width: 50%;">Employee Name : {{ $payslip->employee_name }}</td>
+                        <td>UAN No. : {{ $payslip->uan_no ?? 0 }} </td>
                     </tr>
                     <tr>
-                        <td>Emp. ID: {{ $payslip->emp_id ?? 0 }}</td>
-                        <td>PF No: {{ $payslip->pf_no ?? 0 }}</td>
+                        <td>Emp. ID : {{ $payslip->emp_id ?? 0 }}</td>
+                        <td>PF No : {{ $payslip->pf_no ?? 0 }}</td>
                     </tr>
                     <tr>
-                        <td>Designation:{{ $payslip->designation ?? 0 }} </td>
-                        <td>ESI No.: {{ $payslip->esi_no ?? 0 }}</td>
+                        <td>Designation : {{ $payslip->designation ?? 0 }} </td>
+                        <td>ESI No. : {{ $payslip->esi_no ?? 0 }}</td>
                     </tr>
                     <tr>
                         <td>
-                            Date of Joining:
+                            Date of Joining :
                             @if ($payslip->date_of_joining != '0000-00-00')
                                 {{ date('d-m-Y', strtotime($payslip->date_of_joining)) ?? 0 }}
                             @endif
                         </td>
-                        <td>Bank Name: {{ $payslip->bank_name ?? 0 }}</td>
+                        <td>Bank Name : {{ $payslip->bank_name ?? 0 }}</td>
                     </tr>
                     <tr>
-                        <td>Department: {{ $payslip->department ?? 0 }}</td>
-                        <td>Account No.:{{ $payslip->account_no ?? 0 }} </td>
+                        <td>Department : {{ $payslip->department ?? 0 }}</td>
+                        <td>Account No. : {{ $payslip->account_no ?? 0 }} </td>
                     </tr>
                     <tr>
-                        <td>Location: Bangalore</td>
-                        <td>IFSC Code: {{ $payslip->ifsc_code ?? 0 }}</td>
+                        <td>Location : {{ $payslip->location ?? 'Bangalore' }}</td>
+                        <td>IFSC Code : {{ $payslip->ifsc_code ?? 0 }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -261,15 +261,17 @@
             <table style="margin-top: 3px;">
                 <tbody>
                     <tr>
-                        <td style="width: 38%;">Month Days: {{ $payslip->month_days ?? 0 }}</td>
-                        <td>Leave Days: {{ $payslip->leave_days ?? 0 }}</td>
-                        <td>Arrears Days:{{ $payslip->arrear_days ?? 0 }} </td>
+                        <td style="width: 38%;">Month Days :
+                            {{ !empty($payslip->month_days) ? $payslip->month_days : 0 }}</td>
+                        <td>Leave Days : {{ !empty($payslip->leave_days) ? $payslip->leave_days : 0 }}</td>
+                        <td>Arrears Days : {{ !empty($payslip->arrear_days) ? $payslip->arrear_days : 0 }}</td>
                     </tr>
                     <tr>
-                        <td>Payable Days: {{ $payslip->pay_days ?? 0 }}</td>
-                        <td>LOP Days:{{ $payslip->lop_days ?? 0 }} </td>
-                        <td>OT Hours:{{ $payslip->ot_hours ?? 0 }} </td>
+                        <td>Payable Days : {{ !empty($payslip->pay_days) ? $payslip->pay_days : 0 }}</td>
+                        <td>LOP Days : {{ !empty($payslip->lop_days) ? $payslip->lop_days : 0 }}</td>
+                        <td>OT Hours : {{ !empty($payslip->ot_hours) ? $payslip->ot_hours : 0 }}</td>
                     </tr>
+
                 </tbody>
             </table>
 
@@ -391,7 +393,7 @@
                         <td></td>
                         <td></td>
                     </tr>
-                    <tr>
+                    <tr style="border-top: 2px solid;">
                         <th style="width: 20%;">Total Gross</th>
                         <th style="width: 134px;">{{ $payslip->fixed_gross ?? 0 }}</th>
                         <th style="width: 151px;">{{ $payslip->earned_gross ?? 0 }}</th>
@@ -404,12 +406,12 @@
             <table style="margin-top: 3px;">
                 <tbody>
                     <tr>
-                        <td class="bold" style="border-right:none;">Net Salary:</td>
-                        <td colspan="6" class="bold">{{ $payslip->net_salary ?? 0 }}</td>
+                        <td style="border-right:none;font-weight: bold;">Net Salary:</td>
+                        <td colspan="6" style=" font-weight: bold;">{{ $payslip->net_salary ?? 0 }}</td>
                     </tr>
                     <tr style="border-top: 2px solid;">
-                        <td class="bold" style="border-right:none;">In Words:</td>
-                        <td colspan="6" class="bold">{{ $payslip->in_words ?? 0 }}</td>
+                        <td style="border-right:none;font-weight: bold;">In Words:</td>
+                        <td colspan="6" style=" font-weight: bold;">{{ $payslip->in_words ?? 0 }}</td>
                     </tr>
                 </tbody>
             </table>

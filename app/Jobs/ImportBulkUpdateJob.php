@@ -34,9 +34,7 @@ class ImportBulkUpdateJob implements ShouldQueue
             $info[] = [
                 'ffi_emp_id' => $row['FFI_EMP_ID'],
                 'emp_name' => $row['Employee_Name'],
-                'employee_last_date' => isset($row['Employee_Last_date']) && is_numeric($row['Employee_Last_date'])
-                    ? \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row['Employee_Last_date'])->format('Y-m-d')
-                    : null,
+                'employee_last_date' => date('Y-m-d', strtotime($row['Employee_Last_date'])),
             ];
 
 

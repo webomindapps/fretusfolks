@@ -13,7 +13,7 @@
                 <form action="{{ route('admin.candidatemaster.import') }}" method="POST" enctype="multipart/form-data"
                     class="d-flex align-items-center">
                     @csrf
-                    <input type="file" class="form-control form-control-sm me-2" name="file" accept=".csv"
+                    <input type="file" class="form-control form-control-sm me-2" name="file" 
                         required>
                     <button type="submit" class="add-btn bg-success text-white">Import</button>
                 </form>

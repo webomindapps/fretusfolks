@@ -28,27 +28,30 @@ class ImportCandidatesJob implements ShouldQueue
     public function handle(): void
     {
         foreach ($this->data as $row) {
-            if (!isset($row['ffi_emp_id'])) {
-                \Log::error('Missing ffi_emp_id:', $row);
-                continue; // Skip this record if ffi_emp_id is missing
+            if (empty($row['FFI_Emp_ID'])) {
+                \Log::error('Missing FFI_Emp_ID:', $row);
+                continue;
             }
 
-            $info = [
-                'ffi_emp_id' => $row['ffi_emp_id'],
-                'emp_name' => $row['emp_name'],
-                'email' => $row['email'] ?? null,
-                'uan_no' => $row['uan_no'] ?? null,
-                'esic_no' => $row['esic_no'] ?? null,
-                'comp_status' => 1,
-            ];
+            $ffiEmpId = $row['FFI_Emp_ID'];
+            $clientid = $row['Client_ID'];
+            $phone = $row['Phone_No'];
 
-            \Log::info('Processing record:', $info);
+            $existing = CFISModel::where('ffi_emp_id', $ffiEmpId)
+                ->whereIn('phone1', $phone)
+                ->whereIn('client_emp_id', $clientid)->first();
 
-            // ✅ Correct usage of updateOrCreate
-            CFISModel::updateOrCreate(
-                ['ffi_emp_id' => $info['ffi_emp_id']], // Condition to find the record
-                $info // Data to update or insert
-            );
+            if ($existing) {
+                // Only update UAN and ESIC
+                $existing->update([
+                    'uan_no' => $row['UAN_No'] ?? null,
+                    'esic_no' => $row['ESIC_No'] ?? null,
+                    'comp_status' => 1,
+
+                ]);
+
+                \Log::info("Updated UAN/ESIC for ffi_emp_id: $ffiEmpId");
+            }
         }
 
         \Log::info('Job completed successfully');

@@ -32,7 +32,7 @@ class FHRMSController extends Controller
         $orderBy = request()->orderBy;
         $paginate = request()->paginate;
 
-        $query = $this->model()->where('status', 0);
+        $query = $this->model()->query();
 
         if ($from_date && $to_date) {
             $query->whereBetween('created_at', [$from_date, $to_date]);
@@ -61,14 +61,14 @@ class FHRMSController extends Controller
             'emp_name' => 'required|string|max:255',
             'interview_date' => 'required|date',
             'joining_date' => 'required|date',
-            'contract_date' => 'required|date',
+            'contract_date' => 'nullable|date',
             'designation' => 'required|string|max:255',
             'department' => 'nullable|string|max:255',
             'state' => 'required|integer',
             'location' => 'required|string|max:255',
             'dob' => 'required|date',
             'father_name' => 'required|string|max:255',
-            'gender' => 'required|in:1,2,3',
+            'gender' => 'required',
             'blood_group' => 'required|string',
             'qualification' => 'required|string|max:255',
             'phone1' => 'required|digits:10|min:10|max:15',
@@ -206,14 +206,14 @@ class FHRMSController extends Controller
             'emp_name' => 'required|string|max:255',
             'interview_date' => 'required|date',
             'joining_date' => 'required|date',
-            'contract_date' => 'required|date',
+            'contract_date' => 'nullable|date',
             'designation' => 'required|string|max:255',
             'department' => 'nullable|string|max:255',
             'state' => 'required|integer',
             'location' => 'required|string|max:255',
             'dob' => 'required|date',
             'father_name' => 'required|string|max:255',
-            'gender' => 'required|in:1,2,3',
+            'gender' => 'required',
             'blood_group' => 'required|string',
             'qualification' => 'required|string|max:255',
             'phone1' => 'required|digits:10',
@@ -399,20 +399,38 @@ class FHRMSController extends Controller
             'import_file' => 'required|file|mimes:xlsx,csv,txt',
         ]);
 
-        $file = $request->import_file;
-        $import = new FHRMSImport();
-        Excel::import($import, $file);
-        $error = '';
-        // dd($import);
-        foreach ($import->failures() as $failure) {
-            $failure->row();
-            $failure->attribute();
-            $failure->errors();
-            $failure->values();
-            $error .= 'Row no:-' . $failure->row() . ', Column:-' . $failure->attribute() . ', Error:-' . $failure->errors()[0] . '<br>';
-        }
-        return redirect()->route('admin.fhrms')->with(['success' => 'Employees added successfully', 'error_msg' => $error]);
+        $created_by = auth()->id();
 
+        try {
+            $file = $request->file('import_file');
+            // dd($file);
+            if ($file) {
+                $fileName = time() . '_' . $file->getClientOriginalName();
+                $filePath = public_path('imports');
+
+                if (!file_exists($filePath)) {
+                    mkdir($filePath, 0777, true);
+                }
+
+                $file->move($filePath, $fileName);
+                $fileWithPath = $filePath . '/' . $fileName;
+
+                // Excel Import using Maatwebsite
+                Excel::import(new FHRMSImport($created_by), $fileWithPath);
+
+                if (file_exists($fileWithPath)) {
+                    unlink($fileWithPath);
+                }
+
+                return redirect()->route('admin.fhrms')->with([
+                    'success' => 'File imported successfully'
+                ]);
+            }
+        } catch (Exception $e) {
+            return redirect()->route('admin.fhrms')->with([
+                'alert' => $e->getMessage()
+            ]);
+        }
     }
 
     public function showCodeReport(Request $request)
@@ -527,7 +545,7 @@ class FHRMSController extends Controller
             'location' => 'nullable|string|max:255',
             'dob' => 'nullable|date',
             'father_name' => 'nullable|string|max:255',
-            'gender' => 'nullable|in:1,2,3',
+            'gender' => 'nullable',
             'blood_group' => 'nullable|string',
             'qualification' => 'nullable|string|max:255',
             'phone1' => 'nullable|digits:10',
@@ -654,7 +672,7 @@ class FHRMSController extends Controller
             'location' => 'nullable|string|max:255',
             'dob' => 'nullable|date',
             'father_name' => 'nullable|string|max:255',
-            'gender' => 'nullable|in:1,2,3',
+            'gender' => 'nullable',
             'blood_group' => 'nullable|string',
             'qualification' => 'nullable|string|max:255',
             'phone1' => 'nullable|digits:10',

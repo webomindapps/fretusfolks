@@ -314,15 +314,10 @@ class FretusFolks extends Controller
             '9th',
             '10th',
             'PUC',
-            'BBA',
-            'BCOM',
-            'BCA',
-            'BE',
-            'MBA',
-            'MCOM',
-            'MCA',
-            'Engineering',
-            'Diploma ',
+            'Graduate',
+            'Under_Graduate',
+            'Post_Graduate',
+            'Diploma',
             'PHD'
         ];
         $data = [];

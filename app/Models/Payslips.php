@@ -95,6 +95,7 @@ class Payslips extends Model
         'lwf',
         'salary_advance',
         'other_deduction',
+        'notice_period_deducation',
         'total_deduction',
         'net_salary',
         'in_words',

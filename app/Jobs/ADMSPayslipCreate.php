@@ -38,12 +38,12 @@ class ADMSPayslipCreate implements ShouldQueue
         $paypdf = [];
         $data = [];
         // dd($this->payslips);
-        \Log::info('Generated data:', $this->payslips);
+        // \Log::info('Generated data:', $this->payslips);
 
         foreach ($this->payslips as $key => $row) {
-
+            \Log::info($row);
             $uniqueId = time() . '_' . uniqid(); // Generates a unique identifier
-            $fileName = 'payslip_' . $row['Employee_ID'] . '_' . $this->month . '_' . $this->year . '_' . $uniqueId . '.pdf';
+            $fileName = 'payslip_' . $row['Employee_Name'] . '_' . $row['Employee_ID'] . '_' . $this->month . '_' . $this->year . '_' . $uniqueId . '.pdf';
 
 
 
@@ -54,14 +54,7 @@ class ADMSPayslipCreate implements ShouldQueue
                 'client_emp_id' => isset($row['Client_Employee_ID']) ? $row['Client_Employee_ID'] : 0,
                 'emp_name' => isset($row['Employee_Name']) ? $row['Employee_Name'] : 'N/A',
                 'designation' => isset($row['Designation']) ? $row['Designation'] : 'N/A',
-                'doj' => isset($row['Date_of_Joining']) ? (
-                    is_numeric($row['Date_of_Joining'])
-                    ? Date::excelToDateTimeObject($row['Date_of_Joining'])->format('Y-m-d')
-                    : (Carbon::hasFormat($row['Date_of_Joining'], 'd-m-Y')
-                        ? Carbon::createFromFormat('d-m-Y', $row['Date_of_Joining'])->format('Y-m-d')
-                        : null)
-                ) : null,
-                // 'doj' => Date::excelToDateTimeObject($row['Date_of_Joining']),
+                'doj' => date('Y-m-d', strtotime($row['Date_of_Joining'])),
                 'department' => isset($row['Department']) ? $row['Department'] : 'N/A',
                 'vertical' => isset($row['Vertical']) ? $row['Vertical'] : 'N/A',
                 'location' => isset($row['Location']) ? $row['Location'] : 'N/A',
@@ -148,6 +141,7 @@ class ADMSPayslipCreate implements ShouldQueue
                 'lwf' => isset($row['LWF']) ? $row['LWF'] : 0,
                 'salary_advance' => isset($row['Salary_Advance']) ? $row['Salary_Advance'] : 0,
                 'other_deduction' => isset($row['Other_Deduction']) ? $row['Other_Deduction'] : 0,
+                'notice_period_deducation' => isset($row['Notice_Period_Deduction']) ? $row['Notice_Period_Deduction'] : 0,
                 'total_deduction' => isset($row['Total_Deduction']) ? $row['Total_Deduction'] : 0,
                 'net_salary' => isset($row['Net_Salary']) ? $row['Net_Salary'] : 0,
                 'in_words' => $row['In_Words'],
@@ -165,7 +159,7 @@ class ADMSPayslipCreate implements ShouldQueue
                 'payslips_letter_path' => $filePath
             ];
         }
-        \Log::info('Generated data:', $data);
+        // \Log::info('Generated data:', $data);
 
         // Perform bulk insert
         foreach ($paypdf as $pdfData) {

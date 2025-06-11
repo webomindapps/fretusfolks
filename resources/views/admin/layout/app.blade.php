@@ -63,6 +63,13 @@
                         </div>
                     </div>
                 @endif
+                @if (session('alert'))
+                    <div class="col-lg-12 mt-2 session-alert" id="session-alert">
+                        <div class="alert alert-danger">
+                            {{ session('alert') }}
+                        </div>
+                    </div>
+                @endif
             </div>
             {{ $slot }}
         </div>

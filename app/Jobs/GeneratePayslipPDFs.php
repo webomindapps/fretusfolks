@@ -30,11 +30,11 @@ class GeneratePayslipPDFs implements ShouldQueue, ShouldBeUnique
             'payslip' => $this->payslip,
         ];
 
-        $pdf = Pdf::loadView('admin.hr_management.ffi.payslips.print_payslips', $data)
+        $pdf = Pdf::loadView('admin.adms.payslip.formate', $data)
             ->setPaper('A4', 'portrait')
             ->setOptions(['margin-top' => 10, 'margin-bottom' => 10, 'margin-left' => 15, 'margin-right' => 15]);
         $tempPath = storage_path('app/temp/');
-        $fileName = 'payslip_' . $this->payslip->id . '.pdf';
+        $fileName = 'payslip_' . $this->payslip->id . $this->payslip->emp_id . $this->payslip->emp_name . '.pdf';
         $filePath = $tempPath . $fileName;
 
         // Save the PDF

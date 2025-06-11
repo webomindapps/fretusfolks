@@ -50,43 +50,30 @@ class ImportApprovedCandidatesJob implements ShouldQueue
                 'grade' => $row['Grade'] ?? null,
                 'emp_name' => $row['Emp_Name'],
                 'email' => $row['Email'] ?? null,
-                'interview_date' => isset($row['Interview_Date']) && is_numeric($row['Interview_Date'])
-                    ? \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row['Interview_Date'])->format('Y-m-d')
-                    : null,
-                'joining_date' => isset($row['Joining_Date']) && is_numeric($row['Joining_Date'])
-                    ? \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row['Joining_Date'])->format('Y-m-d')
-                    : null,
-                'contract_date' => isset($row['Contract_End_Date']) && is_numeric($row['Contract_End_Date'])
-                    ? \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row['Contract_End_Date'])->format('Y-m-d')
-                    : null,
+                'interview_date' => date('Y-m-d', strtotime($row['Interview_Date'])),
 
+                'joining_date' => date('Y-m-d', strtotime($row['Joining_Date'])),
+
+                'contract_date' => date('Y-m-d', strtotime($row['Contract_End_Date'])),
                 'designation' => $row['Designation'] ?? null,
                 'department' => $row['Department'] ?? null,
                 'location' => $row['Location'] ?? null,
                 'branch' => $row['Branch'] ?? null,
                 'gender' => $row['Gender'] ?? null,
-                'dob' => isset($row['Date_of_Birth']) && is_numeric($row['Date_of_Birth'])
-                    ? \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row['Date_of_Birth'])->format('Y-m-d')
-                    : null,
+                'dob' => date('Y-m-d', strtotime($row['Date_of_Birth'])),
                 'qualification' => $row['Qualification'] ?? null,
                 'father_name' => $row['Father_Name'] ?? null,
-                'father_dob' => isset($row['Father_DOB']) && is_numeric($row['Father_DOB'])
-                    ? \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row['Father_DOB'])->format('Y-m-d')
-                    : null,
+                'father_dob' => date('Y-m-d', strtotime($row['Father_DOB'])),
                 'father_aadhar_no' => $row['Father_Aadhar'] ?? null,
                 'mother_name' => $row['Mother_Name'] ?? null,
-                'mother_dob' => isset($row['Mother_DOB']) && is_numeric($row['Mother_DOB'])
-                    ? \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row['Mother_DOB'])->format('Y-m-d')
-                    : null,
+                'mother_dob' => date('Y-m-d', strtotime($row['Mother_DOB'])),
                 'mother_aadhar_no' => $row['Mother_Aadhar'] ?? null,
                 'religion' => $row['Religion'] ?? null,
                 'languages' => $row['Languages'] ?? null,
                 'mother_tongue' => $row['Mother_Tongue'] ?? null,
                 'maritial_status' => $row['Maritial_Status'] ?? null,
                 'spouse_name' => $row['Spouse_Name'] ?? null,
-                'spouse_dob' => isset($row['Spouse_DOB']) && is_numeric($row['Spouse_DOB'])
-                    ? \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row['Spouse_DOB'])->format('Y-m-d')
-                    : null,
+                'spouse_dob' => date('Y-m-d', strtotime($row['Spouse_DOB'])),
                 'spouse_aadhar_no' => $row['Spouse_Aadhar'] ?? null,
                 'no_of_childrens' => $row['No_of_Childrens'] ?? null,
                 'emer_contact_no' => $row['Emer_Contact_No'] ?? null,
@@ -123,9 +110,9 @@ class ImportApprovedCandidatesJob implements ShouldQueue
                 'ctc' => $row['CTC'] ?? null,
                 'psd' => $row['Password'] ?? null,
                 'password' => isset($row['Password']) ? bcrypt($row['Password']) : null,
-                'dcs_approval' => match (strtolower(trim($row['DCS_Approval'] ?? ''))) {
-                    'Approved' => 1,
-                    'Pending' => 0,
+                'dcs_approval' => match (strtolower(trim($row['Dcs_Approval']))) {
+                    'Approved' => 0,
+                    'Pending' => 1,
                     'Rejected' => 2,
                     default => null,
                 },
@@ -148,9 +135,7 @@ class ImportApprovedCandidatesJob implements ShouldQueue
                     DCSChildren::create([
                         'emp_id' => $employee->id,
                         'name' => $row[$childNameKey],
-                        'dob' => isset($row[$childDobKey]) && is_numeric($row[$childDobKey])
-                            ? \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[$childDobKey])->format('Y-m-d')
-                            : null,
+                        'dob' => date('Y-m-d', strtotime($row[$childDobKey])),
                         'gender' => $row[$childGenderKey] ?? null,
                     ]);
                 }

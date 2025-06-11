@@ -201,53 +201,44 @@ class ComplianceController extends Controller
     }
 
     // Import from Excel
+
     public function import(Request $request)
     {
-        $file = $request->file;
-
+        $request->validate([
+            'file' => 'required|file|mimes:xlsx,csv,txt',
+        ]);
 
         try {
+            $file = $request->file('file');
+
             if ($file) {
                 $fileName = time() . '_' . $file->getClientOriginalName();
                 $filePath = public_path('imports');
 
+                if (!file_exists($filePath)) {
+                    mkdir($filePath, 0777, true);
+                }
+
                 $file->move($filePath, $fileName);
                 $fileWithPath = $filePath . '/' . $fileName;
 
-                $records = array_map('str_getcsv', file($fileWithPath));
-                $header = $records[0];
-                unset($records[0]);
-
-                $dataChunks = array_chunk($records, 1000);
-                foreach ($dataChunks as $chunk) {
-                    $processedData = [];
-
-                    foreach ($chunk as $record) {
-                        if (count($header) == count($record)) {
-                            $processedData[] = array_combine($header, $record);
-                        }
-                    }
-
-                    if (!empty($processedData)) {
-                        ImportCandidatesJob::dispatch($processedData);
-                    }
-                }
+                // Excel Import using Maatwebsite
+                Excel::import(new CandidatesImport, $fileWithPath);
 
                 if (file_exists($fileWithPath)) {
                     unlink($fileWithPath);
                 }
+
+                return redirect()->route('admin.candidatemaster')->with([
+                    'success' => 'File imported successfully'
+                ]);
             }
         } catch (Exception $e) {
             return redirect()->route('admin.candidatemaster')->with([
-                'error_msg' => 'Import failed: ' . $e->getMessage()
+                'alert' => $e->getMessage()
             ]);
         }
-
-        return redirect()->route('admin.candidatemaster')->with([
-            'success' => 'File imported successfully'
-        ]);
     }
-
     public function download(Request $request)
     {
 
@@ -255,7 +246,7 @@ class ComplianceController extends Controller
 
         $candidates = $query->get();
 
-        return Excel::download(new CadidateDownload($candidates), 'candidates.csv');
+        return Excel::download(new CadidateDownload($candidates), 'candidates.xlsx');
     }
 
     public function create($id)

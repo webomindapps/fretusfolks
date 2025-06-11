@@ -106,8 +106,50 @@ class SideBar extends Component
                     'icon' => 'bx bx-chevron-right',
                     'route' => 'admin.dcs_rejected',
                     'name' => 'dcs_rejected',
-                    'roles' => ['Admin', 'Recruitment'],
+                    'roles' => ['Admin', 'Recruitment', 'HR Operations'],
                 ],
+
+                [
+                    'title' => 'Candidates Master',
+                    'icon' => 'bx bx-chevron-right',
+                    'route' => 'admin.candidatemaster',
+                    'name' => 'candidatemaster',
+                    'roles' => ['Admin', 'Compliance', 'HR Operations'],
+                ],
+                [
+                    'title' => 'Pending Bank Approvals',
+                    'icon' => 'bx bx-chevron-right',
+                    'route' => 'admin.pendingbankapprovals',
+                    'name' => 'pending-bank-approval',
+                    'roles' => ['Admin', 'Compliance', 'HR Operations'],
+                ],
+                [
+                    'title' => 'Candidates Lifecycle',
+                    'icon' => 'bx bx-chevron-right',
+                    'route' => 'admin.candidatelifecycle',
+                    'name' => 'candidatelifecycle',
+                    'roles' => ['Admin', 'HR Operations'],
+                ],
+
+                [
+                    'title' => 'Bulk Exit Update',
+                    'icon' => 'bx bx-chevron-right',
+                    'route' => 'admin.cfisbulk',
+                    'name' => 'cfisbulk',
+                    'roles' => ['Admin', 'HR Operations'],
+                ],
+
+            ],
+
+        ],
+        [
+            'title' => 'HRADMS',
+            'name' => 'hradms',
+            'icon' => '  bx bxl-slack',
+            'route' => '',
+            'isSubMenu' => true,
+            'roles' => ['Admin', 'Recruitment', 'HR Operations'],
+            'subMenus' => [
                 [
                     'title' => 'Hr Approved Candidates',
                     'icon' => 'bx bx-chevron-right',
@@ -123,27 +165,16 @@ class SideBar extends Component
                     'roles' => ['Admin', 'Recruitment', 'HR Operations'],
                 ],
 
-                [
-                    'title' => 'Candidates Master',
-                    'icon' => 'bx bx-chevron-right',
-                    'route' => 'admin.candidatemaster',
-                    'name' => 'candidatemaster',
-                    'roles' => ['Admin', 'Compliance'],
-                ],
-                [
-                    'title' => 'Pending Bank Approvals',
-                    'icon' => 'bx bx-chevron-right',
-                    'route' => 'admin.pendingbankapprovals',
-                    'name' => 'pending-bank-approval',
-                    'roles' => ['Admin', 'Compliance'],
-                ],
-                [
-                    'title' => 'Candidates Lifecycle',
-                    'icon' => 'bx bx-chevron-right',
-                    'route' => 'admin.candidatelifecycle',
-                    'name' => 'candidatelifecycle',
-                    'roles' => ['Admin', 'HR Operations'],
-                ],
+            ]
+        ],
+        [
+            'title' => 'ADMS Letters',
+            'name' => 'admsletters',
+            'icon' => '  bx bxl-slack',
+            'route' => '',
+            'isSubMenu' => true,
+            'roles' => ['Admin', 'Recruitment', 'HR Operations'],
+            'subMenus' => [
                 [
                     'title' => 'Offer Letter  ',
                     'icon' => 'bx bx-chevron-right',
@@ -186,24 +217,18 @@ class SideBar extends Component
                     'name' => 'termination_letter',
                     'roles' => ['Admin', 'HR Operations'],
                 ],
-                [
-                    'title' => 'Payslips  ',
-                    'icon' => 'bx bx-chevron-right',
-                    'route' => 'admin.payslips',
-                    'name' => 'payslips',
-                    'roles' => ['Admin', 'HR Operations'],
-                ],
-                [
-                    'title' => 'Bulk Exit Update',
-                    'icon' => 'bx bx-chevron-right',
-                    'route' => 'admin.cfisbulk',
-                    'name' => 'cfisbulk',
-                    'roles' => ['Admin', 'Recruitment', 'HR Operations'],
-                ],
 
-            ],
-
+            ]
         ],
+        [
+            'title' => 'ADMS Payslip',
+            'icon' => 'bx bx-grid-alt',
+            'route' => 'admin.payslips',
+            'name' => 'admspayslips',
+            'isSubMenu' => false,
+            'roles' => ['Admin', 'HR Operations'],
+        ],
+
         [
             'title' => 'FHRMS',
             'name' => 'fhrms',

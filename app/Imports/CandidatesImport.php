@@ -2,26 +2,37 @@
 
 namespace App\Imports;
 
+use App\Jobs\ImportCandidatesJob;
 use App\Models\CFISModel;
+use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToModel;
+use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
-class CandidatesImport implements ToModel, WithHeadingRow
+class CandidatesImport implements ToCollection
 {
-    public function model(array $row)
+    public function collection(Collection $rows)
     {
-        return CFISModel::updateOrCreate(
-            [
-                'ffi_emp_id' => $row['ffi_emp_id']
-            ],
-            [
-                'emp_name' => $row['emp_name'],
-                'email' => $row['email'],
-                'uan_no' => $row['uan_no'],
-                'esic_no' => $row['esic_no'],
-                'comp_status' => 1,
+        // Remove the header row
+        $header = $rows->first();
+        $data = $rows->slice(1);
 
-            ]
-        );
+        // Chunk rows into 1000-record batches
+        $chunks = $data->chunk(1000);
+
+        foreach ($chunks as $chunk) {
+            $processedData = [];
+
+            foreach ($chunk as $row) {
+                // Skip rows that don't match header count
+                if (count($row) === count($header)) {
+                    $processedData[] = array_combine($header->toArray(), $row->toArray());
+                }
+            }
+
+            if (!empty($processedData)) {
+                ImportCandidatesJob::dispatch($processedData);
+            }
+        }
     }
 }

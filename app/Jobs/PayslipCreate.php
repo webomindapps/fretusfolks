@@ -35,13 +35,8 @@ class PayslipCreate implements ShouldQueue
                 'emp_id' => isset($row['Employee_ID']) ? $row['Employee_ID'] : 0,
                 'employee_name' => isset($row['Employee_Name']) ? $row['Employee_Name'] : 'N/A',
                 'designation' => isset($row['Designation']) ? $row['Designation'] : 'N/A',
-                'date_of_joining' => isset($row['Date_of_Joining']) ? (
-                    is_numeric($row['Date_of_Joining'])
-                    ? Date::excelToDateTimeObject($row['Date_of_Joining'])->format('Y-m-d')
-                    : (Carbon::hasFormat($row['Date_of_Joining'], 'd-m-Y')
-                        ? Carbon::createFromFormat('d-m-Y', $row['Date_of_Joining'])->format('Y-m-d')
-                        : null)
-                ) : null,
+                'location' => isset($row['Location']) ? $row['Location'] : 0,
+                'date_of_joining' => date('Y-m-d', strtotime($row['Date_of_Joining'])),
                 'department' => isset($row['Department']) ? $row['Department'] : 'N/A',
                 'uan_no' => isset($row['UAN_Number']) ? $row['UAN_Number'] : 'N/A',
                 'pf_no' => isset($row['PF_Number']) ? $row['PF_Number'] : 'N/A',
@@ -100,7 +95,6 @@ class PayslipCreate implements ShouldQueue
                 'in_words' => $row['In_Words'],
                 'month' => $this->month,
                 'year' => $this->year,
-                'location' => isset($row['location']) ? $row['location'] : 0,
             ];
         }
 

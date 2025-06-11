@@ -81,33 +81,33 @@
             <div class="row">
 
                 <div class="col-md-3 col-sm-6">
-                    <p><b>Basic Salary :</b> <span>Rs{{ $employee->basic_salary }}</span></p>
-                    <p><b>Special Allowance :</b> <span>Rs{{ $employee->special_allowance }}</span></p>
+                    <p><b>Basic Salary :</b> <span>{{ $employee->basic_salary }}</span></p>
+                    <p><b>Special Allowance :</b> <span>{{ $employee->special_allowance }}</span></p>
                     <p><b>Employee PF (%):</b> <span>{{ $employee->employer_pf_percentage }}</span></p>
                     <p><b>Employee PF (%):</b> <span>{{ $employee->pf_percentage }}</span></p>
-                    <p><b>CTC :</b> <span>Rs{{ $employee->ctc }}</span></p>
+                    <p><b>CTC :</b> <span>{{ $employee->ctc }}</span></p>
 
                 </div>
                 <div class="col-md-3 col-sm-6">
-                    <p><b>HRA :</b> <span>Rs{{ $employee->hra }}</span></p>
-                    <p><b>ST Bonus:</b> <span>Rs{{ $employee->st_bonus }}</span></p>
+                    <p><b>HRA :</b> <span>{{ $employee->hra }}</span></p>
+                    <p><b>ST Bonus:</b> <span>{{ $employee->st_bonus }}</span></p>
                     <p><b>Employee ESIC (%):</b> <span>{{ $employee->employer_esic_percentage }}</span></p>
                     <p><b>Employee ESIC (%):</b> <span>{{ $employee->esic_percentage }}</span></p>
                 </div>
                 <div class="col-md-3 col-sm-6">
 
-                    <p><b>Conveyance :</b> <span>Rs{{ $employee->conveyance }}</span></p>
-                    <p><b>Other Allowance :</b> <span>Rs{{ $employee->other_allowance }}</span></p>
-                    <p><b>PT :</b> <span>Rs{{ $employee->pt }}</span></p>
-                    <p><b>Medical Insurance :</b> <span>Rs{{ $employee->mediclaim }}</span></p>
+                    <p><b>Conveyance :</b> <span>{{ $employee->conveyance }}</span></p>
+                    <p><b>Other Allowance :</b> <span>{{ $employee->other_allowance }}</span></p>
+                    <p><b>PT :</b> <span>{{ $employee->pt }}</span></p>
+                    <p><b>Medical Insurance :</b> <span>{{ $employee->mediclaim }}</span></p>
 
                 </div>
                 <div class="col-md-3 col-sm-6">
 
-                    <p><b>Medical Reimbursement :</b> <span>Rs{{ $employee->medical_reimbursement }}</span></p>
-                    <p><b>Gross Salary :</b> <span>Rs{{ $employee->gross_salary }}</span></p>
-                    <p><b>Total Deduction :</b> <span>Rs{{ $employee->total_deduction }}</span></p>
-                    <p><b>Take Home Salary :</b> <span>Rs{{ $employee->take_home }}</span></p>
+                    <p><b>Medical Reimbursement :</b> <span>{{ $employee->medical_reimbuement }}</span></p>
+                    <p><b>Gross Salary :</b> <span>{{ $employee->gross_salary }}</span></p>
+                    <p><b>Total Deduction :</b> <span>{{ $employee->total_deduction }}</span></p>
+                    <p><b>Take Home Salary :</b> <span>{{ $employee->take_home }}</span></p>
                 </div>
 
             </div>

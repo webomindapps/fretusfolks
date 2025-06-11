@@ -1374,7 +1374,7 @@ class DCSApprovalController extends Controller
             }
         } catch (Exception $e) {
             return redirect()->route('admin.dcs_approval')->with([
-                'error' => 'Import failed: ' . $e->getMessage()
+                'alert' => $e->getMessage()
             ]);
         }
     }

@@ -142,7 +142,8 @@
                                                 <span>{{ $candidate?->father_name ?? 'N/A' }}</span>
                                             </div>
                                             <div class="col-md-4 mb-2"><b>Father DOB:</b>
-                                                <span>{{ \Carbon\Carbon::parse($candidate?->father_dob)->format('d-m-Y') }}</span>
+                                                <span>{{ $candidate?->father_dob && $candidate->father_dob != '0000-00-00' ? \Carbon\Carbon::parse($candidate->father_dob)->format('d-m-Y') : 'N/A' }}
+                                                </span>
                                             </div>
                                             <div class="col-md-4 mb-2"><b>Father Aadhar No:</b>
                                                 <span>{{ $candidate?->father_aadhar_no ?? 'N/A' }}</span>
@@ -151,7 +152,8 @@
                                                 <span>{{ $candidate?->mother_name ?? 'N/A' }}</span>
                                             </div>
                                             <div class="col-md-4 mb-2"><b>Mother DOB:</b>
-                                                <span>{{ \Carbon\Carbon::parse($candidate?->mother_dob)->format('d-m-Y') }}</span>
+                                                <span>{{ $candidate?->mother_dob && $candidate->mother_dob != '0000-00-00' ? \Carbon\Carbon::parse($candidate->mother_dob)->format('d-m-Y') : 'N/A' }}
+                                                </span>
                                             </div>
                                             <div class="col-md-4 mb-2"><b>Mother Aadhar No:</b>
                                                 <span>{{ $candidate?->mother_aadhar_no ?? 'N/A' }}</span>
@@ -161,7 +163,8 @@
                                                 <span>{{ $candidate?->spouse_name ?? 'N/A' }}</span>
                                             </div>
                                             <div class="col-md-4 mb-2"><b>Spouse DOB:</b>
-                                                <span>{{ \Carbon\Carbon::parse($candidate?->spouse_dob)->format('d-m-Y') }}</span>
+                                                <span>{{ $candidate?->spouse_dob && $candidate->spouse_dob != '0000-00-00' ? \Carbon\Carbon::parse($candidate->spouse_dob)->format('d-m-Y') : 'N/A' }}
+                                                </span>
                                             </div>
                                             <div class="col-md-4 mb-2"><b>Spouse Aadhar No:</b>
                                                 <span>{{ $candidate?->spouse_aadhar_no ?? 'N/A' }}</span>
@@ -184,7 +187,8 @@
                                                     @if (!empty($child->child_dob) && $child->child_dob !== 'N/A')
                                                         <div class="col-md-4 mb-2">
                                                             <b>Date of Birth:</b>
-                                                            <span>{{ date('d-m-Y', strtotime($child->child_dob)) }}</span>
+                                                            <span>{{ !empty($child->child_dob) && $child->child_dob != '0000-00-00' ? date('d-m-Y', strtotime($child->child_dob)) : 'N/A' }}
+                                                            </span>
                                                         </div>
                                                     @endif
 
@@ -223,23 +227,21 @@
                             <div id="bankDetails" class="accordion-collapse collapse" aria-labelledby="headingbank"
                                 data-bs-parent="#accordionExample">
                                 <div class="card-body">
-
                                     <div class="row">
-                                        @if ($bankdetails->isNotEmpty())
-                                            <div class="table-responsive">
-                                                <table class="table table-bordered">
-                                                    <thead class="table-light">
-                                                        <tr>
-                                                            <th>SL No</th>
-                                                            <th>Bank Name</th>
-                                                            <th>Account No</th>
-                                                            <th>IFSC Code</th>
-                                                            <th>Bank Document</th>
-                                                            <th>Status</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        {{-- {{dd($bankdetails)}} --}}
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered">
+                                                <thead class="table-light">
+                                                    <tr>
+                                                        <th>SL No</th>
+                                                        <th>Bank Name</th>
+                                                        <th>Account No</th>
+                                                        <th>IFSC Code</th>
+                                                        <th>Bank Document</th>
+                                                        <th>Status</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @if ($bankdetails->isNotEmpty())
                                                         @foreach ($bankdetails as $index => $bank)
                                                             <tr>
                                                                 <td>{{ $index + 1 }}</td>
@@ -247,8 +249,8 @@
                                                                 <td>{{ $bank?->bank_account_no ?? 'N/A' }}</td>
                                                                 <td>{{ $bank?->bank_ifsc_code ?? 'N/A' }}</td>
                                                                 <td>
-                                                                    @if ($bank->bank_document)
-                                                                        <a href="{{ asset($bank?->bank_document) }}"
+                                                                    @if ($bank?->bank_document)
+                                                                        <a href="{{ asset($bank->bank_document) }}"
                                                                             target="_blank"
                                                                             class="btn btn-sm btn-primary">
                                                                             View
@@ -263,18 +265,37 @@
                                                                         {{ $bank->status == 1 ? 'Active' : 'Inactive' }}
                                                                     </span>
                                                                 </td>
-
                                                             </tr>
                                                         @endforeach
-                                                    </tbody>
-                                                </table>
-                                            </div>
-
-                                        @endif
-
+                                                    @else
+                                                        <tr>
+                                                            <td>1</td>
+                                                            <td>{{ $candidate?->bank_name ?? 'N/A' }}</td>
+                                                            <td>{{ $candidate?->bank_account_no ?? 'N/A' }}</td>
+                                                            <td>{{ $candidate?->bank_ifsc_code ?? 'N/A' }}</td>
+                                                            <td>
+                                                                @if (!empty($candidate?->bank_document))
+                                                                    <a href="{{ asset($candidate->bank_document) }}"
+                                                                        target="_blank"
+                                                                        class="btn btn-sm btn-primary">
+                                                                        View
+                                                                    </a>
+                                                                @else
+                                                                    <span class="text-muted">No Document</span>
+                                                                @endif
+                                                            </td>
+                                                            <td>
+                                                                <span class="badge bg-secondary">N/A</span>
+                                                            </td>
+                                                        </tr>
+                                                    @endif
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+
                         </div>
                         <hr>
 

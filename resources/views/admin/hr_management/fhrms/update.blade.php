@@ -35,7 +35,7 @@
                                 <x-forms.input label="Joining Date: " type="date" name="joining_date"
                                     id="joining_date" :required="true" size="col-lg-4 mt-2" :value="old('joining_date', $employee->joining_date)" />
                                 <x-forms.input label="Contract End Date: " type="date" name="contract_date"
-                                    id="contract_date" :required="true" size="col-lg-4 mt-2" :value="old('contract_date', $employee->contract_date)" />
+                                    id="contract_date" :required="false" size="col-lg-4 mt-2" :value="old('contract_date', $employee->contract_date)" />
                                 <x-forms.input label="Designation: " type="text" name="designation" id="designation"
                                     :required="true" size="col-lg-6 mt-2" :value="old('designation', $employee->designation)" />
                                 <x-forms.input label="Department: " type="text" name="department" id="department"
@@ -49,9 +49,9 @@
                                 <x-forms.input label="Father's Name: " type="text" name="father_name"
                                     id="father_name" :required="true" size="col-lg-6 mt-2" :value="old('father_name', $employee->father_name)" />
                                 <x-forms.radio label="Gender: " :options="[
-                                    ['value' => '1', 'label' => 'Male'],
-                                    ['value' => '2', 'label' => 'Female'],
-                                    ['value' => '3', 'label' => 'Other'],
+                                    ['value' => 'Male', 'label' => 'Male'],
+                                    ['value' => 'Female', 'label' => 'Female'],
+                                    ['value' => 'Other', 'label' => 'Other'],
                                 ]" id="gender" name="gender"
                                     :required="true" size="col-lg-6 mt-2 mr-2" :value="old('gender', $employee->gender)" />
                                 <x-forms.select label="Blood Group:" name="blood_group" id="blood_group"

@@ -36,6 +36,7 @@ class ApprovedCandidateImport implements ToCollection
                     // dd($row);
                     $ffiEmpId = $row['FFI_EMP_ID'] ?? null;
                     $phone = $row['Phone_No'] ?? null;
+                    $aadhar = $row['Aadhar_No'] ?? null;
 
                     // Skip this row if FFI_Emp_ID is null or empty
                     if (empty($ffiEmpId)) {
@@ -45,10 +46,11 @@ class ApprovedCandidateImport implements ToCollection
                     $exists = DB::table('backend_management')
                         ->where('ffi_emp_id', $ffiEmpId)
                         ->orWhere('phone1', $phone)
+                        ->orWhere('aadhar_no', $aadhar)
                         ->exists();
 
                     if ($exists) {
-                        $chunkDuplicates[] = "Duplicate at row #" . ($index + 2) . " - FFI_Emp_ID: $ffiEmpId, Phone_NO: $phone";
+                        $chunkDuplicates[] = "Duplicate at row #" . ($index ) . " - FFI_Emp_ID: $ffiEmpId, Phone_NO: $phone, Aadhar_No: $aadhar" . "<br>";
                     } else {
                         $processedData[] = $row;
 

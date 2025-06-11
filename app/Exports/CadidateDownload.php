@@ -21,11 +21,13 @@ class CadidateDownload implements FromCollection, WithHeadings
         return new Collection($this->candidates->map(function ($candidate) {
             return [
 
-                'FFI Emp ID' => $candidate->ffi_emp_id,
-                'Employee Name' => $candidate->emp_name,
-                'Email' => $candidate->email,
-                'UAN No' => $candidate->uan_no,
-                'ESIC No' => $candidate->esic_no,
+                'FFI_Emp_ID' => $candidate->ffi_emp_id,
+                'Client_ID' => $candidate->client_emp_id,
+                'Client_Name' => $candidate->entity_name,
+                'Employee_Name' => $candidate->emp_name,
+                'Phone_No' => $candidate->phone1,
+                'UAN_No' => $candidate->uan_no,
+                'ESIC_No' => $candidate->esic_no,
 
             ];
         }));
@@ -35,11 +37,13 @@ class CadidateDownload implements FromCollection, WithHeadings
     {
         return [
 
-            'ffi_emp_id',
-            'emp_name',
-            'email',
-            'uan_no',
-            'esic_no',
+            'FFI_Emp_ID',
+            'Client_ID',
+            'Client_Name',
+            'Employee_Name',
+            'Phone_No',
+            'UAN_No',
+            'ESIC_No',
 
         ];
     }

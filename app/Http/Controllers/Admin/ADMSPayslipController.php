@@ -111,7 +111,7 @@ class ADMSPayslipController extends Controller
         $error = '';
         return redirect()->route('admin.payslips')->with([
             'success' => 'Payslips added successfully',
-            'error_msg' => $error
+            'alert' => $error
         ]);
     }
     public function export(Request $request)
@@ -189,13 +189,23 @@ class ADMSPayslipController extends Controller
     {
         $payslip = $this->model()->findOrFail($id);
 
+        $monthName = date("F", mktime(0, 0, 0, $payslip->month, 1));
+
         $data = [
             'payslip' => $payslip,
         ];
 
-        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true, 'chroot' => public_path()])->loadView('admin.adms.payslip.formate', $data);
-        return $pdf->stream('payslip' . $payslip->id . '.pdf');
+        $pdf = PDF::setOptions([
+            'isHtml5ParserEnabled' => true,
+            'isRemoteEnabled' => true,
+            'chroot' => public_path()
+        ])->loadView('admin.adms.payslip.formate', $data);
+
+        $filename = 'Payslip' . '-' . ($payslip->emp_name) . '-' . $payslip->emp_id . '-' . $monthName . '-' . $payslip->year . '.pdf';
+
+        return $pdf->stream($filename);
     }
+
     public function zipDownload($payslips, $ademails)
     {
         if ($payslips->isEmpty()) {

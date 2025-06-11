@@ -157,12 +157,23 @@ class FFIPayslipsController extends Controller
     {
         $payslip = $this->model()->findOrFail($id);
 
+        // Get full month name
+        $monthName = date("F", mktime(0, 0, 0, $payslip->month, 1));
+
         $data = [
             'payslip' => $payslip,
         ];
 
-        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true, 'chroot' => public_path()])->loadView('admin.hr_management.ffi.payslips.print_payslips', $data);
-        return $pdf->stream('payslip' . $payslip->id . '.pdf');
+        $pdf = PDF::setOptions([
+            'isHtml5ParserEnabled' => true,
+            'isRemoteEnabled' => true,
+            'chroot' => public_path()
+        ])->loadView('admin.hr_management.ffi.payslips.print_payslips', $data);
+
+        // Generate clean filename
+        $filename = 'Payslip' . '-' . ($payslip->employee_name) . '-' . $payslip->emp_id . '-' . $monthName . '-' . $payslip->year . '.pdf';
+
+        return $pdf->stream($filename);
     }
     public function zipDownload($payslips)
     {
