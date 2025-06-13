@@ -38,8 +38,8 @@ class ImportCandidatesJob implements ShouldQueue
             $phone = $row['Phone_No'];
 
             $existing = CFISModel::where('ffi_emp_id', $ffiEmpId)
-                ->whereIn('phone1', $phone)
-                ->whereIn('client_emp_id', $clientid)->first();
+                ->where('phone1', $phone)
+                ->where('client_emp_id', $clientid)->first();
 
             if ($existing) {
                 // Only update UAN and ESIC

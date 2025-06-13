@@ -26,7 +26,7 @@ class ComplainceBankAccountController extends Controller
             ->where('comp_status', 0)
             ->exists();
 
-        $query = $this->model()->where('status', 1);
+        $query = $this->model()->where('status', 1)->with('clients');
 
         if ($from_date && $to_date) {
             $query->whereBetween('created_at', [$from_date, $to_date]);
@@ -51,7 +51,8 @@ class ComplainceBankAccountController extends Controller
         $bankdetails = $this->model()->find($id);
         return view('admin.adms.compliance.pending-bank_account.edit', compact('bankdetails'));
     }
-    public function update(Request $request, $id){
+    public function update(Request $request, $id)
+    {
         $request->validate([
             'bank_name' => 'required|string|max:255',
             'bank_account_no' => 'required|string|max:50',

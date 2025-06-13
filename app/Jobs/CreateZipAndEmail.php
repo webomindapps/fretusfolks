@@ -27,29 +27,23 @@ class CreateZipAndEmail implements ShouldQueue
 
     public function handle()
     {
-        $zipFileName = "Payslips_{$this->payslips->first()->client_name}_{$this->payslips->first()->month}_{$this->payslips->first()->year}.zip";
+        $zipFileName = "payslips_{$this->payslips->first()->month}_{$this->payslips->first()->year}.zip";
         $zipPath = storage_path("app/temp/{$zipFileName}");
 
         $zip = new ZipArchive();
         if ($zip->open($zipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE) === true) {
             foreach ($this->payslips as $payslip) {
-                // Generate PDF from view and data
-                $pdf = PDF::setOptions([
-                    'isHtml5ParserEnabled' => true,
-                    'isRemoteEnabled' => true,
-                    'chroot' => public_path()
-                ])->loadView('admin.adms.payslip.formate', ['payslip' => $payslip]);
-
-                // Add in-memory PDF to ZIP
-                $zip->addFromString("payslip_{$payslip->emp_name}_{$payslip->emp_id}.pdf", $pdf->output());
+                $filePath = $payslip->payslips_letter_path ? public_path($payslip->payslips_letter_path) : storage_path("app/temp/payslip_{$payslip->id}.pdf");
+                if (file_exists($filePath)) {
+                    $zip->addFile($filePath, basename($filePath));
+                }
             }
             $zip->close();
         }
 
         // Send ZIP file via email
         Mail::to($this->email)->send(new PayslipZipReady($zipPath, $zipFileName));
-
-        // Delete ZIP after sending
+        // Delete ZIP file after sending email
         if (file_exists($zipPath)) {
             unlink($zipPath);
         }

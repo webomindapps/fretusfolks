@@ -215,6 +215,6 @@ class CFISModel extends Model
     }
     public function Bankdetails()
     {
-        $this->hasMany(BankDetails::class, 'ffi_emp_id', 'id');
+        $this->hasMany(BankDetails::class, 'emp_id', 'id');
     }
 }

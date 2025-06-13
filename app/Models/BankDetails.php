@@ -16,6 +16,7 @@ class BankDetails extends Model
         'bank_ifsc_code',
         'bank_status',
         'status',
+        'remark',
     ];
     public function clients()
     {

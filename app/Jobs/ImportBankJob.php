@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Models\CFISModel;
 use App\Models\BankDetails;
 use Illuminate\Bus\Batchable;
 use Illuminate\Queue\SerializesModels;
@@ -26,25 +27,41 @@ class ImportBankJob implements ShouldQueue
      */
     public function handle(): void
     {
-        foreach ($this->data as $row) {
-            $info[] = [
-                'emp_id' => $row['emp_id'],
-                'bank_name' => $row['bank_name'],
-                'bank_account_no' => $row['bank_account_no'] ?? null,
-                'bank_ifsc_code' => $row['bank_ifsc_code'] ?? null,
-                'bank_status' => strtolower(trim($row['bank_status'])) == 'approved' ? 1 : 0,
-            ];
-        }
-        \Log::info('Generated data:', $info);
+        \Log::info('Bank Details:', ['data' => $this->data]);
 
-        if (!empty($info)) {
-            foreach ($info as $data) {
-                BankDetails::updateOrCreate(
-                    ['emp_id' => $data['emp_id']],
-                    $data
-                );
+        foreach ($this->data as $row) {
+
+            $ffiEmpId = $row['FFI_Emp_ID'];
+            $clientid = $row['Client_ID'];
+            $aadhar = $row['Aadhar_No'];
+
+            $existing = CFISModel::where('ffi_emp_id', $ffiEmpId)
+                ->where('aadhar_no', $aadhar)
+                ->where('client_emp_id', $clientid)
+                ->first();
+
+
+            if ($existing) {
+                // Only update UAN and ESIC
+                $details = BankDetails::updateOrCreate(['emp_id' => $row['Row_ID']], [
+                    'emp_id' => $row['Row_ID'],
+                    'bank_name' => $row['Bank_Name'] ?? null,
+                    'bank_account_no' => $row['Bank_Account_No'] ?? null,
+                    'bank_ifsc_code' => $row['Bank_IFSC_Code'] ?? null,
+                    'bank_status' => match (strtolower(trim($row['Bank_Status']))) {
+                        'In-Active' => 0,
+                        'Active' => 1,
+                        default => 0,
+                    },
+                    // 'bank_status' => strtolower(trim($row['Bank_Status'])) == 'Active' ? 1 : 0,
+                ]);
+
+                \Log::info('Updated Bank Details:', ['details' => $details->toArray()]);
             }
+
+
         }
+
         \Log::info('Job completed successfully');
 
 

@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\CandidatesBankImport;
 use App\Exports\CandidateMasterExport;
 use Illuminate\Support\Facades\Storage;
 
@@ -337,57 +338,48 @@ class ComplianceController extends Controller
 
     public function bankimport(Request $request)
     {
-        $file = $request->file;
+        $request->validate([
+            'file' => 'required|file|mimes:xlsx,csv,txt',
+        ]);
 
         try {
+            $file = $request->file('file');
+
             if ($file) {
                 $fileName = time() . '_' . $file->getClientOriginalName();
                 $filePath = public_path('imports');
 
+                if (!file_exists($filePath)) {
+                    mkdir($filePath, 0777, true);
+                }
+
                 $file->move($filePath, $fileName);
                 $fileWithPath = $filePath . '/' . $fileName;
 
-                $records = array_map('str_getcsv', file($fileWithPath));
-                $header = $records[0];
-                unset($records[0]);
-
-                $dataChunks = array_chunk($records, 1000);
-                foreach ($dataChunks as $chunk) {
-                    $processedData = [];
-
-                    foreach ($chunk as $record) {
-                        if (count($header) == count($record)) {
-                            $processedData[] = array_combine($header, $record);
-                        }
-                    }
-
-                    if (!empty($processedData)) {
-                        ImportBankJob::dispatch($processedData);
-                    }
-                }
+                // Excel Import using Maatwebsite
+                Excel::import(new CandidatesBankImport, $fileWithPath);
 
                 if (file_exists($fileWithPath)) {
                     unlink($fileWithPath);
                 }
+
+                return redirect()->route('admin.pendingbankapprovals')->with([
+                    'success' => 'File imported successfully'
+                ]);
             }
         } catch (Exception $e) {
             return redirect()->route('admin.pendingbankapprovals')->with([
-                'error_msg' => 'Import failed: ' . $e->getMessage()
+                'alert' => $e->getMessage()
             ]);
         }
-
-        return redirect()->route('admin.pendingbankapprovals')->with([
-            'success' => 'File imported successfully'
-        ]);
     }
-
     public function bankdownload(Request $request)
     {
 
-        $query = BankDetails::where('bank_status', 0);
+        $query = BankDetails::where('bank_status', 0)->with('clients');
 
         $candidates = $query->get();
 
-        return Excel::download(new BankDownload($candidates), 'bankform.csv');
+        return Excel::download(new BankDownload($candidates), 'bankform.xlsx');
     }
 }
