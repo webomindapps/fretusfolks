@@ -43,7 +43,7 @@ class UserController extends Controller
         // sorting
         ($order == '') ? $query->orderByDesc('id') : $query->orderBy($order, $orderBy);
 
-        $users = $paginate ? $query->paginate($paginate)->appends(request()->query()) : $query->paginate(10)->appends(request()->query());
+        $users = $paginate ? $query->paginate($paginate)->appends(request()->query()) : $query->paginate(100)->appends(request()->query());
         return view('admin.ffimasters.usermasters.index', compact('users'));
     }
 

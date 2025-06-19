@@ -53,7 +53,7 @@ class FFIAssetController extends Controller
             $query->orderBy($order, $orderBy);
         }
 
-        $issues = $paginate ? $query->paginate($paginate)->appends(request()->query()) : $query->paginate(10)->appends(request()->query());
+        $issues = $paginate ? $query->paginate($paginate)->appends(request()->query()) : $query->paginate(100)->appends(request()->query());
 
         return view("admin.fcms.ffi_assets.index", compact("issues"));
     }

@@ -56,7 +56,7 @@ class FFIShowCauseController extends Controller
         }
 
 
-        $show = $paginate ? $query->paginate($paginate)->appends(request()->query()) : $query->paginate(10)->appends(request()->query());
+        $show = $paginate ? $query->paginate($paginate)->appends(request()->query()) : $query->paginate(100)->appends(request()->query());
 
         return view("admin.hr_management.ffi.show_cause.index", compact("show"));
     }

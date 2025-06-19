@@ -49,7 +49,7 @@ class FFCMController extends Controller
 
         ($order == '') ? $query->orderByDesc('id') : $query->orderBy($order, $orderBy);
 
-        $expenses = $paginate ? $query->paginate($paginate)->appends(request()->query()) : $query->paginate(10)->appends(request()->query());
+        $expenses = $paginate ? $query->paginate($paginate)->appends(request()->query()) : $query->paginate(100)->appends(request()->query());
 
         return view("admin.fcms.ffcm.index", compact("expenses"));
     }

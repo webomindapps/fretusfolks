@@ -1,5 +1,5 @@
 <x-applayout>
-    <x-admin.breadcrumb title="Pending Bank Approvals">
+    <x-admin.breadcrumb title="Bank Details">
         <div class="d-flex justify-content-end align-items-center">
             <div class="d-flex gap-3">
                 <form action="{{ route('admin.candidatemaster.bankform') }}" method="POST" style="display: inline;">
@@ -24,10 +24,11 @@
                 $columns = [
                     ['label' => 'Id', 'column' => 'id', 'sort' => true],
                     ['label' => 'Employee ID', 'column' => 'emp_id', 'sort' => true],
+                    ['label' => 'Client Name', 'column' => 'entity_name', 'sort' => true],
                     ['label' => 'Bank Name', 'column' => 'bank_name', 'sort' => true],
                     ['label' => 'Bank Account Number', 'column' => 'bank_account_no', 'sort' => true],
                     ['label' => 'Bank IFSC Code', 'column' => 'bank_ifsc_code', 'sort' => true],
-                    ['label' => 'Approval Status', 'column' => 'bank_status', 'sort' => true],
+                    // ['label' => 'Approval Status', 'column' => 'bank_status', 'sort' => true],
                     ['label' => 'Actions', 'column' => 'action', 'sort' => false],
                 ];
             @endphp
@@ -56,19 +57,20 @@
 
                         <td>{{ $item->id }}</td>
                         <td>{{ $item->clients?->ffi_emp_id }}</td>
+                        <td>{{ $item->clients?->entity_name }}</td>
 
                         <td>
                             {{ $item->bank_name }}
                         </td>
                         <td> {{ $item->bank_account_no }}</td>
                         <td> {{ $item->bank_ifsc_code }}</td>
-                        <td>
+                        {{-- <td>
                             @if ($item->bank_status == 0)
                                 <span class="badge rounded-pill deactive">Pending</span>
                             @else
                                 <span class="badge rounded-pill sactive">Complected</span>
                             @endif
-                        </td>
+                        </td> --}}
 
                         <td>
                             <div class="dropdown pop_Up dropdown_bg">

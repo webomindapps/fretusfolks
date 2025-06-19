@@ -58,7 +58,7 @@ class ComplianceController extends Controller
 
         ($order == '') ? $query->orderByDesc('id') : $query->orderBy($order, $orderBy);
 
-        $candidate = $paginate ? $query->paginate($paginate)->appends(request()->query()) : $query->paginate(10)->appends(request()->query());
+        $candidate = $paginate ? $query->paginate($paginate)->appends(request()->query()) : $query->paginate(100)->appends(request()->query());
         // dd($candidate);
         return view('admin.adms.compliance.compliance', compact("candidate"));
     }
@@ -376,10 +376,10 @@ class ComplianceController extends Controller
     public function bankdownload(Request $request)
     {
 
-        $query = BankDetails::where('bank_status', 0)->with('clients');
+        $query = BankDetails::with('clients');
 
         $candidates = $query->get();
 
-        return Excel::download(new BankDownload($candidates), 'bankform.xlsx');
+        return Excel::download(new BankDownload($candidates), 'Bankform.xlsx');
     }
 }

@@ -14,7 +14,7 @@
                     ['label' => 'Actions', 'column' => 'action', 'sort' => false],
                 ];
             @endphp
-            <x-table :columns="$columns" :data="$client" :checkAll=false :bulk="route('admin.cdms.bulk')" :route="route('admin.cdms')">
+            <x-table :columns="$columns" :data="$client" :checkAll=true :bulk="route('admin.cdms.bulk')" :route="route('admin.cdms')">
                 <x-slot:filters>
                     <form action="{{ route('admin.cdms.export') }}" method="POST">
                         @csrf
@@ -40,10 +40,10 @@
                 </x-slot:filters>
                 @foreach ($client as $key => $item)
                     <tr>
-                        {{-- <td>
+                        <td>
                             <input type="checkbox" name="selected_items[]" class="single-item-check"
                                 value="{{ $item->id }}">
-                        </td> --}}
+                        </td>
                         <td>{{ $item->id }}</td>
                         <td>{{ $item->client_code }}</td>
                         <td>
@@ -85,6 +85,15 @@
                                             href="{{ route('admin.cdms.delete', $item) }}">
                                             <i class='bx bx-trash-alt'></i>
                                             Delete
+                                        </a>
+                                        <a class="dropdown-item"
+                                            href="{{ route('admin.cdms.updateStatus', ['id' => $item->id, 'status' => 0]) }}">
+                                            <i class='bx bx-check-circle'></i>
+                                            Active
+                                        </a><a class="dropdown-item"
+                                            href="{{ route('admin.cdms.updateStatus', ['id' => $item->id, 'status' => 1]) }}">
+                                            <i class='bx bx-x-circle'></i>
+                                            In-Active
                                         </a>
                                     </li>
                                 </ul>

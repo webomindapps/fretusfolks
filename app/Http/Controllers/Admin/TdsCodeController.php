@@ -35,7 +35,7 @@ class TdsCodeController extends Controller
         // sorting
         ($order == '') ? $query->orderByDesc('id') : $query->orderBy($order, $orderBy);
 
-        $tds_code = $paginate ? $query->paginate($paginate)->appends(request()->query()) : $query->paginate(10)->appends(request()->query());
+        $tds_code = $paginate ? $query->paginate($paginate)->appends(request()->query()) : $query->paginate(100)->appends(request()->query());
         return view('admin.ffimasters.tds_code.index', compact('tds_code'));
     }
     public function store(Request $request)

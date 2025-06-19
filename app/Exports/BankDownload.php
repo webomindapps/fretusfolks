@@ -29,7 +29,7 @@ class BankDownload implements FromCollection, WithHeadings
                 'Bank_Name' => $candidate->bank_name,
                 'Bank_Account_No' => $candidate->bank_account_no,
                 'Bank_IFSC_Code' => $candidate->bank_ifsc_code,
-                'Bank_Status' => $candidate->bank_status == 1 ? 'Active' : 'In-Active',
+                // 'Bank_Status' => $candidate->bank_status == 1 ? 'Active' : 'In-Active',
                 'Remark' => $candidate->remark,
 
             ];
@@ -48,7 +48,7 @@ class BankDownload implements FromCollection, WithHeadings
             'Bank_Name',
             'Bank_Account_No',
             'Bank_IFSC_Code',
-            'Bank_Status',
+            // 'Bank_Status',
             'Remark'
 
         ];

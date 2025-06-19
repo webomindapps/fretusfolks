@@ -48,11 +48,8 @@ class ImportBankJob implements ShouldQueue
                     'bank_name' => $row['Bank_Name'] ?? null,
                     'bank_account_no' => $row['Bank_Account_No'] ?? null,
                     'bank_ifsc_code' => $row['Bank_IFSC_Code'] ?? null,
-                    'bank_status' => match (strtolower(trim($row['Bank_Status']))) {
-                        'In-Active' => 0,
-                        'Active' => 1,
-                        default => 0,
-                    },
+                    'bank_status' => 1,
+
                     // 'bank_status' => strtolower(trim($row['Bank_Status'])) == 'Active' ? 1 : 0,
                 ]);
 

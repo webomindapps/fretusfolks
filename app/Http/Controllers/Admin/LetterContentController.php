@@ -38,7 +38,7 @@ class LetterContentController extends Controller
         // sorting
         ($order == '') ? $query->orderByDesc('id') : $query->orderBy($order, $orderBy);
 
-        $letter_content = $paginate ? $query->paginate($paginate)->appends(request()->query()) : $query->paginate(10)->appends(request()->query());
+        $letter_content = $paginate ? $query->paginate($paginate)->appends(request()->query()) : $query->paginate(100)->appends(request()->query());
         return view("admin.ffimasters.letter_content.index", compact("letter_content"));
     }
     public function create()

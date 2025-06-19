@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\ClientManagement;
 use Exception;
 use App\Models\CFISModel;
 use App\Models\BankDetails;
@@ -61,7 +62,7 @@ class DCSApprovalController extends Controller
 
         ($order == '') ? $query->orderByDesc('id') : $query->orderBy($order, $orderBy);
 
-        $candidate = $paginate ? $query->paginate($paginate)->appends(request()->query()) : $query->paginate(10)->appends(request()->query());
+        $candidate = $paginate ? $query->paginate($paginate)->appends(request()->query()) : $query->paginate(100)->appends(request()->query());
         // dd($candidate);
         return view("admin.adms.dcs_approval.index", compact("candidate"));
     }
@@ -180,6 +181,14 @@ class DCSApprovalController extends Controller
             $validatedData['dcs_approval'] = $request->input('dcs_approval', 0);
             $validatedData['data_status'] = $request->input('data_status', 1);
             $validatedData['hr_approval'] = $request->input('hr_approval', 0);
+
+            $client = ClientManagement::find($validatedData['client_id']);
+            if ($client) {
+                $validatedData['entity_name'] = $client->client_name; 
+            }
+            if (empty($validatedData['created_by']) || $validatedData['created_by'] == 0) {
+                $validatedData['created_by'] = auth()->id();
+            }
 
             $candidate->update($validatedData);
 
@@ -344,7 +353,7 @@ class DCSApprovalController extends Controller
 
         ($order == '') ? $query->orderByDesc('id') : $query->orderBy($order, $orderBy);
 
-        $candidate = $paginate ? $query->paginate($paginate)->appends(request()->query()) : $query->paginate(10)->appends(request()->query());
+        $candidate = $paginate ? $query->paginate($paginate)->appends(request()->query()) : $query->paginate(100)->appends(request()->query());
 
         return view("admin.adms.dcs_approval.rejected", compact("candidate"));
     }
@@ -393,7 +402,7 @@ class DCSApprovalController extends Controller
         $orderBy = in_array(request()->get('orderBy'), ['asc', 'desc']) ? request()->get('orderBy') : 'desc';
         $query->orderBy('id', $orderBy);
 
-        $candidates = $query->paginate(10)->appends(request()->query());
+        $candidates = $query->paginate(100)->appends(request()->query());
 
         return view("admin.adms.hr.hrindex", compact("candidates"));
     }
@@ -520,7 +529,10 @@ class DCSApprovalController extends Controller
             $validatedData['dcs_approval'] = $request->input('dcs_approval', 0);
             $validatedData['comp_status'] = $request->input('comp_status', 0);
             $validatedData['modify_by'] = auth()->id();
-
+            $client = ClientManagement::find($validatedData['client_id']);
+            if ($client) {
+                $validatedData['entity_name'] = $client->client_name; 
+            }
             $candidate->update($validatedData);
 
             $fileFields = ['pan_path', 'aadhar_path', 'driving_license_path', 'photo', 'resume', 'family_photo', 'father_photo', 'mother_photo', 'spouse_photo', 'pan_declaration'];
@@ -738,101 +750,105 @@ class DCSApprovalController extends Controller
 
     public function updatePendingDetails(Request $request)
     {
-        $request->validate([
-            'client_id' => 'required|integer',
-            'entity_name' => 'nullable|string|max:255',
-            'console_id' => 'nullable|string|max:255',
-            'ffi_emp_id' => 'nullable|string|max:255',
-            'grade' => 'nullable|string|max:255',
-            'client_emp_id' => 'nullable|string|max:255',
-            'emp_name' => 'nullable|string|max:255',
-            'middle_name' => 'nullable|string|max:255',
-            'last_name' => 'nullable|string|max:255',
-            'interview_date' => 'nullable|date',
-            'joining_date' => 'nullable|date',
-            'contract_date' => 'nullable|date',
-            'designation' => 'nullable|string|max:255',
-            'department' => 'nullable|string|max:255',
-            'state' => 'nullable|string|max:255',
-            'location' => 'nullable|string|max:255',
-            'branch' => 'nullable|string|max:255',
-            'dob' => 'nullable|date',
-            'gender' => 'nullable|string|max:255',
-            'father_name' => 'nullable|string|max:255',
-            'father_dob' => 'nullable|date',
-            'father_aadhar_no' => 'nullable|string|min:12',
-            'mother_aadhar_no' => 'nullable|string|min:12',
-            'mother_name' => 'nullable|string|max:255',
-            'mother_dob' => 'nullable|date',
-            'religion' => 'nullable|string|max:255',
-            'languages' => 'nullable|string|max:255',
-            'mother_tongue' => 'nullable|string|max:255',
-            'maritial_status' => 'nullable|string|max:255',
-            'emer_contact_no' => 'nullable|string|max:15',
-            'emer_name' => 'nullable|string|max:255',
-            'emer_relation' => 'nullable|string|max:255',
-            'spouse_name' => 'nullable|string|max:255',
-            'spouse_dob' => 'nullable|date',
-            'spouse_aadhar_no' => 'nullable|string|min:12',
-            'no_of_childrens' => 'nullable|integer',
-            'blood_group' => 'nullable|string|max:255',
-            'qualification' => 'nullable|string|max:255',
-            'phone1' => 'nullable|string|max:15',
-            'phone2' => 'nullable|string|max:15',
-            'email' => 'nullable|email|max:255',
-            'official_mail_id' => 'nullable|email|max:255',
-            'permanent_address' => 'nullable|string',
-            'present_address' => 'nullable|string',
-            'pan_no' => 'nullable|string|max:255',
-            'pan_path' => 'nullable|file|',
-            'aadhar_no' => 'nullable|string|min:12',
-            'aadhar_path' => 'nullable|file|',
-            'driving_license_no' => 'nullable|string|max:255',
-            'driving_license_path' => 'nullable|file|',
-            'photo' => 'nullable|file|mimes:jpg,jpeg,png,gif,bmp,webp,pdf,doc,docx',
-            'family_photo' => 'nullable|file|mimes:jpg,png,pdf',
-            'resume' => 'nullable|file',
-            // 'bank_document' => 'nullable|file',
-            // 'bank_name' => 'nullable|string|max:255',
-            // 'bank_account_no' => 'nullable|string|max:255',
-            // 'bank_ifsc_code' => 'nullable|string|max:255',
-            'uan_no' => 'nullable|string|max:255',
-            'esic_no' => 'nullable|string|max:255',
-            'basic_salary' => 'nullable|numeric',
-            'hra' => 'nullable|numeric',
-            'conveyance' => 'nullable|numeric',
-            'medical_reimbursement' => 'nullable|numeric',
-            'special_allowance' => 'nullable|numeric',
-            'other_allowance' => 'nullable|numeric',
-            'st_bonus' => 'nullable|numeric',
-            'gross_salary' => 'nullable|numeric',
-            'emp_pf' => 'nullable|numeric',
-            'emp_esic' => 'nullable|numeric',
-            'pt' => 'nullable|numeric',
-            'total_deduction' => 'nullable|numeric',
-            'take_home' => 'nullable|numeric',
-            'employer_pf' => 'nullable|numeric',
-            'employer_esic' => 'nullable|numeric',
-            'mediclaim' => 'nullable|numeric',
-            'ctc' => 'nullable|numeric',
-            'status' => 'nullable|boolean',
-            'modify_by' => 'nullable|integer',
-            'password' => 'nullable|string|max:255',
-            'refresh_code' => 'nullable|string|max:255',
-            'psd' => 'nullable|string|max:255',
-            'document_type.*' => 'nullable|string',
-            'document_file.*' => 'nullable|file',
-            'child_names.*' => 'nullable|string|max:255',
-            'child_dobs.*' => 'nullable|date',
-            'child_photo.*' => 'nullable|file|mimes:jpg,png,pdf',
-            'child_aadhar_no.*' => 'nullable|string|min:12',
+        // $request->validate([
+        //     'client_id' => 'required|integer',
+        //     'entity_name' => 'nullable|string|max:255',
+        //     'console_id' => 'nullable|string|max:255',
+        //     'ffi_emp_id' => 'nullable|string|max:255',
+        //     'grade' => 'nullable|string|max:255',
+        //     'client_emp_id' => 'nullable|string|max:255',
+        //     'emp_name' => 'nullable|string|max:255',
+        //     'middle_name' => 'nullable|string|max:255',
+        //     'last_name' => 'nullable|string|max:255',
+        //     'interview_date' => 'nullable|date',
+        //     'joining_date' => 'nullable|date',
+        //     'contract_date' => 'nullable|date',
+        //     'designation' => 'nullable|string|max:255',
+        //     'department' => 'nullable|string|max:255',
+        //     'state' => 'nullable|string|max:255',
+        //     'location' => 'nullable|string|max:255',
+        //     'branch' => 'nullable|string|max:255',
+        //     'dob' => 'nullable|date',
+        //     'gender' => 'nullable|string|max:255',
+        //     'father_name' => 'nullable|string|max:255',
+        //     'father_dob' => 'nullable|date',
+        //     'father_aadhar_no' => 'nullable|string|min:12',
+        //     'mother_aadhar_no' => 'nullable|string|min:12',
+        //     'mother_name' => 'nullable|string|max:255',
+        //     'mother_dob' => 'nullable|date',
+        //     'religion' => 'nullable|string|max:255',
+        //     'languages' => 'nullable|string|max:255',
+        //     'mother_tongue' => 'nullable|string|max:255',
+        //     'maritial_status' => 'nullable|string|max:255',
+        //     'emer_contact_no' => 'nullable|string|max:15',
+        //     'emer_name' => 'nullable|string|max:255',
+        //     'emer_relation' => 'nullable|string|max:255',
+        //     'spouse_name' => 'nullable|string|max:255',
+        //     'spouse_dob' => 'nullable|date',
+        //     'spouse_aadhar_no' => 'nullable|string|min:12',
+        //     'no_of_childrens' => 'nullable|integer',
+        //     'blood_group' => 'nullable|string|max:255',
+        //     'qualification' => 'nullable|string|max:255',
+        //     'phone1' => 'nullable|string|max:15',
+        //     'phone2' => 'nullable|string|max:15',
+        //     'email' => 'nullable|email|max:255',
+        //     'official_mail_id' => 'nullable|email|max:255',
+        //     'permanent_address' => 'nullable|string',
+        //     'present_address' => 'nullable|string',
+        //     'pan_no' => 'nullable|string|max:255',
+        //     'pan_path' => 'nullable|file|',
+        //     'aadhar_no' => 'nullable|string|min:12',
+        //     // 'aadhar_path' => 'nullable|file|',
+        //     'driving_license_no' => 'nullable|string|max:255',
+        //     'driving_license_path' => 'nullable|file|',
+        //     'photo' => 'nullable|file|mimes:jpg,jpeg,png,gif,bmp,webp,pdf,doc,docx',
+        //     'family_photo' => 'nullable|file|mimes:jpg,png,pdf',
+        //     'resume' => 'nullable|file',
+        //     // 'bank_document' => 'nullable|file',
+        //     // 'bank_name' => 'nullable|string|max:255',
+        //     // 'bank_account_no' => 'nullable|string|max:255',
+        //     // 'bank_ifsc_code' => 'nullable|string|max:255',
+        //     'uan_no' => 'nullable|string|max:255',
+        //     'esic_no' => 'nullable|string|max:255',
+        //     'basic_salary' => 'nullable|numeric',
+        //     'hra' => 'nullable|numeric',
+        //     'conveyance' => 'nullable|numeric',
+        //     'medical_reimbursement' => 'nullable|numeric',
+        //     'special_allowance' => 'nullable|numeric',
+        //     'other_allowance' => 'nullable|numeric',
+        //     'st_bonus' => 'nullable|numeric',
+        //     'gross_salary' => 'nullable|numeric',
+        //     'emp_pf' => 'nullable|numeric',
+        //     'emp_esic' => 'nullable|numeric',
+        //     'pt' => 'nullable|numeric',
+        //     'total_deduction' => 'nullable|numeric',
+        //     'take_home' => 'nullable|numeric',
+        //     'employer_pf' => 'nullable|numeric',
+        //     'employer_esic' => 'nullable|numeric',
+        //     'mediclaim' => 'nullable|numeric',
+        //     'ctc' => 'nullable|numeric',
+        //     'status' => 'nullable|boolean',
+        //     'modify_by' => 'nullable|integer',
+        //     'password' => 'nullable|string|max:255',
+        //     'refresh_code' => 'nullable|string|max:255',
+        //     'psd' => 'nullable|string|max:255',
+        //     // 'document_type.*' => 'nullable|string',
+        //     // 'document_file.*' => 'nullable|file',
+        //     'child_names.*' => 'nullable|string|max:255',
+        //     'child_dobs.*' => 'nullable|date',
+        //     'child_photo.*' => 'nullable|file|mimes:jpg,png,pdf',
+        //     'child_aadhar_no.*' => 'nullable|string|min:12',
 
 
-        ]);
+        // ]);
         $validatedData = $request->all();
         DB::beginTransaction();
         try {
             $candidate = $this->model()->findOrFail($validatedData['id']);
+            $client = ClientManagement::find($validatedData['client_id']);
+            if ($client) {
+                $validatedData['entity_name'] = $client->client_name; 
+            }
             $validatedData['dcs_approval'] = $request->input('data_status', 0);
             $validatedData['data_status'] = $request->input('status', 0);
             $candidate->update($validatedData);
@@ -1018,7 +1034,7 @@ class DCSApprovalController extends Controller
 
         ($order == '') ? $query->orderByDesc('id') : $query->orderBy($order, $orderBy);
 
-        $candidate = $paginate ? $query->paginate($paginate)->appends(request()->query()) : $query->paginate(10)->appends(request()->query());
+        $candidate = $paginate ? $query->paginate($paginate)->appends(request()->query()) : $query->paginate(100)->appends(request()->query());
 
         return view("admin.adms.dcs_approval.docrejected", compact("candidate"));
     }

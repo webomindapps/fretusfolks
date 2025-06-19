@@ -27,7 +27,7 @@ $(document).ready(function () {
     table.orderBy = orderBy ? orderBy : '';
     table.type = type ? type : null;
     table.paginate = paginate ? paginate : null;
-    $('#per_page').val(paginate ? paginate : '10');
+    $('#per_page').val(paginate ? paginate : '100');
 
 });
 

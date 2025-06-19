@@ -45,7 +45,7 @@ class FHRMSController extends Controller
 
         ($order == '') ? $query->orderByDesc('id') : $query->orderBy($order, $orderBy);
 
-        $employee = $paginate ? $query->paginate($paginate)->appends(request()->query()) : $query->paginate(10)->appends(request()->query());
+        $employee = $paginate ? $query->paginate($paginate)->appends(request()->query()) : $query->paginate(100)->appends(request()->query());
 
         return view("admin.hr_management.fhrms.index", compact("employee"));
 
@@ -796,7 +796,7 @@ class FHRMSController extends Controller
             $today = \Carbon\Carbon::now()->format('m-d');
             $query->whereRaw("DATE_FORMAT(dob, '%m-%d') = ?", [$today]);
         }
-        $employees = $query->paginate(10)->withQueryString();
+        $employees = $query->paginate(100)->withQueryString();
         return view('admin.hr_management.fhrms.today_birthday', [
             'employee' => $employees,
         ]);
@@ -825,7 +825,7 @@ class FHRMSController extends Controller
 
         ($order == '') ? $query->orderByDesc('id') : $query->orderBy($order, $orderBy);
 
-        $employee = $paginate ? $query->paginate($paginate)->appends(request()->query()) : $query->paginate(10)->appends(request()->query());
+        $employee = $paginate ? $query->paginate($paginate)->appends(request()->query()) : $query->paginate(100)->appends(request()->query());
 
         // $employee = $this->model()->onlyTrashed()->get();
         return view('admin.hr_management.fhrms.trashed', compact('employee'));

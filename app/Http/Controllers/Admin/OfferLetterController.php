@@ -46,7 +46,7 @@ class OfferLetterController extends Controller
             $query->orderBy($order, $orderBy);
         }
 
-        $offer = $paginate ? $query->paginate($paginate)->appends(request()->query()) : $query->paginate(10)->appends(request()->query());
+        $offer = $paginate ? $query->paginate($paginate)->appends(request()->query()) : $query->paginate(100)->appends(request()->query());
 
         return view("admin.adms.offer_letter.index", compact("offer"));
     }

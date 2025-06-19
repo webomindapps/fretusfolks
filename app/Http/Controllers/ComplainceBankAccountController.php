@@ -42,7 +42,7 @@ class ComplainceBankAccountController extends Controller
 
         ($order == '') ? $query->orderByDesc('id') : $query->orderBy($order, $orderBy);
 
-        $pendingbank = $cfisExists ? $query->paginate($paginate)->appends(request()->query()) : $query->paginate(10)->appends(request()->query());
+        $pendingbank = $cfisExists ? $query->paginate($paginate)->appends(request()->query()) : $query->paginate(100)->appends(request()->query());
 
         return view('admin.adms.compliance.pending-bank_account.index', compact('pendingbank'));
     }

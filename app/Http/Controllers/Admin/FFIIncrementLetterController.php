@@ -54,7 +54,7 @@ class FFIIncrementLetterController extends Controller
         } else {
             $query->orderBy($order, $orderBy);
         }
-        $increment = $paginate ? $query->paginate($paginate)->appends(request()->query()) : $query->paginate(10)->appends(request()->query());
+        $increment = $paginate ? $query->paginate($paginate)->appends(request()->query()) : $query->paginate(100)->appends(request()->query());
 
         return view("admin.hr_management.ffi.increment_letter.index", compact("increment"));
     }

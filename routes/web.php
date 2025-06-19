@@ -122,6 +122,7 @@ Route::prefix('admin')->group(function () {
         Route::post('cdms/export', [CDMSController::class, 'export'])->name('cdms.export');
         Route::get('cdms/cdms_report', [CDMSController::class, 'showCodeReport'])->name('cdms_report');
         Route::post('cdms/cdms_report/export', [CDMSController::class, 'exportReport'])->name('cdms_report.export');
+        Route::get('/cdms/status/{id}/{status}', [CDMSController::class, 'updateStatus'])->name('cdms.updateStatus');
 
         // roles
         Route::get('/roles', [RolePermissionController::class, 'index'])->name('roles');

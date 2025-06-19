@@ -100,7 +100,7 @@
                                         <div class="col-md-4 mb-2"><b>Qualification:</b>
                                             <span>{{ $candidate?->qualification ?? 'N/A' }}</span>
                                         </div>
-                                        <div class="col-md-4 mb-2"><b>PAN NO:</b>
+                                        <div class="col-md-4 mb-2"><b>PAN No:</b>
                                             <span>{{ $candidate?->pan_no ?? 'N/A' }}</span>
                                         </div>
                                         <div class="col-md-4 mb-2"><b>Aadhar No:</b>
@@ -111,6 +111,9 @@
                                         </div>
                                         <div class="col-md-4 mb-2"><b>Password:</b>
                                             <span>{{ $candidate?->psd ?? 'N/A' }}</span>
+                                        </div>
+                                        <div class="col-md-4 mb-2"><b>Created By:</b>
+                                            <span>{{ $candidate?->creator->name ?? 'N/A' }}</span>
                                         </div>
                                         <div class="col-md-12 mb-2"><b>Permanent Address:</b>
                                             <span>{{ $candidate?->permanent_address ?? 'N/A' }}</span>

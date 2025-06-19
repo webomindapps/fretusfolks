@@ -62,7 +62,7 @@ class ADMSPayslipController extends Controller
             $query->orderBy($order, $orderBy);
         }
 
-        $payslip = $paginate ? $query->paginate($paginate)->appends(request()->query()) : $query->paginate(10)->appends(request()->query());
+        $payslip = $paginate ? $query->paginate($paginate)->appends(request()->query()) : $query->paginate(100)->appends(request()->query());
 
         return view('admin.adms.payslip.index', compact("payslip"));
     }
@@ -145,6 +145,7 @@ class ADMSPayslipController extends Controller
         $searchColumns = ['id', 'emp_id', 'month', 'year', 'emp_name', 'designation', 'department', 'client_name'];
         $search = request()->search;
         $emp_id = $request->input('emp_id');
+        $client_name = $request->input('client_name');
         $month = $request->input('month');
         $year = $request->input('year');
 
@@ -159,6 +160,9 @@ class ADMSPayslipController extends Controller
         if (!empty($emp_id)) {
             $query->where('emp_id', $emp_id);
         }
+          if (!empty($client_name)) {
+            $query->where('client_name', $client_name);
+        }
         if (!empty($month)) {
             $query->where('month', $month);
         }
@@ -166,7 +170,7 @@ class ADMSPayslipController extends Controller
             $query->where('year', $year);
         }
 
-        $payslips = $query->orderBy('id', 'ASC')->paginate(20)->withQueryString();
+        $payslips = $query->orderBy('id', 'ASC')->paginate(100)->withQueryString();
 
         return view('admin.adms.payslip.index', compact('payslips'));
     }

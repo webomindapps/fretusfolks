@@ -57,7 +57,7 @@ class FFIPayslipsController extends Controller
             $query->orderBy($order, $orderBy);
         }
 
-        $payslip = $paginate ? $query->paginate($paginate)->appends(request()->query()) : $query->paginate(10)->appends(request()->query());
+        $payslip = $paginate ? $query->paginate($paginate)->appends(request()->query()) : $query->paginate(100)->appends(request()->query());
 
         return view("admin.hr_management.ffi.payslips.index", compact("payslip"));
     }

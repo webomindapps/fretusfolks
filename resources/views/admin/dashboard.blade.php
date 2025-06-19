@@ -490,6 +490,25 @@
                         </a>
                     </div>
                 </div>
+                <div class="col-lg-3">
+                    <div class="card bg-purple-400">
+                        <a
+                            href="{{ route('admin.cfis') }}?from_date={{ request()->from_date }}&to_date={{ request()->to_date ?? date('Y-m-d') }}&created_by={{ auth()->id() }}">
+                            <div class="card-body">
+                                <div class="d-flex">
+                                    <h3 class="font-weight-semibold mb-0">
+                                        {{ $createdByMeCount }}
+                                    </h3>
+                                </div>
+                                <div>
+                                    <div class="font-size-sm opacity-75">Candidates Created by Me</div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+
             </div>
         </div>
     @elseif ($userRole === 'Compliance')

@@ -22,6 +22,7 @@
                 $columns = [
                     ['label' => 'Id', 'column' => 'id', 'sort' => true],
                     ['label' => 'FFI Employee ID', 'column' => 'ffi_emp_id', 'sort' => true],
+                    ['label' => 'Client id', 'column' => 'client_emp_id', 'sort' => true],
                     ['label' => 'Client Name', 'column' => 'entity_name', 'sort' => true],
                     ['label' => 'Employee Name', 'column' => 'emp_name', 'sort' => true],
                     ['label' => 'Phone', 'column' => 'phone1', 'sort' => true],
@@ -62,6 +63,7 @@
                         </td>
                         <td>{{ $item->id }}</td>
                         <td>{{ $item->ffi_emp_id === null || $item->ffi_emp_id === '' ? 'N/A' : $item->ffi_emp_id }}
+                        <td>{{ $item->client_emp_id === null || $item->client_emp_id === '' ? 'N/A' : $item->client_emp_id }}
                         </td>
                         <td>
                             {{ $item->entity_name }}

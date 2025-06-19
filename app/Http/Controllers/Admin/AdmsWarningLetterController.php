@@ -47,7 +47,7 @@ class AdmsWarningLetterController extends Controller
             $query->orderBy($order, $orderBy);
         }
 
-        $warning = $paginate ? $query->paginate($paginate)->appends(request()->query()) : $query->paginate(10)->appends(request()->query());
+        $warning = $paginate ? $query->paginate($paginate)->appends(request()->query()) : $query->paginate(100)->appends(request()->query());
         return view('admin.adms.warning_letter.index', compact('warning'));
     }
 

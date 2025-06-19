@@ -395,7 +395,6 @@
                                     <label for="bank_document">Attach Bank Document: <span
                                             style="color: red;">*</span></label>
                                     <input type="file" name="bank_document" id="bank_document"
-                                        accept="application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/pdf"
                                         class="form-control" value="{{ old('bank_document') }}" required>
                                 </div>
                                 <x-forms.input label="Enter Bank Account No::" type="text" name="bank_account_no"
@@ -612,8 +611,9 @@
                             </div>
                             <div class="row">
                                 <div class="col-lg-12 mt-4">
-                                    <x-forms.button type="submit" label="Submit" class="btn btn-primary" />
-                                    <button type="button" onclick="return pending_update()"
+                                    <x-forms.button type="submit" label="Submit" id="submit"
+                                        class="btn btn-primary" />
+                                    <button type="button" onclick="return pending_update()" id="save"
                                         class="btn btn-primary">Save</button>
                                 </div>
                             </div>
@@ -828,11 +828,11 @@
                    class="form-control">
 
             ${childData.photo ? `
-                                                                                                                                                    <div id="image-preview-container-${i}" class="d-flex mt-2">
-                                                                                                                                                        <img src="{{ url('/') }}/${childData.photo}" 
-                                                                                                                                                             class="img-thumbnail" width="100" height="100" 
-                                                                                                                                                             alt="Child ${i} Uploaded Photo">
-                                                                                                                                                    </div>` : ''}
+                                                                                                                                                            <div id="image-preview-container-${i}" class="d-flex mt-2">
+                                                                                                                                                                <img src="{{ url('/') }}/${childData.photo}" 
+                                                                                                                                                                     class="img-thumbnail" width="100" height="100" 
+                                                                                                                                                                     alt="Child ${i} Uploaded Photo">
+                                                                                                                                                            </div>` : ''}
         </div>
     `;
                             childrenDetails.appendChild(childRow);

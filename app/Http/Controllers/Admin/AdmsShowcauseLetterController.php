@@ -47,7 +47,7 @@ class AdmsShowcauseLetterController extends Controller
             $query->orderBy($order, $orderBy);
         }
 
-        $showcause = $paginate ? $query->paginate($paginate)->appends(request()->query()) : $query->paginate(10)->appends(request()->query());
+        $showcause = $paginate ? $query->paginate($paginate)->appends(request()->query()) : $query->paginate(100)->appends(request()->query());
         return view('admin.adms.showcause_letter.index', compact('showcause'));
     }
     public function create()

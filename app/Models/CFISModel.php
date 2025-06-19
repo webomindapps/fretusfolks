@@ -209,7 +209,7 @@ class CFISModel extends Model
     {
         return $this->belongsTo(MuserMaster::class, 'modify_by', 'id');
     }
-    public function createdBy()
+    public function creator()
     {
         return $this->belongsTo(MuserMaster::class, 'created_by', 'id');
     }

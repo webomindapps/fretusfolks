@@ -53,7 +53,7 @@ class FFIPipLetterController extends Controller
         } else {
             $query->orderBy($order, $orderBy);
         }
-        $pip = $paginate ? $query->paginate($paginate)->appends(request()->query()) : $query->paginate(10)->appends(request()->query());
+        $pip = $paginate ? $query->paginate($paginate)->appends(request()->query()) : $query->paginate(100)->appends(request()->query());
 
         return view("admin.hr_management.ffi.pip_letter.index", compact("pip"));
     }

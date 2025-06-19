@@ -50,7 +50,7 @@ class ApprovedCandidateImport implements ToCollection
                         ->exists();
 
                     if ($exists) {
-                        $chunkDuplicates[] = "Duplicate at row #" . ($index ) . " - FFI_Emp_ID: $ffiEmpId, Phone_NO: $phone, Aadhar_No: $aadhar" . "<br>";
+                        $chunkDuplicates[] = "Duplicate at row #" . ($index) . " - FFI_Emp_ID: $ffiEmpId, Phone_NO: $phone, Aadhar_No: $aadhar";
                     } else {
                         $processedData[] = $row;
 
@@ -69,7 +69,7 @@ class ApprovedCandidateImport implements ToCollection
 
         // Throw error after all processing
         if (!empty($allDuplicates)) {
-            $errorMessage = "Duplicate records found:\n" . implode("\n", $allDuplicates);
+            $errorMessage = "Duplicate records found:<br>" . implode("<br>", $allDuplicates);
             throw new \Exception($errorMessage);
         }
     }

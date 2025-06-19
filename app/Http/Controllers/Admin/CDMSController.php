@@ -43,7 +43,7 @@ class CDMSController extends Controller
 
         ($order == '') ? $query->orderByDesc('id') : $query->orderBy($order, $orderBy);
 
-        $client = $paginate ? $query->paginate($paginate)->appends(request()->query()) : $query->paginate(10)->appends(request()->query());
+        $client = $paginate ? $query->paginate($paginate)->appends(request()->query()) : $query->paginate(100)->appends(request()->query());
 
         return view("admin.client_mangement.cdms.index", compact("client"));
 
@@ -186,7 +186,7 @@ class CDMSController extends Controller
             'rate' => 'nullable|string|max:255',
             'commercial_type' => 'nullable|integer',
             'remark' => 'nullable|string',
-            'status' => 'required|integer',
+            'active_status' => 'required|integer',
         ]);
 
         DB::beginTransaction();
@@ -228,7 +228,7 @@ class CDMSController extends Controller
             if ($type == 1) {
                 $tds_code->delete();
             } else if ($type == 2) {
-                $tds_code->update(['status' => $status]);
+                $tds_code->update(['active_status' => $status]);
             }
         }
         return response()->json(['success' => true, 'message' => 'Bulk operation is completed']);
@@ -338,4 +338,19 @@ class CDMSController extends Controller
             'status'
         ));
     }
+    public function updateStatus($id, $status)
+    {
+        $cdms = $this->model()->findOrFail($id);
+
+        if (!in_array($status, ['0', '1'])) {
+            return redirect()->back()->with('error', 'Invalid status.');
+        }
+
+        $cdms->active_status = $status;
+        $cdms->save();
+
+        return redirect()->back()->with('success', "Status updated .");
+    }
+
+
 }

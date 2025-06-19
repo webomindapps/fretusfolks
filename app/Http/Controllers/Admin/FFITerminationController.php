@@ -55,7 +55,7 @@ class FFITerminationController extends Controller
             $query->orderBy($order, $orderBy);
         }
 
-        $termination = $paginate ? $query->paginate($paginate)->appends(request()->query()) : $query->paginate(10)->appends(request()->query());
+        $termination = $paginate ? $query->paginate($paginate)->appends(request()->query()) : $query->paginate(100)->appends(request()->query());
 
         return view("admin.hr_management.ffi.termination.index", compact("termination"));
     }

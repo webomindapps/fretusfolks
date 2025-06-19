@@ -160,10 +160,20 @@ class LoginController extends Controller
                 SUM(CASE WHEN hr_approval = 2 THEN 1 ELSE 0 END) as Rejecteddocument
             ")->first();
 
+            $createdByMeCount = CFISModel::query()
+                ->where('created_by', auth()->id());
+
+            if ($dateFilter) {
+                $createdByMeCount->whereBetween('created_at', [$from_date, $to_date]);
+            }
+
+            $createdByMeCount = $createdByMeCount->count();
+
             return view('admin.dashboard', compact(
                 'userRole',
                 'cfis',
-                'candidateStats'
+                'candidateStats',
+                'createdByMeCount'
             ));
         } elseif ($userRole == 'Compliance') {
             $cfisQuery = CFISModel::query();
