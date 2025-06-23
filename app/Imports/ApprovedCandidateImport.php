@@ -33,29 +33,43 @@ class ApprovedCandidateImport implements ToCollection
 
                 if (count($rowArray) === count($header)) {
                     $row = array_combine($header, $rowArray);
-                    // dd($row);
                     $ffiEmpId = $row['FFI_EMP_ID'] ?? null;
                     $phone = $row['Phone_No'] ?? null;
                     $aadhar = $row['Aadhar_No'] ?? null;
 
-                    // Skip this row if FFI_Emp_ID is null or empty
                     if (empty($ffiEmpId)) {
                         continue;
                     }
 
-                    $exists = DB::table('backend_management')
-                        ->where('ffi_emp_id', $ffiEmpId)
-                        ->orWhere('phone1', $phone)
-                        ->orWhere('aadhar_no', $aadhar)
-                        ->exists();
+                    // Check for a record with both aadhar and phone number
+                    $existingRecord = DB::table('backend_management')
+                        ->where('aadhar_no', $aadhar)
+                        ->where('phone1', $phone)
+                        ->first();
 
-                    if ($exists) {
-                        $chunkDuplicates[] = "Duplicate at row #" . ($index) . " - FFI_Emp_ID: $ffiEmpId, Phone_NO: $phone, Aadhar_No: $aadhar";
+                    if ($existingRecord) {
+                        // If employee_last_date is set, treat it as not duplicate
+                        if ($existingRecord->employee_last_date) {
+                            $processedData[] = $row;
+                        } else {
+                            $chunkDuplicates[] = "Duplicate at row #" . ($index) . " - FFI_Emp_ID: $ffiEmpId, Phone_NO: $phone, Aadhar_No: $aadhar";
+                        }
                     } else {
-                        $processedData[] = $row;
+                        // No record with both phone and aadhar, proceed to check other individual duplicate conditions
+                        $exists = DB::table('backend_management')
+                            ->where('ffi_emp_id', $ffiEmpId)
+                            ->orWhere('phone1', $phone)
+                            ->orWhere('aadhar_no', $aadhar)
+                            ->exists();
 
+                        if ($exists) {
+                            $chunkDuplicates[] = "Duplicate at row #" . ($index) . " - FFI_Emp_ID: $ffiEmpId, Phone_NO: $phone, Aadhar_No: $aadhar";
+                        } else {
+                            $processedData[] = $row;
+                        }
                     }
                 }
+
             }
 
             if (!empty($chunkDuplicates)) {

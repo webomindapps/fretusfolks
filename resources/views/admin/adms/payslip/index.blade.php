@@ -22,72 +22,15 @@
         <div class="tab-content" id="myTabContent">
             <!-- Upload Payslips Tab -->
             <div class="tab-pane fade show active" id="upload" role="tabpanel" aria-labelledby="upload-tab">
-                <div class="card-header">
-                    <h5 class="card-title">Download format</h5>
-                </div>
-                <div class="card-body">
-                    <form action="{{ route('admin.payslips') }}" method="GET">
-                        <div class="row">
-                            <div class="col-lg-3 mt-2">
-                                <label for="data">Client Name</label>
-                                <div class="dropdown">
-                                    <input type="text" class="btn dropdown-toggle text-start" id="dropdownMenuButton"
-                                        data-bs-toggle="dropdown" aria-expanded="false" readonly
-                                        value="Select Client" />
-
-                                    <ul class="dropdown-menu p-2" aria-labelledby="dropdownMenuButton"
-                                        style="max-height: 300px; overflow-y: auto; min-width: 250px;">
-                                        {{-- Search box --}}
-                                        <li class="mb-2">
-                                            <input type="text" class="form-control" placeholder="Search..."
-                                                onkeyup="filterClientList(this)">
-                                        </li>
-
-                                        {{-- Select All --}}
-                                        <li>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="select_all_data"
-                                                    onchange="toggleSelectAll(this, '.data-checkbox', '#dropdownMenuButton', 'Select Client')">
-                                                <label class="form-check-label" for="select_all_data">Select All</label>
-                                            </div>
-                                        </li>
-
-                                        <li>
-                                            <hr class="dropdown-divider">
-                                        </li>
-
-                                        {{-- Client list --}}
-                                        @foreach (FretusFolks::getClientname() as $option)
-                                            <li class="client-option">
-                                                <div class="form-check">
-                                                    <input class="form-check-input data-checkbox" type="checkbox"
-                                                        name="data[]" value="{{ $option['value'] }}"
-                                                        id="data_{{ $loop->index }}" data-name="{{ $option['label'] }}"
-                                                        onchange="updateSelectedNames('.data-checkbox', '#dropdownMenuButton', 'Select Client')">
-                                                    <label class="form-check-label"
-                                                        for="data_{{ $loop->index }}">{{ $option['label'] }}</label>
-                                                </div>
-                                            </li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                            </div>
 
 
-                            <div class="col-lg-2 mt-4">
-                                <a class="btn btn-info  w-20 text-white mt-3" id="downloadFilteredCSV"
-                                    download="payslip_format.xlsx">
-                                    Download Sample
-                                </a>
-                            </div>
-                        </div>
-                    </form>
-
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">Upload Payslips</h5>
+                    <a class="btn btn-info text-white" id="downloadFilteredCSV" download="payslip_format.xlsx">
+                        Download Sample
+                    </a>
                 </div>
 
-                <div class="card-header">
-                    <h5 class="card-title">Upload Payslips</h5>
-                </div>
 
 
                 <form action="{{ route('admin.payslips.bulk.upload') }}" method="POST" enctype="multipart/form-data">
@@ -122,8 +65,7 @@
                             <div class="col-md-10">
                                 <div class="form-group">
                                     <label>Upload File <span class="text-danger">*</span></label>
-                                    <input type="file" name="file" id="file" class="form-control"
-                                        required>
+                                    <input type="file" name="file" id="file" class="form-control" required>
                                 </div>
                             </div>
                         </div>
@@ -150,9 +92,9 @@
                             <div class="col-lg-3">
                                 <label for="client">Client Name <span class="text-danger">*</span></label>
                                 <div class="dropdown">
-                                    <input type="text" class="btn dropdown-toggle text-start"
-                                        id="dropdownMenuclient" data-bs-toggle="dropdown" aria-expanded="false"
-                                        readonly value="Select Client" />
+                                    <input type="text" class="btn dropdown-toggle text-start" id="dropdownMenuclient"
+                                        data-bs-toggle="dropdown" aria-expanded="false" readonly
+                                        value="Select Client" />
                                     <input type="hidden" name="client[]" id="selected_client_input" required />
 
                                     <ul class="dropdown-menu p-2"
@@ -263,12 +205,7 @@
                     </div>
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-md-3">
-                                <input type="text" name="emp_id" id="emp_id" class="form-control"
-                                    placeholder="Employee ID" value="{{ request()->emp_id }}">
-                            </div>
-                            <div class="col-lg-3">
-                                {{-- <label for="client">Client Name <span class="text-danger">*</span></label> --}}
+                            <div class="col-lg-4">
                                 <div class="dropdown">
                                     <input type="text" class="btn dropdown-toggle text-start"
                                         id="dropdownSearchclient" data-bs-toggle="dropdown" aria-expanded="false"
@@ -287,16 +224,25 @@
                                             <hr class="dropdown-divider">
                                         </li>
 
-                                        @foreach (FretusFolks::getClientname() as $option)
+                                        @foreach (FretusFolks::getClientname() as $index => $option)
                                             <li>
-                                                <a href="#" class="dropdown-sitem"
+                                                <a href="#"
+                                                    class="dropdown-sitem d-flex align-items-center gap-2"
                                                     onclick="selectClientsearch('{{ $option['label'] }}')">
-                                                    {{ $option['label'] }}
+                                                    <input type="checkbox" class="form-check-input" />
+                                                    <span>{{ $option['label'] }}</span>
                                                 </a>
+                                            </li>
+                                            <li>
+                                                <hr class="dropdown-divider">
                                             </li>
                                         @endforeach
                                     </ul>
                                 </div>
+                            </div>
+                            <div class="col-md-2">
+                                <input type="text" name="emp_id" id="emp_id" class="form-control"
+                                    placeholder="Employee ID" value="{{ request()->emp_id }}">
                             </div>
                             <div class="col-md-2">
                                 <select name="month" id="month" class="form-control">
@@ -395,7 +341,7 @@
                     const row = $('#row-' + id);
 
                     $.ajax({
-                        url: 'hhttps://webominddev.co.in/fretusfolks/public/admin/payslips/' + id +
+                        url: 'https://newapp.fretusfolks.com/admin/payslips/' + id +
                             '/delete',
                         method: 'GET',
                         success: function(response) {
@@ -511,7 +457,7 @@
                 if (selectedClients.length === 0) {
                     const link = document.createElement('a');
                     link.href =
-                        'https://webominddev.co.in/fretusfolks/public/admin/payslip_format.xlsx'; // File must be in public/
+                        'https://newapp.fretusfolks.com/admin/payslip_format.xlsx'; // File must be in public/
                     link.download = 'payslip_format.xlsx';
                     document.body.appendChild(link);
                     link.click();
@@ -558,7 +504,7 @@
 
             function startProgressCheck() {
                 progressInterval = setInterval(() => {
-                    $.get("https://webominddev.co.in/fretusfolks/public/batch-status", function(data) {
+                    $.get("https://newapp.fretusfolks.com/batch-status", function(data) {
                         if (data.status !== "not_found") {
                             $("#progress-bar").val(data.status);
                             $("#progress-text").text("Processing Payslips... " + data.status + "%");

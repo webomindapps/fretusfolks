@@ -118,7 +118,7 @@
                                         <div class="form-group col-lg-3 mt-2">
                                             <label for="spouse_photo">Spouse Photo: </label>
                                             <input type="file" name="spouse_photo" id="spouse_photo"
-                                                accept="application/pdf, image/jpg, image/png" class="form-control"
+                                                class="form-control"
                                                 value="{{ old('spouse_photo') }}">
                                             @if ($candidate->candidateDocuments->where('name', 'spouse_photo')->isNotEmpty())
                                                 @php
@@ -160,7 +160,7 @@
                                 <div class="form-group col-lg-3 mt-2">
                                     <label for="father_photo">Father Photo: </label>
                                     <input type="file" name="father_photo" id="father_photo"
-                                        accept="application/pdf, image/jpg, image/png" class="form-control"
+                                       class="form-control"
                                         value="{{ old('father_photo') }}">
                                     @if ($candidate->candidateDocuments->where('name', 'father_photo')->isNotEmpty())
                                         @php
@@ -187,7 +187,7 @@
                                 <div class="form-group col-lg-3 mt-2">
                                     <label for="mother_photo">Mother Photo: </label>
                                     <input type="file" name="mother_photo" id="mother_photo"
-                                        accept="application/pdf, image/jpg, image/png" class="form-control"
+                                       class="form-control"
                                         value="{{ old('mother_photo') }}">
                                     @if ($candidate->candidateDocuments->where('name', 'mother_photo')->isNotEmpty())
                                         @php
@@ -273,7 +273,7 @@
                                         <div class="form-group col-lg-6 mt-2">
                                             <label for="pan_path">Attach PAN: </label>
                                             <input type="file" name="pan_path" id="pan_path"
-                                                accept=".doc, .docx, .pdf, .jpg, .png" class="form-control"
+                                                class="form-control"
                                                 value="{{ old('pan_path', $candidate->pan_path) }}">
                                         </div>
                                     </div>
@@ -291,7 +291,7 @@
                                         <div class="form-group col-lg-6 mt-2">
                                             <label for="pan_declaration">Upload Signed Document: </label>
                                             <input type="file" name="pan_declaration" id="pan_declaration"
-                                                accept=".doc, .docx, .pdf, .jpg, .png" class="form-control">
+                                               class="form-control">
                                         </div>
                                     </div>
 
@@ -311,7 +311,6 @@
                                     <label for="aadhar_path">Attach Aadhar Card: <span
                                             style="color: red">*</span></label>
                                     <input type="file" name="aadhar_path" id="aadhar_path"
-                                        accept="application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/pdf, image/jpg, image/png"
                                         class="form-control"
                                         value="{{ old('aadhar_path', $candidate->aadhar_path) }}" required>
                                 </div>
@@ -322,14 +321,13 @@
                                 <div class="form-group col-lg-6 mt-2">
                                     <label for="driving_license_path">Attach Driving License:</label>
                                     <input type="file" name="driving_license_path" id="driving_license_path"
-                                        accept="application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/pdf, image/jpg, image/png"
                                         class="form-control"
                                         value="{{ old('driving_license_path', $candidate->driving_license_path) }}">
                                 </div>
                                 {{-- <div class="form-group col-lg-6 mt-2">
                                     <label for="photo">Photo: <span style="color: red;">*</span></label>
                                     <input type="file" name="photo" id="photo"
-                                        accept="application/pdf, image/jpg, image/png" class="form-control"
+                                        class="form-control"
                                         value="{{ old('photo', $candidate->photo) }}" required>
                                 </div> --}}
                                 <div class="form-group col-lg-4 mt-2">
@@ -350,7 +348,6 @@
                                 <div class="form-group col-lg-4 mt-2">
                                     <label for="resume">Resume: </label>
                                     <input type="file" name="resume" id="resume"
-                                        accept="application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/pdf"
                                         class="form-control">
 
                                     @if ($candidate->candidateDocuments->where('name', 'resume')->isNotEmpty())
@@ -367,7 +364,7 @@
                                 <div class="form-group col-lg-4 mt-2">
                                     <label for="family_photo">Family Photo: </label>
                                     <input type="file" name="family_photo" id="family_photo"
-                                        accept="application/pdf, image/jpg, image/png" class="form-control"
+                                      class="form-control"
                                         value="{{ old('family_photo') }}">
                                     @if ($candidate->candidateDocuments->where('name', 'family_photo')->isNotEmpty())
                                         @php
@@ -385,7 +382,6 @@
                                 {{-- <div class="form-group col-lg-6 mt-2">
                                     <label for="resume">Resume: <span style="color: red;">*</span></label>
                                     <input type="file" name="resume" id="resume"
-                                        accept="application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/pdf"
                                         class="form-control" value="{{ old('resume', $candidate->resume) }}" required>
                                 </div> --}}
                                 <x-forms.input label="Enter Bank Name:" type="text" name="bank_name"
@@ -502,7 +498,6 @@
                                                 </select>
 
                                                 <input type="file"
-                                                    accept="application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/pdf"
                                                     name="document_file[]" class=" col-lg-5 me-3">
 
                                                 <button type="button" class="btn btn-success me-2 add-row">+</button>
@@ -748,8 +743,7 @@
                         <option value="exp_letter">Exp Letter</option>
                     </select>
                     <input type="file" name="document_file[]" 
-                     accept="application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/pdf"
-                    class="col-lg-5 me-3 " >
+                                      class="col-lg-5 me-3 " >
                     <button type="button" class="btn btn-success me-2 add-row">+</button>
                     <button type="button" class="btn btn-danger me-2 remove-row">-</button>
                 `;
@@ -824,15 +818,15 @@
         </div>
         <div class="form-group col-lg-3">
             <label for="child_photo_${i}">Child ${i} Photo:</label>
-            <input type="file" name="child_photo[]" id="child_photo_${i}" accept="application/pdf, image/jpg, image/png" 
+            <input type="file" name="child_photo[]" id="child_photo_${i}"
                    class="form-control">
 
             ${childData.photo ? `
-                                                                                                                                                            <div id="image-preview-container-${i}" class="d-flex mt-2">
-                                                                                                                                                                <img src="{{ url('/') }}/${childData.photo}" 
-                                                                                                                                                                     class="img-thumbnail" width="100" height="100" 
-                                                                                                                                                                     alt="Child ${i} Uploaded Photo">
-                                                                                                                                                            </div>` : ''}
+                                                                                                                                                                    <div id="image-preview-container-${i}" class="d-flex mt-2">
+                                                                                                                                                                        <img src="{{ url('/') }}/${childData.photo}" 
+                                                                                                                                                                             class="img-thumbnail" width="100" height="100" 
+                                                                                                                                                                             alt="Child ${i} Uploaded Photo">
+                                                                                                                                                                    </div>` : ''}
         </div>
     `;
                             childrenDetails.appendChild(childRow);

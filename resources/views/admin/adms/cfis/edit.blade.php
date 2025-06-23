@@ -98,9 +98,7 @@
 
                                 <div class="form-group col-lg-6">
                                     <label for="resume">Resume:</label>
-                                    <input type="file" name="resume" id="resume"
-                                        accept="application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/pdf"
-                                        class="form-control">
+                                    <input type="file" name="resume" id="resume" class="form-control">
 
                                     @if ($candidate->candidateDocuments->where('name', 'resume')->isNotEmpty())
                                         @php

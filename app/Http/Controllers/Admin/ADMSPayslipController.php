@@ -131,7 +131,6 @@ class ADMSPayslipController extends Controller
         }
 
         $payslips = $payslipsQuery->get();
-        // dd($payslips->count());
 
         if ($payslips->isEmpty()) {
             return back()->with('error', 'No payslips found for the selected month and year.');
@@ -160,7 +159,7 @@ class ADMSPayslipController extends Controller
         if (!empty($emp_id)) {
             $query->where('emp_id', $emp_id);
         }
-          if (!empty($client_name)) {
+        if (!empty($client_name)) {
             $query->where('client_name', $client_name);
         }
         if (!empty($month)) {
@@ -208,6 +207,7 @@ class ADMSPayslipController extends Controller
         return $pdf->stream($filename);
     }
 
+
     public function zipDownload($payslips, $ademails)
     {
         if ($payslips->isEmpty()) {
@@ -215,39 +215,32 @@ class ADMSPayslipController extends Controller
         }
 
         try {
-            // Define first batch (Generate PDFs)
-            $pendingBatch = Bus::batch([])->then(function (Batch $batch) use ($payslips, $ademails) {
-                $emails = array_map('trim', explode(',', $ademails));
-
-                // Dispatch second batch after PDFs are created
-                Bus::batch([
-                    new CreateZipAndEmail($payslips->map->toArray()->toArray(), $emails)
-                ])->then(function (Batch $zipBatch) {
-                    Cache::put("batch_status_zip_{$zipBatch->id}", 'completed', 3600);
-                })->catch(function (Batch $zipBatch, Throwable $e) {
-                    Cache::put("batch_status_zip_{$zipBatch->id}", 'failed', 3600);
-                })->dispatch();
-            })->catch(function (Batch $batch, Throwable $e) {
-                Cache::put("batch_status_gen_{$batch->id}", 'failed', 3600);
-            });
-
-            // Add jobs to the batch
+            $jobs = [];
             foreach ($payslips as $payslip) {
-                $pendingBatch->add(new GeneratePayslipPDFs($payslip->toArray()));
+                $jobs[] = new GeneratePayslipPDFs($payslip);
             }
-
-            // Dispatch the batch and get the real Batch instance
-            $dispatchedBatch = $pendingBatch->dispatch();
-
-            // Now it's safe to access the ID
-            session(['batch_id' => $dispatchedBatch->id]);
-
+    
+            $emails = array_map('trim', explode(',', $ademails));
+    
+            $batch = Bus::batch($jobs)
+                ->then(function (Batch $batch) use ($payslips, $emails) {
+                    // Dispatch zip creation after all PDFs are ready
+                    CreateZipAndEmail::dispatch($payslips, $emails);
+                })
+                ->catch(function (Batch $batch, Throwable $e) {
+                    Cache::put("batch_status_{$batch->id}", 'failed', 3600);
+                })
+                ->dispatch();
+    
+            session(['batch_id' => $batch->id]);
             return redirect()->back()->with('success', 'Payslips are being processed. You will receive an email when ready.');
         } catch (Throwable $e) {
             dd($e);
             return redirect()->back()->with('error', 'An error occurred while processing payslips.');
         }
+
     }
+
 
     // public function downloadfiltered(Request $request)
     // {
@@ -555,5 +548,4 @@ class ADMSPayslipController extends Controller
         // Return response as download
         return response()->download($tempFile, $fileName)->deleteFileAfterSend(true);
     }
-
 }

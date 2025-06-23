@@ -98,6 +98,8 @@
                                     id="repeat_acc_no" :required="false" size="col-lg-6 mt-2" :value="old('repeat_acc_no', $employee->repeat_acc_no)" />
                                 <x-forms.input label="IFSC Code: " type="text" name="bank_ifsc_code"
                                     id="bank_ifsc_code" :required="true" size="col-lg-6 mt-2" :value="old('bank_ifsc_code', $employee->bank_ifsc_code)" />
+                                <x-forms.input label="UAN Number: " type="text" name="uan_no" id="uan_no"
+                                    :required="false" size="col-lg-6 mt-2" :value="old('uan_no', $employee->uan_no)" />
                                 <x-forms.select label="Status:" name="status" id="status" :required="false"
                                     size="col-lg-6 mt-2" :options="FretusFolks::getStatus()" :value="old('status', $employee->status)" />
 

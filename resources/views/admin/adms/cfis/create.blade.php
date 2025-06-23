@@ -77,9 +77,7 @@
                                 </div>
                                 <div class="form-group col-lg-6 mt-2">
                                     <label for="resume">Resume: <span style="color: red">*</span></label>
-                                    <input type="file" name="resume" id="resume"
-                                        accept="application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/pdf"
-                                        required class="form-control">
+                                    <input type="file" name="resume" id="resume" required class="form-control">
                                 </div>
 
                             </div>

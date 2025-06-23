@@ -307,17 +307,18 @@ class FretusFolks extends Controller
     public function getQualification()
     {
         $fields = [
+            'ILLITERATE',
             '5th ',
             '6th',
             '7th',
             '8th',
             '9th',
-            '10th',
+            'SSLC',
             'PUC',
-            'Graduate',
-            'Under_Graduate',
-            'Post_Graduate',
             'Diploma',
+            'Under_Graduate',
+            'Graduate',
+            'Post_Graduate',
             'PHD'
         ];
         $data = [];

@@ -13,8 +13,7 @@
                 <form action="{{ route('admin.candidatemaster.import') }}" method="POST" enctype="multipart/form-data"
                     class="d-flex align-items-center">
                     @csrf
-                    <input type="file" class="form-control form-control-sm me-2" name="file" 
-                        required>
+                    <input type="file" class="form-control form-control-sm me-2" name="file" required>
                     <button type="submit" class="add-btn bg-success text-white">Import</button>
                 </form>
             </div>
@@ -26,6 +25,8 @@
             @php
                 $columns = [
                     ['label' => 'Id', 'column' => 'id', 'sort' => true],
+                    ['label' => 'Employee ID', 'column' => 'ffi_emp_id', 'sort' => true],
+                    ['label' => 'Client ID', 'column' => 'client_emp_id', 'sort' => true],
                     ['label' => 'Client Name', 'column' => 'entity_name', 'sort' => true],
                     ['label' => 'Employee Name', 'column' => 'emp_name', 'sort' => true],
                     ['label' => 'Phone', 'column' => 'phone1', 'sort' => true],
@@ -59,6 +60,11 @@
                     <tr>
 
                         <td>{{ $item->id }}</td>
+                        <td>{{ $item->ffi_emp_id === null || $item->ffi_emp_id === '' ? 'N/A' : $item->ffi_emp_id }}
+                        </td>
+                        <td>{{ $item->client_emp_id === null || $item->client_emp_id === '' ? 'N/A' : $item->client_emp_id }}
+                        </td>
+
                         <td>
                             {{ $item->entity_name }}
                         </td>

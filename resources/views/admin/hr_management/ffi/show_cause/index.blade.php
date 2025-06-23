@@ -14,13 +14,13 @@
                     ['label' => 'Actions', 'column' => 'action', 'sort' => false],
                 ];
             @endphp
-            <x-table :columns="$columns" :data="$show" :checkAll=true :bulk="route('admin.ffi_show_cause.bulk')" :route="route('admin.ffi_show_cause')">
+            <x-table :columns="$columns" :data="$show" :checkAll=false :bulk="route('admin.ffi_show_cause.bulk')" :route="route('admin.ffi_show_cause')">
                 @foreach ($show as $key => $item)
                     <tr>
-                        <td>
+                        {{-- <td>
                             <input type="checkbox" name="selected_items[]" class="single-item-check"
                                 value="{{ $item->id }}">
-                        </td>
+                        </td> --}}
                         <td>{{ $item->id }}</td>
                         <td>{{ $item->emp_id }}</td>
                         <td>{{ $item->show_letter ? $item->show_letter->emp_name : 'N/A' }}</td>

@@ -2,15 +2,14 @@
 
 namespace App\Jobs;
 
-use ZipArchive;
-use Barryvdh\DomPDF\Facade\Pdf;
-use App\Mail\PayslipZipReady;
-use Illuminate\Bus\Batchable;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
+use ZipArchive;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\PayslipZipReady;
+use Illuminate\Bus\Batchable;
 
 class CreateZipAndEmail implements ShouldQueue
 {
@@ -27,18 +26,24 @@ class CreateZipAndEmail implements ShouldQueue
 
     public function handle()
     {
-        $zipFileName = "payslips_{$this->payslips->first()->month}_{$this->payslips->first()->year}.zip";
+        $zipFileName = "Payslips_{$this->payslips->first()->client_name}_{$this->payslips->first()->month}_{$this->payslips->first()->year}.zip";
         $zipPath = storage_path("app/temp/{$zipFileName}");
 
         $zip = new ZipArchive();
+        $pdfFiles = [];
         if ($zip->open($zipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE) === true) {
             foreach ($this->payslips as $payslip) {
-                $filePath = $payslip->payslips_letter_path ? public_path($payslip->payslips_letter_path) : storage_path("app/temp/payslip_{$payslip->id}.pdf");
+                $filePath = storage_path('app/temp/' . $payslip->payslips_letter_path);
                 if (file_exists($filePath)) {
                     $zip->addFile($filePath, basename($filePath));
+                    $pdfFiles[] = $filePath;
+                } else {
+                    \Log::warning("File does not exist: {$filePath}");
                 }
             }
             $zip->close();
+        } else {
+            \Log::error("Failed to create ZIP at: {$zipPath}");
         }
 
         // Send ZIP file via email
@@ -47,6 +52,10 @@ class CreateZipAndEmail implements ShouldQueue
         if (file_exists($zipPath)) {
             unlink($zipPath);
         }
+        foreach ($pdfFiles as $pdfPath) {
+            if (file_exists($pdfPath)) {
+                unlink($pdfPath);
+            }
+        }
     }
-
 }

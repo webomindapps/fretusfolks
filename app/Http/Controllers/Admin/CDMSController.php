@@ -228,7 +228,7 @@ class CDMSController extends Controller
             if ($type == 1) {
                 $tds_code->delete();
             } else if ($type == 2) {
-                $tds_code->update(['active_status' => $status]);
+                $tds_code->update(['status' => $status]);
             }
         }
         return response()->json(['success' => true, 'message' => 'Bulk operation is completed']);
@@ -351,6 +351,4 @@ class CDMSController extends Controller
 
         return redirect()->back()->with('success', "Status updated .");
     }
-
-
 }

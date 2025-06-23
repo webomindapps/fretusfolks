@@ -105,7 +105,7 @@ class CFISController extends Controller
             ],
             'driving_license_no' => 'nullable|string|max:255',
             'photo' => 'required|file|mimes:jpg,jpeg,png,gif,bmp,webp,pdf,doc,docx',
-            'resume' => 'nullable',
+            'resume' => 'nullable|file|mimes:jpg,jpeg,png,gif,bmp,webp,pdf,doc,docx',
         ]);
         $validatedData = $request->all();
         $validatedData['created_at'] = $request->input('created_at', now());

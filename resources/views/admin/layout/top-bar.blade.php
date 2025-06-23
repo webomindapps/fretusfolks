@@ -1,8 +1,8 @@
 <div class="col-lg-10 left-area my-auto">
     <div class="row align-items-center">
         <div class="col-lg-12">
-            <ul class="sopt">
-                
+            <ul class=" sopt back-button" style="padding: 10px; cursor: pointer;" onclick="history.back()">
+                <i class='bx bx-arrow-back' style="font-size: 24px;"></i>Back
             </ul>
         </div>
     </div>
@@ -15,7 +15,7 @@
     </div>
     <ul class="profile-drop" style="display: none;">
         <li>
-            <form action="{{route('admin.logout')}}" id="logoutForm" method="POST">
+            <form action="{{ route('admin.logout') }}" id="logoutForm" method="POST">
                 @csrf
                 <a onclick="document.getElementById('logoutForm').submit()">Logout</a>
             </form>
