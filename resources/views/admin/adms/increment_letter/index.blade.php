@@ -1,5 +1,23 @@
 <x-applayout>
     <x-admin.breadcrumb title=" ADMS Increment Letters" :create="route('admin.increment_letter.create')" />
+    <div class="row mt-2">
+        <div class="d-flex justify-content-end align-items-center">
+            <div class="d-flex gap-3">
+                <a href="{{ asset('admin/letters/increment_letter.xlsx') }}" download="Increment_Letter.xlsx"
+                    class="btn btn-primary text-white">
+                    <i class='bx bxs-download'></i> Download Sample
+                </a>
+
+                <form action="{{ route('admin.increment_letter.bulkimport') }}" method="POST"
+                    enctype="multipart/form-data" class="d-flex align-items-center">
+                    @csrf
+                    <input type="file" class="form-control form-control-sm me-2" name="file" required>
+                    <button type="submit" class="add-btn bg-success text-white">Import</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
 
     <div class="row">
         <div class="col-lg-12">
@@ -7,7 +25,9 @@
                 $columns = [
                     ['label' => 'Id', 'column' => 'id', 'sort' => true],
                     ['label' => 'Employee ID', 'column' => 'employee_id', 'sort' => true],
-                    ['label' => 'Emp Name', 'column' => 'emp_name', 'sort' => true],
+                    ['label' => 'Client ID', 'column' => 'employee_id', 'sort' => true],
+                    ['label' => 'Client Name', 'column' => 'entity_name', 'sort' => true],
+                    ['label' => 'Employee Name', 'column' => 'emp_name', 'sort' => true],
                     ['label' => 'Increment Letter Created On', 'column' => 'date', 'sort' => true],
                     ['label' => 'Designation', 'column' => 'designation', 'sort' => true],
                     ['label' => 'CTC', 'column' => 'ctc', 'sort' => true],
@@ -21,8 +41,11 @@
                             <input type="checkbox" name="selected_items[]" class="single-item-check"
                                 value="{{ $item->id }}">
                         </td> --}}
+                        {{-- {{ dd($item->incrementdata );}} --}}
                         <td>{{ $item->id }}</td>
                         <td>{{ $item->employee_id ?? 'N/A' }}</td>
+                        <td>{{ $item->incrementdata->client_emp_id ?? 'N/A' }}</td>
+                        <td>{{ $item->client->client_name ?? 'N/A' }}</td>
                         <td>{{ $item->emp_name ?? 'N/A' }}</td>
                         <td>{{ \Carbon\Carbon::parse($item->date)->format('d-m-Y') }}</td>
                         <td>{{ $item->designation ?? 'N/A' }}</td>

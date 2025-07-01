@@ -42,6 +42,10 @@ class IncrementLetter extends Model
     ];
     public function incrementdata()
     {
-        return $this->belongsTo(CFISModel::class, 'ffi_emp_id', 'employee_id');
+        return $this->belongsTo(CFISModel::class, 'employee_id', 'ffi_emp_id');
+    }
+    public function client()
+    {
+        return $this->belongsTo(ClientManagement::class, 'company_id', 'id');
     }
 }

@@ -62,4 +62,8 @@ class ClientManagement extends Model
     {
         return $this->hasMany(HRMasters::class, 'client_id', 'id');
     }
+     public function incrementid()
+    {
+        return $this->hasMany(IncrementLetter::class, 'company_id');
+    }
 }

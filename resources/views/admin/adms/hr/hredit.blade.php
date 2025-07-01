@@ -832,7 +832,8 @@
                     let form = document.getElementById('HRedit');
 
                     if (status === "1") {
-                        $('#offerLetterModal').modal('show');
+                        form.submit();
+                        // $('#offerLetterModal').modal('show');
                     } else {
                         form.submit();
                     }
@@ -1105,11 +1106,11 @@
                    class="form-control">
 
             ${childData.photo ? `
-                                                                                                                                                                                                                                            <div id="image-preview-container-${i}" class="d-flex mt-2">
-                                                                                                                                                                                                                                                <img src="{{ url('/') }}/${childData.photo}" 
-                                                                                                                                                                                                                                                     class="img-thumbnail" width="100" height="100" 
-                                                                                                                                                                                                                                                     alt="Child ${i} Uploaded Photo">
-                                                                                                                                                                                                                                            </div>` : ''}
+                                                                                                                                                                                                                                                    <div id="image-preview-container-${i}" class="d-flex mt-2">
+                                                                                                                                                                                                                                                        <img src="{{ url('/') }}/${childData.photo}" 
+                                                                                                                                                                                                                                                             class="img-thumbnail" width="100" height="100" 
+                                                                                                                                                                                                                                                             alt="Child ${i} Uploaded Photo">
+                                                                                                                                                                                                                                                    </div>` : ''}
         </div>
     `;
                             childrenDetails.appendChild(childRow);

@@ -3,8 +3,8 @@
             <span style="color: red">*</span>
         @endif
     </label>
-    <input value="{{ $attributes->get('value') }}" class="{{ $attributes->get('class') }}"
-        type="{{ $attributes->get('type') }}" step=".01" id="{{ $attributes->get('id') }}" name="{{ $attributes->get('name') }}"
+    <input value="{!! $attributes->get('value') !!}" class="{{ $attributes->get('class') }}" type="{{ $attributes->get('type') }}"
+        step=".01" id="{{ $attributes->get('id') }}" name="{{ $attributes->get('name') }}"
         placeholder="{{ $attributes->get('placeholder') }}" @if ($attributes->get('required')) required @endif
         @if ($attributes->get('readonly')) readonly @endif @if ($attributes->get('multiple')) multiple @endif>
 

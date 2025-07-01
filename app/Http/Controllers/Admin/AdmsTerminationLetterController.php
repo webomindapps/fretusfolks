@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use App\Models\CFISModel;
-use App\Models\TerminationLetter;
-use Barryvdh\DomPDF\Facade\Pdf;
 use Exception;
+use App\Models\CFISModel;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
+use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\TerminationLetter;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use App\Imports\ADMSTerminationImport;
 use Illuminate\Support\Facades\Storage;
 
 class AdmsTerminationLetterController extends Controller
@@ -125,7 +127,7 @@ class AdmsTerminationLetterController extends Controller
         $pdf = PDF::loadView('admin.adms.termination_letter.format', $data)
             ->setPaper('A4', 'portrait');
 
-        return $pdf->stream("termination_{$termination->emp_id}_{$termination->month}_{$termination->year}.pdf");
+        return $pdf->stream("Termination_Letter_{$termination->emp_id}.pdf");
     }
     public function edit($id)
     {
@@ -185,5 +187,38 @@ class AdmsTerminationLetterController extends Controller
         }
         $termination->delete();
         return redirect()->route('admin.termination_letter')->with('success', 'Termination Letter has been deleted');
+    }
+
+    public function bulkUpload(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|file|mimes:xlsx,csv,txt',
+        ]);
+        // dd($request->all());
+        $file = $request->file('file');
+
+        try {
+            if ($request->has('file')) {
+                // dd($request->file);
+                $fileName = $request->file->getClientOriginalName();
+                $fileWithPath = public_path('uploads') . '/' . $fileName;
+                // dd($fileWithPath);
+                if (!file_exists($fileWithPath)) {
+                    $request->file->move(public_path('uploads'), $fileName);
+                }
+                // dd($fileWithPath);
+                Excel::import(new ADMSTerminationImport(), $fileWithPath);
+                if (file_exists($fileWithPath)) {
+                    unlink($fileWithPath);
+                }
+            }
+        } catch (Exception $e) {
+            dd($e);
+        }
+        $error = '';
+        return redirect()->route('admin.termination_letter')->with([
+            'success' => 'Termination Letter added successfully',
+            'alert' => $error
+        ]);
     }
 }

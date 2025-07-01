@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
+use Exception;
 use App\Models\CFISModel;
+use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 use App\Models\WarningLetter;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Exception;
-use Illuminate\Http\Request;
+use App\Imports\ADMSWarningImport;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 
 class AdmsWarningLetterController extends Controller
@@ -125,7 +127,7 @@ class AdmsWarningLetterController extends Controller
             ->setPaper('A4', 'portrait');
 
 
-        return $pdf->stream("warning_{$warning->emp_id}_{$warning->month}_{$warning->year}.pdf");
+        return $pdf->stream("Warning_Letter_{$warning->emp_id}.pdf");
     }
     public function edit($id)
     {
@@ -184,5 +186,38 @@ class AdmsWarningLetterController extends Controller
         }
         $warning->delete();
         return redirect()->route('admin.warning_letter')->with('success', 'Warning Letter has been deleted');
+    }
+
+    public function bulkUpload(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|file|mimes:xlsx,csv,txt',
+        ]);
+        // dd($request->all());
+        $file = $request->file('file');
+
+        try {
+            if ($request->has('file')) {
+                // dd($request->file);
+                $fileName = $request->file->getClientOriginalName();
+                $fileWithPath = public_path('uploads') . '/' . $fileName;
+                // dd($fileWithPath);
+                if (!file_exists($fileWithPath)) {
+                    $request->file->move(public_path('uploads'), $fileName);
+                }
+                // dd($fileWithPath);
+                Excel::import(new ADMSWarningImport(), $fileWithPath);
+                if (file_exists($fileWithPath)) {
+                    unlink($fileWithPath);
+                }
+            }
+        } catch (Exception $e) {
+            dd($e);
+        }
+        $error = '';
+        return redirect()->route('admin.warning_letter')->with([
+            'success' => 'Warning Letter added successfully',
+            'alert' => $error
+        ]);
     }
 }

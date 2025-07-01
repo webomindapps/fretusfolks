@@ -1,12 +1,31 @@
 <x-applayout>
-    <x-admin.breadcrumb title=" ADMS Termination Letters" :create="route('admin.termination_letter.create')"/>
-   
+    <x-admin.breadcrumb title=" ADMS Termination Letters" :create="route('admin.termination_letter.create')" />
+    <div class="row mt-2">
+        <div class="d-flex justify-content-end align-items-center">
+            <div class="d-flex gap-3">
+                <a href="{{ asset('admin/letters/termination_letter.xlsx') }}" download="Termination_Letter.xlsx"
+                    class="btn btn-primary text-white">
+                    <i class='bx bxs-download'></i> Download Sample
+                </a>
+
+                <form action="{{ route('admin.termination_letter.bulkimport') }}" method="POST"
+                    enctype="multipart/form-data" class="d-flex align-items-center">
+                    @csrf
+                    <input type="file" class="form-control form-control-sm me-2" name="file" required>
+                    <button type="submit" class="add-btn bg-success text-white">Import</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <div class="row">
         <div class="col-lg-12">
             @php
                 $columns = [
                     ['label' => 'Id', 'column' => 'id', 'sort' => true],
                     ['label' => 'Emp Id', 'column' => 'emp_id', 'sort' => true],
+                    ['label' => 'Client Id', 'column' => 'client_emp_id', 'sort' => true],
+                    ['label' => 'Client Name', 'column' => 'entity_name', 'sort' => true],
                     ['label' => 'Emp Name', 'column' => 'emp_name', 'sort' => false],
                     ['label' => 'Date', 'column' => 'date', 'sort' => true],
                     ['label' => 'Phone', 'column' => 'phone1', 'sort' => false],
@@ -23,6 +42,8 @@
                         </td> --}}
                         <td>{{ $item->id }}</td>
                         <td>{{ $item->emp_id }}</td>
+                        <td>{{ $item->term_letter ? $item->term_letter->client_emp_id : 'N/A' }}</td>
+                        <td>{{ $item->term_letter ? $item->term_letter->entity_name : 'N/A' }}</td>
                         <td>{{ $item->term_letter ? $item->term_letter->emp_name : 'N/A' }}</td>
                         <td>{{ \Carbon\Carbon::parse($item->date)->format('d-m-Y') }}</td>
                         <td>{{ $item->term_letter ? $item->term_letter->phone1 : 'N/A' }}</td>

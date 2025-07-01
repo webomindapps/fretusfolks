@@ -508,10 +508,17 @@
                                                         <td>{{ \Carbon\Carbon::parse($offer->date)->format('d-m-Y') }}
                                                         </td>
                                                         <td>
-                                                            <a href="{{ asset($offer->offer_letter_path) }}"
-                                                                target="_blank" class="btn btn-primary btn-sm">
-                                                                <i class="fas fa-eye"></i> View
-                                                            </a>
+                                                            @if (!empty($offer->offer_letter_path))
+                                                                <a href="{{ asset($offer->offer_letter_path) }}"
+                                                                    target="_blank" class="btn btn-primary btn-sm">
+                                                                    <i class="fas fa-eye"></i> View
+                                                                </a>
+                                                            @else
+                                                                <a href="{{ route('admin.generate.offer.letter', ['id' => $offer->id]) }}"
+                                                                    target="_blank" class="btn btn-warning btn-sm">
+                                                                    <i class="fas fa-eye"></i> View Details
+                                                                </a>
+                                                            @endif
                                                         </td>
                                                     </tr>
                                                 @endforeach
@@ -521,10 +528,18 @@
                                                         <td>{{ \Carbon\Carbon::parse($incrementletter->date)->format('d-m-Y') }}
                                                         </td>
                                                         <td>
-                                                            <a href="{{ asset($incrementletter->increment_path) }}"
-                                                                target="_blank" class="btn btn-primary btn-sm">
-                                                                <i class="fas fa-eye"></i> View
-                                                            </a>
+                                                            @if (!empty($incrementletter->increment_path))
+                                                                <a href="{{ asset($incrementletter->increment_path) }}"
+                                                                    target="_blank" class="btn btn-primary btn-sm">
+                                                                    <i class="fas fa-eye"></i> View
+                                                                </a>
+                                                            @else
+                                                                <a href="{{ route('admin.increment_letter.viewpdf', $incrementletter->id) }}"
+                                                                    target="_blank" class="btn btn-primary btn-sm">
+                                                                    <i class="fas fa-eye"></i> View
+                                                                </a>
+                                                            @endif
+
                                                         </td>
                                                     </tr>
                                                 @endforeach
@@ -534,10 +549,18 @@
                                                         <td>{{ \Carbon\Carbon::parse($warning->date)->format('d-m-Y') }}
                                                         </td>
                                                         <td>
-                                                            <a href="{{ asset($warning->warning_letter_path) }}"
-                                                                target="_blank" class="btn btn-primary btn-sm">
-                                                                <i class="fas fa-eye"></i> View
-                                                            </a>
+                                                            @if (!empty($warning->warning_letter_path))
+                                                                <a href="{{ asset($warning->warning_letter_path) }}"
+                                                                    target="_blank" class="btn btn-primary btn-sm">
+                                                                    <i class="fas fa-eye"></i> View
+                                                                </a>
+                                                            @else
+                                                                <a href="{{ route('admin.warning_letter.viewpdf', ['id' => $warning->id]) }}"
+                                                                    target="_blank" class="btn btn-primary btn-sm">
+                                                                    <i class="fas fa-eye"></i> View
+                                                                </a>
+                                                            @endif
+
                                                         </td>
                                                     </tr>
                                                 @endforeach
@@ -547,29 +570,45 @@
                                                         <td>{{ \Carbon\Carbon::parse($show->date)->format('d-m-Y') }}
                                                         </td>
                                                         <td>
-                                                            <a href="{{ asset($show->showcause_letter_path) }}"
-                                                                target="_blank" class="btn btn-primary btn-sm">
-                                                                <i class="fas fa-eye"></i> View
-                                                            </a>
+                                                            @if (!empty($show->showcause_letter_path))
+                                                                <a href="{{ asset($show->showcause_letter_path) }}"
+                                                                    target="_blank" class="btn btn-primary btn-sm">
+                                                                    <i class="fas fa-eye"></i> View
+                                                                </a>
+                                                            @else
+                                                                <a href="{{ route('admin.showcause_letter.viewpdf', ['id' => $show->id]) }}"
+                                                                    target="_blank" class="btn btn-primary btn-sm">
+                                                                    <i class="fas fa-eye"></i> View
+                                                                </a>
+                                                            @endif
+
                                                         </td>
                                                     </tr>
                                                 @endforeach
                                                 @foreach ($candidate->terminationletter as $term)
                                                     <tr>
-                                                        <td>Show Cause Letter</td>
+                                                        <td>Termination Letter</td>
                                                         <td>{{ \Carbon\Carbon::parse($term->date)->format('d-m-Y') }}
                                                         </td>
                                                         <td>
-                                                            <a href="{{ asset($term->termination_letter_path) }}"
-                                                                target="_blank" class="btn btn-primary btn-sm">
-                                                                <i class="fas fa-eye"></i> View
-                                                            </a>
+                                                            @if (!empty($term->termination_letter_path))
+                                                                <a href="{{ asset($term->termination_letter_path) }}"
+                                                                    target="_blank" class="btn btn-primary btn-sm">
+                                                                    <i class="fas fa-eye"></i> View
+                                                                </a>
+                                                            @else
+                                                                <a href="{{ route('admin.termination_letter.viewpdf', ['id' => $term->id]) }}"
+                                                                    target="_blank" class="btn btn-primary btn-sm">
+                                                                    <i class="fas fa-eye"></i> View
+                                                                </a>
+                                                            @endif
+
                                                         </td>
                                                     </tr>
                                                 @endforeach
                                                 @foreach ($candidate->pipletter as $pip)
                                                     <tr>
-                                                        <td>Show Cause Letter</td>
+                                                        <td>PIP Letter</td>
                                                         <td>{{ \Carbon\Carbon::parse($pip->date)->format('d-m-Y') }}
                                                         </td>
                                                         <td>

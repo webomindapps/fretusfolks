@@ -178,7 +178,7 @@
             alert('All fields have been cleared.');
         }
     </script>
-    <script>
+    {{-- <script>
         //salary calculation
         document.addEventListener("DOMContentLoaded", function () {
             function calculateSalary() {
@@ -229,7 +229,7 @@
             });
             calculateSalary();
         });
-    </script>
+    </script> --}}
     @endpush
 
 

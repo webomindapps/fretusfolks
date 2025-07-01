@@ -130,7 +130,7 @@ Route::prefix('admin')->group(function () {
         Route::post('/role/{id}/permissions', [RolePermissionController::class, 'assignPermission']);
 
         // CMS ESIC
-        Route::get('/cms_esic', [CMSESICController::class, 'index'])->name( 'cms.esic');
+        Route::get('/cms_esic', [CMSESICController::class, 'index'])->name('cms.esic');
         Route::get('/cms_esic/create', [CMSESICController::class, 'create'])->name('cms.esic.create');
         Route::post('/cms_esic/create', [CMSESICController::class, 'store']);
         Route::get('/cms_esic/{id}/delete', [CMSESICController::class, 'destroy'])->name('cms.esic.delete');
@@ -240,7 +240,7 @@ Route::prefix('admin')->group(function () {
         Route::get('ffi_increment_letter/create', [FFIIncrementLetterController::class, 'create'])->name('ffi_increment_letter.create');
         Route::post('ffi_increment_letter/create', [FFIIncrementLetterController::class, 'store']);
         Route::get('/get-employeeIncrement-details/{ffi_emp_id}', [FFIIncrementLetterController::class, 'getEmployeeDetails'])->name('get.employeeIncrement.details');
-        Route::get('ffi_increment_letter/{id}/delete',  [FFIIncrementLetterController::class, 'destroy'])->name('ffi_increment_letter.delete');
+        Route::get('ffi_increment_letter/{id}/delete', [FFIIncrementLetterController::class, 'destroy'])->name('ffi_increment_letter.delete');
         Route::get('/generate-increment-letter/{id}', [FFIIncrementLetterController::class, 'generateIncrementLetterPdf'])->name('generate.increment.letter');
         Route::post('ffi_increment_letter/bulk_operation', [FFIIncrementLetterController::class, 'bulk'])->name('ffi_increment_letter.bulk');
 
@@ -250,7 +250,7 @@ Route::prefix('admin')->group(function () {
         Route::post('ffi_termination/create', [FFITerminationController::class, 'store']);
         Route::get('/get-employeeTermination-details/{ffi_emp_id}', [FFITerminationController::class, 'getEmployeeDetails'])->name('get.employeeTermination.details');
         Route::post('ffi_termination/bulk_operation', [FFITerminationController::class, 'bulk'])->name('ffi_termination.bulk');
-        Route::get('ffi_termination/{id}/delete',  [FFITerminationController::class, 'destroy'])->name('ffi_termination.delete');
+        Route::get('ffi_termination/{id}/delete', [FFITerminationController::class, 'destroy'])->name('ffi_termination.delete');
         Route::get('/generate-termination-letter/{id}', [FFITerminationController::class, 'generateTerminationPdf'])->name('generate.termination.letter');
         Route::get('/ffi-termination/{id}/edit', [FFITerminationController::class, 'edit'])->name('ffi_termination.edit');
         Route::post('/ffi-termination/{id}/edit', [FFITerminationController::class, 'update']);
@@ -261,7 +261,7 @@ Route::prefix('admin')->group(function () {
         Route::post('ffi_warning/create', [FFIWarningController::class, 'store']);
         Route::get('/get-employeeWarning-details/{ffi_emp_id}', [FFIWarningController::class, 'getEmployeeDetails'])->name('get.employeeWarning.details');
         Route::post('ffi_warning/bulk_operation', [FFIWarningController::class, 'bulk'])->name('ffi_warning.bulk');
-        Route::get('ffi_warning/{id}/delete',  [FFIWarningController::class, 'destroy'])->name('ffi_warning.delete');
+        Route::get('ffi_warning/{id}/delete', [FFIWarningController::class, 'destroy'])->name('ffi_warning.delete');
         Route::get('/generate-warning-letter/{id}', [FFIWarningController::class, 'generateWarningPdf'])->name('generate.warning.letter');
         Route::get('/ffi_warning/{id}/edit', [FFIWarningController::class, 'edit'])->name('ffi_warning.edit');
         Route::post('/ffi_warning/{id}/edit', [FFIWarningController::class, 'update']);
@@ -272,7 +272,7 @@ Route::prefix('admin')->group(function () {
         Route::post('ffi_show_cause/create', [FFIShowCauseController::class, 'store']);
         Route::get('/get-employeeShow-details/{ffi_emp_id}', [FFIShowCauseController::class, 'getEmployeeDetails'])->name('get.employeeShow.details');
         Route::post('ffi_show_cause/bulk_operation', [FFIShowCauseController::class, 'bulk'])->name('ffi_show_cause.bulk');
-        Route::get('ffi_show_cause/{id}/delete',  [FFIShowCauseController::class, 'destroy'])->name('ffi_show_cause.delete');
+        Route::get('ffi_show_cause/{id}/delete', [FFIShowCauseController::class, 'destroy'])->name('ffi_show_cause.delete');
         Route::get('/generate-show-letter/{id}', [FFIShowCauseController::class, 'generateShowPdf'])->name('generate.show.letter');
         Route::get('/ffi_show_cause/{id}/edit', [FFIShowCauseController::class, 'edit'])->name('ffi_show_cause.edit');
         Route::post('/ffi_show_cause/{id}/edit', [FFIShowCauseController::class, 'update']);
@@ -283,7 +283,7 @@ Route::prefix('admin')->group(function () {
         Route::post('ffi_pip_letter/create', [FFIPipLetterController::class, 'store']);
         Route::get('/get-employeePip-details/{ffi_emp_id}', [FFIPipLetterController::class, 'getEmployeeDetails'])->name('get.employeePip.details');
         Route::post('ffi_pip_letter/bulk_operation', [FFIPipLetterController::class, 'bulk'])->name('ffi_pip_letter.bulk');
-        Route::get('ffi_pip_letter/{id}/delete',  [FFIPipLetterController::class, 'destroy'])->name('ffi_pip_letter.delete');
+        Route::get('ffi_pip_letter/{id}/delete', [FFIPipLetterController::class, 'destroy'])->name('ffi_pip_letter.delete');
         Route::get('/generate-pip-letter/{id}', [FFIPipLetterController::class, 'generatePipPdf'])->name('generate.pip.letter');
         Route::get('/ffi_pip_letter/{id}/edit', [FFIPipLetterController::class, 'edit'])->name('ffi_pip_letter.edit');
         Route::post('/ffi_pip_letter/{id}/edit', [FFIPipLetterController::class, 'update']);
@@ -354,6 +354,9 @@ Route::prefix('admin')->group(function () {
         Route::get('/offer_letter', [OfferLetterController::class, 'index'])->name('offer_letter');
         Route::get('/generate-offer-letter/{id}', [OfferLetterController::class, 'generateOfferLetterPdf'])->name('generate.offer.letter');
         Route::get('offer_letter/{id}/delete', [OfferLetterController::class, 'destroy'])->name('offer_letter.delete');
+        Route::get('/offer_letter/create', [OfferLetterController::class, 'create'])->name('offer_letter.create');
+        Route::post('/offer_letter/create', [OfferLetterController::class, 'store'])->name('offer_letter.store');
+        Route::post('/offer_letter/bulkimport', [OfferLetterController::class, 'bulkUpload'])->name('offer_letter.bulkimport');
 
         //increment_letter
         Route::get('/increment_letter', [AdmsIncrementLetterController::class, 'index'])->name('increment_letter');
@@ -362,6 +365,7 @@ Route::prefix('admin')->group(function () {
         Route::get('increment_letter/{ffi_emp_id}/details', [AdmsIncrementLetterController::class, 'details'])->name('increment_letter.details');
         Route::get('increment_letter/{ffi_emp_id}/view', [AdmsIncrementLetterController::class, 'viewpdf'])->name('increment_letter.viewpdf');
         Route::get('increment_letter/{ffi_emp_id}/delete', [AdmsIncrementLetterController::class, 'destroy'])->name('increment_letter.delete');
+        Route::post('/increment_letter/bulkimport', [AdmsIncrementLetterController::class, 'bulkUpload'])->name('increment_letter.bulkimport');
 
         //warning Letter
         Route::get('/warning_letter', [AdmsWarningLetterController::class, 'index'])->name('warning_letter');
@@ -372,6 +376,7 @@ Route::prefix('admin')->group(function () {
         Route::get('warning_letter/{id}/edit', [AdmsWarningLetterController::class, 'edit'])->name('warning_letter.edit');
         Route::post('warning_letter/{id}/edit', [AdmsWarningLetterController::class, 'update']);
         Route::get('warning_letter/{id}/delete', [AdmsWarningLetterController::class, 'delete'])->name('warning_letter.delete');
+        Route::post('/warning_letter/bulkimport', [AdmsWarningLetterController::class, 'bulkUpload'])->name('warning_letter.bulkimport');
 
         //showcase Letter
         Route::get('/showcause_letter', [AdmsShowcauseLetterController::class, 'index'])->name('showcause_letter');
@@ -382,6 +387,7 @@ Route::prefix('admin')->group(function () {
         Route::get('showcause_letter/{id}/edit', [AdmsShowcauseLetterController::class, 'edit'])->name('showcause_letter.edit');
         Route::post('showcause_letter/{id}/edit', [AdmsShowcauseLetterController::class, 'update']);
         Route::get('showcause_letter/{id}/delete', [AdmsShowcauseLetterController::class, 'delete'])->name('showcause_letter.delete');
+        Route::post('/showcause_letter/bulkimport', [AdmsShowcauseLetterController::class, 'bulkUpload'])->name('showcause_letter.bulkimport');
 
         //Termination Letter
         Route::get('/termination_letter', [AdmsTerminationLetterController::class, 'index'])->name('termination_letter');
@@ -392,6 +398,7 @@ Route::prefix('admin')->group(function () {
         Route::get('termination_letter/{id}/edit', [AdmsTerminationLetterController::class, 'edit'])->name('termination_letter.edit');
         Route::post('termination_letter/{id}/edit', [AdmsTerminationLetterController::class, 'update']);
         Route::get('termination_letter/{id}/delete', [AdmsTerminationLetterController::class, 'delete'])->name('termination_letter.delete');
+        Route::post('/termination_letter/bulkimport', [AdmsTerminationLetterController::class, 'bulkUpload'])->name('termination_letter.bulkimport');
 
         //PIP Letter
         Route::get('pip_letter', [AdmsPipLetterController::class, 'index'])->name('pip_letter');

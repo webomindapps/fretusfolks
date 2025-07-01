@@ -68,7 +68,7 @@ class ComplianceController extends Controller
         $children = DCSChildren::where('emp_id', $id)->get();
         $bankdetails = BankDetails::where('emp_id', $id)->get();
         $candidate = $this->model()
-            ->with(['client', 'educationCertificates', 'otherCertificates', 'candidateDocuments', 'modifiedBy', 'createdBy'])
+            ->with(['client', 'educationCertificates', 'otherCertificates', 'candidateDocuments', 'modifiedBy', 'creator'])
             ->findOrFail($id);
         return view('admin.adms.compliance.view', compact('candidate', 'children', 'bankdetails'));
     }

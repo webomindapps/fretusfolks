@@ -88,14 +88,14 @@
                     @csrf
                     <div class="card-body">
                         <div class="row align-items-end">
-                            <!-- Multi-Select Client Dropdown -->
-                            <div class="col-lg-3">
+                            <div class="col-lg-4">
                                 <label for="client">Client Name <span class="text-danger">*</span></label>
                                 <div class="dropdown">
                                     <input type="text" class="btn dropdown-toggle text-start" id="dropdownMenuclient"
                                         data-bs-toggle="dropdown" aria-expanded="false" readonly
                                         value="Select Client" />
-                                    <input type="hidden" name="client[]" id="selected_client_input" required />
+
+                                    <input type="hidden" name="client" id="selected_client_input" required />
 
                                     <ul class="dropdown-menu p-2"
                                         style="max-height: 300px; overflow-y: auto; min-width: 250px;">
@@ -108,17 +108,18 @@
                                         </li>
 
                                         @foreach (FretusFolks::getClientname() as $option)
-                                            <li>
-                                                <a href="#" class="dropdown-item"
-                                                    onclick="selectClient('{{ $option['label'] }}')">
+                                            <li class="client-option">
+                                                <label class="dropdown-item m-0" style="cursor:pointer;">
+                                                    <input type="radio" class="form-check-input me-2"
+                                                        name="client_radio" value="{{ $option['label'] }}"
+                                                        onchange="selectSingleClient(this)">
                                                     {{ $option['label'] }}
-                                                </a>
+                                                </label>
                                             </li>
                                         @endforeach
                                     </ul>
                                 </div>
                             </div>
-
 
 
                             {{-- <!-- Single-Select State Dropdown -->
@@ -225,21 +226,20 @@
                                         </li>
 
                                         @foreach (FretusFolks::getClientname() as $index => $option)
-                                            <li>
-                                                <a href="#"
-                                                    class="dropdown-sitem d-flex align-items-center gap-2"
-                                                    onclick="selectClientsearch('{{ $option['label'] }}')">
-                                                    <input type="checkbox" class="form-check-input" />
-                                                    <span>{{ $option['label'] }}</span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <hr class="dropdown-divider">
+                                            <li class="client-option-search">
+                                                <label class="dropdown-item d-flex align-items-center m-0"
+                                                    style="cursor:pointer;">
+                                                    <input type="radio" name="client_search_radio"
+                                                        class="form-check-input me-2" value="{{ $option['label'] }}"
+                                                        onchange="selectClientsearch(this)">
+                                                    {{ $option['label'] }}
+                                                </label>
                                             </li>
                                         @endforeach
                                     </ul>
                                 </div>
                             </div>
+
                             <div class="col-md-2">
                                 <input type="text" name="emp_id" id="emp_id" class="form-control"
                                     placeholder="Employee ID" value="{{ request()->emp_id }}">
@@ -364,31 +364,50 @@
         <script>
             function filterClient(input) {
                 const filter = input.value.toLowerCase();
-                document.querySelectorAll('.dropdown-menu .dropdown-item').forEach(item => {
-                    item.style.display = item.textContent.toLowerCase().includes(filter) ? '' : 'none';
+                document.querySelectorAll('.dropdown-menu li.client-option').forEach(item => {
+                    const text = item.textContent.toLowerCase();
+                    item.style.display = text.includes(filter) ? '' : 'none';
                 });
             }
 
-            function selectClient(name) {
-                document.getElementById('dropdownMenuclient').value = name;
-                document.getElementById('selected_client_input').value = name;
-                bootstrap.Dropdown.getOrCreateInstance(document.getElementById('dropdownMenuclient')).hide();
+            function selectSingleClient(radio) {
+                const selectedName = radio.value;
+
+                // Update visible dropdown input
+                const dropdownInput = document.getElementById('dropdownMenuclient');
+                dropdownInput.value = selectedName;
+
+                // Update hidden input field for form
+                const hiddenInput = document.getElementById('selected_client_input');
+                hiddenInput.value = selectedName;
+
+                // Close dropdown
+                bootstrap.Dropdown.getOrCreateInstance(dropdownInput).hide();
             }
         </script>
+
+
         <script>
             function filterClientsearch(input) {
                 const filter = input.value.toLowerCase();
-                document.querySelectorAll('.dropdown-menu .dropdown-sitem').forEach(item => {
-                    item.style.display = item.textContent.toLowerCase().includes(filter) ? '' : 'none';
+                document.querySelectorAll('.client-option-search').forEach(item => {
+                    const label = item.textContent.toLowerCase();
+                    item.style.display = label.includes(filter) ? '' : 'none';
                 });
             }
 
-            function selectClientsearch(name) {
-                document.getElementById('dropdownSearchclient').value = name;
-                document.getElementById('selected_client_search').value = name;
+            function selectClientsearch(radio) {
+                const selectedName = radio.value;
+
+                // Update visible and hidden input values
+                document.getElementById('dropdownSearchclient').value = selectedName;
+                document.getElementById('selected_client_search').value = selectedName;
+
+                // Close dropdown
                 bootstrap.Dropdown.getOrCreateInstance(document.getElementById('dropdownSearchclient')).hide();
             }
         </script>
+
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 const tabs = document.querySelectorAll('#myTab .nav-link');

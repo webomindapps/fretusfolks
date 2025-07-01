@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
+use Exception;
 use App\Models\CFISModel;
+use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 use App\Models\ShowcauseLetter;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Exception;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use App\Imports\ADMSShowCauseImport;
 use Illuminate\Support\Facades\Storage;
 
 class AdmsShowcauseLetterController extends Controller
@@ -121,7 +123,7 @@ class AdmsShowcauseLetterController extends Controller
             ->setPaper('A4', 'portrait');
 
 
-        return $pdf->stream("showcause_{$showcause->emp_id}_{$showcause->month}_{$showcause->year}.pdf");
+        return $pdf->stream("Showcause_Cause_Letter{$showcause->emp_id}.pdf");
     }
 
     public function edit($id)
@@ -180,5 +182,38 @@ class AdmsShowcauseLetterController extends Controller
         }
         $showcause->delete();
         return redirect()->route('admin.showcause_letter')->with('success', 'ShowCause Letter has Been Deleted');
+    }
+
+    public function bulkUpload(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|file|mimes:xlsx,csv,txt',
+        ]);
+        // dd($request->all());
+        $file = $request->file('file');
+
+        try {
+            if ($request->has('file')) {
+                // dd($request->file);
+                $fileName = $request->file->getClientOriginalName();
+                $fileWithPath = public_path('uploads') . '/' . $fileName;
+                // dd($fileWithPath);
+                if (!file_exists($fileWithPath)) {
+                    $request->file->move(public_path('uploads'), $fileName);
+                }
+                // dd($fileWithPath);
+                Excel::import(new ADMSShowCauseImport(), $fileWithPath);
+                if (file_exists($fileWithPath)) {
+                    unlink($fileWithPath);
+                }
+            }
+        } catch (Exception $e) {
+            dd($e);
+        }
+        $error = '';
+        return redirect()->route('admin.showcause_letter')->with([
+            'success' => 'Show Cause Letter added successfully',
+            'alert' => $error
+        ]);
     }
 }

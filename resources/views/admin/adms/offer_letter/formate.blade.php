@@ -79,7 +79,7 @@
 
 <body class="body">
     <x-letter-head />
-    <div style="color:#000;font-size: 21px;margin-top: 0%;margin-bottom: 5%;padding: 0 10px;">
+    <div style="color:#000;font-size: 21px;margin-top: 0%;margin-bottom: 5%;padding: 0 10px;margin-top:300px;">
         <div
             style="color: #000;font-family: Tahoma;font-size: 17px;line-height: 18px;text-align: justify; padding-left: 0%;">
             <div><br>

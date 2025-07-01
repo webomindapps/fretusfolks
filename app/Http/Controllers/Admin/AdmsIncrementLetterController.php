@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use App\Models\CFISModel;
-use App\Models\IncrementLetter;
-use App\Models\LetterContent;
-use Barryvdh\DomPDF\Facade\Pdf;
 use Exception;
+use App\Models\CFISModel;
 use Illuminate\Http\Request;
+use App\Models\LetterContent;
+use App\Models\IncrementLetter;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use App\Imports\ADMSIncrementImport;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
 
 class AdmsIncrementLetterController extends Controller
@@ -30,7 +32,7 @@ class AdmsIncrementLetterController extends Controller
         $orderBy = request()->orderBy;
         $paginate = request()->paginate;
 
-        $query = $this->model()->with('incrementdata');
+        $query = $this->model()->with('incrementdata','client');
 
         if ($from_date && $to_date) {
             $query->whereBetween('created_at', [$from_date, $to_date]);
@@ -238,7 +240,7 @@ class AdmsIncrementLetterController extends Controller
         $pdf = PDF::loadView('admin.adms.increment_letter.format', $data)
             ->setPaper('A4', 'portrait');
 
-        return $pdf->stream("increment_{$increment->emp_id}_{$increment->month}_{$increment->year}.pdf");
+        return $pdf->stream("Increment_Letter_{$increment->employee_id}.pdf");
     }
     public function destroy($id)
     {
@@ -248,5 +250,37 @@ class AdmsIncrementLetterController extends Controller
         }
         $increment->delete();
         return redirect()->route('admin.increment_letter')->with('success', 'Increment Letter has been deleted');
+    }
+    public function bulkUpload(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|file|mimes:xlsx,csv,txt',
+        ]);
+        // dd($request->all());
+        $file = $request->file('file');
+
+        try {
+            if ($request->has('file')) {
+                // dd($request->file);
+                $fileName = $request->file->getClientOriginalName();
+                $fileWithPath = public_path('uploads') . '/' . $fileName;
+                // dd($fileWithPath);
+                if (!file_exists($fileWithPath)) {
+                    $request->file->move(public_path('uploads'), $fileName);
+                }
+                // dd($fileWithPath);
+                Excel::import(new ADMSIncrementImport(), $fileWithPath);
+                if (file_exists($fileWithPath)) {
+                    unlink($fileWithPath);
+                }
+            }
+        } catch (Exception $e) {
+            dd($e);
+        }
+        $error = '';
+        return redirect()->route('admin.increment_letter')->with([
+            'success' => 'Increment Letter added successfully',
+            'alert' => $error
+        ]);
     }
 }

@@ -184,7 +184,7 @@ class DCSApprovalController extends Controller
 
             $client = ClientManagement::find($validatedData['client_id']);
             if ($client) {
-                $validatedData['entity_name'] = $client->client_name; 
+                $validatedData['entity_name'] = $client->client_name;
             }
             if (empty($validatedData['created_by']) || $validatedData['created_by'] == 0) {
                 $validatedData['created_by'] = auth()->id();
@@ -423,7 +423,7 @@ class DCSApprovalController extends Controller
     public function hrupdate(Request $request, $id)
     {
         // dd($request->cc_emails);
-        $action = $request->input('storing_option');
+        // $action = $request->input('storing_option');
         $candidate = $this->model()->find($id);
         $request->validate([
             'client_id' => 'required|integer',
@@ -531,7 +531,7 @@ class DCSApprovalController extends Controller
             $validatedData['modify_by'] = auth()->id();
             $client = ClientManagement::find($validatedData['client_id']);
             if ($client) {
-                $validatedData['entity_name'] = $client->client_name; 
+                $validatedData['entity_name'] = $client->client_name;
             }
             $candidate->update($validatedData);
 
@@ -668,75 +668,80 @@ class DCSApprovalController extends Controller
             }
             $candidate->save();
             if ($candidate->hr_approval == 1) {
-                $existingOfferLetter = OfferLetter::where('employee_id', $candidate->ffi_emp_id)->first();
-
-                if ($existingOfferLetter) {
-                    $existingOfferLetter->delete();
-                }
-
-                $offerLetter = OfferLetter::create([
-                    'company_id' => $candidate->client_id,
-                    'employee_id' => $candidate->ffi_emp_id,
-                    'emp_name' => $candidate->emp_name,
-                    'phone1' => $candidate->phone1,
-                    'entity_name' => $candidate->entity_name,
-                    'joining_date' => $candidate->joining_date,
-                    'location' => $candidate->location,
-                    'department' => $candidate->department,
-                    'father_name' => $candidate->father_name,
-                    'tenure_month' => now()->format('m'),
-                    'date' => now()->format('Y-m-d'),
-                    'tenure_date' => now()->format('Y-m-d'),
-                    'offer_letter_type' => 1,
-                    'status' => 1,
-                    'basic_salary' => $candidate->basic_salary ?? 0,
-                    'hra' => $candidate->hra ?? 0,
-                    'conveyance' => $candidate->conveyance ?? 0,
-                    'medical_reimbursement' => $candidate->medical_reimbursement ?? 0,
-                    'special_allowance' => $candidate->special_allowance ?? 0,
-                    'other_allowance' => $candidate->other_allowance ?? 0,
-                    'st_bonus' => $candidate->st_bonus ?? 0,
-                    'gross_salary' => $candidate->gross_salary ?? 0,
-                    'emp_pf' => $candidate->emp_pf ?? 0,
-                    'emp_esic' => $candidate->emp_esic ?? 0,
-                    'pt' => $candidate->pt ?? 0,
-                    'lwf' => $candidate->lwf ?? 0,
-                    'employee_lwf' => $candidate->employee_lwf ?? 0,
-                    'total_deduction' => $candidate->total_deduction ?? 0,
-                    'take_home' => $candidate->take_home ?? 0,
-                    'employer_pf' => $candidate->employer_pf ?? 0,
-                    'employer_esic' => $candidate->employer_esic ?? 0,
-                    'mediclaim' => $candidate->mediclaim ?? 0,
-                    'ctc' => $candidate->ctc ?? 0,
-                    'leave_wage' => $candidate->leave_wage ?? 0,
-                    'email' => $candidate->email,
-                    'notice_period' => $candidate->notice_period ?? 7,
-                    'salary_date' => $candidate->salary_date ?? 7,
-                    'designation' => $candidate->designation,
-                ]);
-                $pdf = Pdf::loadView('admin.adms.offer_letter.formate', ['offerLetter' => $offerLetter]);
-
-                $fileName = 'offer_letter' . $candidate->ffi_emp_id . '.pdf';
-                $filePath = 'offer_letters/' . $fileName;
-
-                Storage::disk('public')->put($filePath, $pdf->output());
-
-                $offerLetter->update([
-                    'offer_letter_path' => $filePath
-                ]);
-
-
-                if ($action === 'send') {
-                    $ccEmails = $request->input('cc_emails', []);
-                    Mail::send('mail.offer_letter', ['employee' => $candidate], function ($message) use ($candidate, $filePath, $ccEmails) {
-                        $message->to($candidate->email)
-                            ->cc($ccEmails)
-                            ->subject('Offer Letter')
-                            ->attach(asset($filePath)); // Use the file path for attaching the PDF to email
-                    });
-                }
+                $candidate->save();
 
             }
+            // if ($candidate->hr_approval == 1) {
+            //     $existingOfferLetter = OfferLetter::where('employee_id', $candidate->ffi_emp_id)->first();
+
+            //     if ($existingOfferLetter) {
+            //         $existingOfferLetter->delete();
+            //     }
+
+            //     $offerLetter = OfferLetter::create([
+            //         'company_id' => $candidate->client_id,
+            //         'employee_id' => $candidate->ffi_emp_id,
+            //         'emp_name' => $candidate->emp_name,
+            //         'phone1' => $candidate->phone1,
+            //         'entity_name' => $candidate->entity_name,
+            //         'joining_date' => $candidate->joining_date,
+            //         'location' => $candidate->location,
+            //         'department' => $candidate->department,
+            //         'father_name' => $candidate->father_name,
+            //         'tenure_month' => now()->format('m'),
+            //         'date' => now()->format('Y-m-d'),
+            //         'tenure_date' => now()->format('Y-m-d'),
+            //         'offer_letter_type' => 1,
+            //         'status' => 1,
+            //         'basic_salary' => $candidate->basic_salary ?? 0,
+            //         'hra' => $candidate->hra ?? 0,
+            //         'conveyance' => $candidate->conveyance ?? 0,
+            //         'medical_reimbursement' => $candidate->medical_reimbursement ?? 0,
+            //         'special_allowance' => $candidate->special_allowance ?? 0,
+            //         'other_allowance' => $candidate->other_allowance ?? 0,
+            //         'st_bonus' => $candidate->st_bonus ?? 0,
+            //         'gross_salary' => $candidate->gross_salary ?? 0,
+            //         'emp_pf' => $candidate->emp_pf ?? 0,
+            //         'emp_esic' => $candidate->emp_esic ?? 0,
+            //         'pt' => $candidate->pt ?? 0,
+            //         'lwf' => $candidate->lwf ?? 0,
+            //         'employee_lwf' => $candidate->employee_lwf ?? 0,
+            //         'total_deduction' => $candidate->total_deduction ?? 0,
+            //         'take_home' => $candidate->take_home ?? 0,
+            //         'employer_pf' => $candidate->employer_pf ?? 0,
+            //         'employer_esic' => $candidate->employer_esic ?? 0,
+            //         'mediclaim' => $candidate->mediclaim ?? 0,
+            //         'ctc' => $candidate->ctc ?? 0,
+            //         'leave_wage' => $candidate->leave_wage ?? 0,
+            //         'email' => $candidate->email,
+            //         'notice_period' => $candidate->notice_period ?? 7,
+            //         'salary_date' => $candidate->salary_date ?? 7,
+            //         'designation' => $candidate->designation,
+            //     ]);
+            //     $pdf = Pdf::loadView('admin.adms.offer_letter.formate', ['offerLetter' => $offerLetter]);
+
+            //     $fileName = 'offer_letter' . $candidate->ffi_emp_id . '.pdf';
+            //     $filePath = 'offer_letters/' . $fileName;
+
+            //     Storage::disk('public')->put($filePath, $pdf->output());
+
+            //     $offerLetter->update([
+            //         'offer_letter_path' => $filePath
+            //     ]);
+
+
+            //     if ($action === 'send') {
+            //         $ccEmails = $request->input('cc_emails', []);
+            //         Mail::send('mail.offer_letter', ['employee' => $candidate], function ($message) use ($candidate, $filePath, $ccEmails) {
+            //             $message->to($candidate->email)
+            //                 ->cc($ccEmails)
+            //                 ->subject('Offer Letter')
+            //                 ->attach(asset($filePath)); // Use the file path for attaching the PDF to email
+            //         });
+            //     }
+
+            // }
+
             DB::commit();
 
 
@@ -847,7 +852,7 @@ class DCSApprovalController extends Controller
             $candidate = $this->model()->findOrFail($validatedData['id']);
             $client = ClientManagement::find($validatedData['client_id']);
             if ($client) {
-                $validatedData['entity_name'] = $client->client_name; 
+                $validatedData['entity_name'] = $client->client_name;
             }
             $validatedData['dcs_approval'] = $request->input('data_status', 0);
             $validatedData['data_status'] = $request->input('status', 0);

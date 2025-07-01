@@ -3,11 +3,19 @@
 namespace App\Http\Controllers\Admin;
 
 // use Barryvdh\DomPDF\PDF;
+use Exception;
 use App\Models\CFISModel;
 use App\Models\OfferLetter;
-use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use App\Models\LetterContent;
+use Barryvdh\DomPDF\Facade\Pdf;
+use App\Imports\ADMSOfferImport;
+use App\Models\ClientManagement;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Storage;
 
 class OfferLetterController extends Controller
 {
@@ -59,6 +67,7 @@ class OfferLetterController extends Controller
     {
         $offerLetter = $this->model()->with('employee')->findOrFail($id);
 
+        // Return existing file if already generated
         if (!empty($offerLetter->offer_letter_path)) {
             $filePath = storage_path('app/public/' . str_replace('storage/', '', $offerLetter->offer_letter_path));
 
@@ -66,13 +75,23 @@ class OfferLetterController extends Controller
                 return response()->file($filePath);
             }
         }
+
+        // View mapping based on offer_letter_type
+        $viewMap = [
+            1 => 'admin.adms.offer_letter.format1',
+            2 => 'admin.adms.offer_letter.format2',
+            3 => 'admin.adms.offer_letter.format3',
+            4 => 'admin.adms.offer_letter.format4',
+            5 => 'admin.adms.offer_letter.format5',
+        ];
+
+        $view = $viewMap[$offerLetter->offer_letter_type] ?? 'admin.adms.offer_letter.format1';
+
         $data = ['offerLetter' => $offerLetter];
 
-        $pdf = PDF::loadView('admin.adms.offer_letter.formate', $data)
-            ->setPaper('A4', 'portrait');
+        $pdf = PDF::loadView($view, $data)->setPaper('A4', 'portrait');
 
-
-        return $pdf->stream("offer_letter_{$offerLetter->employee?->emp_id}.pdf");
+        return $pdf->stream("Offer_Letter_{$offerLetter->employee_id}.pdf");
     }
 
 
@@ -80,5 +99,131 @@ class OfferLetterController extends Controller
     {
         $this->model()->destroy($id);
         return redirect()->route('admin.offer_letter')->with('success', 'Successfully deleted!');
+    }
+    public function create()
+    {
+        $content = LetterContent::where('type', 1)->first();
+        return view('admin.adms.offer_letter.create', compact('content'));
+    }
+
+
+    public function store(Request $request)
+    {
+        $validatedData = $request->validate([
+            'company_id' => 'required|integer',
+            'employee_id' => 'required|string',
+            'emp_name' => 'required|string|max:255',
+            'phone1' => 'nullable|string|max:20',
+            'entity_name' => 'nullable|string|max:255',
+            'joining_date' => 'required|date',
+            'location' => 'nullable|string|max:255',
+            'department' => 'nullable|string|max:255',
+            'father_name' => 'nullable|string|max:255',
+            'tenure_month' => 'nullable|integer',
+            'offer_letter_type' => 'required|integer',
+            'status' => 'nullable|string|max:50',
+            'basic_salary' => 'nullable|numeric',
+            'hra' => 'nullable|numeric',
+            'conveyance' => 'nullable|numeric',
+            'medical_reimbursement' => 'nullable|numeric',
+            'special_allowance' => 'nullable|numeric',
+            'other_allowance' => 'nullable|numeric',
+            'st_bonus' => 'nullable|numeric',
+            'gross_salary' => 'nullable|numeric',
+            'emp_pf' => 'nullable|numeric',
+            'emp_esic' => 'nullable|numeric',
+            'pt' => 'nullable|numeric',
+            'lwf' => 'nullable|numeric',
+            'total_deduction' => 'nullable|numeric',
+            'take_home' => 'nullable|numeric',
+            'employer_pf' => 'nullable|numeric',
+            'employer_esic' => 'nullable|numeric',
+            'mediclaim' => 'nullable|numeric',
+            'ctc' => 'nullable|numeric',
+            'leave_wage' => 'nullable|numeric',
+            'email' => 'nullable|email|max:255',
+            'notice_period' => 'nullable|string|max:255',
+            'salary_date' => 'nullable|date',
+            'designation' => 'nullable|string|max:255',
+        ]);
+
+        $client = ClientManagement::find($validatedData['company_id']);
+        if ($client) {
+            $validatedData['entity_name'] = $client->client_name;
+        }
+
+        DB::beginTransaction();
+        try {
+            $offerLetter = new OfferLetter();
+            $offerLetter->fill($validatedData);
+            $offerLetter->date = now();
+            $offerLetter->tenure_date = now();
+            $offerLetter->status = 1;
+            $offerLetter->save();
+
+            // View selection based on type
+            $viewMap = [
+                1 => 'admin.adms.offer_letter.format1',
+                2 => 'admin.adms.offer_letter.format2',
+                3 => 'admin.adms.offer_letter.format3',
+                4 => 'admin.adms.offer_letter.format4',
+                5 => 'admin.adms.offer_letter.format5',
+            ];
+            $view = $viewMap[$offerLetter->offer_letter_type] ?? 'admin.offer_letter.format1';
+
+            // Generate PDF
+            $pdf = Pdf::loadView($view, ['offerLetter' => $offerLetter])->setPaper('A4', 'portrait');
+
+            // Save to storage
+            $fileName = 'offer_letter_' . $offerLetter->employee_id . '_' . time() . '.pdf';
+            $filePath = 'offer_letters/' . $fileName;
+
+            Storage::disk('public')->put($filePath, $pdf->output());
+
+            $offerLetter->update([
+                'offer_letter_path' => $filePath
+            ]);
+
+            DB::commit();
+            return redirect()->route('admin.offer_letter')->with('success', 'Offer Letter has been Created!');
+        } catch (Exception $e) {
+            DB::rollBack();
+            Log::error('OfferLetter Store Error: ' . $e->getMessage());
+            return back()->withErrors('Something went wrong while creating the offer letter.');
+        }
+    }
+
+
+    public function bulkUpload(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|file|mimes:xlsx,csv,txt',
+        ]);
+        // dd($request->all());
+        $file = $request->file('file');
+
+        try {
+            if ($request->has('file')) {
+                // dd($request->file);
+                $fileName = $request->file->getClientOriginalName();
+                $fileWithPath = public_path('uploads') . '/' . $fileName;
+                // dd($fileWithPath);
+                if (!file_exists($fileWithPath)) {
+                    $request->file->move(public_path('uploads'), $fileName);
+                }
+                // dd($fileWithPath);
+                Excel::import(new ADMSOfferImport(), $fileWithPath);
+                if (file_exists($fileWithPath)) {
+                    unlink($fileWithPath);
+                }
+            }
+        } catch (Exception $e) {
+            dd($e);
+        }
+        $error = '';
+        return redirect()->route('admin.offer_letter')->with([
+            'success' => 'Offer Letter added successfully',
+            'alert' => $error
+        ]);
     }
 }

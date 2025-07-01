@@ -106,8 +106,9 @@
                                         <div class="col-md-4 mb-2"><b>Driving License NO:</b>
                                             <span>{{ $candidate->driving_license_no }}</span>
                                         </div>
+                                        {{-- {{dd($candidate?->creator->name)}} --}}
                                         <div class="col-md-4 mb-2"><b>Created By:</b>
-                                            <span>{{ $candidate->createdBy->name ?? 'N/A' }}</span>
+                                            <span>{{ $candidate?->creator->name ?? 'N/A' }}</span>
                                         </div>
                                         <div class="col-md-4 mb-2"><b>Approved By:</b>
                                             <span>{{ $candidate->modifiedBy->name ?? 'N/A' }}</span>

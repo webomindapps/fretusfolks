@@ -167,7 +167,7 @@
                 </div>
                 <br>
                 <div class="content" style="line-height: 2; font-size: 14px">
-                    <p>Yours faithfully,</p>
+                    <p>Yours Sincerely,</p>
                 </div>
                 <table style="border-collapse: collapse; width: 100%; margin-bottom: 20px;">
                     <tbody>
