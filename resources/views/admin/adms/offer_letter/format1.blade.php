@@ -6,18 +6,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fretus Folks</title>
     <style>
+        @page {
+            margin: 200px 55px 120px 55px;
+            /* top increased to make space for header */
+        }
+
         .table1 td {
             font-size: 12px;
         }
 
         header {
             position: fixed;
-            top: -100px;
+            top: -200px;
+            left: 0;
+            right: 0;
+            height: 170px;
         }
 
         footer {
             position: fixed;
-            bottom: -40px;
+            bottom: -60px;
         }
 
         td:nth-child(2),
@@ -43,7 +51,7 @@
                   top: 120px;
                   right: 20px;
                   font-size: 18px;margin:0 35px">
-        <p style="line-height:1.8;font-size:14px;font-family:times;margin-top:300px; ">
+        <p style="line-height:1.8;font-size:14px;font-family:times;">
             <span>Date
                 :{{ \Carbon\Carbon::parse($offerLetter->joining_date)->format('d-m-Y') }}</span> <br>
         </p>
@@ -52,7 +60,7 @@
     <div style="margin:0 35px">
         <p style="line-height:1.8;font-size:14px;font-family:times;">
             <span>Mr. /Mrs. /Ms. : {{ $offerLetter->emp_name }}</span> <br>
-            <span>Employee ID : {{ $offerLetter->ffi_emp_id }}</span> <br>
+            <span>Employee ID : {{ $offerLetter->employee_id }}</span> <br>
             <span>Place :{{ $offerLetter->location }}</span> <br>
         </p>
     </div>
@@ -320,12 +328,13 @@
             <tbody>
                 <tr>s
                     <td style="font-size:12px;text-align:left;margin-left:-5px;">
-                        <br>
-                        Yours faithfully,<br><br>
-                        <b>For : Fretus Folks India Pvt Ltd.</b> <br>
+                        <p><br>
+                            Yours faithfully,<br><br>
+                            <b>For : Fretus Folks India Pvt Ltd.</b> <br>
+                        </p>
                         &nbsp;&nbsp;&nbsp;<img src="{{ public_path('admin/images/seal.png') }}" style="margin-top:2%;"
                             width="100"><br>
-                        <b>&nbsp;&nbsp;&nbsp;Authorized Signatory</b> <br>
+                        <p><b>&nbsp;&nbsp;&nbsp;Authorized Signatory</b> <br></p>
 
                     </td>
                     <td style="font-size:12px;text-align:right;padding:7px;width:40%">

@@ -58,6 +58,8 @@ class ComplainceBankAccountController extends Controller
             'bank_account_no' => 'required|string|max:50',
             'bank_ifsc_code' => 'required|string|max:20',
             'bank_status' => 'required',
+            'status' => 'required',
+
         ]);
 
         $bankDetails = BankDetails::find($id);
@@ -83,8 +85,17 @@ class ComplainceBankAccountController extends Controller
             'bank_ifsc_code' => $request->bank_ifsc_code,
             'bank_document' => $filePath,
             'bank_status' => $request->bank_status,
+            'status' => $request->status,
+
         ]);
 
         return redirect()->route('admin.pendingbankapprovals')->with('success', 'Successfully updated!');
+    }
+    public function destroy($id)
+    {
+        $bankDetails = BankDetails::findOrFail($id);
+
+        $bankDetails->delete();
+        return redirect()->route('admin.pendingbankapprovals')->with('success', 'Successfully deleted!');
     }
 }

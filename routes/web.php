@@ -1,11 +1,9 @@
 <?php
 
-use App\Http\Controllers\Admin\AdmsIncrementLetterController;
-use App\Http\Controllers\Admin\AdmsPipLetterController;
-use App\Http\Controllers\Admin\EmployeeLifecycleController;
-use App\Http\Controllers\Admin\AdmsShowcauseLetterController;
-use App\Http\Controllers\Admin\AdmsTerminationLetterController;
-use App\Http\Controllers\Admin\AdmsWarningLetterController;
+use Illuminate\Bus\Batch;
+use Illuminate\Http\Request;
+use App\Jobs\ADMSPayslipCreate;
+use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\CDMSController;
 use App\Http\Controllers\Admin\CFISController;
@@ -16,6 +14,7 @@ use App\Http\Controllers\Admin\CMSPTController;
 use App\Http\Controllers\Admin\FHRMSController;
 use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\CMSLWFController;
+use App\Http\Controllers\Admin\CMSCLRAController;
 use App\Http\Controllers\Admin\CMSESICController;
 use App\Http\Controllers\Admin\InvoiceController;
 use App\Http\Controllers\Admin\PaymentController;
@@ -24,6 +23,7 @@ use App\Http\Controllers\Admin\TdsCodeController;
 use App\Http\Controllers\Admin\CMSFormTController;
 use App\Http\Controllers\Admin\FFIAssetController;
 use App\Http\Controllers\RolePermissionController;
+use App\Http\Controllers\Admin\CMSOthersController;
 use App\Http\Controllers\Admin\ComplianceController;
 use App\Http\Controllers\Admin\FFIWarningController;
 use App\Http\Controllers\Admin\ADMSPayslipController;
@@ -32,21 +32,23 @@ use App\Http\Controllers\Admin\FFIPayslipsController;
 use App\Http\Controllers\Admin\OfferLetterController;
 use App\Http\Controllers\Admin\FFIPipLetterController;
 use App\Http\Controllers\Admin\FFIShowCauseController;
+use App\Http\Controllers\Admin\AdmsPipLetterController;
 use App\Http\Controllers\Admin\LetterContentController;
 use App\Http\Controllers\Admin\FFIOfferLetterController;
 use App\Http\Controllers\Admin\FFITerminationController;
 use App\Http\Controllers\Admin\CMSLabourNoticeController;
-use App\Http\Controllers\Admin\FFIIncrementLetterController;
 use App\Http\Controllers\ComplainceBankAccountController;
-use App\Jobs\ADMSPayslipCreate;
+use App\Http\Controllers\Admin\AdmsWarningLetterController;
 
 Route::get('/', function () {
     return to_route('admin.dashboard');
     // return view('welcome');
 });
-use Illuminate\Bus\Batch;
-use Illuminate\Support\Facades\Bus;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Admin\EmployeeLifecycleController;
+use App\Http\Controllers\Admin\FFIIncrementLetterController;
+use App\Http\Controllers\Admin\AdmsIncrementLetterController;
+use App\Http\Controllers\Admin\AdmsShowcauseLetterController;
+use App\Http\Controllers\Admin\AdmsTerminationLetterController;
 
 Route::get('/batch-status', function (Request $request) {
     $batchId = session('batch_id');
@@ -166,6 +168,18 @@ Route::prefix('admin')->group(function () {
         Route::get('/cms/labour/notice/{id}/edit', [CMSLabourNoticeController::class, 'edit'])->name('cms.labour.edit');
         Route::post('/cms/labour/notice/{id}/edit', [CMSLabourNoticeController::class, 'update']);
         Route::get('/cms/labour/{id}/delete', [CMSLabourNoticeController::class, 'destroy'])->name('cms.labour.delete');
+
+        // CMS CLRA
+        Route::get('/cms_clra', [CMSCLRAController::class, 'index'])->name('cms.clra');
+        Route::get('/cms_clra/create', [CMSCLRAController::class, 'create'])->name('cms.clra.create');
+        Route::post('/cms_clra/create', [CMSCLRAController::class, 'store']);
+        Route::get('/cms_clra/{id}/delete', [CMSCLRAController::class, 'destroy'])->name('cms.clra.delete');
+
+        // CMS PF
+        Route::get('/cms_others', [CMSOthersController::class, 'index'])->name('cms.others');
+        Route::get('/cms_others/create', [CMSOthersController::class, 'create'])->name('cms.others.create');
+        Route::post('/cms_others/create', [CMSOthersController::class, 'store']);
+        Route::get('/cms_others/{id}/delete', [CMSOthersController::class, 'destroy'])->name('cms.others.delete');
 
         //cfis
         Route::get('/cfis', [CFISController::class, 'index'])->name('cfis');
@@ -419,8 +433,8 @@ Route::prefix('admin')->group(function () {
         Route::post('candidatemaster/{id}/edit', [ComplianceController::class, 'update']);
         Route::post('/candidatemaster/import', [ComplianceController::class, 'import'])->name('candidatemaster.import');
         Route::post('candidatemaster/formate/download', [ComplianceController::class, 'download'])->name('candidatemaster.formdownload');
-        Route::get('/bankdetails/{id}/create', [ComplianceController::class, 'create'])->name('bankdetails.create');
-        Route::post('/bankdetails/{id}/create', [ComplianceController::class, 'store']);
+        Route::get('/bankdetails/create', [ComplianceController::class, 'create'])->name('bankdetails.create');
+        Route::post('/bankdetails/create', [ComplianceController::class, 'store']);
         Route::get('/bankdetails/{id}/edit', [ComplianceController::class, 'bankedit'])->name('bankdetails.edit');
         Route::post('/bankdetails/{id}/edit', [ComplianceController::class, 'bankupdate']);
         Route::get('bankdetails/{id}/delete', [ComplianceController::class, 'destroy'])->name('bankdetails.delete');
@@ -444,6 +458,7 @@ Route::prefix('admin')->group(function () {
         Route::get('/pending-bank-approval', [ComplainceBankAccountController::class, 'index'])->name('pendingbankapprovals');
         Route::get('/pending-bank-approval/edit/{id}', [ComplainceBankAccountController::class, 'edit'])->name('pendingbankapprovals.edit');
         Route::post('/pending-bank-approval/edit/{id}', [ComplainceBankAccountController::class, 'update']);
+        Route::get('/pending-bank-approval/{id}/delete', [ComplainceBankAccountController::class, 'destroy'])->name('pendingbankapprovals.delete');
 
     });
 });

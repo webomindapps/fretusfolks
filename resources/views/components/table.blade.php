@@ -29,7 +29,7 @@
         <div class="col-lg-12">
 
             <table class="table">
-                <thead>
+                <thead style="position: sticky;top:0; z-index: 3;">
                     <tr>
                         @if (isset($checkAll) && $checkAll)
                             <th>

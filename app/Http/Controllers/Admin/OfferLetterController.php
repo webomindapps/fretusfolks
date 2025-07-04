@@ -68,13 +68,13 @@ class OfferLetterController extends Controller
         $offerLetter = $this->model()->with('employee')->findOrFail($id);
 
         // Return existing file if already generated
-        if (!empty($offerLetter->offer_letter_path)) {
-            $filePath = storage_path('app/public/' . str_replace('storage/', '', $offerLetter->offer_letter_path));
+        // if (!empty($offerLetter->offer_letter_path)) {
+        //     $filePath = storage_path('app/public/' . str_replace('storage/', '', $offerLetter->offer_letter_path));
 
-            if (file_exists($filePath)) {
-                return response()->file($filePath);
-            }
-        }
+        //     if (file_exists($filePath)) {
+        //         return response()->file($filePath);
+        //     }
+        // }
 
         // View mapping based on offer_letter_type
         $viewMap = [

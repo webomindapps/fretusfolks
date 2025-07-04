@@ -1,23 +1,22 @@
 <x-applayout>
-    <x-admin.breadcrumb title="Bank Details">
-        <div class="d-flex justify-content-end align-items-center">
-            <div class="d-flex gap-3">
-                <form action="{{ route('admin.candidatemaster.bankform') }}" method="POST" style="display: inline;">
-                    @csrf
-                    <button type="submit" class="btn btn-primary text-white">
-                        <i class='bx bxs-download'></i> Download
-                    </button>
-                </form>
+    <x-admin.breadcrumb title="Bank Details" :create="route('admin.bankdetails.create')" />
+    <div class="d-flex justify-content-end align-items-center">
+        <div class="d-flex gap-3">
+            <form action="{{ route('admin.candidatemaster.bankform') }}" method="POST" style="display: inline;">
+                @csrf
+                <button type="submit" class="btn btn-primary text-white">
+                    <i class='bx bxs-download'></i> Download
+                </button>
+            </form>
 
-                <form action="{{ route('admin.candidatemaster.bankimport') }}" method="POST"
-                    enctype="multipart/form-data" class="d-flex align-items-center">
-                    @csrf
-                    <input type="file" class="form-control form-control-sm me-2" name="file" required>
-                    <button type="submit" class="add-btn bg-success text-white">Import</button>
-                </form>
-            </div>
+            <form action="{{ route('admin.candidatemaster.bankimport') }}" method="POST" enctype="multipart/form-data"
+                class="d-flex align-items-center">
+                @csrf
+                <input type="file" class="form-control form-control-sm me-2" name="file" required>
+                <button type="submit" class="add-btn bg-success text-white">Import</button>
+            </form>
         </div>
-    </x-admin.breadcrumb>
+    </div>
     <div class="row">
         <div class="col-lg-12">
             @php
@@ -90,6 +89,12 @@
                                             href="{{ route('admin.pendingbankapprovals.edit', $item->id) }}">
                                             <i class='bx bx-edit-alt'></i>
                                             Edit
+                                        </a>
+                                        <a href="{{ route('admin.pendingbankapprovals.delete', $item->id) }}"
+                                            class="dropdown-item"
+                                            onclick="return confirm('Are you sure to delete this?')">
+                                            <i class="bx bx-trash-alt"></i>
+                                            Delete
                                         </a>
                                     </li>
                                 </ul>

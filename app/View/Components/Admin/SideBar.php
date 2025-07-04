@@ -371,6 +371,20 @@ class SideBar extends Component
                     'name' => 'labour',
                     'roles' => ['Admin', 'Compliance'],
                 ],
+                [
+                    'title' => 'CLRA',
+                    'icon' => 'bx bx-chevron-right',
+                    'route' => 'admin.cms.clra',
+                    'name' => 'clra',
+                    'roles' => ['Admin', 'Compliance'],
+                ],
+                [
+                    'title' => 'Others',
+                    'icon' => 'bx bx-chevron-right',
+                    'route' => 'admin.cms.others',
+                    'name' => 'others',
+                    'roles' => ['Admin', 'Compliance'],
+                ],
             ],
         ],
         [

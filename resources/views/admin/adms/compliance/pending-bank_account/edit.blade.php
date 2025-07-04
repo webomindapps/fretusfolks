@@ -39,21 +39,21 @@
                                 <x-forms.input label="Enter Bank Name:" type="text" name="bank_name" id="bank_name"
                                     :required="true" size="col-lg-6 mt-2" :value="old('bank_name', $bankdetails->bank_name ?? '')" />
 
-                              
+
                                 <div class="form-group col-lg-6 mt-2">
                                     <label for="bank_document">Attach Bank Document:</label>
                                     <input type="file" name="bank_document" id="bank_document"
                                         accept="application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/pdf"
                                         class="form-control">
-                                        @if ($bankdetails && $bankdetails->bank_document)
+                                    @if ($bankdetails && $bankdetails->bank_document)
                                         <div id="image-preview-container" class="d-flex mt-2">
-                                            <a href="{{ asset('storage/' . $bankdetails->bank_document) }}" target="_blank"
-                                               class="btn btn-custom mt-2">
+                                            <a href="{{ asset('storage/' . $bankdetails->bank_document) }}"
+                                                target="_blank" class="btn btn-custom mt-2">
                                                 View
                                             </a>
                                         </div>
                                     @endif
-                                    
+
 
                                 </div>
                                 <x-forms.input label="Enter Bank Account No::" type="text" name="bank_account_no"
@@ -61,16 +61,33 @@
                                 <x-forms.input label="Enter Bank IFSC CODE:" type="text" name="bank_ifsc_code"
                                     id="bank_ifsc_code" :required="true" size="col-lg-6 mt-2" :value="old('bank_ifsc_code', $bankdetails->bank_ifsc_code ?? '')" />
                                 <div class="form-group col-lg-6 mt-2">
-                                    <label for="status">Status <span style="color: red">*</span></label>
+                                    <label for="status">Pending Bank Approval <span
+                                            style="color: red">*</span></label>
                                     <select id="status" name="bank_status" class="form-control" required
                                         onchange="toggleNotesField(this.value)">
                                         <option value="">Select Status</option>
                                         <option value="1"
                                             {{ old('status', $bankdetails->bank_status ?? '') == '1' ? 'selected' : '' }}>
-                                            Active
+                                            Approved
                                         </option>
                                         <option value="0"
                                             {{ old('status', $bankdetails->bank_status ?? '') == '0' ? 'selected' : '' }}>
+                                            Pending
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-lg-6 mt-2">
+                                    <label for="status">Bank Status <span
+                                            style="color: red">*</span></label>
+                                    <select id="status" name="status" class="form-control" required
+                                        onchange="toggleNotesField(this.value)">
+                                        <option value="">Select Status</option>
+                                        <option value="1"
+                                            {{ old('status', $bankdetails->status ?? '') == '1' ? 'selected' : '' }}>
+                                            Active
+                                        </option>
+                                        <option value="0"
+                                            {{ old('status', $bankdetails->status ?? '') == '0' ? 'selected' : '' }}>
                                             Inactive
                                         </option>
                                     </select>

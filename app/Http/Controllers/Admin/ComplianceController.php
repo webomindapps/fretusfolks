@@ -250,16 +250,17 @@ class ComplianceController extends Controller
         return Excel::download(new CadidateDownload($candidates), 'candidates.xlsx');
     }
 
-    public function create($id)
+    public function create()
     {
-        $candidate = $this->model()->find($id);
-        return view('admin.adms.compliance.bank_create', compact('candidate'));
+        return view('admin.adms.compliance.bank_create');
     }
-    public function store(Request $request, $id)
+    public function store(Request $request)
     {
-        $candidate = $this->model()->findOrFail($id);
+        $candidate = $this->model()->where('ffi_emp_id', $request->ffi_emp_id)->firstOrFail();
+        // dd($candidate->id);
 
         $request->validate([
+            'ffi_emp_id' => 'required',
             'bank_name' => 'required|string|max:255',
             'bank_account_no' => 'required|string|max:50',
             'bank_ifsc_code' => 'required|string|max:20',
@@ -277,7 +278,7 @@ class ComplianceController extends Controller
             BankDetails::where('emp_id', $request->emp_id)->update(['status' => 0]);
         }
         BankDetails::create([
-            'emp_id' => $request->emp_id,
+            'emp_id' => $candidate->id,
             'bank_name' => $request->bank_name,
             'bank_account_no' => $request->bank_account_no,
             'bank_ifsc_code' => $request->bank_ifsc_code,
@@ -285,7 +286,7 @@ class ComplianceController extends Controller
             'status' => $request->status,
             'bank_status' => 0,
         ]);
-        return redirect()->route('admin.candidatemaster.view', $candidate->id)->with('success', 'Bank details saved successfully!');
+        return redirect()->route('admin.pendingbankapprovals')->with('success', 'Bank details saved successfully!');
     }
     public function destroy($id)
     {

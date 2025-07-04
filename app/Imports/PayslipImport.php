@@ -23,7 +23,7 @@ class PayslipImport implements ToCollection
     {
         $header = $rows->first()->toArray();
         $data = $rows->slice(1);
-
+        // dd($header);
         $chunked = $data->chunk(1000);
         // dd($chunked);
         foreach ($chunked as $chunk) {
@@ -32,25 +32,40 @@ class PayslipImport implements ToCollection
             foreach ($chunk as $row) {
                 $rowArray = $row->toArray();
 
-                if (count($rowArray) === count($header)) {
-                    $combined = array_combine($header, $rowArray);
+                if (count($rowArray) !== count($header)) {
+                    continue;
+                }
 
-                    if (!empty($combined['Employee_ID'])) {
-                        Payslips::where('emp_id', $combined['Employee_ID'])
-                            ->where('month', $this->month)
-                            ->where('year', $this->year)
-                            ->delete();
-
-                        $processedData[] = $combined;
+                $hasNewline = false;
+                foreach ($rowArray as $cell) {
+                    if (is_string($cell) && preg_match("/\r|\n/", $cell)) {
+                        $hasNewline = true;
+                        break;
                     }
+                }
+
+                if ($hasNewline) {
+                    continue; 
+                }
+
+                $combined = array_combine($header, $rowArray);
+
+                if (!empty($combined['Employee_ID'])) {
+                    Payslips::where('emp_id', $combined['Employee_ID'])
+                        ->where('month', $this->month)
+                        ->where('year', $this->year)
+                        ->delete();
+
+                    $processedData[] = $combined;
                 }
             }
 
             if (!empty($processedData)) {
-                // dd($processedData);
                 ADMSPayslipCreate::dispatch($processedData, $this->month, $this->year);
             }
         }
+
+
     }
 
 

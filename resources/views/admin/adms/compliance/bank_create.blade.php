@@ -14,7 +14,7 @@
     @endif
     <div class="col-lg-12 pb-4">
         <div class="form-card px-md-3 px-2">
-            <form action="{{ route('admin.bankdetails.create', $candidate->id) }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('admin.bankdetails.create') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="card mt-3">
                     <div class="card-header header-elements-inline d-flex justify-content-between align-items-center">
@@ -23,9 +23,9 @@
                     <div class="card-body">
                         <div class="form-contents">
                             {{-- {{ dd($candidate->id) }} --}}
-                            <input type="hidden" name="emp_id" value="{{ $candidate->id }}">
                             <div class="row">
-
+                                <x-forms.input label="Enter FFI Emp Id:" type="text" name="ffi_emp_id"
+                                    id="ffi_emp_id" :required="true" size="col-lg-6 mt-2" :value="old('ffi_emp_id')" />
                                 <x-forms.input label="Enter Bank Name:" type="text" name="bank_name" id="bank_name"
                                     :required="true" size="col-lg-6 mt-2" :value="old('bank_name')" />
 
