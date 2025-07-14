@@ -23,12 +23,20 @@
             <div class="col-lg-12 pb-4 ">
                 <div class="form-card px-md-3 px-2">
                     <div class="header  text-white" style="background-color: #517bb9;">
-                        <h4 class="modal-title">Candidate Details
-                            <div>
-                                <h5>{{ $candidate?->ffi_emp_id }}-
-                                    {{ $candidate?->emp_name }}</h5>
+                        <div class="row">
+                            <div class="col-lg-10">
+                                <h4 class="modal-title">Candidate Details
+                                    <div>
+                                        <h5>{{ $candidate?->ffi_emp_id }}-
+                                            {{ $candidate?->emp_name }}</h5>
+                                    </div>
+                                </h4>
                             </div>
-                        </h4>
+                            <div class="col-lg-2">
+                                <h5>Status: {{ $candidate?->status == 1 ? 'Active' : 'Inactive' }}</h5>
+                            </div>
+                        </div>
+
                     </div>
                     <div class="accordion" id="accordionExample">
                         <div class="card custom-card">

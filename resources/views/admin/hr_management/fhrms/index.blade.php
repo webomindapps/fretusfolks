@@ -16,7 +16,7 @@
         <div class="col-lg-12">
             @php
                 $columns = [
-                    ['label' => 'Id', 'column' => 'id', 'sort' => true],
+                    ['label' => 'SL No', 'column' => 'id', 'sort' => true],
                     ['label' => 'Employee Id', 'column' => 'ffi_emp_id', 'sort' => true],
                     ['label' => 'Emp Name', 'column' => 'emp_name', 'sort' => true],
                     ['label' => 'Joining date', 'column' => 'joining_date', 'sort' => true],
@@ -65,7 +65,7 @@
                 </x-slot:filters>
                 @foreach ($employee as $key => $item)
                     <tr>
-                        <td>{{ $item->id }}</td>
+                        <td>{{ $key + 1 }}</td>
                         <td>{{ $item->ffi_emp_id }}</td>
 
                         <td> {{ $item->emp_name }}</td>

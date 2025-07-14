@@ -1,5 +1,5 @@
 <x-applayout>
-    <x-admin.breadcrumb title="Candidate Master">
+    <x-admin.breadcrumb title="Candidate Master (USN and ESIC)">
 
         <div class="d-flex justify-content-end align-items-center">
             <div class="d-flex gap-3">
@@ -24,7 +24,7 @@
         <div class="col-lg-12">
             @php
                 $columns = [
-                    ['label' => 'Id', 'column' => 'id', 'sort' => true],
+                    ['label' => 'SL No', 'column' => 'id', 'sort' => true],
                     ['label' => 'Employee ID', 'column' => 'ffi_emp_id', 'sort' => true],
                     ['label' => 'Client ID', 'column' => 'client_emp_id', 'sort' => true],
                     ['label' => 'Client Name', 'column' => 'entity_name', 'sort' => true],
@@ -59,7 +59,7 @@
                 @foreach ($candidate as $key => $item)
                     <tr>
 
-                        <td>{{ $item->id }}</td>
+                        <td>{{ $key + 1 }}</td>
                         <td>{{ $item->ffi_emp_id === null || $item->ffi_emp_id === '' ? 'N/A' : $item->ffi_emp_id }}
                         </td>
                         <td>{{ $item->client_emp_id === null || $item->client_emp_id === '' ? 'N/A' : $item->client_emp_id }}

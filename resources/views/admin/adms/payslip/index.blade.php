@@ -282,7 +282,7 @@
                 <div class="col-lg-12">
                     @php
                         $columns = [
-                            ['label' => 'Id', 'column' => 'id', 'sort' => true],
+                            ['label' => 'SL No', 'column' => 'id', 'sort' => true],
                             ['label' => 'EMP ID', 'column' => 'emp_id', 'sort' => false],
                             ['label' => 'Client Name', 'column' => 'client_name', 'sort' => false],
                             ['label' => 'EMP Name', 'column' => 'emp_name', 'sort' => false],
@@ -296,7 +296,7 @@
                     <x-table :columns="$columns" :data="$payslips" :checkAll=false :bulk="route('admin.cms.esic')" :route="route('admin.search.payslips')">
                         @foreach ($payslips as $key => $item)
                             <tr>
-                                <td>{{ $item->id }}</td>
+                                <td>{{ $key + 1 }}</td>
                                 <td>{{ $item->emp_id }}</td>
                                 <td>{{ $item->client_name }}</td>
                                 <td>{{ $item->emp_name }}</td>
@@ -340,7 +340,7 @@
                     const row = $('#row-' + id);
 
                     $.ajax({
-                        url: 'https://newapp.fretusfolks.com/admin/payslips/' + id +
+                        url: 'http://127.0.0.1:8000/admin/payslips/' + id +
                             '/delete',
                         method: 'GET',
                         success: function(response) {
@@ -456,7 +456,7 @@
                 if (selectedClients.length === 0) {
                     const link = document.createElement('a');
                     link.href =
-                        'https://newapp.fretusfolks.com/admin/payslip_format.xlsx'; // File must be in public/
+                        'http://127.0.0.1:8000/admin/payslip_format.xlsx'; // File must be in public/
                     link.download = 'payslip_format.xlsx';
                     document.body.appendChild(link);
                     link.click();
@@ -503,7 +503,7 @@
 
             function startProgressCheck() {
                 progressInterval = setInterval(() => {
-                    $.get("https://newapp.fretusfolks.com/batch-status", function(data) {
+                    $.get("http://127.0.0.1:8000/batch-status", function(data) {
                         if (data.status !== "not_found") {
                             $("#progress-bar").val(data.status);
                             $("#progress-text").text("Processing Payslips... " + data.status + "%");

@@ -55,7 +55,7 @@ class EmployeeLifecycleController extends Controller
 
         $defaultColumns = ['id', 'created_at', 'emp_name', 'entity_name', 'phone1', 'email', 'ffi_emp_id', 'client_id'];
 
-        $results = $filteredResults->select($defaultColumns)->paginate(10)->appends($request->query());
+        $results = $filteredResults->select($defaultColumns)->paginate(100)->appends($request->query());
 
         return view('admin.adms.employee_lifecycle.index', compact(
             'results',

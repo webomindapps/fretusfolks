@@ -1,5 +1,5 @@
 <x-applayout>
-    <x-admin.breadcrumb title=" Approved Candidates">
+    <x-admin.breadcrumb title=" Approved Candidates" >
         <div class="d-flex justify-content-end align-items-center">
             <div class="d-flex gap-3">
                 <a href="{{ asset('admin/approvedcandidates_formate.xlsx') }}" download="ApprovedCandidates_Formate.xlsx"
@@ -20,7 +20,7 @@
         <div class="col-lg-12">
             @php
                 $columns = [
-                    ['label' => 'Id', 'column' => 'id', 'sort' => true],
+                    ['label' => 'SL No', 'column' => 'id', 'sort' => true],
                     ['label' => 'FFI Employee ID', 'column' => 'ffi_emp_id', 'sort' => true],
                     ['label' => 'Client id', 'column' => 'client_emp_id', 'sort' => true],
                     ['label' => 'Client Name', 'column' => 'entity_name', 'sort' => true],
@@ -61,7 +61,7 @@
                             <input type="checkbox" name="selected_items[]" class="single-item-check"
                                 value="{{ $item->id }}">
                         </td> --}}
-                        <td>{{ $item->id }}</td>
+                        <td>{{ $key + 1 }}</td>
                         <td>{{ $item->ffi_emp_id === null || $item->ffi_emp_id === '' ? 'N/A' : $item->ffi_emp_id }}
                         <td>{{ $item->client_emp_id === null || $item->client_emp_id === '' ? 'N/A' : $item->client_emp_id }}
                         </td>

@@ -17,10 +17,12 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use App\Jobs\GeneratePayslipPDFs;
 use Illuminate\Support\Facades\Bus;
 use App\Http\Controllers\Controller;
+use App\Jobs\ProcessPayslipChunkJob;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
@@ -79,40 +81,82 @@ class ADMSPayslipController extends Controller
         return response()->json(['success' => true, 'message' => 'Payslip deleted successfully.']);
     }
 
+    // public function bulkUpload(Request $request)
+    // {
+    //     $request->validate([
+    //         'month' => 'required',
+    //         'year' => 'required',
+    //         'file' => 'required|file|mimes:xlsx,csv,txt',
+    //     ]);
+    //     // dd($request->all());
+    //     ini_set('memory_limit', '2G'); // increase memory limit
+    //     ini_set('max_execution_time', '0'); //
+    //     $file = $request->file('file');
+    //     $month = $request->input('month');
+    //     $year = $request->input('year');
+    //     try {
+    //         if ($request->has('file')) {
+    //             // dd($request->file);
+    //             // $fileName = $request->file->getClientOriginalName();
+    //             // $fileWithPath = public_path('uploads') . '/' . $fileName;
+    //             // // dd($fileWithPath);
+    //             // if (!file_exists($fileWithPath)) {
+    //             //     $request->file->move(public_path('uploads'), $fileName);
+    //             // }
+    //             // dd($fileWithPath);
+    //             Excel::import(new PayslipImport($month, $year), $file);
+    //             // if (file_exists($fileWithPath)) {
+    //             //     unlink($fileWithPath);
+    //             // }
+    //         }
+    //     } catch (Exception $e) {
+    //         dd($e);
+    //     }
+    //     $error = '';
+    //     return redirect()->route('admin.payslips')->with([
+    //         'success' => 'Payslips added successfully',
+    //         'alert' => $error
+    //     ]);
+    // }
     public function bulkUpload(Request $request)
     {
         $request->validate([
             'month' => 'required',
             'year' => 'required',
-            'file' => 'required|file|mimes:xlsx,csv,txt',
+            'file' => 'required|file|mimes:xlsx',
         ]);
-        // dd($request->all());
+
         $file = $request->file('file');
         $month = $request->input('month');
         $year = $request->input('year');
-        try {
-            if ($request->has('file')) {
-                // dd($request->file);
-                $fileName = $request->file->getClientOriginalName();
-                $fileWithPath = public_path('uploads') . '/' . $fileName;
-                // dd($fileWithPath);
-                if (!file_exists($fileWithPath)) {
-                    $request->file->move(public_path('uploads'), $fileName);
-                }
-                // dd($fileWithPath);
-                Excel::import(new PayslipImport($month, $year), $fileWithPath);
-                if (file_exists($fileWithPath)) {
-                    unlink($fileWithPath);
-                }
-            }
-        } catch (Exception $e) {
-            dd($e);
+
+        ini_set('memory_limit', '2G');
+        ini_set('max_execution_time', '0');
+
+        $spreadsheet = IOFactory::load($file);
+        $worksheet = $spreadsheet->getActiveSheet();
+        $rows = $worksheet->toArray();
+
+        $header = array_shift($rows); // remove header row
+        $chunkSize = 100;
+        $chunks = array_chunk($rows, $chunkSize);
+
+        foreach ($chunks as $index => $chunk) {
+            $newSpreadsheet = new Spreadsheet();
+            $sheet = $newSpreadsheet->getActiveSheet();
+            $sheet->fromArray([$header], NULL, 'A1'); // add header
+            $sheet->fromArray($chunk, NULL, 'A2');    // add data
+
+            $tempFileName = 'temp_chunks/payslip_chunk_' . $index . '_' . time() . '.xlsx';
+            $filePath = storage_path('app/' . $tempFileName);
+
+            IOFactory::createWriter($newSpreadsheet, 'Xlsx')->save($filePath);
+
+            // Dispatch job
+            ProcessPayslipChunkJob::dispatch($tempFileName, $month, $year);
         }
-        $error = '';
-        return redirect()->route('admin.payslips')->with([
-            'success' => 'Payslips added successfully',
-            'alert' => $error
-        ]);
+
+        return redirect()->route('admin.payslips')->with('success', 'Payslip import is being processed in the background.');
     }
     public function export(Request $request)
     {
@@ -219,9 +263,9 @@ class ADMSPayslipController extends Controller
             foreach ($payslips as $payslip) {
                 $jobs[] = new GeneratePayslipPDFs($payslip);
             }
-    
+
             $emails = array_map('trim', explode(',', $ademails));
-    
+
             $batch = Bus::batch($jobs)
                 ->then(function (Batch $batch) use ($payslips, $emails) {
                     // Dispatch zip creation after all PDFs are ready
@@ -231,7 +275,7 @@ class ADMSPayslipController extends Controller
                     Cache::put("batch_status_{$batch->id}", 'failed', 3600);
                 })
                 ->dispatch();
-    
+
             session(['batch_id' => $batch->id]);
             return redirect()->back()->with('success', 'Payslips are being processed. You will receive an email when ready.');
         } catch (Throwable $e) {

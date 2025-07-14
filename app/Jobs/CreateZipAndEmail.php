@@ -26,7 +26,8 @@ class CreateZipAndEmail implements ShouldQueue
 
     public function handle()
     {
-        $zipFileName = "Payslips_{$this->payslips->first()->client_name}_{$this->payslips->first()->month}_{$this->payslips->first()->year}.zip";
+        $clientName = str_replace(' ', '_', $this->payslips->first()->client_name);
+        $zipFileName = "Payslips_{$clientName}_{$this->payslips->first()->month}_{$this->payslips->first()->year}.zip";
         $zipPath = storage_path("app/temp/{$zipFileName}");
 
         $zip = new ZipArchive();

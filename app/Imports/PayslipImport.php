@@ -5,10 +5,13 @@ namespace App\Imports;
 use App\Models\Payslips;
 use App\Jobs\ADMSPayslipCreate;
 use Illuminate\Support\Collection;
+use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Maatwebsite\Excel\Concerns\WithChunkReading;
+use Maatwebsite\Excel\Concerns\WithColumnLimit;
 
-class PayslipImport implements ToCollection
+class PayslipImport implements ToCollection, WithHeadingRow, WithChunkReading, SkipsEmptyRows, WithColumnLimit
 {
     protected $month;
     protected $year;
@@ -21,52 +24,41 @@ class PayslipImport implements ToCollection
 
     public function collection(Collection $rows)
     {
-        $header = $rows->first()->toArray();
-        $data = $rows->slice(1);
-        // dd($header);
-        $chunked = $data->chunk(1000);
-        // dd($chunked);
-        foreach ($chunked as $chunk) {
-            $processedData = [];
+        foreach ($rows as $row) {
+            $row = $row->toArray();
 
-            foreach ($chunk as $row) {
-                $rowArray = $row->toArray();
+            if (!isset($row['employee_id']) || empty($row['employee_id'])) {
+                continue;
+            }
 
-                if (count($rowArray) !== count($header)) {
-                    continue;
-                }
 
-                $hasNewline = false;
-                foreach ($rowArray as $cell) {
-                    if (is_string($cell) && preg_match("/\r|\n/", $cell)) {
-                        $hasNewline = true;
-                        break;
-                    }
-                }
-
-                if ($hasNewline) {
-                    continue; 
-                }
-
-                $combined = array_combine($header, $rowArray);
-
-                if (!empty($combined['Employee_ID'])) {
-                    Payslips::where('emp_id', $combined['Employee_ID'])
-                        ->where('month', $this->month)
-                        ->where('year', $this->year)
-                        ->delete();
-
-                    $processedData[] = $combined;
+            // Optional: check for newline characters
+            $hasNewline = false;
+            foreach ($row as $cell) {
+                if (is_string($cell) && preg_match("/\r|\n/", $cell)) {
+                    $hasNewline = true;
+                    break;
                 }
             }
 
-            if (!empty($processedData)) {
-                ADMSPayslipCreate::dispatch($processedData, $this->month, $this->year);
+            if ($hasNewline) {
+                continue;
             }
+
+            Payslips::where('emp_id', $row['employee_id'])
+                ->where('month', $this->month)
+                ->where('year', $this->year)
+                ->delete();
+            // dd($row);
+            ADMSPayslipCreate::dispatch([$row], $this->month, $this->year);
         }
-
-
     }
-
-
+    public function endColumn(): string
+    {
+        return 'BH';
+    }
+    public function chunkSize(): int
+    {
+        return 100;
+    }
 }
