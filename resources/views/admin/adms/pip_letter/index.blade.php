@@ -5,7 +5,7 @@
         <div class="col-lg-12">
             @php
                 $columns = [
-                    ['label' => 'Id', 'column' => 'id', 'sort' => true],
+                    ['label' => 'SL No', 'column' => 'id', 'sort' => true],
                     ['label' => 'From Name', 'column' => 'from_name', 'sort' => true],
                     ['label' => 'Emp Id', 'column' => 'emp_id', 'sort' => true],
                     ['label' => 'To', 'column' => 'emp_name', 'sort' => false],
@@ -18,7 +18,7 @@
             <x-table :columns="$columns" :data="$pip" :checkAll=false :bulk="route('admin.ffi_pip_letter.bulk')" :route="route('admin.pip_letter')">
                 @foreach ($pip as $key => $item)
                     <tr>
-                        <td>{{ $item->id }}</td>
+                        <td>{{ $key + 1 }}</td>
                         <td>{{ $item->from_name }}</td>
                         <td>{{ $item->emp_id }}</td>
                         <td>{{ $item->pip_letters ? $item->pip_letters->emp_name : 'N/A' }}</td>

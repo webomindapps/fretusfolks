@@ -1,5 +1,5 @@
 <x-applayout>
-    <x-admin.breadcrumb title="HR Back-End Management" />
+    <x-admin.breadcrumb title="HR Back-End Management" isBack="{{ true }}" />
     <style>
         .btn-custom {
             background-color: #007bff;

@@ -15,18 +15,19 @@
     <div class="row">
         <div class="col-lg-12">
             @php
-                $columns = [
-                    ['label' => 'SL No', 'column' => 'id', 'sort' => true],
-                    ['label' => 'Employee Id', 'column' => 'ffi_emp_id', 'sort' => true],
-                    ['label' => 'Emp Name', 'column' => 'emp_name', 'sort' => true],
-                    ['label' => 'Joining date', 'column' => 'joining_date', 'sort' => true],
-                    ['label' => 'Phone', 'column' => 'phone1', 'sort' => true],
-                    ['label' => 'Email', 'column' => 'email', 'sort' => true],
-                    ['label' => 'Status', 'column' => 'status', 'sort' => true],
-                    ['label' => 'Actions', 'column' => 'action', 'sort' => false],
-                ];
+            $columns = [
+            ['label' => 'SL No', 'column' => 'id', 'sort' => true],
+            ['label' => 'Employee Id', 'column' => 'ffi_emp_id', 'sort' => true],
+            ['label' => 'Emp Name', 'column' => 'emp_name', 'sort' => true],
+            ['label' => 'Joining date', 'column' => 'joining_date', 'sort' => true],
+            ['label' => 'Phone', 'column' => 'phone1', 'sort' => true],
+            ['label' => 'Email', 'column' => 'email', 'sort' => true],
+            ['label' => 'Status', 'column' => 'status', 'sort' => true],
+            ['label' => 'Actions', 'column' => 'action', 'sort' => false],
+            ];
             @endphp
-            <x-table :columns="$columns" :data="$employee" :bulk="route('admin.fhrms.bulk')" :route="route('admin.fhrms')">
+            <x-table :columns="$columns" :data="$employee" :bulk="route('admin.fhrms.bulk')"
+                :route="route('admin.fhrms')">
                 <x-slot:filters>
                     <div class="row px-2 align-items-center">
                         <!-- Export Form -->
@@ -64,92 +65,90 @@
 
                 </x-slot:filters>
                 @foreach ($employee as $key => $item)
-                    <tr>
-                        <td>{{ $key + 1 }}</td>
-                        <td>{{ $item->ffi_emp_id }}</td>
+                <tr>
+                    <td>{{ $key + 1 }}</td>
+                    <td>{{ $item->ffi_emp_id }}</td>
 
-                        <td> {{ $item->emp_name }}</td>
-                        <td> {{ \Carbon\Carbon::parse($item->joining_date)->format('d-m-Y') }}</td>
-                        <td> {{ $item->phone1 }}</td>
-                        <td>
-                            {{ $item->email }}
-                        </td>
-                        <td>
-                            @if ($item->status == 0)
-                                <span class="badge rounded-pill sactive">Completed</span>
-                            @else
-                                <span class="badge rounded-pill deactive">Pending</span>
-                            @endif
-                        </td>
-                        <td>
-                            <div class="dropdown pop_Up dropdown_bg">
-                                <div class="dropdown-toggle" id="dropdownMenuButton-{{ $item->id }}"
-                                    data-bs-toggle="dropdown" aria-expanded="true">
-                                    Action
-                                </div>
-                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1"
-                                    style="position: absolute; inset: auto auto 0px 0px; margin: 0px; transform: translate(-95px, -25.4219px);"
-                                    data-popper-placement="top-end">
-                                    <li>
-                                        <a href="javascript:void(0);" class="dropdown-item" data-toggle="modal"
-                                            data-target="#client_details"
-                                            onclick="showEmployeeDetails({{ $item->id }})">
-                                            <i class='bx bx-link-alt'></i>
-                                            View Details
-                                        </a>
-
-                                        <a class="dropdown-item" href="{{ route('admin.fhrms.edit', $item) }}">
-                                            <i class='bx bx-edit-alt'></i>
-                                            Edit
-                                        </a>
-                                        <a class="dropdown-item"
-                                            onclick="return confirm('Are you sure to move to trash ?')"
-                                            href="{{ route('admin.fhrms.delete', $item) }}">
-                                            <i class='bx bx-trash-alt'></i>
-                                            Delete
-                                        </a>
-                                    </li>
-                                </ul>
+                    <td> {{ $item->emp_name }}</td>
+                    <td> {{ \Carbon\Carbon::parse($item->joining_date)->format('d-m-Y') }}</td>
+                    <td> {{ $item->phone1 }}</td>
+                    <td>
+                        {{ $item->email }}
+                    </td>
+                    <td>
+                        @if ($item->status == 0)
+                        <span class="badge rounded-pill sactive">Completed</span>
+                        @else
+                        <span class="badge rounded-pill deactive">Pending</span>
+                        @endif
+                    </td>
+                    <td>
+                        <div class="dropdown pop_Up dropdown_bg">
+                            <div class="dropdown-toggle" id="dropdownMenuButton-{{ $item->id }}"
+                                data-bs-toggle="dropdown" aria-expanded="true">
+                                Action
                             </div>
-                        </td>
-                    </tr>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1"
+                                style="position: absolute; inset: auto auto 0px 0px; margin: 0px; transform: translate(-95px, -25.4219px);"
+                                data-popper-placement="top-end">
+                                <li>
+                                    <a href="javascript:void(0);" class="dropdown-item" data-toggle="modal"
+                                        data-target="#client_details" onclick="showEmployeeDetails({{ $item->id }})">
+                                        <i class='bx bx-link-alt'></i>
+                                        View Details
+                                    </a>
+
+                                    <a class="dropdown-item" href="{{ route('admin.fhrms.edit', $item) }}">
+                                        <i class='bx bx-edit-alt'></i>
+                                        Edit
+                                    </a>
+                                    <a class="dropdown-item" onclick="return confirm('Are you sure to move to trash ?')"
+                                        href="{{ route('admin.fhrms.delete', $item) }}">
+                                        <i class='bx bx-trash-alt'></i>
+                                        Delete
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
                 @endforeach
             </x-table>
         </div>
     </div>
     <x-model1 />
     @push('scripts')
-        <script>
-            function showEmployeeDetails(employeeId) {
-                fetch(`{{ url('/') }}/admin/fhrms/show/${employeeId}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.html_content) {
-                            document.querySelector('#client_details').innerHTML = data.html_content;
-                            $('#client_details').modal('show');
-                            const closeButton = document.querySelector('#closeModalButton');
-                            if (closeButton) {
-                                closeButton.addEventListener('click', function() {
-                                    $('#client_details').modal('hide');
-                                });
-                            }
-                        } else {
-                            console.error('No HTML content found in the response');
+    <script>
+        function showEmployeeDetails(employeeId) {
+            fetch(`{{ url('/') }}/admin/fhrms/show/${employeeId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.html_content) {
+                        document.querySelector('#client_details').innerHTML = data.html_content;
+                        $('#client_details').modal('show');
+                        const closeButton = document.querySelector('#closeModalButton');
+                        if (closeButton) {
+                            closeButton.addEventListener('click', function () {
+                                $('#client_details').modal('hide');
+                            });
                         }
-                    })
-                    .catch(error => {
-                        console.error('Error fetching client details:', error);
-                    });
-            }
-            document.getElementById('importButton').addEventListener('click', function() {
-                document.getElementById('importFile').click();
-            });
+                    } else {
+                        console.error('No HTML content found in the response');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching client details:', error);
+                });
+        }
+        document.getElementById('importButton').addEventListener('click', function () {
+            document.getElementById('importFile').click();
+        });
 
-            document.getElementById('importFile').addEventListener('change', function() {
-                if (this.files.length > 0) {
-                    document.getElementById('importForm').submit();
-                }
-            });
-        </script>
+        document.getElementById('importFile').addEventListener('change', function () {
+            if (this.files.length > 0) {
+                document.getElementById('importForm').submit();
+            }
+        });
+    </script>
     @endpush
 </x-applayout>

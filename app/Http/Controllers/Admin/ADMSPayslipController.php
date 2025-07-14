@@ -263,9 +263,9 @@ class ADMSPayslipController extends Controller
             foreach ($payslips as $payslip) {
                 $jobs[] = new GeneratePayslipPDFs($payslip);
             }
-
+    
             $emails = array_map('trim', explode(',', $ademails));
-
+    
             $batch = Bus::batch($jobs)
                 ->then(function (Batch $batch) use ($payslips, $emails) {
                     // Dispatch zip creation after all PDFs are ready
@@ -274,8 +274,9 @@ class ADMSPayslipController extends Controller
                 ->catch(function (Batch $batch, Throwable $e) {
                     Cache::put("batch_status_{$batch->id}", 'failed', 3600);
                 })
+                ->allowFailures()
                 ->dispatch();
-
+    
             session(['batch_id' => $batch->id]);
             return redirect()->back()->with('success', 'Payslips are being processed. You will receive an email when ready.');
         } catch (Throwable $e) {

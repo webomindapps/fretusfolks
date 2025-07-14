@@ -1,5 +1,5 @@
 <x-applayout>
-    <x-admin.breadcrumb title="Candidate Master (USN and ESIC)">
+    <x-admin.breadcrumb title="Candidate Master (UAN and ESIC)">
 
         <div class="d-flex justify-content-end align-items-center">
             <div class="d-flex gap-3">

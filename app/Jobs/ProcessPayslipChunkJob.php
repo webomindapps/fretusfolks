@@ -17,6 +17,8 @@ class ProcessPayslipChunkJob implements ShouldQueue
     protected $filePath;
     protected $month;
     protected $year;
+    public $tries = 2;
+    public $backoff = 30;
 
     public function __construct(string $filePath, string $month, string $year)
     {
@@ -29,6 +31,6 @@ class ProcessPayslipChunkJob implements ShouldQueue
     {
         $fileFullPath = storage_path('app/' . $this->filePath);
         Excel::import(new PayslipImport($this->month, $this->year), $fileFullPath);
-        Storage::delete($this->filePath); // cleanup
+        Storage::delete($this->filePath);
     }
 }

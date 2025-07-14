@@ -1,5 +1,5 @@
 <x-applayout>
-    <x-admin.breadcrumb title=" Approved Candidates" >
+    <x-admin.breadcrumb title=" Approved Candidates">
         <div class="d-flex justify-content-end align-items-center">
             <div class="d-flex gap-3">
                 <a href="{{ asset('admin/approvedcandidates_formate.xlsx') }}" download="ApprovedCandidates_Formate.xlsx"

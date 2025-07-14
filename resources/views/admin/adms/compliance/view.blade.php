@@ -1,4 +1,5 @@
 <x-applayout>
+     <x-admin.breadcrumb title="{{ false }}" isBack="{{ true }}" />
     <style>
         .custom-card {
             border-radius: 8px;
@@ -211,14 +212,14 @@
                             <div id="bankDetails" class="accordion-collapse collapse" aria-labelledby="headingbank"
                                 data-bs-parent="#accordionExample">
                                 <div class="card-body">
-                                    {{-- <div class="row">
+                                    <div class="row">
                                         <div class="d-flex justify-content-end mt-2">
                                             <a href="{{ route('admin.bankdetails.create', $candidate->id) }}"
                                                 class="btn btn-sm btn-primary">
                                                 <i class="bx bx-add-alt" aria-hidden="true"></i> Add
                                             </a>
                                         </div>
-                                    </div> --}}
+                                    </div>
                                     <div class="row mt-2">
                                         @if ($bankdetails->isNotEmpty())
                                             <div class="table-responsive mt-2">

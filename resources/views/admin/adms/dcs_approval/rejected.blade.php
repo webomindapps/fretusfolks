@@ -1,5 +1,5 @@
 <x-applayout>
-    <x-admin.breadcrumb title="Rejected Candidates " />
+    <x-admin.breadcrumb title="Rejected Candidates " isBack="{{ true }}" />
     <div class="row">
         <div class="col-lg-12">
             @php

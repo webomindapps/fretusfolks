@@ -1,5 +1,5 @@
 <x-applayout>
-    <x-admin.breadcrumb title="FFI Assets Management - Update" />
+    <x-admin.breadcrumb title="FFI Assets Management - Update" isBack="{{ true }}" />
 
     @if ($errors->any())
         <div class="col-lg-12 pb-4 px-2">

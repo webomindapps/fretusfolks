@@ -1,5 +1,5 @@
 <x-applayout>
-    <x-admin.breadcrumb title="Updating UAN and ESIC Number" />
+    <x-admin.breadcrumb title="Updating UAN and ESIC Number" isBack="{{ true }}" />
 
     @if ($errors->any())
         <div class="col-lg-12 pb-4 px-2">

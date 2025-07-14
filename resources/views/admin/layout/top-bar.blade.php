@@ -1,4 +1,4 @@
-<div class="col-lg-10 left-area my-auto" style="position: sticky;top:0; z-index: 3;">
+<div class="col-lg-10 left-area my-auto">
     <div class="row align-items-center">
         <div class="col-lg-12">
             {{-- @if (!request()->is('admin/dashboard'))
@@ -7,7 +7,6 @@
                     <i class='bx bx-arrow-back' style="font-size: 20px; margin-right: 6px;"></i> Back
                 </div>
             @endif --}}
-
 
         </div>
     </div>

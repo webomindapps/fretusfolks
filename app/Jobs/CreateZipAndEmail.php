@@ -50,9 +50,9 @@ class CreateZipAndEmail implements ShouldQueue
         // Send ZIP file via email
         Mail::to($this->email)->send(new PayslipZipReady($zipPath, $zipFileName));
         // Delete ZIP file after sending email
-        if (file_exists($zipPath)) {
-            unlink($zipPath);
-        }
+        // if (file_exists($zipPath)) {
+        //     unlink($zipPath);
+        // }
         foreach ($pdfFiles as $pdfPath) {
             if (file_exists($pdfPath)) {
                 unlink($pdfPath);

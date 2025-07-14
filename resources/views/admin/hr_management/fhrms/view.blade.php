@@ -38,8 +38,7 @@
                         <span>{{ \Carbon\Carbon::parse($employee->contract_date)->format('d-m-Y') }}</span>
                     </p>
                     <p><b>Gender :</b>
-                        <span>{{ $employee->gender == 1 ? 'Male' : ($employee->gender == 2 ? 'Female' : 'Others')
-                            }}</span>
+                        <span>{{ $employee->gender == 1 ? 'Male' : ($employee->gender == 2 ? 'Female' : 'Others') }}</span>
                     </p>
                     <p><b>Phone 2 :</b> <span>{{ $employee->phone2 }}</span></p>
                     <p><b>Location :</b> <span>{{ $employee->location }}</span></p>
@@ -126,34 +125,34 @@
                         </thead>
                         <tbody>
                             @php
-                            $documents = [
-                            'pan_path' => 'PAN Document',
-                            'aadhar_path' => 'Aadhar Document',
-                            'driving_license_path' => 'Driving License',
-                            'photo' => 'Photo',
-                            'resume' => 'Resume',
-                            'bank_document' => 'Bank Document',
-                            'voter_id' => 'Voter ID/ PVC/ UL',
-                            'emp_form' => 'Employee Form',
-                            'pf_esic_form' => 'PF Form / ESIC',
-                            'payslip' => 'Payslip/Fitness Document',
-                            'exp_letter' => 'Experience Letter',
-
-                            ];
+                                $documents = [
+                                    'pan_path' => 'PAN Document',
+                                    'aadhar_path' => 'Aadhar Document',
+                                    'driving_license_path' => 'Driving License',
+                                    'photo' => 'Photo',
+                                    'resume' => 'Resume',
+                                    'bank_document' => 'Bank Document',
+                                    'voter_id' => 'Voter ID/ PVC/ UL',
+                                    'emp_form' => 'Employee Form',
+                                    'pf_esic_form' => 'PF Form / ESIC',
+                                    'payslip' => 'Payslip/Fitness Document',
+                                    'exp_letter' => 'Experience Letter',
+                                ];
                             @endphp
 
                             @foreach ($documents as $key => $label)
-                            @php $path = $employee->$key ?? null; @endphp
-                            @if ($path)
-                            <tr>
-                                <td>{{ $label }}</td>
-                                <td>
-                                    <a href="{{ asset($path) }}" target="_blank" class="btn btn-primary btn-sm">
-                                        <i class="fas fa-eye"></i> View
-                                    </a>
-                                </td>
-                            </tr>
-                            @endif
+                                @php $path = $employee->$key ?? null; @endphp
+                                @if ($path)
+                                    <tr>
+                                        <td>{{ $label }}</td>
+                                        <td>
+                                            <a href="{{ asset($path) }}" target="_blank"
+                                                class="btn btn-primary btn-sm">
+                                                <i class="fas fa-eye"></i> View
+                                            </a>
+                                        </td>
+                                    </tr>
+                                @endif
                             @endforeach
                         </tbody>
                     </table>
@@ -166,25 +165,25 @@
             <div class="row">
                 <div class="col-md-12 col-sm-12">
                     @if ($education->isNotEmpty())
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Si No</th>
-                                <th>Certificates</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($education as $edu)
-                            <tr>
-                                <td>{{ $loop->iteration }}</td>
-                                <td> <a href="{{ $edu->path }}" target="_blank">
-                                        <i class="fa fa-book"></i>
-                                        Education Certificate
-                                    </a></td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Si No</th>
+                                    <th>Certificates</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($education as $edu)
+                                    <tr>
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td> <a href="{{ $edu->path }}" target="_blank">
+                                                <i class="fa fa-book"></i>
+                                                Education Certificate
+                                            </a></td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
                     @endif
                 </div>
             </div>
@@ -193,27 +192,27 @@
             <div class="row">
                 <div class="col-md-12 col-sm-12">
                     @if ($others->isNotEmpty())
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Si No</th>
-                                <th>Certificates</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($others as $other)
-                            <tr>
-                                <td>{{ $loop->iteration }}</td>
-                                <td>
-                                    <a href="{{ $other->path }}" target="_blank">
-                                        <i class="fa fa-book"></i>
-                                        Certificate
-                                    </a>
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Si No</th>
+                                    <th>Certificates</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($others as $other)
+                                    <tr>
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td>
+                                            <a href="{{ $other->path }}" target="_blank">
+                                                <i class="fa fa-book"></i>
+                                                Certificate
+                                            </a>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
                     @endif
                 </div>
             </div>

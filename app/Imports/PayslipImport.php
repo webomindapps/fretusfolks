@@ -11,7 +11,7 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Concerns\WithColumnLimit;
 
-class PayslipImport implements ToCollection, WithHeadingRow, WithChunkReading, SkipsEmptyRows, WithColumnLimit
+class PayslipImport implements ToCollection, WithHeadingRow, WithChunkReading ,SkipsEmptyRows,WithColumnLimit
 {
     protected $month;
     protected $year;
@@ -30,7 +30,7 @@ class PayslipImport implements ToCollection, WithHeadingRow, WithChunkReading, S
             if (!isset($row['employee_id']) || empty($row['employee_id'])) {
                 continue;
             }
-
+            // dd($row);
 
             // Optional: check for newline characters
             $hasNewline = false;
@@ -49,7 +49,7 @@ class PayslipImport implements ToCollection, WithHeadingRow, WithChunkReading, S
                 ->where('month', $this->month)
                 ->where('year', $this->year)
                 ->delete();
-            // dd($row);
+
             ADMSPayslipCreate::dispatch([$row], $this->month, $this->year);
         }
     }

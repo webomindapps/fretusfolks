@@ -1,5 +1,5 @@
 <x-applayout>
-    <x-admin.breadcrumb title="Updating Bank Details" />
+    <x-admin.breadcrumb title="Updating Bank Details" isBack="{{ true }}" />
     <style>
         .btn-custom {
             background-color: #067e1a;

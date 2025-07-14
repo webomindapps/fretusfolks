@@ -1,5 +1,5 @@
 <x-applayout>
-    <x-admin.breadcrumb title="Update User Masters" />
+    <x-admin.breadcrumb title="Update User Masters" isBack="{{ true }}" />
 
     @if ($errors->any())
         <div class="col-lg-12 pb-4">

@@ -1,5 +1,5 @@
 <x-applayout>
-    <x-admin.breadcrumb title="  Bulk Exit Date">
+    <x-admin.breadcrumb title="Bulk Exit Date">
         <button type="button" class="add-btn bg-success text-white" data-bs-toggle="modal" data-bs-target="#downloadModal"
             style="
         height: 40px;

@@ -1,5 +1,5 @@
 <x-applayout>
-    <x-admin.breadcrumb title="New CMS Labour Notice" />
+    <x-admin.breadcrumb title="New CMS Labour Notice" isBack="{{ true }}" />
     @if ($errors->any())
         <div class="col-lg-12 pb-4 px-2">
             <div class="alert alert-danger">

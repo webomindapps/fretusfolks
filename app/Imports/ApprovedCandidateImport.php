@@ -77,7 +77,6 @@ class ApprovedCandidateImport implements ToCollection
             }
 
             if (!empty($processedData)) {
-                // dd($processedData);
                 ImportApprovedCandidatesJob::dispatch($processedData, $this->created_by);
             }
         }

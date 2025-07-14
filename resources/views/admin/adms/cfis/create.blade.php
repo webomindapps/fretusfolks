@@ -1,5 +1,5 @@
 <x-applayout>
-    <x-admin.breadcrumb title="Candidate First Information System" />
+    <x-admin.breadcrumb title="Candidate First Information System" isBack="{{ true }}" />
 
     @if ($errors->any())
         <div class="col-lg-12 pb-4 px-2">

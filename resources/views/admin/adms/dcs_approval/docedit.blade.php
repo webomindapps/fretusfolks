@@ -1,5 +1,5 @@
 <x-applayout>
-    <x-admin.breadcrumb title="Document Rejection" />
+    <x-admin.breadcrumb title="Document Rejection" isBack="{{ true }}" />
     <style>
         .btn-custom {
             background-color: #007bff;

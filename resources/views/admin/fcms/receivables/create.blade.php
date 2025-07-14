@@ -1,5 +1,5 @@
 <x-applayout>
-    <x-admin.breadcrumb title="New Receipts Details" />
+    <x-admin.breadcrumb title="New Receipts Details" isBack="{{ true }}" />
     @if ($errors->any())
         <div class="col-lg-12 pb-4 px-2">
             <div class="alert alert-danger">

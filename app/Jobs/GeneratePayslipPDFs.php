@@ -16,6 +16,8 @@ class GeneratePayslipPDFs implements ShouldQueue, ShouldBeUnique
     use Dispatchable, InteractsWithQueue, SerializesModels, Batchable;
 
     public $payslip;
+    public $tries = 3;
+    public $backoff = 10;
 
     public function __construct($payslip)
     {
@@ -27,24 +29,29 @@ class GeneratePayslipPDFs implements ShouldQueue, ShouldBeUnique
      */
     public function handle(): void
     {
-        $data = [
-            'payslip' => $this->payslip,
-        ];
-        $payslip = $this->payslip;
-        $month = DateTime::createFromFormat('!m', $this->payslip['month'])->format('F');
-        $pdf = PDF::setOptions([
-            'isHtml5ParserEnabled' => true,
-            'isRemoteEnabled' => true,
-            'chroot' => public_path()
-        ])->loadView('admin.adms.payslip.formate', $data);
-        $tempPath = storage_path('app/temp/');
-        $fileName = 'Payslip_' . $this->payslip['emp_id'] . '-' . $this->payslip['emp_name'] . '-' . $month . '-' . $this->payslip['year'] . '.pdf';
-        $filePath = $tempPath . $fileName;
-
-        // Save the PDF
-        file_put_contents($filePath, $pdf->output());
-        $payslip->payslips_letter_path = $fileName;
-        $payslip->save();
-        \Log::info("Payslip created: {$filePath}");
+        try {
+            $data = [
+                'payslip' => $this->payslip,
+            ];
+            $payslip = $this->payslip;
+            $month = DateTime::createFromFormat('!m', $this->payslip['month'])->format('F');
+            $pdf = PDF::setOptions([
+                'isHtml5ParserEnabled' => true,
+                'isRemoteEnabled' => true,
+                'chroot' => public_path()
+            ])->loadView('admin.adms.payslip.formate', $data);
+            $tempPath = storage_path('app/temp/');
+            $fileName = 'Payslip_' . $this->payslip['emp_id'] . '-' . $this->payslip['emp_name'] . '-' . $month . '-' . $this->payslip['year'] . '.pdf';
+            $filePath = $tempPath . $fileName;
+    
+            // Save the PDF
+            file_put_contents($filePath, $pdf->output());
+            $payslip->payslips_letter_path = $fileName;
+            $payslip->save();
+            \Log::info("Payslip created: {$filePath}");
+        } catch (\Exception $e) {
+            \Log::error('Payslip generation failed: ' . $e->getMessage());
+            throw $e; // ensure job still fails so Laravel retries it
+        }
     }
 }

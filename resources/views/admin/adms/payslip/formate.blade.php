@@ -4,10 +4,52 @@
 <head>
     <meta http-equiv="Content-type" content="text/html; charset=utf-8">
     <meta content="telephone=no" name="format-detection">
-
+    @php
+        $monthName = '';
+        switch ($payslip['month']) {
+            case 1:
+                $monthName = 'January';
+                break;
+            case 2:
+                $monthName = 'February';
+                break;
+            case 3:
+                $monthName = 'March';
+                break;
+            case 4:
+                $monthName = 'April';
+                break;
+            case 5:
+                $monthName = 'May';
+                break;
+            case 6:
+                $monthName = 'June';
+                break;
+            case 7:
+                $monthName = 'July';
+                break;
+            case 8:
+                $monthName = 'August';
+                break;
+            case 9:
+                $monthName = 'September';
+                break;
+            case 10:
+                $monthName = 'October';
+                break;
+            case 11:
+                $monthName = 'November';
+                break;
+            case 12:
+                $monthName = 'December';
+                break;
+            default:
+                $monthName = '';
+                break;
+        }
+    @endphp
     <title> Payslip - {{ $payslip['emp_name'] ?? '' }} - {{ $payslip['emp_id'] ?? '' }}
-        - {{ isset($payslip['month']) ? \Carbon\Carbon::create()->month((int) $payslip['month'])->format('F') : '' }}
-        - {{ $payslip['year'] ?? '' }}
+        - {{ $monthName }} - {{ $payslip['year'] ?? '' }}
     </title>
 
     <!-- Bootstrap CSS -->
@@ -166,9 +208,7 @@
                     <div class="payslip-header">
                         <div class="logo">
                             <img src="{{ public_path('admin/images/main_logo.png') }}" alt="Logo" />
-                            <h5 style="float:right;">Payslip -
-                                {{ isset($payslip['month']) ? \Carbon\Carbon::create()->month((int) $payslip['month'])->format('F') : '' }}
-                                -
+                            <h5 style="float:right;">Payslip - {{ $monthName }} -
                                 {{ $payslip['year'] ?? '' }}
                             </h5>
 

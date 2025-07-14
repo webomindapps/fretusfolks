@@ -1,4 +1,5 @@
 <x-applayout>
+     <x-admin.breadcrumb title="{{ false }}" isBack="{{ true }}" />
     <style>
         .custom-card {
             border-radius: 8px;

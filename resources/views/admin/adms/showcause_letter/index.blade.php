@@ -22,7 +22,7 @@
         <div class="col-lg-12">
             @php
                 $columns = [
-                    ['label' => 'Id', 'column' => 'id', 'sort' => true],
+                    ['label' => 'SL No', 'column' => 'id', 'sort' => true],
                     ['label' => 'Emp Id', 'column' => 'emp_id', 'sort' => true],
                     ['label' => 'Client Id', 'column' => 'client_emp_id', 'sort' => true],
                     ['label' => 'Client Name', 'column' => 'entity_name', 'sort' => true],
@@ -40,7 +40,7 @@
                             <input type="checkbox" name="selected_items[]" class="single-item-check"
                                 value="{{ $item->id }}">
                         </td> --}}
-                        <td>{{ $item->id }}</td>
+                        <td>{{ $key + 1 }}</td>
                         <td>{{ $item->emp_id }}</td>
                         <td>{{ $item->showcauseletter ? $item->showcauseletter->client_emp_id : 'N/A' }}</td>
                         <td>{{ $item->showcauseletter ? $item->showcauseletter->entity_name : 'N/A' }}</td>
