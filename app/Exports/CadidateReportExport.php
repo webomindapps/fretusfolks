@@ -93,6 +93,7 @@ class CadidateReportExport implements FromCollection, WithHeadings
                 'Employer ESIC' => $candidate->employer_esic,
                 'Mediclaim' => $candidate->mediclaim,
                 'CTC' => $candidate->ctc,
+                'Status' => $candidate->status == 1 ? 'Active' : 'In-Active',
 
 
                 'Aadhar Doc' => $documentPaths['aadhar_path'] ?? $candidate->aadhar_path ?? '',

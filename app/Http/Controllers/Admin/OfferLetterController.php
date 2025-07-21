@@ -26,7 +26,7 @@ class OfferLetterController extends Controller
 
     public function index()
     {
-        $searchColumns = ['id', 'emp_name', 'date', 'phone1', 'email'];
+        $searchColumns = ['id','employee_id', 'emp_name','entity_name', 'date', 'phone1', 'email', 'employee.client_emp_id'];
         $search = request()->search;
         $from_date = request()->from_date;
         $to_date = request()->to_date;
@@ -43,10 +43,19 @@ class OfferLetterController extends Controller
         if ($search != '') {
             $query->where(function ($q) use ($search, $searchColumns) {
                 foreach ($searchColumns as $key => $value) {
-                    $key == 0 ? $q->where($value, 'LIKE', '%' . $search . '%') : $q->orWhere($value, 'LIKE', '%' . $search . '%');
+                    if ($value === 'employee.client_emp_id') {
+                        $q->orWhereHas('employee', function ($subQuery) use ($search) {
+                            $subQuery->where('client_emp_id', 'LIKE', '%' . $search . '%');
+                        });
+                    } else {
+                        $key == 0
+                            ? $q->where($value, 'LIKE', '%' . $search . '%')
+                            : $q->orWhere($value, 'LIKE', '%' . $search . '%');
+                    }
                 }
             });
         }
+
 
         if ($order == '') {
             $query->orderByDesc('id');
@@ -138,6 +147,7 @@ class OfferLetterController extends Controller
             'take_home' => 'nullable|numeric',
             'employer_pf' => 'nullable|numeric',
             'employer_esic' => 'nullable|numeric',
+            'employer_lwf' => 'nullable|numeric',
             'mediclaim' => 'nullable|numeric',
             'ctc' => 'nullable|numeric',
             'leave_wage' => 'nullable|numeric',

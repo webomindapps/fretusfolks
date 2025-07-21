@@ -8,7 +8,6 @@
     <style>
         @page {
             margin: 200px 55px 120px 55px;
-            /* top increased to make space for header */
         }
 
         .cash {
@@ -37,25 +36,50 @@
         }
 
         .table1 td:nth-child(2),
-        td:nth-child(3) {
+        .table1 td:nth-child(3) {
             text-align: right;
-
         }
 
         .table1 td,
         .table1 th {
-            padding: 3px 3px 3px 3px;
+            padding: 3px;
         }
 
         .table1 td {
             font-size: 12px;
+        }
+
+        h1 {
+            font-size: 14px;
+            text-align: center;
+            text-decoration: underline;
+            margin-top: 10px;
+            margin-bottom: 15px;
+        }
+
+        p,
+        li {
+            font-size: 12px;
+            line-height: 1.5;
+            text-align: justify;
+        }
+
+        .signature-table td {
+            vertical-align: top;
+            padding: 10px;
+        }
+
+        .seal {
+            width: 100px;
+            margin-top: 10px;
         }
     </style>
 </head>
 
 <body>
     <x-letter-head />
-    <div style="margin:0px 35">
+    <div style="margin:0px 35px">
+
         <h1 style="font-size:18px;text-align:center;text-decoration:underline;margin-top:20px">Deputation Letter</h1>
 
         <p style="font-size:12px;line-height:1.5;text-align:justify;">
@@ -76,7 +100,7 @@
             <span style="">
                 We are glad to inform you that you have been deputed to <b>{{ $offerLetter->location }}</b>
                 with
-                <b>{{ $offerLetter->entity_name }}</b>(herein after referred as ‘Udaan), with effect from
+                <b>{{ $offerLetter->entity_name }}</b>, with effect from
                 <b>{{ \Carbon\Carbon::parse($offerLetter->joining_date)->format('d-m-Y') }}</b>.
             </span>
         </p>
@@ -104,111 +128,93 @@
 
             </span>
         </p>
-        <table width="100%" border="0">
+        <table width="100%" border="0" cellspacing="0" cellpadding="0">
             <tbody>
                 <tr>
-                    <td colspan="3" style="font-size:14px;text-align:left;">
-                        <p style="line-height:1.8;">
-                            <b>Fretus Folks India Pvt Ltd.</b> <br><br>
-                        </p><img src="{{ public_path('admin/images/seal.png') }}" style="" width="100"><br>
-                        <p>
-                            <b>&nbsp;&nbsp;&nbsp;Authorized Signatory</b> <br>
+                    <!-- Left Side: Company Seal and Signatory -->
+                    <td width="60%" style="font-size:14px; text-align:left; vertical-align:top; padding-right:20px;">
+                        <p style="line-height:1.8; margin: 0;">
+                            <b>Fretus Folks India Pvt Ltd.</b>
+                        </p>
+                        <br>
+                        <img src="{{ public_path('admin/images/seal.png') }}" width="100" alt="Seal"><br><br>
+                        <p style="margin: 0;">
+                            <b>Authorized Signatory</b>
                         </p>
                     </td>
-                    <td style="font-size:14px;text-align:right;">
-                        <p style="line-height:1.8;">
-                            <br><br><br><br>
-                            <b>I accepted
-                                :&nbsp;</b><br><br><br><br>
-                            <b>(Signature of an Employee) </b> <br>
+
+                    <!-- Right Side: Employee Acceptance -->
+                    <td width="40%" style="font-size:14px; text-align:right; vertical-align:top; padding-top:80px;">
+                        <p style="line-height:1.8; margin: 0;">
+                            <b>I accepted:</b>
+                        </p>
+                        <br><br><br>
+                        <p style="margin: 0;">
+                            <b>(Signature of the Employee)</b>
                         </p>
                     </td>
+
                 </tr>
             </tbody>
         </table>
-        <pagebreak />
-        <h1 style="font-size:14px;text-align:center;text-decoration:underline;margin-top:20px">Offer cum Appointment
+
+        <div style="page-break-after: always;"></div>
+
+        <h1 style="font-size:16px;text-align:center;text-decoration:underline;margin-top:10px;">Offer cum Appointment
             Letter</h1>
 
-        <p style="font-size:12px;line-height:1.5;text-align:justify;">
-            <span style="">
-                Further to your application and subsequent discussion for employment with us, we are pleased to appoint
-                you as <b>{{ $offerLetter->designation }}</b>,
-                <b>{{ $offerLetter->department }}</b> at <b>{{ $offerLetter->location }}</b>
-                effective
-                <b>{{ \Carbon\Carbon::parse($offerLetter->joining_date)->format('d-m-Y') }}</b> on the
-                following terms & conditions
+        <p style="font-size:13px;line-height:1.4;text-align:justify;">
+            Further to your application and subsequent discussion for employment with us, we are pleased to appoint you
+            as <br>
+            <b>{{ $offerLetter->designation }}</b>, <b>{{ $offerLetter->department }}</b> at
+            <b>{{ $offerLetter->location }}</b>
+            effective <b>{{ \Carbon\Carbon::parse($offerLetter->joining_date)->format('d-m-Y') }}</b> on the following
+            terms & conditions:
         </p>
 
-        <ol type="1">
+        <ol type="1" style="padding-left: 15px;">
 
             <li>
-                <p style="font-size:12px;line-height:1.5;text-align:justify;">
-                    <span style="">
-                        <b>Posting</b><br /><br />
-                        We would like you to depute you to the office of the Client on immediate basis and your initial
-                        posting will be at <b>{{ $offerLetter->location }}</b>
+                <p style="font-size:13px;line-height:1.4;text-align:justify;">
+                    <b>Posting</b><br>
+                    You will be deputed to the Client's office on immediate basis. Your initial posting will be at
+                    <br><b>{{ $offerLetter->location }}</b>.
+                </p>
+            </li>
 
+            <li>
+                <p style="font-size:13px;line-height:1.4;text-align:justify;">
+                    <b>Probation</b><br>
+                    You will be under probation for 3 months from the effective date of appointment. Confirmation will
+                    be based on satisfactory performance. The probation may be extended by another 3 months at the
+                    Client’s discretion. Unless otherwise communicated in writing, your employment shall be confirmed
+                    post the probation period. During probation, either party may terminate the agreement with 7 days’
+                    prior written notice or by paying the gross salary in lieu of the notice period.
                 </p>
             </li>
+
             <li>
-                <p style="font-size:12px;line-height:1.5;text-align:justify;">
-                    <span style="">
-                        <b>Probation</b><br /><br />
-                        You will be under probation for a period of 3 months from the effective date of your appointment
-                        and shall be confirmed based on satisfactory performance during the said period.
-                </p>
-                <p style="font-size:12px;line-height:1.5;text-align:justify;">
-                    <span style="">
-                        Your probation may be extended for another period of 3 months on sole discretion of the Client.
-                        Unless communicated otherwise in writing by the Client, your employment shall stand confirmed on
-                        completion of the probation period.
-                </p>
-                <p style="font-size:12px;line-height:1.5;text-align:justify;">
-                    <span style="">
-                        During the probation period, anyone can terminate the employment agreement by giving 7 days’
-                        prior written notice or by paying monthly gross salary in lieu of unnerved notice period.
+                <p style="font-size:13px;line-height:1.4;text-align:justify;">
+                    <b>Duty & Working Days</b><br>
+                    You are required to work from Monday to Saturday. Leaves can be availed as per the Company policy.
+                    You must devote full attention to your duties and comply with instructions from the Client and
+                    reporting manager. Flexibility in duties and role is expected. You may also be transferred/deputed
+                    to another client, section, subsidiary, or associated firm with prior written notice.
                 </p>
             </li>
+
             <li>
-                <p style="font-size:12px;line-height:1.5;text-align:justify;">
-                    <span style="">
-                        <b>Duty & Working days</b><br /><br />
-                        You shall be required to work from Monday to Saturday. Leaves can be taken as per the Company
-                        policy.
-                </p>
-                <p style="font-size:12px;line-height:1.5;text-align:justify;">
-                    <span style="">
-                        You shall devote your time, attention and ability towards Client and shall perform such duties
-                        and exercise assigned to you from time to time by the Client. You shall also comply with
-                        instructions, directions, and rules as laid by the Client and your reporting manager at work
-                        location.
-                </p>
-                <p style="font-size:12px;line-height:1.5;text-align:justify;">
-                    <span style="">
-                        You are required to be flexible and to undertake all duties associated with your role
-                        diligently. You are also expected to undertake reasonable alternative duties in addition to your
-                        normal duties that may be associated with your role and as may be assigned to you by the Client,
-                        from time to time. The Client’s decision in this regard would stand final and abiding.
-                </p>
-                <p style="font-size:12px;line-height:1.5;text-align:justify;">
-                    <span style="">
-                        Your Services may be transferred/ deputed either part time or full time to any other client,
-                        section, and subsidiary or associated firm by giving you a prior written notice.
+                <p style="font-size:13px;line-height:1.4;text-align:justify;">
+                    <b>Compensation</b><br>
+                    Your salary breakup is detailed in the attached Annexure. You authorize <b>Fretus Folks India Pvt
+                        Ltd</b> to make all payments, including reimbursements, either by bank transfer, DD, or Cheque.
                 </p>
             </li>
+
+
+
             <li>
-                <p style="font-size:12px;line-height:1.5;text-align:justify;">
-                    <span style="">
-                        <b>Compensation</b><br /><br />
-                        Details of your salary breakup will be as per the Annexure attached herein. You hereby authorize
-                        <b>Fretus Folks India Pvt Ltd</b> to make all salary payments required to be made to you by
-                        Fretus Folks India Pvt Ltd including all reimbursements either by way of directly crediting the
-                        amounts to your bank account or DD / Cheque.
-                </p>
-            </li>
-            <li>
-                <p style="font-size:12px;line-height:1.5;text-align:justify;">
+                <p style="font-size:13px;line-height:1.4;text-align:justify;">
                     <span style="">
                         <b>Period of services and Notice period</b><br /><br />
                         During the period of your employment with us for the first three months, your employment shall
@@ -216,7 +222,7 @@
                         On successful completion of three months’ service your employment shall be terminated by either
                         you or by us, after giving fifteen days’ notice or compensation in lieu thereof.
                 </p>
-                <p style="font-size:12px;line-height:1.5;text-align:justify;">
+                <p style="font-size:13px;line-height:1.4;text-align:justify;">
                     <span style="">
                         Were serves the right to terminate your employment on grounds of performance or misconduct not
                         being up to expected standards without any notice period or pay. Should you be placed on
@@ -225,19 +231,19 @@
                         we decide that your performance during PIP period was not satisfactory we shall terminate your
                         employment without giving any further notice or compensation.
                 </p>
-                <p style="font-size:12px;line-height:1.5;text-align:justify;">
+                <p style="font-size:13px;line-height:1.4;text-align:justify;">
                     <span style="">
                         In case of notice pay recovery, the same will be recovered if you leave the client before
                         completion of the notice period.
                 </p>
-                <p style="font-size:12px;line-height:1.5;text-align:justify;">
+                <p style="font-size:13px;line-height:1.4;text-align:justify;">
                     <span style="">
                         You shall retire on your 60th birthday or the day immediately preceding such date, if your
                         birthday does not fall on a working day.
                 </p>
             </li>
             <li>
-                <p style="font-size:12px;line-height:1.5;text-align:justify;">
+                <p style="font-size:13px;line-height:1.4;text-align:justify;">
                     <span style="">
                         <b>Recovery of Assets</b><br /><br />
                         You shall be provided with an IT Asset or IT login credentials for your allotted work at the
@@ -248,7 +254,7 @@
                         settlement amount falls short of the amount to be recovered, you shall remain solely liable to
                         pay the balance amount pending to be recovered.
                 </p>
-                <p style="font-size:12px;line-height:1.5;text-align:justify;">
+                <p style="font-size:13px;line-height:1.4;text-align:justify;">
                     <span style="">
                         You shall remain solely liable to pay any cash or cash equivalent which may have been handed
                         over to you by the Client at any time during your deputation with the Client or after the
@@ -256,7 +262,7 @@
                 </p>
             </li>
             <li>
-                <p style="font-size:12px;line-height:1.5;text-align:justify;">
+                <p style="font-size:13px;line-height:1.4;text-align:justify;">
                     <span style="">
                         <b>Service rules, Discipline and Code of conduct</b><br /><br />
                         During your employment with us, you will not associate yourself with such activities, as in the
@@ -270,12 +276,9 @@
                         discipline applicable to the employees of Client where you have been deputed.
                 </p>
             </li>
-        </ol>
-        <pagebreak />
 
-        <ol start="8">
             <li>
-                <p style="font-size:12px;line-height:1.5;text-align:justify;">
+                <p style="font-size:13px;line-height:1.4;text-align:justify;">
                     <span style="">
                         <b>Background verification and other obligations</b><br /><br />
                         Your engagement with us is contingent upon completion of a background verification, including
@@ -289,21 +292,22 @@
                         found not to be satisfactory to the Client is the Company’s & Client's sole discretion.
                 </p>
 
-                <p style="font-size:12px;line-height:1.5;text-align:justify;">
+                <p style="font-size:13px;line-height:1.4;text-align:justify;">
                     <span style="">
                         You agree and acknowledge that your personal details may be shared by us with the Client and any
                         third party that may engaged by the Client for the purposes of conducting your background
                         verification and you further consent to such disclosure by us in this regard.
                 </p>
 
-                <p style="font-size:12px;line-height:1.5;text-align:justify;">
+                <p style="font-size:13px;line-height:1.4;text-align:justify;">
                     <span style="">
                         If any time it should emerge that the details provided by you are false / incorrect, or if any
                         material or relevant information has been suppressed or concealed, this appointment will be
                         considered ineffective and would be liable to be terminated immediately without notice.
                 </p>
 
-                <p style="font-size:12px;line-height:1.5;text-align:justify;">
+
+                <p style="font-size:13px;line-height:1.4;text-align:justify;">
                     <span style="">
                         If you are at any time found to be guilty of misconduct, commit any breach of this Agreement, or
                         refuse or wilfully neglect to perform to the satisfaction of the Client or any of the associated
@@ -317,14 +321,14 @@
 
                 </p>
 
-                <p style="font-size:12px;line-height:1.5;text-align:justify;">
+                <p style="font-size:13px;line-height:1.4;text-align:justify;">
                     <span style="">
                         Nothing contained herein constitutes a guarantee of employment. Company may amend the provisions
                         of this agreement from time to time, provided that such amendments to the Agreement are in
                         accordance with the applicable law.
                 </p>
 
-                <p style="font-size:12px;line-height:1.5;text-align:justify;">
+                <p style="font-size:13px;line-height:1.4;text-align:justify;">
                     <span style="">
                         Please note that upon your acceptance of this offer, this appointment letter shall supersede all
                         prior, oral or written agreements, commitments, understanding or communications either formally
@@ -347,16 +351,16 @@
                 </tr>
             </tbody>
         </table>
-        <pagebreak />
-        <p style="font-size:12px;line-height:1.5;text-align:justify;">
+        <div style="page-break-after: always;"></div>
+        <p style="font-size:13px;line-height:1.5;text-align:justify;">
             <span style="">
-                <b>DECLERATION</b><br /><br />
+                <b>DECLERATION</b><br />
                 I have been explained/read/understood/the above terms & conditions and agree to abide by
-                them.<br /><br /><br />
-                Signature of employee<br /><br />
+                them.<br /><br />
+                Signature of employee<br />
                 Name of the employee<br />
                 {{ $offerLetter->emp_name }}<br />
-                {{ $offerLetter->ffi_emp_id }}
+                {{ $offerLetter->employee_id }}
 
         </p>
 
@@ -366,13 +370,13 @@
             style="border-collapse:collapse; width:80%;font-size: 10px;margin-left:auto;margin-right:auto;">
             <tbody>
                 <tr>
-                    <th style="font-size:12px;text-align:left;padding:7px;border-top: 1px solid #000;">
+                    <th style="font-size:13px;text-align:left;padding:7px;border-top: 1px solid #000;">
                         Particulars
                     </th>
-                    <th style="font-size:12px;text-align:left;padding:7px;width:30%;border-top: 1px solid #000;">
+                    <th style="font-size:13px;text-align:left;padding:7px;width:30%;border-top: 1px solid #000;">
                         Monthly (INR)
                     </th>
-                    <th style="font-size:12px;text-align:left;padding:7px;width:30%;border-top: 1px solid #000;">
+                    <th style="font-size:13px;text-align:left;padding:7px;width:30%;border-top: 1px solid #000;">
                         Annual (INR)
                     </th>
                 </tr>
@@ -411,13 +415,20 @@
                     <td>{{ $offerLetter->employer_esic }}</td>
                     <td>{{ $offerLetter->employer_esic * 12 }}</td>
                 </tr>
+                <tr>
+                    <td>Employer LAW</td>
+                    <td>{{ $offerLetter->employer_lwf }}</td>
+                    <td>{{ $offerLetter->employer_lwf * 12 }}</td>
+                </tr>
                 <tr class="gross" style="background: #ecbfbf;">
                     <td>Cost to Client</td>
                     <td>{{ $offerLetter->ctc }}</td>
                     <td>{{ $offerLetter->ctc * 12 }}</td>
                 </tr>
                 <tr class="gross" style="background: #ecbfbf;">
-                    <td colspan="3">Deduction</td>
+                    <td>Deduction</td>
+                    <td></td>
+                    <td></td>
                 </tr>
                 <tr>
                     <td>Employee PF</td>
@@ -429,35 +440,41 @@
                     <td>{{ $offerLetter->emp_esic }}</td>
                     <td>{{ $offerLetter->emp_esic * 12 }}</td>
                 </tr>
+                <tr>
+                    <td>Employee LAW</td>
+                    <td>{{ $offerLetter->lwf }}</td>
+                    <td>{{ $offerLetter->lwf * 12 }}</td>
+                </tr>
                 <tr class="gross" style="background: #ecbfbf;">
                     <td>Take-home</td>
                     <td>{{ $offerLetter->take_home }}</td>
                     <td>{{ $offerLetter->take_home * 12 }}</td>
                 </tr>
             </tbody>
-        </table><br>
+        </table>
         <p style="font-size:10px;line-height:1.5;text-align:justify;">
             <span style="">
-                <b><u>Note:</u></b><br />
+                <b style="font-size:14px;"><u>Note:</u></b>
                 <ul>
-                    <li style="font-size:12px;">Profession tax and LWF will be deducted as per the statutory laws
+                    <li style="font-size:13px;">Profession tax and LWF will be deducted as per the statutory laws
                         prevailing at the location of work.</li>
-                    <li style="font-size:12px;">Employers contribution to Provident Fund (maximum 12% on 1,80,000/- of
+                    <li style="font-size:13px;">Employers contribution to Provident Fund (maximum 13% on 1,80,000/- of
                         Basic Salary per annum).</li>
-                    <li style="font-size:12px;">Income tax liability arising out of these allowances, perquisites and
+                    <li style="font-size:13px;">Income tax liability arising out of these allowances, perquisites and
                         reimbursements will be borne by the employees.
                     </li>
-                    <li style="font-size:12px;">Gratuity is at 4.81% of your basic salary and its payable on
+                    <li style="font-size:13px;">Gratuity is at 4.81% of your basic salary and its payable on
                         separation, subject to completion of 4 years and eight months of service in the client location
                         with the prevailing acts.</li>
-                    <li style="font-size:10px;">Medical insurance, Group Personal Accidental, ESIC will be applicable
+                    <li style="font-size:13px;">Medical insurance, Group Personal Accidental, ESIC will be applicable
                         as per eligibility.</li>
-                    <li style="font-size:12px;">Incentives, Travel & Daily allowance and reimbursements will be
+                    <li style="font-size:13px;">Incentives, Travel & Daily allowance and reimbursements will be
                         applicable as per role and schemes prevailing from time to time as per policy.
                     </li>
                 </ul>
         </p>
     </div>
+
 </body>
 
 </html>

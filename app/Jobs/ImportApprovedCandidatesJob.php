@@ -84,7 +84,7 @@ class ImportApprovedCandidatesJob implements ShouldQueue
                 'official_mail_id' => $row['Official_Mail_ID'] ?? null,
                 'permanent_address' => $row['Permanent_Address'] ?? null,
                 'present_address' => $row['Present_Address'] ?? null,
-                'pan_no' => $row['Pan_No'] ?? null,
+                'pan_no' => $row['PAN_No'] ?? null,
                 'aadhar_no' => $row['Aadhar_No'] ?? null,
                 'driving_license_no' => $row['Driving_License_No'] ?? null,
                 'uan_no' => $row['UAN_No'] ?? null,
@@ -110,7 +110,7 @@ class ImportApprovedCandidatesJob implements ShouldQueue
                 'ctc' => $row['CTC'] ?? null,
                 'psd' => $row['Password'] ?? null,
                 'password' => isset($row['Password']) ? bcrypt($row['Password']) : null,
-                'dcs_approval' => match (strtolower(trim($row['Dcs_Approval']))) {
+                'dcs_approval' => match (strtolower(trim((string) $row['Dcs_Approval'] ?? ''))) {
                     'Approved' => 0,
                     'Pending' => 1,
                     'Rejected' => 2,

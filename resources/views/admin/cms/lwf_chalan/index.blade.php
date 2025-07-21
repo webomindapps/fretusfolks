@@ -36,7 +36,8 @@
                             $currentYear = now()->year;
                         @endphp
                         @foreach (range($currentYear, $currentYear - 6) as $year)
-                            <option value="{{ $year }}" {{ request()->year == $year ? 'selected' : '' }}>{{ $year }}</option>
+                            <option value="{{ $year }}" {{ request()->year == $year ? 'selected' : '' }}>
+                                {{ $year }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -82,6 +83,19 @@
                                             href="{{ route('admin.cms.esic.delete', $item) }}">
                                             <i class='bx bx-trash-alt'></i>
                                             Delete
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="{{ asset('storage/' . $item->path) }}"
+                                            target="_blank">
+                                            <i class='bx bx-show'></i> View
+                                        </a>
+                                    </li>
+
+                                    {{-- Download file --}}
+                                    <li>
+                                        <a class="dropdown-item" href="{{ asset('storage/' . $item->path) }}" download>
+                                            <i class='bx bx-download'></i> Download
                                         </a>
                                     </li>
                                 </ul>

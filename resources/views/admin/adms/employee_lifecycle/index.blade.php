@@ -96,6 +96,7 @@
                         <tr>
                             <th>Sl NO</th>
                             <th>Client Name</th>
+                            <th>Client ID</th>
                             <th>Employee ID</th>
                             <th>Name</th>
                             <th>Phone</th>
@@ -103,11 +104,14 @@
                             <th>Action</th>
                         </tr>
                     </thead>
+                   
                     <tbody>
                         @forelse ($results as $result)
                             <tr>
+                                 {{-- {{ dd($result) }} --}}
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $result->entity_name }}</td>
+                                <td>{{ $result->client_emp_id }}</td>
                                 <td>{{ $result->ffi_emp_id }}</td>
                                 <td>
                                     {{ trim("{$result->emp_name} {$result->middle_name} {$result->last_name}") ?: 'N/A' }}
@@ -207,4 +211,19 @@
             });
         </script>
     @endpush
+    <style>
+        .table-responsive {
+            max-height: 500px;
+            /* Adjust height as needed */
+            overflow-y: auto;
+        }
+
+        .table-responsive thead th {
+            position: sticky;
+            top: 0;
+            background-color: #fff;
+            /* Ensure background covers content below */
+            z-index: 10;
+        }
+    </style>
 </x-applayout>

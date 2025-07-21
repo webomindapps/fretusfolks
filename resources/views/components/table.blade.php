@@ -27,47 +27,47 @@
     </div>
     <div class="row custom_table">
         <div class="col-lg-12">
+            <div class="custom-table-scroll">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            @if (isset($checkAll) && $checkAll)
+                                <th>
+                                    <input type="checkbox" id="checkAll" class="checkALl">
+                                </th>
+                            @endif
 
-            <table class="table">
-                <thead style="position: sticky;top:0; z-index: 3;">
-                    <tr>
-                        @if (isset($checkAll) && $checkAll)
-                            <th>
-                                <input type="checkbox" id="checkAll" class="checkALl">
+                            <th colspan="{{ count($columns) }}" id="bulk-options" style="display: none;">
+                                <div class="row">
+                                    <div class="col-lg-3">
+                                        <select id="bulkOperation">
+                                            <option value="">Select</option>
+                                            <option value="1">Delete</option>
+                                            <option value="2">Status Change</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <select name="" id="bulkStatus" style="display: none;">
+                                            <option value="">Select</option>
+                                            <option value="1">Active</option>
+                                            <option value="0">Inactive</option>
+                                        </select>
+                                    </div>
+                                </div>
                             </th>
-                        @endif
 
-                        <th colspan="{{ count($columns) }}" id="bulk-options" style="display: none;">
-                            <div class="row">
-                                <div class="col-lg-3">
-                                    <select id="bulkOperation">
-                                        <option value="">Select</option>
-                                        <option value="1">Delete</option>
-                                        <option value="2">Status Change</option>
-                                    </select>
-                                </div>
-                                <div class="col-lg-3">
-                                    <select name="" id="bulkStatus" style="display: none;">
-                                        <option value="">Select</option>
-                                        <option value="1">Active</option>
-                                        <option value="0">Inactive</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </th>
-
-                        @foreach ($columns as $column)
-                            <th class="sorting" data-sort="{{ $column['sort'] }}" data-column="{{ $column['column'] }}"
-                                scope="col">
-                                {{ $column['label'] }}</th>
-                        @endforeach
-                    </tr>
-                </thead>
-                <tbody>
-                    {{ $slot }}
-                </tbody>
-            </table>
-
+                            @foreach ($columns as $column)
+                                <th class="sorting" data-sort="{{ $column['sort'] }}"
+                                    data-column="{{ $column['column'] }}" scope="col">
+                                    {{ $column['label'] }}</th>
+                            @endforeach
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{ $slot }}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
     <div class="row text-center">
@@ -77,3 +77,23 @@
     </div>
 
 </div>
+<style>
+    .custom-table-scroll {
+        max-height: 500px;
+        /* Set desired height */
+        overflow-y: auto;
+    }
+
+    .custom-table-scroll thead th {
+        position: sticky;
+        top: 0;
+        background-color: #fff;
+        z-index: 5;
+    }
+
+    /* Optional: If you want the checkbox/bulk row to stay fixed too */
+    .custom-table-scroll thead th[colspan] {
+        background-color: #f9f9f9;
+        z-index: 6;
+    }
+</style>

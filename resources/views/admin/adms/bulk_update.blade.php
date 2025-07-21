@@ -30,11 +30,11 @@
         <div class="col-lg-12">
             @php
                 $columns = [
-                    ['label' => 'Id', 'column' => 'id', 'sort' => true],
+                    ['label' => 'SL No', 'column' => 'id', 'sort' => true],
                     ['label' => 'Client Name', 'column' => 'client_id', 'sort' => true],
                     ['label' => 'Employee ID', 'column' => 'ffi_emp_id', 'sort' => true],
                     ['label' => 'Employee Name', 'column' => 'emp_name', 'sort' => true],
-                    ['label' => 'Contract End Daate', 'column' => 'contract_date', 'sort' => true],
+                    ['label' => 'Contract End Date', 'column' => 'contract_date', 'sort' => true],
                     ['label' => 'Date OF leave', 'column' => 'employee_last_date', 'sort' => true],
                     // ['label' => 'Approval Status', 'column' => 'dcs_approval', 'sort' => true],
                     // ['label' => 'Status', 'column' => 'data_status', 'sort' => true],
@@ -71,7 +71,7 @@
                             <input type="checkbox" name="selected_items[]" class="single-item-check"
                                 value="{{ $item->id }}">
                         </td> --}}
-                        <td>{{ $item->id }}</td>
+                        <td>{{ $key + 1 }}</td>
                         <td>
                             {{ $item->client?->client_name }}
                         </td>

@@ -1,62 +1,24 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+    <meta content="telephone=no" name="format-detection" />
     <title>Fretus Folks</title>
     <style>
         @page {
             margin: 200px 55px 120px 55px;
-            /* top increased to make space for header */
         }
 
-        p {
-            text-align: justify;
-        }
-
-        header {
-            position: fixed;
-            top: -100px;
-        }
-
-        footer {
-            position: fixed;
-            bottom: -40px;
-        }
-
-        .table1 {
-            border-collapse: collapse;
-            width: 80%;
-            margin-left: auto;
-            margin-right: auto;
-            font-size: 11px;
-        }
-
-        .table1 th,
-        .table1 td {
-            border: 1px solid #000;
-            padding: 6px 8px;
+        .cash {
             text-align: right;
         }
 
-        .table1 th:first-child,
-        .table1 td:first-child {
-            text-align: left;
+        li {
+            line-height: 1.5;
         }
 
-        .table1 .highlight-red {
-            background-color: #ffd6d6;
-            font-weight: bold;
-        }
-
-        .table1 .highlight-green {
-            background-color: #c6f1d6;
-            font-weight: bold;
-        }
-
-        .table1 .highlight-pink {
-            background-color: #ffe6e6;
+        b {
             font-weight: bold;
         }
 
@@ -73,9 +35,64 @@
             bottom: -60px;
         }
 
-        td:nth-child(2),
-        td:nth-child(3) {
+        .table1 {
+            border-collapse: collapse;
+            width: 80%;
+            margin-left: auto;
+            margin-right: auto;
+            font-size: 12px;
+        }
+
+        .table1 th,
+        .table1 td {
+            padding: 8px;
+            border: 1px solid #000;
+        }
+
+        .table1 td:first-child {
+            text-align: left;
+        }
+
+        .table1 td:nth-child(2),
+        .table1 td:nth-child(3),
+        .table1 th:nth-child(2),
+        .table1 th:nth-child(3) {
             text-align: right;
+        }
+
+        h1 {
+            font-size: 15px;
+            text-align: center;
+            text-decoration: underline;
+            margin-bottom: 15px;
+        }
+
+        p,
+        li {
+            font-size: 12px;
+            line-height: 1.5;
+            text-align: justify;
+        }
+
+        .signature-table td {
+            vertical-align: top;
+            padding: 10px;
+        }
+
+        .seal {
+            width: 100px;
+            margin-top: 10px;
+        }
+
+        .header-row {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .header-row .left,
+        .header-row .right {
+            font-size: 14px;
         }
     </style>
 </head>
@@ -102,17 +119,13 @@
             </tbody>
         </table>
     </div>
-    <h4 style="text-align: center;text-decoration: underline;margin-bottom:30px;">OFFER LETTER</h4>
+    <h4 style="text-align: center;text-decoration: underline;margin-bottom:30px;">Offer cum Appointment Letter</h4>
     <div style="margin:0 35px">
         <p style="line-height:1.8;font-size:13px;">
             <span><b>To,</b></span> <br>
             <span><b>/Mrs. /Ms. : {{ $offerLetter->emp_name }}</b></span> <br>
             <span> <b>
-                    {{ $offerLetter->employee?->gender == 'Male'
-                        ? 'S/o'
-                        : ($offerLetter->employee?->gender == 'Female'
-                            ? 'D/o'
-                            : 'S/o/ D/o') }}
+                    {{ $offerLetter->employee->gender == 'Male' ? 'S/o' : 'D/o' }}
                     {{ $offerLetter->father_name }}
                 </b> </span><br>
             <span><b>Location : {{ $offerLetter->location }}</b></span> <br>
@@ -135,7 +148,8 @@
 
         <p style="font-size:12px;line-height:1.8;">
             <span style="margin-left:0%;">
-                You will with effect from be deputed by <b>Fretus Folks India Pvt Ltd.</b> to work at client's office /
+                You will with effect from be deputed by <b>Fretus Folks India Pvt Ltd.</b> to work at client's
+                office /
                 premises at any of their locations.
             </span>
         </p>
@@ -162,12 +176,16 @@
         </p>
         <p style="font-size:12px;line-height:1.8;">
             <span>
-                <b style="text-decoration: underline;">EXTENSION: </b> Unless otherwise notified to you in writing this
+                <b style="text-decoration: underline;">EXTENSION: </b> Unless otherwise notified to you in writing
+                this
                 contract of employment would be valid till from the date of your joining <b>Fretus Folks India Pvt
                     Ltd.</b>
-                This contract may be considered for an extension depending on the client and <b>Fretus Folks India Pvt
-                    Ltd.</b> requirements. The extension of contract period would be considered on fresh terms as agreed
-                between you and Fretus <b>Fretus Folks India Pvt Ltd.</b> through a separate mutually executed contract
+                This contract may be considered for an extension depending on the client and <b>Fretus Folks India
+                    Pvt
+                    Ltd.</b> requirements. The extension of contract period would be considered on fresh terms as
+                agreed
+                between you and Fretus <b>Fretus Folks India Pvt Ltd.</b> through a separate mutually executed
+                contract
                 of employment. <b>Fretus Folks India Pvt Ltd.</b> shall inform you in writing of the extension
                 requirements, if any.
 
@@ -178,35 +196,44 @@
             <span>
                 <b style="text-decoration: underline;">WORKING HOURS: </b> You will follow the working hours of the
                 client where you will be deputed. You may have to work on shifts, based on the client's requirement.
-                Your attendance will be maintained by the Reporting Officer of the client, who shall at the end of the
-                month share the attendance with the contact person at <b>Fretus Folks India Pvt Ltd.</b> for pay-roll
+                Your attendance will be maintained by the Reporting Officer of the client, who shall at the end of
+                the
+                month share the attendance with the contact person at <b>Fretus Folks India Pvt Ltd.</b> for
+                pay-roll
                 processing.
             </span>
         </p>
-        <pagebreak />
+        <div style="page-break-after: always;"></div>
         <p style="font-size:12px;line-height:1.8;">
             <span>
-                <b style="text-decoration: underline;">TERMINATION & SUSPENSION: </b> At the time of termination of the
+                <b style="text-decoration: underline;">TERMINATION & SUSPENSION: </b> At the time of termination of
+                the
                 employment either due to termination by either you or the Company or upon the lapse of the term of
-                employment, if there are any dues owing from you to the Company, the same may be adjusted against any
-                money due to you by the Company on account of salary including bonus or any other payment owned to you
+                employment, if there are any dues owing from you to the Company, the same may be adjusted against
+                any
+                money due to you by the Company on account of salary including bonus or any other payment owned to
+                you
                 under the terms of your employment.
             </span>
         </p>
         <p style="font-size:12px;line-height:1.8;">
             <span>
                 During the tenure of your Contract, any deviation or misconduct in any form that were noticed by the
-                company or if there are any breach of internal policies or any regulation that was mutually agreed to be
-                complied with, <b>Fretus Folks India Pvt Ltd.</b> or principal employer has the rights and authority to
+                company or if there are any breach of internal policies or any regulation that was mutually agreed
+                to be
+                complied with, <b>Fretus Folks India Pvt Ltd.</b> or principal employer has the rights and authority
+                to
                 suspend your services until you are notified to resume work in writing. <b>Fretus Folks India Pvt
-                    Ltd.</b> reserves all such right to withheld full or a portion of your salary during such suspension
+                    Ltd.</b> reserves all such right to withheld full or a portion of your salary during such
+                suspension
                 period.
             </span>
         </p>
 
         <p style="font-size:12px;line-height:1.8;">
             <span>
-                <b style="text-decoration: underline;">NOTICE PERIOD: </b> In the eventuality if you wish to separate
+                <b style="text-decoration: underline;">NOTICE PERIOD: </b> In the eventuality if you wish to
+                separate
                 from the organization you will need to serve 7day's notice in writing or 7 day's basic pay in lieu
                 thereof. The Contract can be terminated at the discretion of , <b>Fretus Folks India Pvt Ltd.</b>
                 subject to 7 day's noticeor basic pay in lieu thereof. However due to breach of code of conduct,
@@ -219,11 +246,14 @@
         <p style="font-size:12px;line-height:1.8;">
             <span>
                 <b style="text-decoration: underline;">INDEMNITY: </b> You shall be responsible for protecting any
-                property of the Client entrusted to you in the due discharge of your duties and you shall indemnify the
+                property of the Client entrusted to you in the due discharge of your duties and you shall indemnify
+                the
                 Client if there is a loss of any kind to the said property.To the fullest extent permitted by the
                 Applicable Law, you shall hold the Client, its agents, employees and assigns, free and harmless and
-                indemnify and defend Client from and against any and all suits, actions, proceedings, claims, demands,
-                liabilities, costs and charges, legal expenses, damages or penalties of any nature actually or allegedly
+                indemnify and defend Client from and against any and all suits, actions, proceedings, claims,
+                demands,
+                liabilities, costs and charges, legal expenses, damages or penalties of any nature actually or
+                allegedly
                 arising out of or related to your services at the Location or to any alleged actions or omissions by
                 you, including, but not limited to, those resulting from, or claimed to result from injury, death or
                 damage to you.
@@ -233,28 +263,37 @@
         <p style="font-size:12px;line-height:1.8;">
             <span>
                 <b style="text-decoration: underline;">TRANSFER: </b> You are liable to be transferred to any other
-                department of the Client or <b>Fretus Folks India Pvt Ltd.</b> or at any other branches across India in
-                which the client or <b>Fretus Folks India Pvt Ltd</b> or any of the employer subsidiary company has any
-                kind of interest. That also upon such transfer, the present terms and conditions shall be applicable, to
+                department of the Client or <b>Fretus Folks India Pvt Ltd.</b> or at any other branches across India
+                in
+                which the client or <b>Fretus Folks India Pvt Ltd</b> or any of the employer subsidiary company has
+                any
+                kind of interest. That also upon such transfer, the present terms and conditions shall be
+                applicable, to
                 such a post or at the place of transfer.
             </span>
         </p>
 
         <p style="font-size:12px;line-height:1.8;">
             <span>
-                <b style="text-decoration: underline;">CODE OF CONDUCT: </b> You shall not engage in any act subversive
-                of discipline in the course of your duty/ies for the Client either within the Client's organization or
+                <b style="text-decoration: underline;">CODE OF CONDUCT: </b> You shall not engage in any act
+                subversive
+                of discipline in the course of your duty/ies for the Client either within the Client's organization
+                or
                 outside it, and if you were at any time found indulging in such act/s, the Company shall reserve the
                 right to initiate disciplinary action as is deemed fit against you.
             </span>
         </p>
-        <pagebreak />
+        <div style="page-break-after: always;"></div>
         <p style="font-size:12px;line-height:1.8;">
             <span>
-                <b style="text-decoration: underline;">ADDRESS FOR COMMUNICATION: </b> The address of communication for
-                the purpose of service of notice and other official communication to the company shall be the registered
-                address of the company which is, <b>Fretus Folks India Pvt Ltd. No. M 20, 3rd Floor, UKS Heights, Sector
-                    XI, Jeevan Bhima Nagar,Bangalore-560075.</b> The address of communication and service of notice and
+                <b style="text-decoration: underline;">ADDRESS FOR COMMUNICATION: </b> The address of communication
+                for
+                the purpose of service of notice and other official communication to the company shall be the
+                registered
+                address of the company which is, <b>Fretus Folks India Pvt Ltd. No. M 20, 3rd Floor, UKS Heights,
+                    Sector
+                    XI, Jeevan Bhima Nagar,Bangalore-560075.</b> The address of communication and service of notice
+                and
                 other official communication is the address set out as above and your present residential address
                 namely. In the event there is a change in your address, you shall inform the same in writing to the
                 Management and that shall be the address last furnished by you, shall be deemed to be sufficient for
@@ -265,9 +304,11 @@
 
         <p style="font-size:12px;line-height:1.8;">
             <span>
-                <b style="text-decoration: underline;">BACKGROUND VERIFICATION: </b> The company reserves the right to
+                <b style="text-decoration: underline;">BACKGROUND VERIFICATION: </b> The company reserves the right
+                to
                 have your back ground verified directly or through an outside agency. If on such verification it is
-                found that you have furnished wrong information or concealed any material information your services are
+                found that you have furnished wrong information or concealed any material information your services
+                are
                 liable to be terminated.
             </span>
         </p>
@@ -275,8 +316,10 @@
             <span>
                 <b style="text-decoration: underline;">ABSENTEEISM: </b> You should be regular and punctual in your
                 attendance. If you remain absent for 3 consecutive working days or more without sanction of leave or
-                prior permission or if you over stay sanctioned leave beyond 3 consecutive working days or more it shall
-                be deemed that you have voluntarily abandonment your employment with the company and your services are
+                prior permission or if you over stay sanctioned leave beyond 3 consecutive working days or more it
+                shall
+                be deemed that you have voluntarily abandonment your employment with the company and your services
+                are
                 liable to be terminated accordingly.
             </span>
         </p>
@@ -284,8 +327,10 @@
         <p style="font-size:12px;line-height:1.8;">
             <span>
                 <b style="text-decoration: underline;">RULES AND REGULATIONS: </b> You shall be bound by the Rules &
-                Regulations framed by the company from time to time in relation to conduct, discipline and other service
-                conditions which will be deemed as Rules, Regulation and order and shall form part and parcel of this
+                Regulations framed by the company from time to time in relation to conduct, discipline and other
+                service
+                conditions which will be deemed as Rules, Regulation and order and shall form part and parcel of
+                this
                 letter of appointment.
             </span>
         </p>
@@ -293,8 +338,10 @@
         <p style="font-size:12px;line-height:1.8;">
             <span>
                 <b style="text-decoration: underline;">OTHER TERMS OF CONTRACT: </b> In addition to the terms of
-                appointment mentioned above, you are also governed by the standard employment rules of , <b>Fretus Folks
-                    India Pvt Ltd.</b> (as per Associate Manual). The combined rules and procedures as contained in this
+                appointment mentioned above, you are also governed by the standard employment rules of , <b>Fretus
+                    Folks
+                    India Pvt Ltd.</b> (as per Associate Manual). The combined rules and procedures as contained in
+                this
                 letter will constitute the standard employment rules and you are required to read both of them in
                 conjunction.
             </span>
@@ -303,7 +350,8 @@
         <p style="font-size:12px;line-height:1.8;">
             <span>
                 <b style="text-decoration: underline;">JURISDICTION: </b> Notwithstanding the place of working or
-                placement or the normal or usual residence of the employee concerned or the place where this instrument
+                placement or the normal or usual residence of the employee concerned or the place where this
+                instrument
                 is signed or executed this Contract shall only be subject to the jurisdiction of the High Court of
                 Judicature of <b>Delhi At Delhi</b> and its subordinate Courts.
             </span>
@@ -312,11 +360,13 @@
             <span>
                 <b style="text-decoration: underline;">DEEMED CANCELLATION OF CONTRACT: </b> The Contract stands
                 cancelled and revoked if you do not report to duty within 3 days from the date of joining & your act
-                will be construed as deemed and implied rejection of the offer of employment from your side; hence no
+                will be construed as deemed and implied rejection of the offer of employment from your side; hence
+                no
                 obligation would arise on the part of the company in lieu of such Employment Contract issued.
             </span>
         </p>
-        <pagebreak />
+        <div style="page-break-after: always;"></div>
+
         <p><b>You are requested to bring the following documents at the time of joining: </b> </p>
         <ol style="font-size:12px;line-height:1.8;">
             <li>Educational Certificates for 10th and 12 standard or the highest qualification held by you.</li>
@@ -339,30 +389,27 @@
             </span>
         </p>
 
-        <p style="line-height:1.8;font-size:14px">
-            <b>For : Fretus Folks India Pvt Ltd.</b> <br>
+        <p style="line-height:1.8; font-size:14px; text-align:left;">
+            <b>For: Fretus Folks India Pvt Ltd.</b><br><br>
+            <img src="{{ public_path('admin/images/seal.png') }}" alt="Seal" style="margin: 10px 0;"
+                width="100"><br><br>
+            <b>Authorized Signatory</b>
         </p>
-        <img src="{{ public_path('admin/images/seal.png') }}" style="margin-top:2%;" width="100"><br>
-        <p>
-            <b>Authorized Signatory</b> <br>
-        </p>
-        <pagebreak />
 
-        <div
-            style="color: #000;font-family: Tahoma;font-size: 10px;line-height: 1.5px;text-align: justify; padding-left: 0%;">
-            <h1 style="font-size:15px;text-align:center;text-decoration: underline;">Annexure - A</h1>
-            <p style="line-height:1.8;font-size:14px ;">
-                <span style="margin-left:10%;text-decoration:underline;">
-                    <b>Compensation Sheet</b> <br>
-                </span>
-                <span style="margin-left:10%;">Offer No : {{ $offerLetter->employee_id }} <br></span>
-                <span style="margin-left:10%;"> Associate Name : {{ $offerLetter->emp_name }}
-                    <br></span>
-                <span style="margin-left:10%;"> Designation : {{ $offerLetter->designation }}
-                    <br></span>
-                <span style="margin-left:10%;"> Location : {{ $offerLetter->location }} <br></span>
-            </p><br /><br /><br />
-            <table class="table table1">
+
+        <div style="page-break-after: always;"></div>
+
+        <div style="color: #000;font-family: Tahoma;font-size: 12px;text-align: justify;">
+            <h1>Annexure - A</h1>
+            <p style="text-align: left;">
+                <span style="text-decoration:underline;"><b>Compensation Sheet</b></span><br>
+                Offer No: <b>{{ $offerLetter->ffi_emp_id }}</b><br>
+                Associate Name: <b>{{ $offerLetter->emp_name }}</b><br>
+                Designation: <b>{{ $offerLetter->designation }}</b><br>
+                Location: <b>{{ $offerLetter->location }}</b><br>
+            </p>
+
+            <table class="table1">
                 <thead>
                     <tr>
                         <th>Components</th>
@@ -391,10 +438,10 @@
                         <td>{{ $offerLetter->st_bonus }}</td>
                         <td>{{ $offerLetter->st_bonus * 12 }}</td>
                     </tr>
-                    <tr class="highlight-pink">
-                        <td>Gross Salary</td>
-                        <td>{{ $offerLetter->gross_salary }}</td>
-                        <td>{{ $offerLetter->gross_salary * 12 }}</td>
+                    <tr style="background-color:#ecbfbf;">
+                        <td><b>Gross Salary</b></td>
+                        <td><b>{{ $offerLetter->gross_salary }}</b></td>
+                        <td><b>{{ $offerLetter->gross_salary * 12 }}</b></td>
                     </tr>
                     <tr>
                         <td>Employee PF</td>
@@ -407,19 +454,24 @@
                         <td>{{ $offerLetter->emp_esic * 12 }}</td>
                     </tr>
                     <tr>
+                        <td>Employee LWF</td>
+                        <td>{{ $offerLetter->lwf }}</td>
+                        <td>{{ $offerLetter->lwf * 12 }}</td>
+                    </tr>
+                    <tr>
                         <td>PT</td>
                         <td>{{ $offerLetter->pt }}</td>
                         <td>{{ $offerLetter->pt * 12 }}</td>
                     </tr>
-                    <tr class="highlight-red">
-                        <td>Total Deduction</td>
-                        <td>{{ $offerLetter->total_deduction }}</td>
-                        <td>{{ $offerLetter->total_deduction * 12 }}</td>
+                    <tr style="background-color:#ecbfbf;">
+                        <td><b>Total Deduction</b></td>
+                        <td><b>{{ $offerLetter->total_deduction }}</b></td>
+                        <td><b>{{ $offerLetter->total_deduction * 12 }}</b></td>
                     </tr>
-                    <tr class="highlight-red">
-                        <td>Take-home</td>
-                        <td>{{ $offerLetter->take_home }}</td>
-                        <td>{{ $offerLetter->take_home * 12 }}</td>
+                    <tr style="background-color:#ecbfbf;">
+                        <td><b>Take-home</b></td>
+                        <td><b>{{ $offerLetter->take_home }}</b></td>
+                        <td><b>{{ $offerLetter->take_home * 12 }}</b></td>
                     </tr>
                     <tr>
                         <td>Employer PF</td>
@@ -431,33 +483,37 @@
                         <td>{{ $offerLetter->employer_esic }}</td>
                         <td>{{ $offerLetter->employer_esic * 12 }}</td>
                     </tr>
-                    <tr class="highlight-green">
-                        <td>CTC</td>
-                        <td>{{ $offerLetter->ctc }}</td>
-                        <td>{{ $offerLetter->ctc * 12 }}</td>
+                    <tr>
+                        <td>Employer LWF</td>
+                        <td>{{ $offerLetter->employer_lwf }}</td>
+                        <td>{{ $offerLetter->employer_lwf * 12 }}</td>
+                    </tr>
+                    <tr style="background-color:#ecbfbf;">
+                        <td><b>CTC</b></td>
+                        <td><b>{{ $offerLetter->ctc }}</b></td>
+                        <td><b>{{ $offerLetter->ctc * 12 }}</b></td>
                     </tr>
                 </tbody>
             </table>
 
-            <p style="margin-top:40px;font-size:13px"><b>Signature</b></p> <br /> <br /><br />
-            <p style="font-size:12px"><b>Name:</b>{{ $offerLetter->emp_name }}</p><br />
-            <p style="font-size:12px"><b>Designation:</b> {{ $offerLetter->designation }}</p>
 
+            <p style="margin-top:20px;"><b>Signature</b></p>
+            <p><b>Name:</b> {{ $offerLetter->emp_name }}</p>
+            <p><b>Designation:</b> {{ $offerLetter->designation }}</p>
         </div>
-        <pagebreak />
 
-        <table>
+        <div style="page-break-after: always;"></div>
+
+        <table style="border-collapse:collapse;width:100%;margin-bottom:20px;">
             <tbody>
                 <tr>
-                    <td colspan="3" style="font-size:14px;text-align:left;">
-                        <p style="line-height:1.8;font-size:14px !important;margin:0;padding:0">
-                            <b>Ref.No. :</b> {{ $offerLetter->employee_id }} <br>
-                        </p>
+                    <td colspan="3" style="font-size:12px;text-align:left;padding:7px">
+                        <p><b>Ref.No. :</b> {{ $offerLetter->employee_id }}</p>
+
                     </td>
-                    <td style="font-size:14px;text-align:right;width:20%;padding-left:20px;">
-                        <p style="line-height:1.8;font-size:13px;float:right">
-                            <b>Date:</b>&nbsp;&nbsp;{{ \Carbon\Carbon::parse($offerLetter->joining_date)->format('d-m-Y') }}
-                        </p>
+                    <td style="font-size:12px;text-align:right;padding:7px;width:30%">
+                        <p><b>Date:</b> {{ \Carbon\Carbon::parse($offerLetter->joining_date)->format('d-m-Y') }}</p>
+
                     </td>
                 </tr>
             </tbody>
@@ -465,42 +521,35 @@
         <p style="font-size:12px;margin-top:30px;">
             <b style="font-size:13px">To,</b> <br>
             <b style="font-size:13px">Fretus Folks India Pvt Ltd.,</b><br>
-            M 20, 3rd Floor, UKS Heights, <br />
-            Sector XI, Jeevan Bhima Nagar, <br />
-            Bangalore-560075.
-            </b><br>
+            VBC Tower, #39,<br />
+            1st Floor, CMH Road, Indiranagar,<br />
+            Bangalore-560038. Ph- 080-43726370 <br>
         </p>
-        <p style="font-size:13px">
-            <span>
-                <b>Subject :- Acknowledgement and receipt of Offer Letter</b>
-            </span>
-        </p>
-        <p style="font-size:12px;margin-bottom:10px;">
-            <span>
-                Dear Sir,<br /><br />
-                I have read and understood the above mentioned terms and conditions of the Contract. I voluntarily
-                accept the same. I have received <b>Fretus Folks India Pvt Ltd.</b> Associate Manual and I shall abide
-                to the terms and conditions mentioned therein and any amendments from time to time.
-                <br /><br />
-                On receipt of the first salary, all terms & conditions in this fixed term employment contract would be
-                deemed as acknowledged & accepted.
-            </span>
-        </p>
-        <p style="font-size:12px">
-            <span>
-                <b>Name:</b><span style="font-size:12px">{{ $offerLetter->emp_name }}</span>
-                <br /><br />
-                <p><b>Signature:<span style="text-decoration:underline;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></b>
-                </p><br /> <br />
 
-                <b>Place:</b> <span style="font-size:12px">{{ $offerLetter->location }}</span> <br />
-                <b>Date:</b> <span
-                    style="font-size:12px">{{ \Carbon\Carbon::parse($offerLetter->joining_date)->format('d-m-Y') }}</span>
-                <br />
-            </span>
+        <p style="font-size:13px">
+            <b>Subject :- Acknowledgement and receipt of Offer Letter</b>
+        </p>
+
+        <p style="font-size:13px;margin-bottom:10px;">
+            Dear Sir,<br /><br />
+            I have read and understood the above mentioned terms and conditions of the Contract. I voluntarily
+            accept the same. I have received <b>Fretus Folks India Pvt Ltd.</b> Associate Manual and I shall
+            abide to the terms and conditions mentioned therein and any amendments from time to time.
+            <br /><br />
+            On receipt of the first salary, all terms & conditions in this fixed term employment contract would
+            be deemed as acknowledged & accepted.
+        </p>
+
+        <p style="font-size:13px">
+            <b>Name:</b> {{ $offerLetter->emp_name }}<br /><br />
+            <b>Signature:</b> <span
+                style="text-decoration:underline;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><br /><br />
+            <b>Place:</b> {{ $offerLetter->location }}<br />
+            <b>Date:</b> {{ \Carbon\Carbon::parse($offerLetter->joining_date)->format('d-m-Y') }}
         </p>
 
     </div>
+
 </body>
 
 </html>

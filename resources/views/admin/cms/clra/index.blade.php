@@ -86,6 +86,19 @@
                                             Delete
                                         </a>
                                     </li>
+                                    <li>
+                                        <a class="dropdown-item" href="{{ asset('storage/' . $item->path) }}"
+                                            target="_blank">
+                                            <i class='bx bx-show'></i> View
+                                        </a>
+                                    </li>
+
+                                    {{-- Download file --}}
+                                    <li>
+                                        <a class="dropdown-item" href="{{ asset('storage/' . $item->path) }}" download>
+                                            <i class='bx bx-download'></i> Download
+                                        </a>
+                                    </li>
                                 </ul>
                             </div>
                         </td>

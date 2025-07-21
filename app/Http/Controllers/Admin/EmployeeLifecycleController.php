@@ -45,7 +45,9 @@ class EmployeeLifecycleController extends Controller
                     ->orWhere('phone1', 'like', "%{$search_query}%")
                     ->orWhere('entity_name', 'like', "%{$search_query}%")
                     ->orWhere('email', 'like', "%{$search_query}%")
-                    ->orWhere('ffi_emp_id', 'like', "%{$search_query}%");
+                    ->orWhere('ffi_emp_id', 'like', "%{$search_query}%")
+                    ->orWhere('client_emp_id', 'like', "%{$search_query}%");
+
             });
         }
 
@@ -53,7 +55,7 @@ class EmployeeLifecycleController extends Controller
             $filteredResults->whereIn('client_id', $selectedData);
         }
 
-        $defaultColumns = ['id', 'created_at', 'emp_name', 'entity_name', 'phone1', 'email', 'ffi_emp_id', 'client_id'];
+        $defaultColumns = ['id', 'created_at', 'client_emp_id', 'emp_name', 'entity_name', 'phone1', 'email', 'ffi_emp_id', 'client_id'];
 
         $results = $filteredResults->select($defaultColumns)->paginate(100)->appends($request->query());
 

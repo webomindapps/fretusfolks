@@ -110,7 +110,7 @@
             </li>
             <li>
                 <p style="font-size:12px;line-height:1.5;text-align:justify;">
-                    Duration of your contract is {{ $offerLetter->tenure_month }}
+                    Duration of your contract is {{ $offerLetter->tenure_month }} months
                 </p>
             </li>
             <li>
@@ -144,6 +144,8 @@
                     immediately.
                 </p>
             </li>
+        </ol>
+        <ol start="7">
             <li>
                 <p style="font-size:12px;line-height:1.5;text-align:justify;">
                     You will not be absent from your duty without sufficient reasons, you will obtain prior written
@@ -151,8 +153,7 @@
                     duration immediately, failing which, the same will be treated as loss of Pay.
                 </p>
             </li>
-        </ol>
-        <ol start="8">
+
             <li>
                 <p style="font-size:12px;line-height:1.5;text-align:justify;">
                     If you did not report to work for continuous 3 days without proper notification of absenteeism,
@@ -251,6 +252,10 @@
                 <td>{{ $offerLetter->emp_esic }}</td>
             </tr>
             <tr>
+                <th>Employee LWF </th>
+                <td>{{ $offerLetter->lwf }}</td>
+            </tr>
+            <tr>
                 <th>PT</th>
                 <td>{{ $offerLetter->pt }}</td>
             </tr>
@@ -269,6 +274,10 @@
             <tr>
                 <th>Employer ESIC</th>
                 <td>{{ $offerLetter->employer_esic }}</td>
+            </tr>
+              <tr>
+                <th>Employer LWF</th>
+                <td>{{ $offerLetter->employer_lwf }}</td>
             </tr>
             <tr style="background-color:#FFC300;">
                 <th>CTC</th>

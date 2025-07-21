@@ -71,7 +71,7 @@
                                 <div class="form-group col-lg-6 mt-2">
                                     <label for="phone1">Phone: <span style="color: red">*</span></label>
                                     <input type="text" name="phone1" id="phone1" class="form-control"
-                                   maxlength="10" inputmode="numeric" required>
+                                        maxlength="10" inputmode="numeric" required>
                                 </div>
 
                                 <label size="col-lg-12 mt-4"><strong>Salary Details</strong></label>
@@ -117,8 +117,9 @@
                                             :value="old('emp_esic')" />
                                         <x-forms.input label="PT: " type="number" name="pt" id="pt"
                                             :required="true" size="col-lg-3 mt-2" :value="old('pt')" />
-                                        <x-forms.input label="Lwf: " type="number" name="lwf" id="lwf"
-                                            :required="true" size="col-lg-3 mt-2" :value="old('lwf', '0')" />
+                                        <x-forms.input label="Employee Lwf: " type="number" name="lwf"
+                                            id="lwf" :required="true" size="col-lg-3 mt-2"
+                                            :value="old('lwf', '0')" />
                                         <x-forms.input label="Total Deduction: " type="number"
                                             name="total_deduction" id="total_deduction" :required="true"
                                             size="col-lg-3 mt-2" :value="old('total_deduction')" />
@@ -131,7 +132,9 @@
                                         <x-forms.input label="Employer ESIC: " type="number" name="employer_esic"
                                             id="employer_esic" :required="true" size="col-lg-3 mt-2"
                                             :value="old('employer_esic')" />
-
+                                        <x-forms.input label="Employer LWF: " type="number" name="employer_lwf"
+                                            id="employer_lwf" :required="true" size="col-lg-3 mt-2"
+                                            :value="old('employer_lwf')" />
                                         <x-forms.input label="Mediclaim: " type="number" name="mediclaim"
                                             id="mediclaim" :required="true" size="col-lg-3 mt-2"
                                             :value="old('mediclaim')" />

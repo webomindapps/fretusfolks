@@ -9,70 +9,91 @@
 
 <style>
     @page {
-        margin: 100px 55px 120px 55px;
+        size: A4;
+        margin: 150px 55px 120px 55px;
+        /* leave top and bottom space for header/footer */
     }
 
     header {
         position: fixed;
-        top: -100px;
+        top: -150px;
     }
 
     footer {
         position: fixed;
-        bottom: -40px;
-    }
-
-    .page-break {
-        page-break-after: always;
+        bottom: -60px;
     }
 
     body {
-        padding: 0 !important;
-        margin: 0 !important;
-        display: block !important;
-        /* background: red; */
-        -webkit-text-size-adjust: none;
-        font-family: times;
+        font-family: 'Times New Roman', serif;
         font-size: 13px;
+        margin-top: 10px;
+        padding: 0;
+        line-height: 1.5;
     }
 
-    a {
-        color: #00b8e4;
+    h1 {
+        font-size: 18px;
+        text-align: center;
         text-decoration: underline;
-        font-family: times;
-    }
-
-    h3 a {
-        color: #1f1f1f;
-        text-decoration: none;
-        font-family: times;
-    }
-
-    .text2 a {
-        color: #ea4261;
-        text-decoration: none;
-        font-family: times;
+        margin-bottom: 10px;
     }
 
     p {
-        padding: 0 !important;
-        margin: 0 !important;
-        font-family: times;
+        margin: 0;
     }
 
     ol {
-        font-family: times;
+        padding-left: 20px;
     }
 
     ol li {
-        margin-top: 1%;
-        line-height: 1.7;
+        margin-bottom: 8px;
     }
 
-    .table1 td,
-    .table1 th {
-        border: 1px solid black;
-        padding: 5px 8px;
+    .table1 {
+        width: 80%;
+        margin: 20px auto;
+        border-collapse: collapse;
+        font-size: 12px;
+    }
+
+    .table1 th,
+    .table1 td {
+        border: 1px solid #000;
+        padding: 6px 10px;
+        text-align: left;
+    }
+
+    .table1 .gross {
+        background-color: #ecbfbf;
+    }
+
+    .info-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 15px;
+    }
+
+    .info-table td {
+        font-size: 14px;
+        padding: 5px;
+    }
+
+    .signature-table {
+        width: 100%;
+        margin-top: 30px;
+        border-collapse: collapse;
+    }
+
+    .signature-table td {
+        font-size: 14px;
+        padding: 10px;
+        vertical-align: top;
+    }
+
+    .signature-table img {
+        margin-top: 10px;
     }
 </style>
 </head>
@@ -88,6 +109,7 @@
                         <tr>
                             <td colspan="3" style="font-size:12px;text-align:left;padding:7px">
                                 <p style="line-height:1.8;font-size:14px">
+
                                     <b>Mr. /Mrs. /Ms. : {{ $offerLetter->employee?->emp_name }}</b> <br>
                                     <b>Employee ID : {{ $offerLetter->employee?->ffi_emp_id }}</b> <br>
                                     <b>Place : {{ $offerLetter->employee?->location }}</b> <br>
@@ -107,7 +129,7 @@
 
         <div
             style="color: #000;font-family: Tahoma;font-size: 17px;line-height: 15px;text-align: justify; padding-left: 0%;">
-            <h1 style="font-size:18px;text-align:center;text-decoration: underline;">Appointment Letter</h1>
+            <h1 style="font-size:18px;text-align:center;text-decoration: underline;">Offer cum Appointment Letter</h1>
             <br>
             <p style="font-size:12px;line-height:1.5;">
                 <b>Dear Mr./Mrs./Ms {{ $offerLetter->employee?->emp_name }}</b><br>
@@ -175,6 +197,8 @@
                     Any contravention of this condition will entail termination of your services from
                     the Company.
                 </li>
+                <div style="page-break-after: always;"></div>
+
                 <li>
                     <ol type="i">
                         <li>Your services are liable to be transferred or loaned or assigned
@@ -251,6 +275,8 @@
                     fully recovered from your salary and any other legal dues including
                     Gratuity, at the time of you’re leaving the services of the Company.
                 </li>
+                <div style="page-break-after: always;"></div>
+
                 <li>
                     You shall faithfully and to the best of your ability perform your duties
                     that may be entrusted to you from time to time by the management. You
@@ -340,6 +366,8 @@
             </div>
         </div>
     </div>
+    <div style="page-break-after: always;"></div>
+
     <div
         style="color: #000;font-family: Tahoma;font-size: 13px;line-height: 1.5;text-align: justify;padding-left: 0%; margin-top:100px;">
         <h1 style="font-size:17px;text-align:center;text-decoration: underline;"> Annexure - 1</h1>

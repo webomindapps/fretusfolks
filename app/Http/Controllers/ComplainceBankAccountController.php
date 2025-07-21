@@ -14,7 +14,16 @@ class ComplainceBankAccountController extends Controller
     }
     public function index()
     {
-        $searchColumns = ['id', 'bank_name', 'bank_account_no', 'bank_ifsc_code']; // Adjust column names as per your database
+        $searchColumns = [
+            'id',
+            'bank_name',
+            'bank_account_no',
+            'bank_ifsc_code',
+            'clients.ffi_emp_id',
+            'clients.client_emp_id',
+            'clients.entity_name',
+            'clients.emp_name',
+        ]; // Adjust column names as per your database
         $search = request()->search;
         $from_date = request()->from_date;
         $to_date = request()->to_date;
@@ -32,13 +41,25 @@ class ComplainceBankAccountController extends Controller
             $query->whereBetween('created_at', [$from_date, $to_date]);
         }
 
-        if (!empty($search)) {
+        if ($search != '') {
             $query->where(function ($q) use ($search, $searchColumns) {
-                foreach ($searchColumns as $key => $value) {
-                    ($key == 0) ? $q->where($value, 'LIKE', '%' . $search . '%') : $q->orWhere($value, 'LIKE', '%' . $search . '%');
+                foreach ($searchColumns as $key => $column) {
+                    if (in_array($column, ['clients.ffi_emp_id', 'clients.client_emp_id', 'clients.entity_name', 'clients.emp_name'])) {
+                        // Search in related 'client' model
+                        $q->orWhereHas('clients', function ($subQuery) use ($column, $search) {
+                            $relatedColumn = explode('.', $column)[1]; // Extract 'ffi_emp_id', etc.
+                            $subQuery->where($relatedColumn, 'LIKE', '%' . $search . '%');
+                        });
+                    } else {
+                        // Search in current model
+                        $key == 0
+                            ? $q->where($column, 'LIKE', '%' . $search . '%')
+                            : $q->orWhere($column, 'LIKE', '%' . $search . '%');
+                    }
                 }
             });
         }
+
 
         ($order == '') ? $query->orderByDesc('id') : $query->orderBy($order, $orderBy);
 

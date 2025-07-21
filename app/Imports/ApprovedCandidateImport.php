@@ -41,33 +41,35 @@ class ApprovedCandidateImport implements ToCollection
                         continue;
                     }
 
-                    // Check for a record with both aadhar and phone number
                     $existingRecord = DB::table('backend_management')
                         ->where('aadhar_no', $aadhar)
                         ->where('phone1', $phone)
                         ->first();
 
                     if ($existingRecord) {
-                        // If employee_last_date is set, treat it as not duplicate
-                        if ($existingRecord->employee_last_date) {
+                        // If employee has left (last date is set), allow insertion
+                        if (!empty($existingRecord->employee_last_date)) {
                             $processedData[] = $row;
                         } else {
-                            $chunkDuplicates[] = "Duplicate at row #" . ($index) . " - FFI_Emp_ID: $ffiEmpId, Phone_NO: $phone, Aadhar_No: $aadhar";
+                            $chunkDuplicates[] = "Duplicate at row #" . $index . " - FFI_Emp_ID: $ffiEmpId, Phone_NO: $phone, Aadhar_No: $aadhar";
                         }
                     } else {
-                        // No record with both phone and aadhar, proceed to check other individual duplicate conditions
+                        // Check if any record exists with same FFI ID or phone or aadhar
                         $exists = DB::table('backend_management')
-                            ->where('ffi_emp_id', $ffiEmpId)
-                            ->orWhere('phone1', $phone)
-                            ->orWhere('aadhar_no', $aadhar)
+                            ->where(function ($query) use ($ffiEmpId, $phone, $aadhar) {
+                                $query->where('ffi_emp_id', $ffiEmpId)
+                                    ->orWhere('phone1', $phone)
+                                    ->orWhere('aadhar_no', $aadhar);
+                            })
                             ->exists();
 
                         if ($exists) {
-                            $chunkDuplicates[] = "Duplicate at row #" . ($index) . " - FFI_Emp_ID: $ffiEmpId, Phone_NO: $phone, Aadhar_No: $aadhar";
+                            $chunkDuplicates[] = "Duplicate at row #" . $index . " - FFI_Emp_ID: $ffiEmpId, Phone_NO: $phone, Aadhar_No: $aadhar";
                         } else {
                             $processedData[] = $row;
                         }
                     }
+
                 }
 
             }
@@ -77,11 +79,11 @@ class ApprovedCandidateImport implements ToCollection
             }
 
             if (!empty($processedData)) {
+                // dd($processedData);
                 ImportApprovedCandidatesJob::dispatch($processedData, $this->created_by);
             }
         }
 
-        // Throw error after all processing
         if (!empty($allDuplicates)) {
             $errorMessage = "Duplicate records found:<br>" . implode("<br>", $allDuplicates);
             throw new \Exception($errorMessage);

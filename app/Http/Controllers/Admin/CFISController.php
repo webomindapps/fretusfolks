@@ -310,7 +310,7 @@ class CFISController extends Controller
 
     public function bulkindex()
     {
-        $searchColumns = ['id', 'client_id', 'ffi_emp_id', 'employee_last_date', 'phone1'];
+        $searchColumns = ['id', 'client_id', 'ffi_emp_id', 'employee_last_date', 'phone1', 'client.client_name'];
         $search = request()->search;
         $from_date = request()->from_date;
         $to_date = request()->to_date;
@@ -331,11 +331,22 @@ class CFISController extends Controller
         if ($from_date && $to_date) {
             $query->whereBetween('created_at', [$from_date, $to_date]);
         }
-        if ($search != '')
+        if ($search != '') {
             $query->where(function ($q) use ($search, $searchColumns) {
-                foreach ($searchColumns as $key => $value)
-                    ($key == 0) ? $q->where($value, 'LIKE', '%' . $search . '%') : $q->orWhere($value, 'LIKE', '%' . $search . '%');
+                foreach ($searchColumns as $key => $value) {
+                    if ($value === 'client.client_name') {
+                        // Search in related `client` table
+                        $q->orWhereHas('client', function ($relQuery) use ($search) {
+                            $relQuery->where('client_name', 'LIKE', '%' . $search . '%');
+                        });
+                    } else {
+                        // Search in main table
+                        $q->{$key == 0 ? 'where' : 'orWhere'}($value, 'LIKE', '%' . $search . '%');
+                    }
+                }
             });
+        }
+
 
         ($order == '') ? $query->orderByDesc('id') : $query->orderBy($order, $orderBy);
 

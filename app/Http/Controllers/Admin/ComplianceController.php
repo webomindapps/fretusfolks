@@ -32,7 +32,7 @@ class ComplianceController extends Controller
     }
     public function index()
     {
-        $searchColumns = ['id', 'entity_name', 'emp_name', 'phone1'];
+        $searchColumns = ['id', 'entity_name', 'emp_name', 'phone1','ffi_emp_id','client_emp_id'];
         $search = request()->search;
         $from_date = request()->from_date;
         $to_date = request()->to_date;
