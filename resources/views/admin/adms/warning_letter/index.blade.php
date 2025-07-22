@@ -41,7 +41,7 @@
                         <input type="checkbox" name="selected_items[]" class="single-item-check"
                             value="{{ $item->id }}">
                     </td> --}}
-                    <td>{{ $key + 1 }}</td>
+                    <td>{{ $warning->firstItem() + $key }}</td>
                     <td>{{ $item->emp_id }}</td>
                     <td>{{ $item->warningletter ? $item->warningletter->client_emp_id : 'N/A' }}</td>
                     <td>{{ $item->warningletter ? $item->warningletter->entity_name : 'N/A' }}</td>

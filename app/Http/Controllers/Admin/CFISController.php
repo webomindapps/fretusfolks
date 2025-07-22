@@ -412,7 +412,7 @@ class CFISController extends Controller
             File::makeDirectory($empFolder, 0755, true);
 
 
-            $fileName = "employee_details_{$employee->id}.xlsx";
+            $fileName = "Employee_Details_{$employee->id}.xlsx";
             $publicPath = "public/employee_exports/{$fileName}";
             Excel::store(new EmployeeExport($employee), $publicPath);
 

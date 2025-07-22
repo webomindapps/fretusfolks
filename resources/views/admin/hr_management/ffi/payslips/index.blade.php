@@ -185,7 +185,7 @@
                     :route="route('admin.search.ffi_payslips')">
                     @foreach ($payslips as $key => $item)
                     <tr>
-                        <td>{{ $item->id }}</td>
+                        <td>{{ $payslips->firstItem() + $key }}</td>
                         <td>{{ $item->emp_id }}</td>
                         <td>{{ $item->employee_name }}</td>
                         <td>{{ $item->designation }}</td>

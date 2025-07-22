@@ -27,9 +27,9 @@ class ADMSOfferImport implements ToCollection
 
                 if (count($rowArray) === count($header)) {
                     $combined = array_combine($header, $rowArray);
-                    if (!empty($combined['Employee_ID'])) {
+                    if (!empty($combined['FFI_Employee_ID'])) {
                         // Remove existing records
-                        OfferLetter::where('employee_id', $combined['Employee_ID'])
+                        OfferLetter::where('employee_id', $combined['FFI_Employee_ID'])
                             ->delete();
 
                         $processedData[] = $combined;

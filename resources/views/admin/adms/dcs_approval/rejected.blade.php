@@ -1,5 +1,5 @@
 <x-applayout>
-    <x-admin.breadcrumb title="Rejected Candidates " isBack="{{ true }}" />
+    <x-admin.breadcrumb title="Rejected Candidates "  />
     <div class="row">
         <div class="col-lg-12">
             @php
@@ -14,7 +14,7 @@
                     ['label' => 'Actions', 'column' => 'action', 'sort' => false],
                 ];
             @endphp
-            <x-table :columns="$columns" :data="$candidate" :checkAll=true :bulk="route('admin.cfis.bulk')" :route="route('admin.dcs_approval')">
+            <x-table :columns="$columns" :data="$candidate" :checkAll=true :bulk="route('admin.cfis.bulk')" :route="route('admin.dcs_rejected')">
                 {{-- <x-slot:filters>
                     <form action="{{ route('admin.dcs_approval.export') }}" method="POST">
                         @csrf
@@ -44,7 +44,7 @@
                             <input type="checkbox" name="selected_items[]" class="single-item-check"
                                 value="{{ $item->id }}">
                         </td>
-                        <td>{{ $item->id }}</td>
+                        <td>{{ $candidate->firstItem() + $key }}</td>
                         <td>{{ $item->ffi_emp_id === null || $item->ffi_emp_id === '' ? 'N/A' : $item->ffi_emp_id }}
                         </td>
                         <td>{{ $item->client_emp_id === null || $item->client_emp_id === '' ? 'N/A' : $item->client_emp_id }}

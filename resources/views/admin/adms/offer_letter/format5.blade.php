@@ -81,8 +81,8 @@
         <p style="font-size:14px;line-height:1.5;text-align:justify;">
             To, <br />
             {{ $offerLetter->emp_name }} <br />
-            {{ $offerLetter->employee?->gender == 'Male' ? 'S/o' : ($offerLetter->employee?->gender == 'Female' ? 'D/o' : 'S/o/ D/o') }}
-            {{ $offerLetter->employee?->father_name }}<br />
+            {{ $offerLetter->gender_salutation }}
+            {{ $offerLetter->father_name }}<br>
             Emp : {{ $offerLetter->employee_id }} <br />
             Address : {{ $offerLetter->location }}
         </p>
@@ -275,7 +275,7 @@
                 <th>Employer ESIC</th>
                 <td>{{ $offerLetter->employer_esic }}</td>
             </tr>
-              <tr>
+            <tr>
                 <th>Employer LWF</th>
                 <td>{{ $offerLetter->employer_lwf }}</td>
             </tr>

@@ -13,7 +13,7 @@
         <div class="d-flex justify-content-end align-items-center">
             <div class="d-flex gap-3">
                 <a href='{{ asset('admin/cfis_bulkupdate.xlsx') }}' class="btn btn-primary text-white"
-                    download="CFIs_BulkUpdate.xlsx">
+                    download="cfis_bulkupdate.xlsx">
                     <i class='bx bxs-download'></i> Download Sample
                 </a>
 
@@ -30,7 +30,7 @@
         <div class="col-lg-12">
             @php
                 $columns = [
-                    ['label' => 'SL No', 'column' => 'id', 'sort' => true],
+                    ['label' => 'SL NO', 'column' => 'id', 'sort' => true],
                     ['label' => 'Client Name', 'column' => 'client_id', 'sort' => true],
                     ['label' => 'Employee ID', 'column' => 'ffi_emp_id', 'sort' => true],
                     ['label' => 'Employee Name', 'column' => 'emp_name', 'sort' => true],
@@ -71,7 +71,7 @@
                             <input type="checkbox" name="selected_items[]" class="single-item-check"
                                 value="{{ $item->id }}">
                         </td> --}}
-                        <td>{{ $candidate->firstItem() + $key }}</td>
+                        <td>{{ $key + 1 }}</td>
                         <td>
                             {{ $item->client?->client_name }}
                         </td>

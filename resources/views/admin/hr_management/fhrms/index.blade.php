@@ -66,7 +66,7 @@
                 </x-slot:filters>
                 @foreach ($employee as $key => $item)
                 <tr>
-                    <td>{{ $key + 1 }}</td>
+                    <td>{{ $employee->firstItem() + $key }}</td>
                     <td>{{ $item->ffi_emp_id }}</td>
 
                     <td> {{ $item->emp_name }}</td>

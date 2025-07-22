@@ -162,7 +162,7 @@ class ComplianceController extends Controller
 
         $candidates = $query->get();
 
-        return Excel::download(new CandidateMasterExport($candidates), 'candidates.xlsx');
+        return Excel::download(new CandidateMasterExport($candidates), 'Candidate_Details.xlsx');
     }
     public function edit($id)
     {

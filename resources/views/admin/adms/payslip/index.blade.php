@@ -298,7 +298,7 @@
                     :route="route('admin.search.payslips')">
                     @foreach ($payslips as $key => $item)
                     <tr>
-                        <td>{{ $key + 1}}</td>
+                        <td>{{ $payslips->firstItem() + $key}}</td>
                         <td>{{ $item->emp_id }}</td>
                         <td>{{ $item->client_name }}</td>
                         <td>{{ $item->emp_name }}</td>

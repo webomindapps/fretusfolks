@@ -115,7 +115,7 @@ class EmployeeLifecycleController extends Controller
 
         $candidates = $query->get();
 
-        return Excel::download(new CadidateReportExport($candidates), 'filtered_report.xlsx');
+        return Excel::download(new CadidateReportExport($candidates), 'Candidate_Report.xlsx');
     }
 
 

@@ -18,7 +18,7 @@
             <x-table :columns="$columns" :data="$pip" :checkAll=false :bulk="route('admin.ffi_pip_letter.bulk')" :route="route('admin.pip_letter')">
                 @foreach ($pip as $key => $item)
                     <tr>
-                        <td>{{ $key + 1 }}</td>
+                        <td>{{ $pip->firstItem() + $key }}</td>
                         <td>{{ $item->from_name }}</td>
                         <td>{{ $item->emp_id }}</td>
                         <td>{{ $item->pip_letters ? $item->pip_letters->emp_name : 'N/A' }}</td>

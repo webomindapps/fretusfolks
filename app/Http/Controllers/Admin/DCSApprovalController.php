@@ -223,6 +223,13 @@ class DCSApprovalController extends Controller
                     $file = $request->file('document_file')[$index] ?? null;
 
                     if ($file) {
+
+                        $maxSize = $type === 'other_certificate' ? 25600 : 5120; // 25MB for other_certificate, 5MB for others
+
+                        if ($file->getSize() > ($maxSize * 1024)) {
+                            return back()->with('error', "File for '$type' exceeds allowed size limit.");
+                        }
+
                         $fileName = $type . $candidate->id . '.' . $file->getClientOriginalExtension();
                         $filePath = $file->storeAs('documents/' . $type, $fileName, 'public');
                         if ($type === 'education_certificate') {
@@ -890,6 +897,13 @@ class DCSApprovalController extends Controller
                     $file = $request->file('document_file')[$index] ?? null;
 
                     if ($file) {
+
+                        $maxSize = $type === 'other_certificate' ? 25600 : 5120; // 25MB for other_certificate, 5MB for others
+
+                        if ($file->getSize() > ($maxSize * 1024)) {
+                            return back()->with('error', "File for '$type' exceeds allowed size limit.");
+                        }
+
                         $fileName = $type . $candidate->id . '.' . $file->getClientOriginalExtension();
                         $filePath = $file->storeAs('documents/' . $type, $fileName, 'public');
                         if ($type === 'education_certificate') {
@@ -1185,6 +1199,13 @@ class DCSApprovalController extends Controller
                     $file = $request->file('document_file')[$index] ?? null;
 
                     if ($file) {
+
+                        $maxSize = $type === 'other_certificate' ? 25600 : 5120; // 25MB for other_certificate, 5MB for others
+
+                        if ($file->getSize() > ($maxSize * 1024)) {
+                            return back()->with('error', "File for '$type' exceeds allowed size limit.");
+                        }
+
                         $fileName = $type . $candidate->id . '.' . $file->getClientOriginalExtension();
                         $filePath = $file->storeAs('documents/' . $type, $fileName, 'public');
                         if ($type === 'education_certificate') {

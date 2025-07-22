@@ -24,10 +24,10 @@ class BankDownload implements FromCollection, WithHeadings
                 'Client_ID' => $candidate->clients?->client_emp_id,
                 'Client_Name' => $candidate->clients?->entity_name,
                 'Emp_Name' => $candidate->clients?->emp_name,
-                'Aadhar_No' => $candidate->clients?->aadhar_no,
+                'Aadhar_No' => "'" . $candidate->clients?->aadhar_no,
 
                 'Bank_Name' => $candidate->bank_name,
-                'Bank_Account_No' => $candidate->bank_account_no,
+                'Bank_Account_No' => "'" . $candidate->bank_account_no,
                 'Bank_IFSC_Code' => $candidate->bank_ifsc_code,
                 // 'Bank_Status' => $candidate->bank_status == 1 ? 'Active' : 'In-Active',
                 'Remark' => $candidate->remark,

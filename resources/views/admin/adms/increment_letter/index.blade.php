@@ -42,7 +42,7 @@
                                 value="{{ $item->id }}">
                         </td> --}}
                         {{-- {{ dd($item->incrementdata );}} --}}
-                        <td>{{ $key + 1 }}</td>
+                        <td>{{ $increment->firstItem() + $key }}</td>
                         <td>{{ $item->employee_id ?? 'N/A' }}</td>
                         <td>{{ $item->incrementdata->client_emp_id ?? 'N/A' }}</td>
                         <td>{{ $item->client->client_name ?? 'N/A' }}</td>

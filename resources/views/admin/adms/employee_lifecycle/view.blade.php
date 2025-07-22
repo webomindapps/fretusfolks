@@ -1,5 +1,5 @@
 <x-applayout>
-     <x-admin.breadcrumb title="{{ false }}" isBack="{{ true }}" />
+    <x-admin.breadcrumb title="{{ false }}" isBack="{{ true }}" />
     <style>
         .custom-card {
             border-radius: 8px;
@@ -34,8 +34,15 @@
                                 </h4>
                             </div>
                             <div class="col-lg-2">
-                                <h5>Status: {{ $candidate?->status == 1 ? 'Active' : 'Inactive' }}</h5>
+                                <h5>Status:
+                                    @if ($candidate?->status == 1)
+                                        <span class="badge rounded-pill sactive">Active</span>
+                                    @else
+                                        <span class="badge rounded-pill deactive">In-Active</span>
+                                    @endif
+                                </h5>
                             </div>
+
                         </div>
 
                     </div>
@@ -82,6 +89,9 @@
                                         <div class="col-md-4 mb-2"><b>Joining Date:</b>
                                             <span>{{ \Carbon\Carbon::parse($candidate?->joining_date)->format('d-m-Y') }}</span>
                                         </div>
+                                           <div class="col-md-4 mb-2"><b>Date Of Leaving:</b>
+                                            <span>{{ \Carbon\Carbon::parse($candidate->employee_last_date)->format('d-m-Y') }}</span>
+                                        </div>
                                         <div class="col-md-4 mb-2"><b>Email:</b>
                                             <span>{{ $candidate?->email ?? 'N/A' }}</span>
                                         </div>
@@ -122,7 +132,7 @@
                                             <span>{{ $candidate?->psd ?? 'N/A' }}</span>
                                         </div>
                                         <div class="col-md-4 mb-2"><b>Created By:</b>
-                                            <span>{{ $candidate?->creator->name ?? 'N/A' }}</span>
+                                            <span>{{ $candidate?->creator->name ?? 'HR' }}</span>
                                         </div>
                                         <div class="col-md-12 mb-2"><b>Permanent Address:</b>
                                             <span>{{ $candidate?->permanent_address ?? 'N/A' }}</span>
@@ -358,6 +368,9 @@
                                         <div class="col-md-4 mb-2"><b>Employee ESIC:</b>
                                             <span>{{ $candidate?->emp_esic ?? 'N/A' }}</span>
                                         </div>
+                                        <div class="col-md-4 mb-2"><b>Employee LWF:</b>
+                                            <span>{{ $candidate?->lwf ?? 'N/A' }}</span>
+                                        </div>
                                         <div class="col-md-4 mb-2"><b>PT:</b>
                                             <span>{{ $candidate?->pt ?? 'N/A' }}</span>
                                         </div>
@@ -372,6 +385,9 @@
                                         </div>
                                         <div class="col-md-4 mb-2"><b>Employer ESIC:</b>
                                             <span>{{ $candidate?->employer_esic ?? 'N/A' }}</span>
+                                        </div>
+                                        <div class="col-md-4 mb-2"><b>Employer LWF:</b>
+                                            <span>{{ $candidate?->employee_lwf ?? 'N/A' }}</span>
                                         </div>
                                         <div class="col-md-4 mb-2"><b>Mediclaim:</b>
                                             <span>{{ $candidate?->mediclaim ?? 'N/A' }}</span>

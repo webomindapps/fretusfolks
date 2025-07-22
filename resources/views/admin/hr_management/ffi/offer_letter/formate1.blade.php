@@ -129,7 +129,7 @@
 
         <div
             style="color: #000;font-family: Tahoma;font-size: 17px;line-height: 15px;text-align: justify; padding-left: 0%;">
-            <h1 style="font-size:18px;text-align:center;text-decoration: underline;">Offer cum Appointment Letter</h1>
+            <h1 style="font-size:18px;text-align:center;text-decoration: underline;">Appointment Letter</h1>
             <br>
             <p style="font-size:12px;line-height:1.5;">
                 <b>Dear Mr./Mrs./Ms {{ $offerLetter->employee?->emp_name }}</b><br>

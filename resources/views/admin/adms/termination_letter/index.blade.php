@@ -41,7 +41,7 @@
                         <input type="checkbox" name="selected_items[]" class="single-item-check"
                             value="{{ $item->id }}">
                     </td> --}}
-                    <td>{{$key + 1}}</td>
+                    <td>{{ $termination->firstItem() + $key}}</td>
                     <td>{{ $item->emp_id }}</td>
                     <td>{{ $item->term_letter ? $item->term_letter->client_emp_id : 'N/A' }}</td>
                     <td>{{ $item->term_letter ? $item->term_letter->entity_name : 'N/A' }}</td>

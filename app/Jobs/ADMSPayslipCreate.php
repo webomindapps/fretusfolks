@@ -42,7 +42,7 @@ class ADMSPayslipCreate implements ShouldQueue
         // \Log::info('Generated data:', $this->payslips);
 
         foreach ($this->payslips as $key => $row) {
-            \Log::info($row);
+            // \Log::info($row);
             $uniqueId = time() . '_' . uniqid(); // Generates a unique identifier
             $fileName = 'payslip_' . $row['employee_name'] . '_' . $row['employee_id'] . '_' . $this->month . '_' . $this->year . '_' . $uniqueId . '.pdf';
 
@@ -160,7 +160,7 @@ class ADMSPayslipCreate implements ShouldQueue
                 'payslips_letter_path' => $filePath
             ];
         }
-        // \Log::info('Generated data:', $data);
+        \Log::info('Generated data:');
 
         // Perform bulk insert
         foreach ($paypdf as $pdfData) {

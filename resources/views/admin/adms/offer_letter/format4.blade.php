@@ -86,6 +86,10 @@
             Employee Code : <b>{{ $offerLetter->employee_id }}</b> <br />
             Agency : <b>Fretus Folks India Pvt Ltd</b> <br />
             Employee Name : <b>{{ $offerLetter->emp_name }}</b> <br />
+            <span> <b>
+                    {{ $offerLetter->gender_salutation }}
+                    {{ $offerLetter->father_name }}
+                </b> </span><br>
             Designation : <b>{{ $offerLetter->designation }}</b> <br />
             Dept : <b>{{ $offerLetter->department }}</b> <br />
             Contact No. : <b>{{ $offerLetter->phone1 }}</b> <br />
@@ -416,7 +420,7 @@
                     <td>{{ $offerLetter->employer_esic * 12 }}</td>
                 </tr>
                 <tr>
-                    <td>Employer LAW</td>
+                    <td>Employer LWF</td>
                     <td>{{ $offerLetter->employer_lwf }}</td>
                     <td>{{ $offerLetter->employer_lwf * 12 }}</td>
                 </tr>
@@ -441,7 +445,7 @@
                     <td>{{ $offerLetter->emp_esic * 12 }}</td>
                 </tr>
                 <tr>
-                    <td>Employee LAW</td>
+                    <td>Employee LWF</td>
                     <td>{{ $offerLetter->lwf }}</td>
                     <td>{{ $offerLetter->lwf * 12 }}</td>
                 </tr>

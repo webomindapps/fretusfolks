@@ -27,7 +27,7 @@
                     ['label' => 'Employee Name', 'column' => 'emp_name', 'sort' => true],
                     ['label' => 'Phone', 'column' => 'phone1', 'sort' => true],
                     ['label' => ' Approval Status', 'column' => 'dcs_approval', 'sort' => true],
-                    // ['label' => 'HR Approval Status', 'column' => 'status', 'sort' => true],
+                    ['label' => 'Status', 'column' => 'status', 'sort' => true],
                     ['label' => 'Actions', 'column' => 'action', 'sort' => false],
                 ];
             @endphp
@@ -61,7 +61,7 @@
                             <input type="checkbox" name="selected_items[]" class="single-item-check"
                                 value="{{ $item->id }}">
                         </td> --}}
-                        <td>{{ $key + 1 }}</td>
+                        <td>{{ $candidate->firstItem() + $key }}</td>
                         <td>{{ $item->ffi_emp_id === null || $item->ffi_emp_id === '' ? 'N/A' : $item->ffi_emp_id }}
                         <td>{{ $item->client_emp_id === null || $item->client_emp_id === '' ? 'N/A' : $item->client_emp_id }}
                         </td>
@@ -92,15 +92,13 @@
                                 </ul>
                             </div>
                         </td>
-                        {{-- <td>
-                        @if ($item->status == 1)
-                        <span class="badge rounded-pill deactive">Pending</span>
-                        @elseif ($item->status == 0)
-                        <span class="badge rounded-pill sactive">Completed</span>
-                        @else
-                        <span class="badge rounded-pill deactive">Rejected</span>
-                        @endif
-                    </td> --}}
+                        <td>
+                            @if ($item->status == 0)
+                                <span class="badge rounded-pill deactive">In-Active</span>
+                            @else
+                                <span class="badge rounded-pill sactive">Active</span>
+                            @endif
+                        </td>
 
                         <td>
                             <div class="dropdown pop_Up dropdown_bg">

@@ -1,5 +1,5 @@
 <x-applayout>
-     <x-admin.breadcrumb title="{{ false }}" isBack="{{ true }}" />
+    <x-admin.breadcrumb title="{{ false }}" isBack="{{ true }}" />
     <style>
         .custom-card {
             border-radius: 8px;
@@ -70,6 +70,9 @@
                                         </div>
                                         <div class="col-md-4 mb-2"><b>Joining Date:</b>
                                             <span>{{ \Carbon\Carbon::parse($candidate->joining_date)->format('d-m-Y') }}</span>
+                                        </div>
+                                        <div class="col-md-4 mb-2"><b>Date Of Leaving:</b>
+                                            <span>{{ \Carbon\Carbon::parse($candidate->employee_last_date)->format('d-m-Y') }}</span>
                                         </div>
                                         <div class="col-md-4 mb-2"><b>Email:</b>
                                             <span>{{ $candidate->email }}</span>

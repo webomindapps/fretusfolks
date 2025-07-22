@@ -25,9 +25,9 @@ class CadidateDownload implements FromCollection, WithHeadings
                 'Client_ID' => $candidate->client_emp_id,
                 'Client_Name' => $candidate->entity_name,
                 'Employee_Name' => $candidate->emp_name,
-                'Phone_No' => $candidate->phone1,
-                'UAN_No' => $candidate->uan_no,
-                'ESIC_No' => $candidate->esic_no,
+                'Phone_No' => "'" . $candidate->phone1,
+                'UAN_No' => "'" . $candidate->uan_no,
+                'ESIC_No' => "'" . $candidate->esic_no,
 
             ];
         }));

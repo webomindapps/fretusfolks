@@ -35,7 +35,7 @@ class ADMSOfferJOB implements ShouldQueue
 
             $offerLetters[] = [
                 'company_id' => $client?->id,
-                'employee_id' => $row['Employee_ID'] ?? null,
+                'employee_id' => $row['FFI_Employee_ID'] ?? null,
                 'emp_name' => $row['Employee_Name'] ?? null,
                 'phone1' => $row['Phone'] ?? null,
                 'entity_name' => $client?->client_name,
@@ -52,7 +52,7 @@ class ADMSOfferJOB implements ShouldQueue
                             ($row['Offer_Letter_Type'] === 'Blue Dart' ? 5 : 1))),
 
                 'status' => 1,
-
+                'gender_salutation' => $row['Gender_Salutation'] ?? null,
                 // Salary and Benefits
                 'basic_salary' => $row['Basic_Salary'] ?? 0,
                 'hra' => $row['HRA'] ?? 0,
@@ -66,13 +66,14 @@ class ADMSOfferJOB implements ShouldQueue
                 'emp_esic' => $row['Employee_ESIC'] ?? 0,
                 'pt' => $row['PT'] ?? 0,
                 'lwf' => $row['Employee_LWF'] ?? 0,
+                'other_deduction' => $row['Other_Deduction'] ?? 0,
                 'total_deduction' => $row['Total_Deduction'] ?? 0,
-                'take_home' => $row['Take_Home_Salary'] ?? 0,
+                'take_home' => $row['Net Take Home Salary – NTH (Gross Salary – Total Deduction)'] ?? 0,
                 'employer_pf' => $row['Employer_PF'] ?? 0,
                 'employer_esic' => $row['Employer_ESIC'] ?? 0,
                 'employer_lwf' => $row['Employer_LWF'] ?? 0,
                 'mediclaim' => $row['Mediclaim'] ?? 0,
-                'ctc' => $row['CTC'] ?? 0,
+                'ctc' => $row['Cost_To_Company - CTC (Gross_Salary + Employer_Deduction)'] ?? 0,
                 'leave_wage' => $row['Leave_Wage'] ?? 0,
 
                 'email' => $row['Email'] ?? null,

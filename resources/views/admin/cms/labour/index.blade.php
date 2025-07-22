@@ -4,18 +4,43 @@
         <form action="{{ route('admin.cms.labour') }}">
             <div class="row">
                 <div class="col-lg-4">
-                    <label for="client">Select Client
-                        <span style="color: red">*</span>
-                    </label>
-                    <select class="form-select" id="client" name="client_id" required="">
-                        <option value="">Select</option>
-                        @foreach ($clients as $client)
-                            <option value="{{ $client->id }}"
-                                {{ request()->client_id == $client->id ? 'selected' : '' }}>
-                                {{ $client->client_name }}
-                            </option>
-                        @endforeach
-                    </select>
+                    <label for="clientDropdown">Client Name</label>
+                    <div class="dropdown">
+                        <input type="text" class="btn dropdown-toggle text-start" id="clientDropdown"
+                            data-bs-toggle="dropdown" aria-expanded="false" readonly
+                            value="{{ old('client_name', 'Select Client') }}">
+
+                        <ul class="dropdown-menu p-2" aria-labelledby="clientDropdown"
+                            style="max-height: 300px; overflow-y: auto; min-width: 250px;">
+
+                            {{-- Search box --}}
+                            <li class="mb-2">
+                                <input type="text" class="form-control" placeholder="Search..."
+                                    onkeyup="filterClientList(this)">
+                            </li>
+
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+
+                            {{-- Client list - single selection --}}
+                            @foreach ($clients as $client)
+                                <li class="client-option">
+                                    <div class="form-check">
+                                        <input class="form-check-input client-radio" type="radio" name="client_radio"
+                                            id="client_{{ $client->id }}" value="{{ $client->id }}"
+                                            data-name="{{ $client->client_name }}" onchange="selectClient(this)">
+                                        <label class="form-check-label" for="client_{{ $client->id }}">
+                                            {{ $client->client_name }}
+                                        </label>
+                                    </div>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
+
+                    {{-- Hidden input to store selected client ID --}}
+                    <input type="hidden" name="client_id" id="selected_client_id" required>
                 </div>
             </div>
             <button type="submit" class="submit-btn submitBtn" id="submitButton">Search</button>
@@ -85,4 +110,29 @@
             </x-table>
         </div>
     </div>
+    @push('scripts')
+        <script>
+            function filterClientList(input) {
+                const filter = input.value.toLowerCase();
+                const items = document.querySelectorAll('.client-option');
+
+                items.forEach(item => {
+                    const label = item.textContent.toLowerCase();
+                    item.style.display = label.includes(filter) ? '' : 'none';
+                });
+            }
+
+            function selectClient(radio) {
+                const label = radio.getAttribute('data-name');
+                const value = radio.value;
+
+                document.getElementById('clientDropdown').value = label;
+                document.getElementById('selected_client_id').value = value;
+
+                // Optionally close the dropdown after selection
+                const dropdown = bootstrap.Dropdown.getInstance(document.getElementById('clientDropdown'));
+                if (dropdown) dropdown.hide();
+            }
+        </script>
+    @endpush
 </x-applayout>

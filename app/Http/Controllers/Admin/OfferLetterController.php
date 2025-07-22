@@ -155,6 +155,7 @@ class OfferLetterController extends Controller
             'notice_period' => 'nullable|string|max:255',
             'salary_date' => 'nullable|date',
             'designation' => 'nullable|string|max:255',
+            'gender_salutation' => 'nullable|string',
         ]);
 
         $client = ClientManagement::find($validatedData['company_id']);

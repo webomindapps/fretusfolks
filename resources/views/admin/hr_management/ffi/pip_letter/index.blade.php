@@ -22,7 +22,7 @@
                             <input type="checkbox" name="selected_items[]" class="single-item-check"
                                 value="{{ $item->id }}">
                         </td> --}}
-                        <td>{{ $item->id }}</td>
+                        <td>{{ $pip->firstItem() + $key }}</td>
                         <td>{{ $item->from_name }}</td>
                         <td>{{ $item->emp_id }}</td>
                         <td>{{ $item->pip_letter ? $item->pip_letter->emp_name : 'N/A' }}</td>

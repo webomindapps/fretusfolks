@@ -1,5 +1,5 @@
 <x-applayout>
-    <x-admin.breadcrumb title=" New ADMS Offer Letter" isBack="{{ true }}" />
+    <x-admin.breadcrumb title=" New ADMS Offer cum Appointment Letter" isBack="{{ true }}" />
 
     @if ($errors->any())
         <div class="col-lg-12 pb-4 px-2">
@@ -61,6 +61,17 @@
                                         <option value="5">Blue Dart</option>
                                     </select>
                                 </div>
+                                <div class="form-group col-lg-6 mt-2">
+                                    <label for="gender_salutation">Gender Salutation: <span
+                                            class="text-danger">*</span></label>
+                                    <select class="form-control" id="gender_salutation" name="gender_salutation"
+                                        required>
+                                        <option value="">-- Select --</option>
+                                        <option value="S/O">S/O</option>
+                                        <option value="D/O">D/O</option>
+
+                                    </select>
+                                </div>
 
                                 <x-forms.input label="Tenure Month(Integer): " type="text" name="tenure_month"
                                     id="tenure_month" :required="true" size="col-lg-6 mt-2" :value="old('tenure_month')" />
@@ -80,52 +91,56 @@
                                     1px solid #d6c8c8;padding: 2%;margin-bottom: 1%;">
                                     <div class="row">
                                         <x-forms.input label="Basic Salary: " type="number" name="basic_salary"
-                                            id="basic_salary" :required="true" size="col-lg-3 mt-2"
+                                            id="basic_salary" :required="true" size="col-lg-4 mt-2"
                                             :value="old('basic_salary')" />
                                         <x-forms.input label="HRA: " type="number" name="hra" id="hra"
-                                            :required="true" size="col-lg-3 mt-2" :value="old('hra')" />
+                                            :required="true" size="col-lg-4 mt-2" :value="old('hra')" />
                                         <x-forms.input label="Conveyance: " type="number" name="conveyance"
-                                            id="conveyance" :required="true" size="col-lg-3 mt-2"
+                                            id="conveyance" :required="true" size="col-lg-4 mt-2"
                                             :value="old('conveyance')" />
-                                        <x-forms.input label="Medical Reimbursement: " type="number"
+                                        {{-- <x-forms.input label="Medical Reimbursement: " type="number"
                                             name="medical_reimbursement" id="medical_reimbursement" :required="true"
-                                            size="col-lg-3 mt-2" :value="old('medical_reimbursement')" />
-                                        <x-forms.input label="Leave Wage: " type="number" name="leave_wage"
+                                            size="col-lg-3 mt-2" :value="old('medical_reimbursement')" /> --}}
+                                        {{-- <x-forms.input label="Leave Wage: " type="number" name="leave_wage"
                                             id="leave_wage" :required="true" size="col-lg-3 mt-2"
-                                            :value="old('leave_wage')" />
+                                            :value="old('leave_wage')" /> --}}
                                         <x-forms.input label="Special Allowance: " type="number"
                                             name="special_allowance" id="special_allowance" :required="true"
-                                            size="col-lg-3 mt-2" :value="old('special_allowance')" />
+                                            size="col-lg-4 mt-2" :value="old('special_allowance')" />
                                         <x-forms.input label="Other Allowance: " type="number"
                                             name="other_allowance" id="other_allowance" :required="true"
-                                            size="col-lg-3 mt-2" :value="old('other_allowance')" />
+                                            size="col-lg-4 mt-2" :value="old('other_allowance')" />
                                         <x-forms.input label="ST Bonus: " type="number" name="st_bonus"
-                                            id="st_bonus" :required="true" size="col-lg-3 mt-2"
+                                            id="st_bonus" :required="true" size="col-lg-4 mt-2"
                                             :value="old('st_bonus')" />
                                         <x-forms.input label="Gross Salary: " type="number" name="gross_salary"
-                                            id="gross_salary" :required="true" size="col-lg-3 mt-2"
+                                            id="gross_salary" :required="true" size="col-lg-12 mt-2"
                                             :value="old('gross_salary')" />
-                                        <x-forms.input label="PF Percentage: " type="number" name="pf_percentage"
+                                        {{-- <x-forms.input label="PF Percentage: " type="number" name="pf_percentage"
                                             id="pf_percentage" :required="true" size="col-lg-3 mt-2"
-                                            :value="old('pf_percentage')" />
+                                            :value="old('pf_percentage')" /> --}}
                                         <x-forms.input label="Employee PF: " type="number" name="emp_pf"
-                                            id="emp_pf" :required="true" size="col-lg-3 mt-2"
+                                            id="emp_pf" :required="true" size="col-lg-4 mt-2"
                                             :value="old('emp_pf')" />
 
                                         <x-forms.input label="Employee ESIC: " type="number" name="emp_esic"
-                                            id="emp_esic" :required="true" size="col-lg-3 mt-2"
+                                            id="emp_esic" :required="true" size="col-lg-4 mt-2"
                                             :value="old('emp_esic')" />
-                                        <x-forms.input label="PT: " type="number" name="pt" id="pt"
-                                            :required="true" size="col-lg-3 mt-2" :value="old('pt')" />
                                         <x-forms.input label="Employee Lwf: " type="number" name="lwf"
-                                            id="lwf" :required="true" size="col-lg-3 mt-2"
+                                            id="lwf" :required="true" size="col-lg-4 mt-2"
                                             :value="old('lwf', '0')" />
+                                        <x-forms.input label="PT: " type="number" name="pt" id="pt"
+                                            :required="true" size="col-lg-4 mt-2" :value="old('pt')" />
+                                        <x-forms.input label="Other Deduction: " type="number"
+                                            name="other_deduction" id="other_deduction" :required="true"
+                                            size="col-lg-4 mt-2" :value="old('other_deduction')" />
                                         <x-forms.input label="Total Deduction: " type="number"
                                             name="total_deduction" id="total_deduction" :required="true"
-                                            size="col-lg-3 mt-2" :value="old('total_deduction')" />
-                                        <x-forms.input label="Take Home Salary: " type="number" name="take_home"
-                                            id="take_home" :required="true" size="col-lg-3 mt-2"
-                                            :value="old('take_home')" />
+                                            size="col-lg-4 mt-2" :value="old('total_deduction')" />
+                                        <x-forms.input
+                                            label="Net Take Home Salary – NTH (Gross Salary – Total Deduction): "
+                                            type="number" name="take_home" id="take_home" :required="true"
+                                            size="col-lg-12 mt-2" :value="old('take_home')" />
                                         <x-forms.input label="Employer PF: " type="number" name="employer_pf"
                                             id="employer_pf" :required="true" size="col-lg-3 mt-2"
                                             :value="old('employer_pf')" />
@@ -138,8 +153,10 @@
                                         <x-forms.input label="Mediclaim: " type="number" name="mediclaim"
                                             id="mediclaim" :required="true" size="col-lg-3 mt-2"
                                             :value="old('mediclaim')" />
-                                        <x-forms.input label="CTC: " type="number" name="ctc" id="ctc"
-                                            :required="true" size="col-lg-3 mt-2" :value="old('ctc')" />
+                                        <x-forms.input
+                                            label="Cost To Company - CTC (Gross_Salary + Employer_Deduction): "
+                                            type="number" name="ctc" id="ctc" :required="true"
+                                            size="col-lg-12 mt-2" :value="old('ctc')" />
                                     </div>
                                 </div>
                             </div>

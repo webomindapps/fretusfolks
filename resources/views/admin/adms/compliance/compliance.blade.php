@@ -59,7 +59,7 @@
                 @foreach ($candidate as $key => $item)
                     <tr>
 
-                        <td>{{ $key + 1 }}</td>
+                        <td>{{ $candidate->firstItem() + $key }}</td>
                         <td>{{ $item->ffi_emp_id === null || $item->ffi_emp_id === '' ? 'N/A' : $item->ffi_emp_id }}
                         </td>
                         <td>{{ $item->client_emp_id === null || $item->client_emp_id === '' ? 'N/A' : $item->client_emp_id }}

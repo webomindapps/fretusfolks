@@ -29,7 +29,7 @@ class PayslipCreate implements ShouldQueue
      */
     public function handle(): void
     {
-        \Log::info('Generated data:', $this->payslips);
+        // \Log::info('Generated data:', $this->payslips);
         foreach ($this->payslips as $key => $row) {
             $data[] = [
                 'emp_id' => isset($row['Employee_ID']) ? $row['Employee_ID'] : 0,
@@ -97,7 +97,7 @@ class PayslipCreate implements ShouldQueue
                 'year' => $this->year,
             ];
         }
-
+        \Log::info('Generated data:');
         // Perform bulk insert
         FFIPayslipsModel::insert($data);
     }

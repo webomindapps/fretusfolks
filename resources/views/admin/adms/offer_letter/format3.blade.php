@@ -90,6 +90,10 @@
             <p style="line-height: 1.8; font-size: 14px; font-family: Times New Roman;">
                 <span>To,</span><br>
                 <span>Mr./Mrs./Ms.: <b>{{ $offerLetter->emp_name }}</b></span><br>
+                <span> <b>
+                        {{ $offerLetter->gender_salutation }}
+                        {{ $offerLetter->father_name }}
+                    </b> </span><br>
                 <span>Emp ID: <b>{{ $offerLetter->employee_id }}</b></span><br>
                 <span>Address: <b>{{ $offerLetter->location }}</b></span><br>
             </p>

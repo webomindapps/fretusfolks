@@ -1,9 +1,9 @@
 <x-applayout>
-    <x-admin.breadcrumb title="  Candidate First Information System" :create="route('admin.cfis.create')" />
+    <x-admin.breadcrumb title="Candidate First Information System" :create="route('admin.cfis.create')" />
     <div class="row mt-2">
         <div class="d-flex justify-content-end align-items-center">
             <div class="d-flex gap-3">
-                <a href="{{ asset('admin/cfis_formate.xlsx') }}" download="cfis_format.xlsx"
+                <a href="{{ asset('admin/cfis_formate.xlsx') }}" download="CFIS_Format.xlsx"
                     class="btn btn-primary text-white">
                     <i class='bx bxs-download'></i> Download Sample
                 </a>
@@ -63,7 +63,7 @@
                         <input type="checkbox" name="selected_items[]" class="single-item-check"
                             value="{{ $item->id }}">
                     </td> --}}
-                        <td>{{ $key + 1 }}</td>
+                        <td>{{ $candidate->firstItem() + $key }}</td>
                         <td>{{ $item->ffi_emp_id === null || $item->ffi_emp_id === '' ? 'N/A' : $item->ffi_emp_id }}
                         </td>
                         <td>{{ $item->client_emp_id === null || $item->client_emp_id === '' ? 'N/A' : $item->client_emp_id }}

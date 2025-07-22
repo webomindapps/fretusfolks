@@ -104,12 +104,12 @@
                             <th>Action</th>
                         </tr>
                     </thead>
-                   
+
                     <tbody>
-                        @forelse ($results as $result)
+                        @forelse ($results as $key=>$result)
                             <tr>
-                                 {{-- {{ dd($result) }} --}}
-                                <td>{{ $loop->iteration }}</td>
+                                {{-- {{ dd($result) }} --}}
+                                <td>{{ $results->firstItem() + $key }}</td>
                                 <td>{{ $result->entity_name }}</td>
                                 <td>{{ $result->client_emp_id }}</td>
                                 <td>{{ $result->ffi_emp_id }}</td>
@@ -118,11 +118,29 @@
                                 </td>
                                 <td>{{ $result->phone1 }}</td>
                                 <td>{{ $result->email }}</td>
+
                                 <td>
-                                    <a href="{{ route('admin.candidatelifecycle.view', $result->id) }}"
-                                        class="btn btn-info">
-                                        <i class='bx bx-link-alt'></i> View
-                                    </a>
+                                    <div class="dropdown pop_Up dropdown_bg">
+                                        <div class="dropdown-toggle" id="dropdownMenuButton-{{ $result->id }}"
+                                            data-bs-toggle="dropdown" aria-expanded="true">
+                                            Action
+                                        </div>
+                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1"
+                                            style="position: absolute; inset: auto auto 0px 0px; margin: 0px; transform: translate(-95px, -25.4219px);"
+                                            data-popper-placement="top-end">
+                                            <li>
+                                                <a href="{{ route('admin.candidatelifecycle.view', $result->id) }}"
+                                                    class="dropdown-item">
+                                                    <i class='bx bx-link-alt'></i> View
+                                                </a>
+                                                <a class="dropdown-item"
+                                                    href="{{ route('admin.candidatemaster.download', $result->id) }}">
+                                                    <i class='bx bxs-download'></i>
+                                                    Download pdf
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
                                 </td>
                             </tr>
                         @empty

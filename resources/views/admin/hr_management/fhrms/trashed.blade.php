@@ -23,7 +23,7 @@
                             <input type="checkbox" name="selected_items[]" class="single-item-check"
                                 value="{{ $item->id }}">
                         </td>
-                        <td>{{ $item->id }}</td>
+                        <td>{{ $employee->firstItem() + $key }}</td>
                         <td>{{ $item->ffi_emp_id }}</td>
                         <td> {{ $item->emp_name }}</td>
                         <td> {{ \Carbon\Carbon::parse($item->joining_date)->format('d-m-Y') }}</td>

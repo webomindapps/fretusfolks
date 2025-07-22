@@ -40,7 +40,7 @@
                             <input type="checkbox" name="selected_items[]" class="single-item-check"
                                 value="{{ $item->id }}">
                         </td> --}}
-                        <td>{{ $key + 1 }}</td>
+                        <td>{{ $showcause->firstItem() + $key }}</td>
                         <td>{{ $item->emp_id }}</td>
                         <td>{{ $item->showcauseletter ? $item->showcauseletter->client_emp_id : 'N/A' }}</td>
                         <td>{{ $item->showcauseletter ? $item->showcauseletter->entity_name : 'N/A' }}</td>

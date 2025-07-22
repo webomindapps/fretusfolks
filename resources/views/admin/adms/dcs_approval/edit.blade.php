@@ -118,8 +118,7 @@
                                         <div class="form-group col-lg-3 mt-2">
                                             <label for="spouse_photo">Spouse Photo: </label>
                                             <input type="file" name="spouse_photo" id="spouse_photo"
-                                                class="form-control"
-                                                value="{{ old('spouse_photo') }}">
+                                                class="form-control" value="{{ old('spouse_photo') }}">
                                             @if ($candidate->candidateDocuments->where('name', 'spouse_photo')->isNotEmpty())
                                                 @php
                                                     $spouse_photo = $candidate->candidateDocuments
@@ -159,8 +158,7 @@
                                 </div>
                                 <div class="form-group col-lg-3 mt-2">
                                     <label for="father_photo">Father Photo: </label>
-                                    <input type="file" name="father_photo" id="father_photo"
-                                       class="form-control"
+                                    <input type="file" name="father_photo" id="father_photo" class="form-control"
                                         value="{{ old('father_photo') }}">
                                     @if ($candidate->candidateDocuments->where('name', 'father_photo')->isNotEmpty())
                                         @php
@@ -186,8 +184,7 @@
                                 </div>
                                 <div class="form-group col-lg-3 mt-2">
                                     <label for="mother_photo">Mother Photo: </label>
-                                    <input type="file" name="mother_photo" id="mother_photo"
-                                       class="form-control"
+                                    <input type="file" name="mother_photo" id="mother_photo" class="form-control"
                                         value="{{ old('mother_photo') }}">
                                     @if ($candidate->candidateDocuments->where('name', 'mother_photo')->isNotEmpty())
                                         @php
@@ -291,7 +288,7 @@
                                         <div class="form-group col-lg-6 mt-2">
                                             <label for="pan_declaration">Upload Signed Document: </label>
                                             <input type="file" name="pan_declaration" id="pan_declaration"
-                                               class="form-control">
+                                                class="form-control">
                                         </div>
                                     </div>
 
@@ -310,8 +307,7 @@
                                 <div class="form-group col-lg-6 mt-2">
                                     <label for="aadhar_path">Attach Aadhar Card: <span
                                             style="color: red">*</span></label>
-                                    <input type="file" name="aadhar_path" id="aadhar_path"
-                                        class="form-control"
+                                    <input type="file" name="aadhar_path" id="aadhar_path" class="form-control"
                                         value="{{ old('aadhar_path', $candidate->aadhar_path) }}" required>
                                 </div>
 
@@ -347,8 +343,7 @@
 
                                 <div class="form-group col-lg-4 mt-2">
                                     <label for="resume">Resume: </label>
-                                    <input type="file" name="resume" id="resume"
-                                        class="form-control">
+                                    <input type="file" name="resume" id="resume" class="form-control">
 
                                     @if ($candidate->candidateDocuments->where('name', 'resume')->isNotEmpty())
                                         @php
@@ -363,8 +358,7 @@
 
                                 <div class="form-group col-lg-4 mt-2">
                                     <label for="family_photo">Family Photo: </label>
-                                    <input type="file" name="family_photo" id="family_photo"
-                                      class="form-control"
+                                    <input type="file" name="family_photo" id="family_photo" class="form-control"
                                         value="{{ old('family_photo') }}">
                                     @if ($candidate->candidateDocuments->where('name', 'family_photo')->isNotEmpty())
                                         @php
@@ -497,8 +491,7 @@
 
                                                 </select>
 
-                                                <input type="file"
-                                                    name="document_file[]" class=" col-lg-5 me-3">
+                                                <input type="file" name="document_file[]" class=" col-lg-5 me-3">
 
                                                 <button type="button" class="btn btn-success me-2 add-row">+</button>
                                             </div>
@@ -600,9 +593,22 @@
                                 <x-forms.input label="Password:" type="text" name="psd" id="psd"
                                     :required="true" size="col-lg-6 mt-2" :value="old('psd') ?? ($candidate->psd ?? 'ffemp@123')" />
 
-                                {{-- <x-forms.select label="Active Status:" name="active_status" id="active_status"
-                                    :required="true" size="col-lg-6 mt-2" :options="FretusFolks::getStatus()"
-                                    :value="old('active_status', $candidate->active_status)" /> --}}
+                                <div class="col-lg-6 mt-2">
+                                    <label for="status" class="form-label">Status: <span
+                                            class="text-danger">*</span></label>
+                                    <select name="status" id="status" class="form-select" required>
+                                        <option value="">-- Select Status --</option>
+                                        <option value="1"
+                                            {{ old('status', $candidate->status) == '1' ? 'selected' : '' }}>Active
+                                        </option>
+                                        <option value="0"
+                                            {{ old('status', $candidate->status) == '0' ? 'selected' : '' }}>In-Active
+                                        </option>
+                                    </select>
+                                </div>
+
+                                {{-- <x-forms.select label="Active Status:" name="status" id="status"
+                                    :required="true" size="col-lg-6 mt-2" :options="FretusFolks::getStatus()" :value="old('status', $candidate->status)" /> --}}
                             </div>
                             <div class="row">
                                 <div class="col-lg-12 mt-4">
@@ -822,11 +828,11 @@
                    class="form-control">
 
             ${childData.photo ? `
-                                                                                                                                                                    <div id="image-preview-container-${i}" class="d-flex mt-2">
-                                                                                                                                                                        <img src="{{ url('/') }}/${childData.photo}" 
-                                                                                                                                                                             class="img-thumbnail" width="100" height="100" 
-                                                                                                                                                                             alt="Child ${i} Uploaded Photo">
-                                                                                                                                                                    </div>` : ''}
+                                                                                                                                                                                            <div id="image-preview-container-${i}" class="d-flex mt-2">
+                                                                                                                                                                                                <img src="{{ url('/') }}/${childData.photo}" 
+                                                                                                                                                                                                     class="img-thumbnail" width="100" height="100" 
+                                                                                                                                                                                                     alt="Child ${i} Uploaded Photo">
+                                                                                                                                                                                            </div>` : ''}
         </div>
     `;
                             childrenDetails.appendChild(childRow);

@@ -345,7 +345,7 @@
                                                 <tr>
                                                     <th>Document Name</th>
                                                     <th>View Document</th>
-                                                    <th>Action</th>
+                                                    {{-- <th>Action</th> --}}
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -394,7 +394,7 @@
                                                                     {{-- {{ $candidateDocuments[$certificate->name] ?? $certificate->name }} --}}
                                                                 </a>
                                                             </td>
-                                                            <td>
+                                                            {{-- <td>
                                                                 <div class="dropdown">
                                                                     <button class="btn btn btn-sm dropdown-toggle"
                                                                         type="button"
@@ -416,7 +416,7 @@
                                                                         </li>
                                                                     </ul>
                                                                 </div>
-                                                            </td>
+                                                            </td> --}}
                                                         </tr>
                                                     @endforeach
                                                 @endif
@@ -433,7 +433,7 @@
                                                                         View
                                                                     </a>
                                                                 </td>
-                                                                <td>
+                                                                {{-- <td>
                                                                     <div class="dropdown">
                                                                         <button class="btn btn-sm dropdown-toggle"
                                                                             type="button"
@@ -455,7 +455,7 @@
                                                                             </li>
                                                                         </ul>
                                                                     </div>
-                                                                </td>
+                                                                </td> --}}
                                                             </tr>
                                                         @endif
                                                     @endforeach
@@ -472,7 +472,7 @@
                                                                     View
                                                                 </a>
                                                             </td>
-                                                            <td>
+                                                            {{-- <td>
                                                                 <div class="dropdown">
                                                                     <button class="btn bt btn-sm dropdown-toggle"
                                                                         type="button"
@@ -494,7 +494,7 @@
                                                                         </li>
                                                                     </ul>
                                                                 </div>
-                                                            </td>
+                                                            </td> --}}
                                                         </tr>
                                                     @endforeach
                                                 @endif
@@ -510,7 +510,7 @@
                                                                     View
                                                                 </a>
                                                             </td>
-                                                            <td>
+                                                            {{-- <td>
                                                                 <div class="dropdown">
                                                                     <button class="btn btn btn-sm dropdown-toggle"
                                                                         type="button"
@@ -532,7 +532,7 @@
                                                                         </li>
                                                                     </ul>
                                                                 </div>
-                                                            </td>
+                                                            </td> --}}
                                                         </tr>
                                                     @endforeach
                                                 @endif
@@ -634,6 +634,19 @@
 
                                 <x-forms.input label="Password:" type="text" name="psd" id="psd"
                                     :required="true" size="col-lg-6 mt-2" :value="old('psd') ?? ($candidate->psd ?? 'ffemp@123')" />
+                                <div class="col-lg-6 mt-2">
+                                    <label for="status" class="form-label">Status: <span
+                                            class="text-danger">*</span></label>
+                                    <select name="status" id="status" class="form-select" required>
+                                        <option value="">-- Select Status --</option>
+                                        <option value="1"
+                                            {{ old('status', $candidate->status) == '1' ? 'selected' : '' }}>Active
+                                        </option>
+                                        <option value="0"
+                                            {{ old('status', $candidate->status) == '0' ? 'selected' : '' }}>In-Active
+                                        </option>
+                                    </select>
+                                </div>
 
                                 <div class="form-group col-lg-6 mt-2 mr-2">
                                     <label for="hr_approval">Status<span style="color: red">*</span></label>
@@ -1106,11 +1119,11 @@
                    class="form-control">
 
             ${childData.photo ? `
-                                                                                                                                                                                                                                                    <div id="image-preview-container-${i}" class="d-flex mt-2">
-                                                                                                                                                                                                                                                        <img src="{{ url('/') }}/${childData.photo}" 
-                                                                                                                                                                                                                                                             class="img-thumbnail" width="100" height="100" 
-                                                                                                                                                                                                                                                             alt="Child ${i} Uploaded Photo">
-                                                                                                                                                                                                                                                    </div>` : ''}
+                                                                                                                                                                                                                                                                    <div id="image-preview-container-${i}" class="d-flex mt-2">
+                                                                                                                                                                                                                                                                        <img src="{{ url('/') }}/${childData.photo}" 
+                                                                                                                                                                                                                                                                             class="img-thumbnail" width="100" height="100" 
+                                                                                                                                                                                                                                                                             alt="Child ${i} Uploaded Photo">
+                                                                                                                                                                                                                                                                    </div>` : ''}
         </div>
     `;
                             childrenDetails.appendChild(childRow);

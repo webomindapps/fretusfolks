@@ -35,6 +35,7 @@ class OfferLetter extends Model
         'emp_esic',
         'pt',
         'lwf',
+        'other_deduction',
         'total_deduction',
         'take_home',
         'employer_pf',
@@ -48,6 +49,7 @@ class OfferLetter extends Model
         'salary_date',
         'designation',
         'offer_letter_path',
+        'gender_salutation',
     ];
     public function employee()
     {
