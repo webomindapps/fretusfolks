@@ -38,6 +38,16 @@ class ImportApprovedCandidatesJob implements ShouldQueue
 
         // dd($this->data);
         foreach ($this->data as $row) {
+            $ffiEmpId = $row['FFI_EMP_ID'] ?? null;
+
+            if (!empty($ffiEmpId)) {
+                $exists = CFISModel::where('ffi_emp_id', $ffiEmpId)->exists();
+
+                if ($exists) {
+                    \Log::warning("Duplicate FFI_EMP_ID skipped: {$ffiEmpId}");
+                    continue;
+                }
+            }
 
             $state = States::where('state_name', $row['State'])->first();
             $client = ClientManagement::where('client_name', $row['Client_Name'])->first();

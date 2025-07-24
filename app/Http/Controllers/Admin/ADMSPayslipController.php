@@ -263,9 +263,9 @@ class ADMSPayslipController extends Controller
             foreach ($payslips as $payslip) {
                 $jobs[] = new GeneratePayslipPDFs($payslip);
             }
-    
+
             $emails = array_map('trim', explode(',', $ademails));
-    
+
             $batch = Bus::batch($jobs)
                 ->then(function (Batch $batch) use ($payslips, $emails) {
                     // Dispatch zip creation after all PDFs are ready
@@ -276,7 +276,7 @@ class ADMSPayslipController extends Controller
                 })
                 ->allowFailures()
                 ->dispatch();
-    
+
             session(['batch_id' => $batch->id]);
             return redirect()->back()->with('success', 'Payslips are being processed. You will receive an email when ready.');
         } catch (Throwable $e) {
@@ -592,5 +592,27 @@ class ADMSPayslipController extends Controller
 
         // Return response as download
         return response()->download($tempFile, $fileName)->deleteFileAfterSend(true);
+    }
+
+    public function bulkdelete(Request $request)
+    {
+        $query = $this->model()->query();
+
+        if ($request->client_name) {
+            $query->where('client_name', $request->client_name);
+        }
+        if ($request->emp_id) {
+            $query->where('ffi_emp_id', $request->emp_id);
+        }
+        if ($request->month) {
+            $query->where('month', $request->month);
+        }
+        if ($request->year) {
+            $query->where('year', $request->year);
+        }
+
+        $deletedCount = $query->delete();
+
+        return redirect()->back()->with('success', "$deletedCount payslip(s) deleted successfully.");
     }
 }

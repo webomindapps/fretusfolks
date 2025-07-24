@@ -7,8 +7,7 @@
     <title>Fretus Folks</title>
     <style>
         @page {
-            margin: 200px 55px 120px 55px;
-            /* top increased to make space for header */
+            margin: 200px 0 120px 0;
         }
 
         .cash {
@@ -224,7 +223,7 @@
                 </tr>
             </tbody>
         </table>
-        <pagebreak />
+        <div style="page-break-after: always;"></div>
         <h3 style="text-align:center;font-weight:bold;">Annexure Salary Break Up</h3>
         <table class="salary-details-table" border="1">
             <tr>

@@ -24,8 +24,9 @@ class ApprovedCandidateImport implements ToCollection
 
         $chunked = $data->chunk(1000);
 
-        $alreadyReinserted = []; // Track reinserted combinations
-        $alreadyInsertedInThisRun = []; // Prevent inserting same record twice in this import
+        $alreadyReinserted = []; // Track reinserted phone or aadhar separately
+        $alreadyInsertedInThisRun = []; // Avoid duplicates within same import
+        $ffiEmpIdsInThisRun = []; // Track FFI_EMP_IDs during current import
 
         foreach ($chunked as $chunk) {
             $processedData = [];
@@ -44,42 +45,60 @@ class ApprovedCandidateImport implements ToCollection
                         continue;
                     }
 
+                    // Unique key to track within current import
                     $uniqueKey = $ffiEmpId . '|' . $phone . '|' . $aadhar;
 
-                    // Already inserted in this run?
-                    if (in_array($uniqueKey, $alreadyInsertedInThisRun)) {
-                        $chunkDuplicates[] = "Duplicate in current import at row #$index - FFI_Emp_ID: $ffiEmpId, Phone: $phone, Aadhar: $aadhar";
+                    // ✅ 1. FFI_EMP_ID must be unique
+                    if (in_array($ffiEmpId, $ffiEmpIdsInThisRun)) {
+                        $chunkDuplicates[] = "Duplicate FFI_EMP_ID in current import at row #$index - $ffiEmpId";
                         continue;
                     }
 
-                    // Fetch all records from DB that match same FFI + Phone + Aadhar
-                    $matchingRecords = DB::table('backend_management')
-                        ->where('ffi_emp_id', $ffiEmpId)
-                        ->where('phone1', $phone)
-                        ->where('aadhar_no', $aadhar)
-                        ->get();
-
-                    $totalExisting = $matchingRecords->count();
-                    $hasExitRecord = $matchingRecords->whereNotNull('employee_last_date')->count() > 0;
-                    $hasActiveRecord = $matchingRecords->whereNull('employee_last_date')->count() > 0;
-
-                    if ($totalExisting == 0) {
-                        // No existing record — safe to insert
-                        $processedData[] = $row;
-                        $alreadyInsertedInThisRun[] = $uniqueKey;
-                    } elseif ($totalExisting == 1 && $hasExitRecord) {
-                        // One exited record exists — allow reinsertion only once
-                        if (!in_array($uniqueKey, $alreadyReinserted)) {
-                            $processedData[] = $row;
-                            $alreadyInsertedInThisRun[] = $uniqueKey;
-                            $alreadyReinserted[] = $uniqueKey;
-                        } else {
-                            $chunkDuplicates[] = "Duplicate (exit data already reused) at row #$index - FFI_Emp_ID: $ffiEmpId, Phone: $phone, Aadhar: $aadhar";
-                        }
-                    } else {
-                        // Already two records (one active and one exited) — do not allow more
-                        $chunkDuplicates[] = "Duplicate (already 2 records exist) at row #$index - FFI_Emp_ID: $ffiEmpId, Phone: $phone, Aadhar: $aadhar";
+                    $ffiExists = DB::table('backend_management')->where('ffi_emp_id', $ffiEmpId)->exists();
+                    if ($ffiExists) {
+                        $chunkDuplicates[] = "FFI_EMP_ID already exists with active record at row #$index - $ffiEmpId";
+                        continue;
                     }
+
+                    // ✅ 2. Check phone1 separately
+                    $phoneExists = DB::table('backend_management')->where('phone1', $phone)->get();
+                    if ($phoneExists->count()) {
+                        $hasActivePhone = $phoneExists->whereNull('employee_last_date')->count() > 0;
+                        if ($hasActivePhone) {
+                            $chunkDuplicates[] = "Phone number already exists with active record at row #$index - $phone";
+                            continue;
+                        }
+
+                        // Prevent reusing same phone again in current import
+                        if (in_array('phone|' . $phone, $alreadyReinserted)) {
+                            $chunkDuplicates[] = "Phone number reuse blocked (already reinserted) at row #$index - $phone";
+                            continue;
+                        }
+
+                        $alreadyReinserted[] = 'phone|' . $phone;
+                    }
+
+                    // ✅ 3. Check aadhar_no separately
+                    $aadharExists = DB::table('backend_management')->where('aadhar_no', $aadhar)->get();
+                    if ($aadharExists->count()) {
+                        $hasActiveAadhar = $aadharExists->whereNull('employee_last_date')->count() > 0;
+                        if ($hasActiveAadhar) {
+                            $chunkDuplicates[] = "Aadhar number already exists with active record at row #$index - $aadhar";
+                            continue;
+                        }
+
+                        if (in_array('aadhar|' . $aadhar, $alreadyReinserted)) {
+                            $chunkDuplicates[] = "Aadhar reuse blocked (already reinserted) at row #$index - $aadhar";
+                            continue;
+                        }
+
+                        $alreadyReinserted[] = 'aadhar|' . $aadhar;
+                    }
+
+                    // ✅ Passed all checks
+                    $processedData[] = $row;
+                    $alreadyInsertedInThisRun[] = $uniqueKey;
+                    $ffiEmpIdsInThisRun[] = $ffiEmpId;
                 }
             }
 
@@ -91,6 +110,7 @@ class ApprovedCandidateImport implements ToCollection
                 ImportApprovedCandidatesJob::dispatch($processedData, $this->created_by);
             }
         }
+
 
 
 

@@ -21,6 +21,7 @@ class CadidateReportExport implements FromCollection, WithHeadings
         return $this->candidates->load('candidateDocuments', 'clientstate')->map(function ($candidate, $index) {
 
             $documentPaths = $candidate->candidateDocuments->pluck('path', 'name');
+            // \Log::info('documents:', $documentPaths->toArray());
 
             return [
                 'Sl No' => $index + 1,
@@ -98,17 +99,16 @@ class CadidateReportExport implements FromCollection, WithHeadings
                 'Mediclaim' => $candidate->mediclaim,
                 'CTC' => $candidate->ctc,
 
-
-                'Aadhar Doc' => isset($documentPaths['aadhar_path']) ? asset($documentPaths['aadhar_path']) : asset($candidate->aadhar_path ?? ''),
-                'PAN Doc' => isset($documentPaths['pan_path']) ? asset($documentPaths['pan_path']) : asset($candidate->pan_path ?? ''),
-                'Driving License Doc' => isset($documentPaths['driving_license_path']) ? asset($documentPaths['driving_license_path']) : asset($candidate->driving_license_path ?? ''),
-                'Resume Doc' => isset($documentPaths['resume']) ? asset($documentPaths['resume']) : asset($candidate->resume ?? ''),
-                'Voter ID Doc' => isset($documentPaths['voter_id']) ? asset($documentPaths['voter_id']) : asset($candidate->voter_id ?? ''),
-                'Employee Form Doc' => isset($documentPaths['emp_form']) ? asset($documentPaths['emp_form']) : asset($candidate->emp_form ?? ''),
-                'PF/ESIC Form Doc' => isset($documentPaths['pf_esic_form']) ? asset($documentPaths['pf_esic_form']) : asset($candidate->pf_esic_form ?? ''),
-                'Payslip Doc' => isset($documentPaths['payslip']) ? asset($documentPaths['payslip']) : asset($candidate->payslip ?? ''),
-                'Experience Letter Doc' => isset($documentPaths['exp_letter']) ? asset($documentPaths['exp_letter']) : asset($candidate->exp_letter ?? ''),
-                'PAN Declaration Doc' => isset($documentPaths['pan_declaration']) ? asset($documentPaths['pan_declaration']) : asset($candidate->pan_declaration ?? ''),
+                'Aadhar Doc' => $documentPaths->has('aadhar_path') ? asset($documentPaths['aadhar_path']) : ($candidate->aadhar_path ? asset($candidate->aadhar_path) : ''),
+                'PAN Doc' => $documentPaths->has('pan_path') ? asset($documentPaths['pan_path']) : ($candidate->pan_path ? asset($candidate->pan_path) : ''),
+                'Driving License Doc' => $documentPaths->has('driving_license_path') ? asset($documentPaths['driving_license_path']) : ($candidate->driving_license_path ? asset($candidate->driving_license_path) : ''),
+                'Resume Doc' => $documentPaths->has('resume') ? asset($documentPaths['resume']) : ($candidate->resume ? asset($candidate->resume) : ''),
+                'Voter ID Doc' => $documentPaths->has('voter_id') ? asset($documentPaths['voter_id']) : ($candidate->voter_id ? asset($candidate->voter_id) : ''),
+                'Employee Form Doc' => $documentPaths->has('emp_form') ? asset($documentPaths['emp_form']) : ($candidate->emp_form ? asset($candidate->emp_form) : ''),
+                'PF/ESIC Form Doc' => $documentPaths->has('pf_esic_form') ? asset($documentPaths['pf_esic_form']) : ($candidate->pf_esic_form ? asset($candidate->pf_esic_form) : ''),
+                'Payslip Doc' => $documentPaths->has('payslip') ? asset($documentPaths['payslip']) : ($candidate->payslip ? asset($candidate->payslip) : ''),
+                'Experience Letter Doc' => $documentPaths->has('exp_letter') ? asset($documentPaths['exp_letter']) : ($candidate->exp_letter ? asset($candidate->exp_letter) : ''),
+                'PAN Declaration Doc' => $documentPaths->has('pan_declaration') ? asset($documentPaths['pan_declaration']) : ($candidate->pan_declaration ? asset($candidate->pan_declaration) : ''),
 
             ];
         });

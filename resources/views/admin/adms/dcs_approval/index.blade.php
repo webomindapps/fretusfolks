@@ -26,8 +26,8 @@
                     ['label' => 'Client Name', 'column' => 'entity_name', 'sort' => true],
                     ['label' => 'Employee Name', 'column' => 'emp_name', 'sort' => true],
                     ['label' => 'Phone', 'column' => 'phone1', 'sort' => true],
-                    ['label' => ' Approval Status', 'column' => 'dcs_approval', 'sort' => true],
                     ['label' => 'Status', 'column' => 'status', 'sort' => true],
+                    ['label' => ' Approval Status', 'column' => 'dcs_approval', 'sort' => true],
                     ['label' => 'Actions', 'column' => 'action', 'sort' => false],
                 ];
             @endphp
@@ -73,6 +73,13 @@
                         </td>
                         <td> {{ $item->phone1 }}</td>
                         <td>
+                            @if ($item->status == 0)
+                                <span class="badge rounded-pill deactive">In-Active</span>
+                            @else
+                                <span class="badge rounded-pill sactive">Active</span>
+                            @endif
+                        </td>
+                        <td>
                             <div class="dropdown">
                                 <button class="btn btn-secondary dropdown-toggle" type="button"
                                     id="statusDropdown{{ $item->id }}" data-bs-toggle="dropdown"
@@ -91,13 +98,6 @@
                                     </li>
                                 </ul>
                             </div>
-                        </td>
-                        <td>
-                            @if ($item->status == 0)
-                                <span class="badge rounded-pill deactive">In-Active</span>
-                            @else
-                                <span class="badge rounded-pill sactive">Active</span>
-                            @endif
                         </td>
 
                         <td>

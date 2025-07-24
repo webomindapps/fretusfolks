@@ -453,6 +453,7 @@ Route::prefix('admin')->group(function () {
         Route::get('payslips/search-payslip', [ADMSPayslipController::class, 'searchPayslip'])->name('search.payslips');
         Route::get('/generate-payslips/{id}', [ADMSPayslipController::class, 'generatePayslipsPdf'])->name('generate.payslips');
         Route::get('/payslips/{id}/delete', [ADMSPayslipController::class, 'destroy'])->name('payslips.delete');
+        Route::delete('/payslips/delete-payslips', [ADMSPayslipController::class, 'bulkdelete'])->name('bulkdelete.payslips');
 
         //Pending Bank Approvals
         Route::get('/pending-bank-approval', [ComplainceBankAccountController::class, 'index'])->name('pendingbankapprovals');

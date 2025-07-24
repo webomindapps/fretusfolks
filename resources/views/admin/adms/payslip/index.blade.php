@@ -43,9 +43,9 @@
                                     <select name="month" id="month" class="form-control" required>
                                         <option value="">Select Month</option>
                                         @foreach (range(1, 12) as $month)
-                                        <option value="{{ $month }}">
-                                            {{ \Carbon\Carbon::create()->month($month)->format('F') }}
-                                        </option>
+                                            <option value="{{ $month }}">
+                                                {{ \Carbon\Carbon::create()->month($month)->format('F') }}
+                                            </option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -56,7 +56,7 @@
                                     <select name="year" id="year" class="form-control" required>
                                         <option value="">Select Year</option>
                                         @foreach (range(2018, now()->year) as $year)
-                                        <option value="{{ $year }}">{{ $year }}</option>
+                                            <option value="{{ $year }}">{{ $year }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -108,14 +108,14 @@
                                         </li>
 
                                         @foreach (FretusFolks::getClientname() as $index => $option)
-                                        <li>
-                                            <label class="dropdown-item m-0">
-                                                <input type="checkbox" name="client_checkbox"
-                                                    class="form-check-input me-2"
-                                                    onclick="selectClientWithCheckbox(this, '{{ $option['label'] }}')">
-                                                {{ $option['label'] }}
-                                            </label>
-                                        </li>
+                                            <li>
+                                                <label class="dropdown-item m-0">
+                                                    <input type="checkbox" name="client_checkbox"
+                                                        class="form-check-input me-2"
+                                                        onclick="selectClientWithCheckbox(this, '{{ $option['label'] }}')">
+                                                    {{ $option['label'] }}
+                                                </label>
+                                            </li>
                                         @endforeach
                                     </ul>
                                 </div>
@@ -165,8 +165,8 @@
                                 <select name="month" id="month" class="form-control" required>
                                     <option value="">Select Month</option>
                                     @foreach (range(1, 12) as $month)
-                                    <option value="{{ $month }}">
-                                        {{ \Carbon\Carbon::create()->month($month)->format('F') }}</option>
+                                        <option value="{{ $month }}">
+                                            {{ \Carbon\Carbon::create()->month($month)->format('F') }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -177,7 +177,7 @@
                                 <select name="year" id="year" class="form-control" required>
                                     <option value="">Select Year</option>
                                     @foreach (range(2018, now()->year) as $year)
-                                    <option value="{{ $year }}">{{ $year }}</option>
+                                        <option value="{{ $year }}">{{ $year }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -208,11 +208,11 @@
                     </div>
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-lg-4">
+                            <div class="col-lg-3">
                                 <div class="dropdown">
-                                    <input type="text" class="btn dropdown-toggle text-start" id="dropdownSearchclient"
-                                        data-bs-toggle="dropdown" aria-expanded="false" readonly
-                                        value="{{ request('client_name') ?? 'Select Client' }}" />
+                                    <input type="text" class="btn dropdown-toggle text-start"
+                                        id="dropdownSearchclient" data-bs-toggle="dropdown" aria-expanded="false"
+                                        readonly value="{{ request('client_name') ?? 'Select Client' }}" />
 
                                     <input type="hidden" name="client_name" id="selected_client_search"
                                         value="{{ request('client_name') }}" />
@@ -228,15 +228,15 @@
                                         </li>
 
                                         @foreach (FretusFolks::getClientname() as $index => $option)
-                                        <li class="client-option-search">
-                                            <label class="dropdown-item d-flex align-items-center m-0"
-                                                style="cursor:pointer;">
-                                                <input type="radio" name="client_search_radio"
-                                                    class="form-check-input me-2" value="{{ $option['label'] }}"
-                                                    onchange="selectClientsearch(this)">
-                                                {{ $option['label'] }}
-                                            </label>
-                                        </li>
+                                            <li class="client-option-search">
+                                                <label class="dropdown-item d-flex align-items-center m-0"
+                                                    style="cursor:pointer;">
+                                                    <input type="radio" name="client_search_radio"
+                                                        class="form-check-input me-2" value="{{ $option['label'] }}"
+                                                        onchange="selectClientsearch(this)">
+                                                    {{ $option['label'] }}
+                                                </label>
+                                            </li>
                                         @endforeach
                                     </ul>
                                 </div>
@@ -250,8 +250,9 @@
                                 <select name="month" id="month" class="form-control">
                                     <option value="">Select Month</option>
                                     @foreach (range(1, 12) as $month)
-                                    <option value="{{ $month }}" {{ request('month')==$month ? 'selected' : '' }}>
-                                        {{ \Carbon\Carbon::create()->month($month)->format('F') }}</option>
+                                        <option value="{{ $month }}"
+                                            {{ request('month') == $month ? 'selected' : '' }}>
+                                            {{ \Carbon\Carbon::create()->month($month)->format('F') }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -259,289 +260,306 @@
                                 <select name="year" id="year" class="form-control">
                                     <option value="">Select Year</option>
                                     @foreach (range(2018, now()->year) as $year)
-                                    <option value="{{ $year }}" {{ request('year')==$year ? 'selected' : '' }}>
-                                        {{ $year }}</option>
+                                        <option value="{{ $year }}"
+                                            {{ request('year') == $year ? 'selected' : '' }}>
+                                            {{ $year }}</option>
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-md-3">
                                 <button type="submit" class="btn btn-primary">Search</button>
+                                <button type="button" class="btn btn-danger" onclick="confirmDelete()">Bulk
+                                    Delete</button>
                             </div>
                         </div>
                     </div>
                 </div>
             </form>
+            <form id="delete_form" method="POST" action="{{ route('admin.bulkdelete.payslips') }}">
+                @csrf
+                @method('DELETE')
+                <input type="hidden" name="client_name" value="{{ request('client_name') }}">
+                <input type="hidden" name="emp_id" value="{{ request('emp_id') }}">
+                <input type="hidden" name="month" value="{{ request('month') }}">
+                <input type="hidden" name="year" value="{{ request('year') }}">
+            </form>
         </div>
     </div>
 
     @if (isset($payslips) && count($payslips) > 0)
-    <div class="card">
-        <div class="card-header header-elements-inline">
-            <h5 class="card-title">Payslip Details</h5>
-        </div>
-        <div class="row mt-4">
-            <div class="col-lg-12">
-                @php
-                $columns = [
-                ['label' => 'SL No', 'column' => 'id', 'sort' => true],
-                ['label' => 'EMP ID', 'column' => 'emp_id', 'sort' => false],
-                ['label' => 'Client Name', 'column' => 'client_name', 'sort' => false],
-                ['label' => 'EMP Name', 'column' => 'emp_name', 'sort' => false],
-                ['label' => 'Designation', 'column' => 'designation', 'sort' => true],
-                ['label' => 'Department', 'column' => 'department', 'sort' => true],
-                ['label' => 'Date', 'column' => 'month,year', 'sort' => true],
-                ['label' => 'Actions', 'column' => 'action', 'sort' => false],
-                ];
-                @endphp
+        <div class="card">
+            <div class="card-header header-elements-inline">
+                <h5 class="card-title">Payslip Details</h5>
+            </div>
+            <div class="row mt-4">
+                <div class="col-lg-12">
+                    @php
+                        $columns = [
+                            ['label' => 'SL No', 'column' => 'id', 'sort' => true],
+                            ['label' => 'EMP ID', 'column' => 'emp_id', 'sort' => false],
+                            ['label' => 'Client Name', 'column' => 'client_name', 'sort' => false],
+                            ['label' => 'EMP Name', 'column' => 'emp_name', 'sort' => false],
+                            ['label' => 'Designation', 'column' => 'designation', 'sort' => true],
+                            ['label' => 'Department', 'column' => 'department', 'sort' => true],
+                            ['label' => 'Date', 'column' => 'month,year', 'sort' => true],
+                            ['label' => 'Actions', 'column' => 'action', 'sort' => false],
+                        ];
+                    @endphp
 
-                <x-table :columns="$columns" :data="$payslips" :checkAll=false :bulk="route('admin.cms.esic')"
-                    :route="route('admin.search.payslips')">
-                    @foreach ($payslips as $key => $item)
-                    <tr>
-                        <td>{{ $payslips->firstItem() + $key}}</td>
-                        <td>{{ $item->emp_id }}</td>
-                        <td>{{ $item->client_name }}</td>
-                        <td>{{ $item->emp_name }}</td>
-                        <td>{{ $item->designation }}</td>
-                        <td>{{ $item->department }}</td>
-                        <td>{{ \DateTime::createFromFormat('!m', $item->month)->format('F') }}-{{ $item->year }}
-                        </td>
-                        <td>
-                            <a href="{{ route('admin.generate.payslips', ['id' => $item->id]) }}" target="_blank"
-                                class="btn btn-sm btn-info">
-                                View Details
-                            </a>
-                            <a href="javascript:void(0);" class="btn btn-sm btn-danger delete-btn"
-                                data-id="{{ $item->id }}">
-                                Delete
-                            </a>
-                        </td>
-                    </tr>
-                    @endforeach
-                </x-table>
+                    <x-table :columns="$columns" :data="$payslips" :checkAll=false :bulk="route('admin.cms.esic')" :route="route('admin.search.payslips')">
+                        @foreach ($payslips as $key => $item)
+                            <tr>
+                                <td>{{ $payslips->firstItem() + $key }}</td>
+                                <td>{{ $item->emp_id }}</td>
+                                <td>{{ $item->client_name }}</td>
+                                <td>{{ $item->emp_name }}</td>
+                                <td>{{ $item->designation }}</td>
+                                <td>{{ $item->department }}</td>
+                                <td>{{ \DateTime::createFromFormat('!m', $item->month)->format('F') }}-{{ $item->year }}
+                                </td>
+                                <td>
+                                    <a href="{{ route('admin.generate.payslips', ['id' => $item->id]) }}"
+                                        target="_blank" class="btn btn-sm btn-info">
+                                        View Details
+                                    </a>
+                                    <a href="javascript:void(0);" class="btn btn-sm btn-danger delete-btn"
+                                        data-id="{{ $item->id }}">
+                                        Delete
+                                    </a>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </x-table>
+                </div>
             </div>
         </div>
-    </div>
     @else
-    @if (isset($payslips))
-    <div class="alert alert-warning">No records found</div>
-    @endif
+        @if (isset($payslips))
+            <div class="alert alert-warning">No records found</div>
+        @endif
     @endif
 
     @push('scripts')
-    <script>
-        $(function () {
-            $('.delete-btn').on('click', function (event) {
-                event.preventDefault(); // ⛔ prevent page navigation
+        <script>
+            $(function() {
+                $('.delete-btn').on('click', function(event) {
+                    event.preventDefault(); // ⛔ prevent page navigation
 
-                if (!confirm('Are you sure to delete this?')) {
+                    if (!confirm('Are you sure to delete this?')) {
+                        return;
+                    }
+
+                    const id = $(this).data('id');
+                    const row = $('#row-' + id);
+
+                    $.ajax({
+                        url: 'https://newapp.fretusfolks.com/admin/payslips/' + id +
+                            '/delete',
+                        method: 'GET',
+                        success: function(response) {
+                            if (response.success) {
+                                row.fadeOut(300, () => row.remove());
+                                alert('Deleted successfully!');
+                                window.location.reload();
+                            } else {
+                                alert('Failed to delete.');
+                            }
+                        },
+                        error: function() {
+                            alert('Error occurred while deleting.');
+                        }
+                    });
+                });
+            });
+        </script>
+
+        <script>
+            function filterClient(input) {
+                const filter = input.value.toLowerCase();
+                document.querySelectorAll('.dropdown-menu .dropdown-item').forEach(item => {
+                    item.style.display = item.textContent.toLowerCase().includes(filter) ? '' : 'none';
+                });
+            }
+
+            function selectClientWithCheckbox(checkbox, name) {
+                // Uncheck all other checkboxes (single-select behavior)
+                document.querySelectorAll('input[name="client_checkbox"]').forEach(cb => {
+                    if (cb !== checkbox) cb.checked = false;
+                });
+
+                if (checkbox.checked) {
+                    document.getElementById('dropdownMenuclient').value = name;
+                    document.getElementById('selected_client_input').value = name;
+                    bootstrap.Dropdown.getOrCreateInstance(document.getElementById('dropdownMenuclient')).hide();
+                } else {
+                    document.getElementById('dropdownMenuclient').value = 'Select Client';
+                    document.getElementById('selected_client_input').value = '';
+                }
+            }
+        </script>
+
+
+
+        <script>
+            function filterClientsearch(input) {
+                const filter = input.value.toLowerCase();
+                document.querySelectorAll('.client-option-search').forEach(item => {
+                    const label = item.textContent.toLowerCase();
+                    item.style.display = label.includes(filter) ? '' : 'none';
+                });
+            }
+
+            function selectClientsearch(radio) {
+                const selectedName = radio.value;
+
+                // Update visible and hidden input values
+                document.getElementById('dropdownSearchclient').value = selectedName;
+                document.getElementById('selected_client_search').value = selectedName;
+
+                // Close dropdown
+                bootstrap.Dropdown.getOrCreateInstance(document.getElementById('dropdownSearchclient')).hide();
+            }
+        </script>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const tabs = document.querySelectorAll('#myTab .nav-link');
+                const tabContents = document.querySelectorAll('.tab-pane');
+
+                tabs.forEach(tab => {
+                    tab.addEventListener('click', function(e) {
+                        e.preventDefault();
+
+                        tabs.forEach(t => t.classList.remove('active'));
+                        tabContents.forEach(content => content.classList.remove('show', 'active'));
+
+                        this.classList.add('active');
+
+                        const targetId = this.getAttribute('href').substring(1);
+                        const targetContent = document.getElementById(targetId);
+                        targetContent.classList.add('show', 'active');
+                    });
+                });
+            });
+        </script>
+        <script>
+            function confirmDelete() {
+                if (confirm('Are you sure you want to delete the selected payslips?')) {
+                    document.getElementById('delete_form').submit();
+                }
+            }
+        </script>
+        <script>
+            function updateSelectedNames(checkboxClass, dropdownInputId, defaultText) {
+                const checkboxes = document.querySelectorAll(checkboxClass);
+                const dropdownInput = document.querySelector(dropdownInputId);
+
+                const selectedLabels = Array.from(checkboxes)
+                    .filter(cb => cb.checked)
+                    .map(cb => cb.getAttribute('data-name'));
+
+                dropdownInput.value = selectedLabels.length > 0 ? selectedLabels.join(', ') : defaultText;
+
+                // Handle Select All
+                const selectAllCheckbox = document.querySelector('#select_all_data');
+                selectAllCheckbox.checked = selectedLabels.length === checkboxes.length;
+            }
+
+            function toggleSelectAll(selectAllCheckbox, checkboxClass, dropdownInputId, defaultText) {
+                const dropdown = selectAllCheckbox.closest('.dropdown-menu');
+                const checkboxes = dropdown.querySelectorAll(checkboxClass);
+                const isChecked = selectAllCheckbox.checked;
+
+                checkboxes.forEach(cb => cb.checked = isChecked);
+                updateSelectedNames(checkboxClass, dropdownInputId, defaultText);
+            }
+
+            function filterClientList(input) {
+                const filter = input.value.toLowerCase();
+                const items = document.querySelectorAll('.client-option');
+
+                items.forEach(item => {
+                    const label = item.textContent.toLowerCase();
+                    item.style.display = label.includes(filter) ? '' : 'none';
+                });
+            }
+        </script>
+
+        <script>
+            $(document).on('click', '#downloadFilteredCSV', function() {
+                let selectedClients = [];
+
+                $('.data-checkbox:checked').each(function() {
+                    selectedClients.push($(this).val());
+                });
+
+                if (selectedClients.length === 0) {
+                    const link = document.createElement('a');
+                    link.href =
+                        'https://newapp.fretusfolks.com/admin/payslip_format.xlsx'; // File must be in public/
+                    link.download = 'payslip_format.xlsx';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
                     return;
                 }
 
-                const id = $(this).data('id');
-                const row = $('#row-' + id);
+                // Construct the query parameters
+                let queryParams = {
+                    data: selectedClients,
+                };
+
+                let queryString = $.param(queryParams);
+
+                // Redirect to download CSV
+                window.location.href = `payslips/download-filtered?${queryString}`;
+            });
+        </script>
+        <script src="https://cdn.jsdelivr.net/npm/jquery"></script>
+        <script>
+            let progressInterval;
+
+            $("#payslipForm").on("submit", function(event) {
+                event.preventDefault();
+                $('#dwnPayBtn').prop('disabled', true);
+                $("#progress-bar-container").show();
+                $("#progress-bar").val(0);
+                $("#progress-text").text("Processing Payslips...");
+                $("#payslip-completed").text("");
 
                 $.ajax({
-                    url: 'https://newapp.fretusfolks.com/admin/payslips/' + id +
-                        '/delete',
-                    method: 'GET',
-                    success: function (response) {
-                        if (response.success) {
-                            row.fadeOut(300, () => row.remove());
-                            alert('Deleted successfully!');
-                            window.location.reload();
-                        } else {
-                            alert('Failed to delete.');
-                        }
+                    url: $(this).attr("action"),
+                    type: "POST",
+                    data: $(this).serialize(),
+                    success: function(response) {
+                        startProgressCheck();
                     },
-                    error: function () {
-                        alert('Error occurred while deleting.');
+                    error: function(xhr) {
+                        $("#progress-bar-container").hide();
+                        alert("Something went wrong. Please try again.");
                     }
                 });
             });
-        });
-    </script>
 
-    <script>
-        function filterClient(input) {
-            const filter = input.value.toLowerCase();
-            document.querySelectorAll('.dropdown-menu .dropdown-item').forEach(item => {
-                item.style.display = item.textContent.toLowerCase().includes(filter) ? '' : 'none';
-            });
-        }
+            function startProgressCheck() {
+                progressInterval = setInterval(() => {
+                    $.get("https://newapp.fretusfolks.com/batch-status", function(data) {
+                        if (data.status !== "not_found") {
+                            $("#progress-bar").val(data.status);
+                            $("#progress-text").text("Processing Payslips... " + data.status + "%");
 
-        function selectClientWithCheckbox(checkbox, name) {
-            // Uncheck all other checkboxes (single-select behavior)
-            document.querySelectorAll('input[name="client_checkbox"]').forEach(cb => {
-                if (cb !== checkbox) cb.checked = false;
-            });
-
-            if (checkbox.checked) {
-                document.getElementById('dropdownMenuclient').value = name;
-                document.getElementById('selected_client_input').value = name;
-                bootstrap.Dropdown.getOrCreateInstance(document.getElementById('dropdownMenuclient')).hide();
-            } else {
-                document.getElementById('dropdownMenuclient').value = 'Select Client';
-                document.getElementById('selected_client_input').value = '';
-            }
-        }
-    </script>
-
-
-
-    <script>
-        function filterClientsearch(input) {
-            const filter = input.value.toLowerCase();
-            document.querySelectorAll('.client-option-search').forEach(item => {
-                const label = item.textContent.toLowerCase();
-                item.style.display = label.includes(filter) ? '' : 'none';
-            });
-        }
-
-        function selectClientsearch(radio) {
-            const selectedName = radio.value;
-
-            // Update visible and hidden input values
-            document.getElementById('dropdownSearchclient').value = selectedName;
-            document.getElementById('selected_client_search').value = selectedName;
-
-            // Close dropdown
-            bootstrap.Dropdown.getOrCreateInstance(document.getElementById('dropdownSearchclient')).hide();
-        }
-    </script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const tabs = document.querySelectorAll('#myTab .nav-link');
-            const tabContents = document.querySelectorAll('.tab-pane');
-
-            tabs.forEach(tab => {
-                tab.addEventListener('click', function (e) {
-                    e.preventDefault();
-
-                    tabs.forEach(t => t.classList.remove('active'));
-                    tabContents.forEach(content => content.classList.remove('show', 'active'));
-
-                    this.classList.add('active');
-
-                    const targetId = this.getAttribute('href').substring(1);
-                    const targetContent = document.getElementById(targetId);
-                    targetContent.classList.add('show', 'active');
-                });
-            });
-        });
-    </script>
-    <script>
-        function updateSelectedNames(checkboxClass, dropdownInputId, defaultText) {
-            const checkboxes = document.querySelectorAll(checkboxClass);
-            const dropdownInput = document.querySelector(dropdownInputId);
-
-            const selectedLabels = Array.from(checkboxes)
-                .filter(cb => cb.checked)
-                .map(cb => cb.getAttribute('data-name'));
-
-            dropdownInput.value = selectedLabels.length > 0 ? selectedLabels.join(', ') : defaultText;
-
-            // Handle Select All
-            const selectAllCheckbox = document.querySelector('#select_all_data');
-            selectAllCheckbox.checked = selectedLabels.length === checkboxes.length;
-        }
-
-        function toggleSelectAll(selectAllCheckbox, checkboxClass, dropdownInputId, defaultText) {
-            const dropdown = selectAllCheckbox.closest('.dropdown-menu');
-            const checkboxes = dropdown.querySelectorAll(checkboxClass);
-            const isChecked = selectAllCheckbox.checked;
-
-            checkboxes.forEach(cb => cb.checked = isChecked);
-            updateSelectedNames(checkboxClass, dropdownInputId, defaultText);
-        }
-
-        function filterClientList(input) {
-            const filter = input.value.toLowerCase();
-            const items = document.querySelectorAll('.client-option');
-
-            items.forEach(item => {
-                const label = item.textContent.toLowerCase();
-                item.style.display = label.includes(filter) ? '' : 'none';
-            });
-        }
-    </script>
-
-    <script>
-        $(document).on('click', '#downloadFilteredCSV', function () {
-            let selectedClients = [];
-
-            $('.data-checkbox:checked').each(function () {
-                selectedClients.push($(this).val());
-            });
-
-            if (selectedClients.length === 0) {
-                const link = document.createElement('a');
-                link.href =
-                    'https://newapp.fretusfolks.com/admin/payslip_format.xlsx'; // File must be in public/
-                link.download = 'payslip_format.xlsx';
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                return;
-            }
-
-            // Construct the query parameters
-            let queryParams = {
-                data: selectedClients,
-            };
-
-            let queryString = $.param(queryParams);
-
-            // Redirect to download CSV
-            window.location.href = `payslips/download-filtered?${queryString}`;
-        });
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/jquery"></script>
-    <script>
-        let progressInterval;
-
-        $("#payslipForm").on("submit", function (event) {
-            event.preventDefault();
-            $('#dwnPayBtn').prop('disabled', true);
-            $("#progress-bar-container").show();
-            $("#progress-bar").val(0);
-            $("#progress-text").text("Processing Payslips...");
-            $("#payslip-completed").text("");
-
-            $.ajax({
-                url: $(this).attr("action"),
-                type: "POST",
-                data: $(this).serialize(),
-                success: function (response) {
-                    startProgressCheck();
-                },
-                error: function (xhr) {
-                    $("#progress-bar-container").hide();
-                    alert("Something went wrong. Please try again.");
-                }
-            });
-        });
-
-        function startProgressCheck() {
-            progressInterval = setInterval(() => {
-                $.get("https://newapp.fretusfolks.com/batch-status", function (data) {
-                    if (data.status !== "not_found") {
-                        $("#progress-bar").val(data.status);
-                        $("#progress-text").text("Processing Payslips... " + data.status + "%");
-
-                        if (data.status == 100) {
-                            clearInterval(progressInterval);
-                            $('#dwnPayBtn').prop('disabled', false);
-                            $("#progress-bar-container").hide();
-                            $("#payslip-completed").text("Payslip Zip has been sent to your email.");
-                        } else {
-                            $("#payslip-completed").text("");
+                            if (data.status == 100) {
+                                clearInterval(progressInterval);
+                                $('#dwnPayBtn').prop('disabled', false);
+                                $("#progress-bar-container").hide();
+                                $("#payslip-completed").text("Payslip Zip has been sent to your email.");
+                            } else {
+                                $("#payslip-completed").text("");
+                            }
                         }
-                    }
-                });
-            }, 3000);
-        }
-    </script>
+                    });
+                }, 3000);
+            }
+        </script>
     @endpush
 </x-applayout>

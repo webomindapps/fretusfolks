@@ -176,7 +176,7 @@ class SideBar extends Component
             'roles' => ['Admin', 'HR Operations'],
             'subMenus' => [
                 [
-                    'title' => 'Offer cum Appointment Letter  ',
+                    'title' => 'Offer/Appointment Letter  ',
                     'icon' => 'bx bx-chevron-right',
                     'route' => 'admin.offer_letter',
                     'name' => 'offer_letter',

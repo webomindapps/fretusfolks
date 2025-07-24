@@ -7,7 +7,7 @@
     <title>Fretus Folks</title>
     <style>
         @page {
-            margin: 200px 55px 120px 55px;
+            margin: 200px 0 120px 0;
         }
 
         .cash {

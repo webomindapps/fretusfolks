@@ -48,6 +48,7 @@ class LoginController extends Controller
         $userRole = $user->getRoleNames()->first();
         $today = Carbon::today();
 
+        // dd($userRole);
         $from_date = $request->from_date;
         $to_date = $request->to_date;
         $dateFilter = $from_date && $to_date;
@@ -202,7 +203,11 @@ class LoginController extends Controller
                 'uanNumbers'
             ));
         } elseif ($userRole == 'Finance') {
-            return view('admin.dashboard');
+
+            return view('admin.dashboard', compact(
+                'userRole'
+
+            ));
         } else {
             // Default return if no role matches
             return view('admin.dashboard');
