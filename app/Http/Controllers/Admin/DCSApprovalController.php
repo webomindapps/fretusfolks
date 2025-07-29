@@ -334,8 +334,11 @@ class DCSApprovalController extends Controller
 
     public function destroy($id)
     {
-        $this->model()->destroy($id);
-        return redirect()->route('admin.dcs_approval')->with('success', 'Candidate data has been successfully deleted!');
+        // $this->model()->destroy($id);
+        // return redirect()->route('admin.dcs_approval')->with('success', 'Candidate data has been successfully deleted!');
+        $employee = $this->model()->findOrFail($id);
+        $employee->delete();
+        return redirect()->route('admin.dcs_approval')->with('success', 'Candidate moved to trash.');
     }
     public function rejected()
     {
@@ -1419,5 +1422,46 @@ class DCSApprovalController extends Controller
                 'alert' => $e->getMessage()
             ]);
         }
+    }
+
+    public function trashed()
+    {
+        $searchColumns = ['id', 'ffi_emp_id', 'client_id', 'emp_name', 'phone1'];
+        $search = request()->search;
+        $from_date = request()->from_date;
+        $to_date = request()->to_date;
+        $order = request()->orderedColumn;
+        $orderBy = request()->orderBy;
+        $paginate = request()->paginate;
+
+        $query = $this->model()->onlyTrashed();
+
+        if ($from_date && $to_date) {
+            $query->whereBetween('created_at', [$from_date, $to_date]);
+        }
+        if ($search != '')
+            $query->where(function ($q) use ($search, $searchColumns) {
+                foreach ($searchColumns as $key => $value)
+                    ($key == 0) ? $q->where($value, 'LIKE', '%' . $search . '%') : $q->orWhere($value, 'LIKE', '%' . $search . '%');
+            });
+
+        ($order == '') ? $query->orderByDesc('id') : $query->orderBy($order, $orderBy);
+
+        $candidate = $paginate ? $query->paginate($paginate)->appends(request()->query()) : $query->paginate(100)->appends(request()->query());
+
+        // $candidate = $this->model()->onlyTrashed()->get();
+        return view('admin.adms.dcs_approval.trashed', compact('candidate'));
+    }
+    public function restore($id)
+    {
+        $candidate = $this->model()->onlyTrashed()->findOrFail($id);
+        $candidate->restore();
+        return redirect()->back()->with('success', 'Candidate restored successfully.');
+    }
+    public function forceDelete($id)
+    {
+        $candidate = $this->model()->onlyTrashed()->findOrFail($id);
+        $candidate->forceDelete();
+        return redirect()->back()->with('success', 'Candidate  permanently deleted.');
     }
 }

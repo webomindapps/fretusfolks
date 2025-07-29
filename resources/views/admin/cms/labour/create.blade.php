@@ -69,8 +69,8 @@
                     :required="true" size="col-lg-6 mt-2" :value="old('notice_file')" />
                 <x-forms.input label="Closure Date: " type="date" name="closure_date" id="closure_date"
                     :required="true" size="col-lg-6 mt-2" :value="old('closure_date')" />
-                <x-forms.input label="Closure Document: " type="file" name="closure_file" id="closure_file"
-                    :required="true" size="col-lg-6 mt-2" :value="old('closure_file')" />
+                <x-forms.input label="Closure Document: " type="file" name="closure_document" id="closure_document"
+                    :required="true" size="col-lg-6 mt-2" :value="old('closure_document')" />
             </div>
             <button type="submit" class="submit-btn submitBtn" id="submitButton">Submit</button>
         </form>

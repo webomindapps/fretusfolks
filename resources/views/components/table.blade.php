@@ -25,7 +25,7 @@
 
 
     </div>
-    <div class="row custom_table">
+    <div class="row custom-table-scroll">
         <div class="col-lg-12">
             <table class="table">
                 <thead>
@@ -77,9 +77,17 @@
 </div>
 <style>
     .custom-table-scroll {
-        max-height: 500px;
-        /* Set desired height */
-        overflow-y: auto;
+        height: 500px;
+        overflow: auto;
+        position: relative;
+        /* Needed for absolute-positioned children */
+        z-index: 1;
+        /* Add z-index if needed */
+    }
+
+    .dropdown-menu {
+        z-index: 1000;
+        /* Bootstrap usually does this already */
     }
 
     .custom-table-scroll thead th {

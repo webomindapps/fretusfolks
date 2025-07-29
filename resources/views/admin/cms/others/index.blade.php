@@ -1,5 +1,5 @@
 <x-applayout>
-    <x-admin.breadcrumb title="CMS Others Challan" :create="route('admin.cms.others.create')" />
+    <x-admin.breadcrumb title="CMS Others " :create="route('admin.cms.others.create')" />
     <div class="form-card px-3 mt-4">
         <form action="{{ route('admin.cms.others') }}">
             <div class="row">
@@ -75,7 +75,7 @@
         <div class="col-lg-12">
             @php
                 $columns = [
-                    ['label' => 'Id', 'column' => 'id', 'sort' => true],
+                    ['label' => 'Sl No', 'column' => 'id', 'sort' => false],
                     ['label' => 'Client Name', 'column' => 'client_name', 'sort' => false],
                     ['label' => 'State name', 'column' => 'contact_person', 'sort' => false],
                     ['label' => 'Month', 'column' => 'month', 'sort' => true],
@@ -86,7 +86,7 @@
             <x-table :columns="$columns" :data="$challans" :checkAll=false :bulk="route('admin.cms.esic')" :route="route('admin.cms.others')">
                 @foreach ($challans as $key => $item)
                     <tr>
-                        <td>{{ $item->id }}</td>
+                        <td>{{ $key + 1 }}</td>
                         <td>
                             {{ $item->client?->client_name }}
                         </td>

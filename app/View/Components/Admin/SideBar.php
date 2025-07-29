@@ -139,6 +139,14 @@ class SideBar extends Component
                     'roles' => ['Admin', 'HR Operations'],
                 ],
 
+                [
+                    'title' => 'ADMS Trashed',
+                    'icon' => 'bx bx-chevron-right',
+                    'route' => 'admin.dcs_approval.trashed',
+                    'name' => 'adms trashed',
+                    'roles' => ['Admin'],
+                ],
+
             ],
 
         ],
@@ -164,7 +172,6 @@ class SideBar extends Component
                     'name' => 'doc_rejected',
                     'roles' => ['Admin', 'Recruitment', 'HR Operations'],
                 ],
-
             ]
         ],
         [
@@ -225,6 +232,14 @@ class SideBar extends Component
             'icon' => 'bx bx-grid-alt',
             'route' => 'admin.payslips',
             'name' => 'admspayslips',
+            'isSubMenu' => false,
+            'roles' => ['Admin', 'HR Operations'],
+        ],
+        [
+            'title' => 'ADMS Other Payslip',
+            'icon' => 'bx bx-grid-alt',
+            'route' => 'admin.other_payslips',
+            'name' => 'admsotherpayslips',
             'isSubMenu' => false,
             'roles' => ['Admin', 'HR Operations'],
         ],

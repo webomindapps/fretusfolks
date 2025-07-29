@@ -91,11 +91,11 @@
                                             class="dropdown-item">
                                             <i class='bx bx-link-alt'></i> View
                                         </a>
-                                        <a class="dropdown-item"
+                                        {{-- <a class="dropdown-item"
                                             href="{{ route('admin.candidatemaster.download', $item->id) }}">
                                             <i class='bx bxs-download'></i>
                                             Download pdf
-                                        </a>
+                                        </a> --}}
                                     </li>
                                 </ul>
                             </div>

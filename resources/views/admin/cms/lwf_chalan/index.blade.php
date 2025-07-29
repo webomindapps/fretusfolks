@@ -1,5 +1,5 @@
 <x-applayout>
-    <x-admin.breadcrumb title="CMS LWF Challan" :create="route('admin.cms.lwf.create')" />
+    <x-admin.breadcrumb title="CMS LWF " :create="route('admin.cms.lwf.create')" />
     <div class="form-card px-3 mt-4">
         <form action="{{ route('admin.cms.lwf') }}">
             <div class="row">
@@ -74,7 +74,7 @@
         <div class="col-lg-12">
             @php
                 $columns = [
-                    ['label' => 'Id', 'column' => 'id', 'sort' => true],
+                    ['label' => 'Sl No', 'column' => 'id', 'sort' => false],
                     ['label' => 'Client Name', 'column' => 'client_name', 'sort' => false],
                     ['label' => 'State name', 'column' => 'contact_person', 'sort' => false],
                     ['label' => 'Month', 'column' => 'month', 'sort' => true],
@@ -82,10 +82,10 @@
                     ['label' => 'Actions', 'column' => 'action', 'sort' => false],
                 ];
             @endphp
-            <x-table :columns="$columns" :data="$challans" :checkAll=false :bulk="route('admin.cms.esic')" :route="route('admin.cms.esic')">
+            <x-table :columns="$columns" :data="$challans" :checkAll=false :bulk="route('admin.cms.esic')" :route="route('admin.cms.lwf')">
                 @foreach ($challans as $key => $item)
                     <tr>
-                        <td>{{ $item->id }}</td>
+                        <td>{{$key + 1 }}</td>
                         <td>
                             {{ $item->client?->client_name }}
                         </td>
@@ -105,7 +105,7 @@
                                     <li>
                                         <a class="dropdown-item"
                                             onclick="return confirm('Are you sure to delete this ?')"
-                                            href="{{ route('admin.cms.esic.delete', $item) }}">
+                                            href="{{ route('admin.cms.lwf.delete', $item) }}">
                                             <i class='bx bx-trash-alt'></i>
                                             Delete
                                         </a>

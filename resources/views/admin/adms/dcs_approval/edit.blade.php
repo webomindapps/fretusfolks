@@ -394,23 +394,11 @@
                                     :value="old('bank_account_no', $bankdetails->bank_account_no ?? '')" />
                                 <x-forms.input label="Enter Bank IFSC CODE:" type="text" name="bank_ifsc_code"
                                     id="bank_ifsc_code" :required="true" size="col-lg-6 mt-2" :value="old('bank_ifsc_code', $bankdetails->bank_ifsc_code ?? '')" />
-                                <x-forms.select label="Do you Have UAN No? " :options="[['value' => '0', 'label' => 'No'], ['value' => '1', 'label' => 'Yes']]" id="uan_status"
-                                    name="uan_status" :required="true" size="col-lg-6 mt-2 mr-2"
-                                    :value="old('uan_status', $candidate->uan_status)" />
-                                <div id="uan-number-field" style="display: none;" class="mt-2">
-                                    <x-forms.input label="Enter UAN No:" type="text" name="uan_no"
-                                        id="uan_no" :required="true" size="col-lg-6" :value="old('uan_no', $candidate->uan_no)" />
-                                </div>
-                                <x-forms.select label="Do you Have Esic No? " :options="[['value' => '0', 'label' => 'No'], ['value' => '1', 'label' => 'Yes']]" id="esic_status"
-                                    name="esic_status" :required="true" size="col-lg-6 mt-2 mr-2"
-                                    :value="old('esic_status', $candidate->esic_status)" />
-                                <div id="esic-number-field" style="display: none;" class="mt-2">
-                                    <x-forms.input label="Enter Esic No:" type="text" name="esic_no"
-                                        id="esic_no" :required="true" size="col-lg-6" :value="old('esic_no', $candidate->esic_no)" />
-                                </div>
-                                {{-- <x-forms.input label="ESIC No:" type="text" name="esic_no" id="esic_no"
-                                    :required="false" size="col-lg-6 mt-2"
-                                    :value="old('esic_no', $candidate->esic_no)" /> --}}
+
+                                <x-forms.input label="UAN No:" type="text" name="uan_no" id="uan_no"
+                                    :required="false" size="col-lg-6 mt-2" :value="old('uan_no', $candidate->uan_no)" />
+                                <x-forms.input label="ESIC No:" type="text" name="esic_no" id="esic_no"
+                                    :required="false" size="col-lg-6 mt-2" :value="old('esic_no', $candidate->esic_no)" />
                                 {{-- <x-forms.select label="Status:" name="status" id="status" :required="false"
                                     size="col-lg-6 mt-2" :options="FretusFolks::getStatus()"
                                     :value="old('status', $candidate->status)" /> --}}
@@ -828,11 +816,11 @@
                    class="form-control">
 
             ${childData.photo ? `
-                                                                                                                                                                                            <div id="image-preview-container-${i}" class="d-flex mt-2">
-                                                                                                                                                                                                <img src="{{ url('/') }}/${childData.photo}" 
-                                                                                                                                                                                                     class="img-thumbnail" width="100" height="100" 
-                                                                                                                                                                                                     alt="Child ${i} Uploaded Photo">
-                                                                                                                                                                                            </div>` : ''}
+                                                                                                                                                                                                                            <div id="image-preview-container-${i}" class="d-flex mt-2">
+                                                                                                                                                                                                                                <img src="{{ url('/') }}/${childData.photo}" 
+                                                                                                                                                                                                                                     class="img-thumbnail" width="100" height="100" 
+                                                                                                                                                                                                                                     alt="Child ${i} Uploaded Photo">
+                                                                                                                                                                                                                            </div>` : ''}
         </div>
     `;
                             childrenDetails.appendChild(childRow);

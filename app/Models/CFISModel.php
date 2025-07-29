@@ -9,11 +9,15 @@ use App\Models\OfferLetter;
 use App\Models\IncrementLetter;
 use App\Models\ClientManagement;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class CFISModel extends Model
 {
-    use HasFactory;
+    use SoftDeletes;
+
+    protected $dates = ['deleted_at'];
+
     protected $table = 'backend_management';
 
     protected $fillable = [
@@ -80,7 +84,7 @@ class CFISModel extends Model
         'uan_no',
         'esic_no',
         'uan_status',
-        'esic_status',
+        'other_deduction',
         'basic_salary',
         'hra',
         'conveyance',
@@ -215,6 +219,6 @@ class CFISModel extends Model
     }
     public function Bankdetails()
     {
-        $this->hasMany(BankDetails::class, 'emp_id', 'id');
+        return $this->hasMany(BankDetails::class, 'emp_id', 'id');
     }
 }

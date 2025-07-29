@@ -212,9 +212,11 @@ class CFISController extends Controller
 
     public function destroy($id)
     {
-        $this->model()->destroy($id);
-        return redirect()->route('admin.cfis')->with('success', 'Candidate data has been successfully deleted!');
+        $employee = $this->model()->findOrFail($id);
+        $employee->delete();
+        return redirect()->route('admin.cfis')->with('success', 'Candidate moved to trash.');
     }
+
     public function bulk(Request $request)
     {
         $type = $request->type;

@@ -50,7 +50,7 @@
         <div class="col-lg-12">
             @php
                 $columns = [
-                    ['label' => 'Id', 'column' => 'id', 'sort' => true],
+                    ['label' => 'Sl No', 'column' => 'id', 'sort' => false],
                     ['label' => 'Client Name', 'column' => 'client_name', 'sort' => false],
                     ['label' => 'State name', 'column' => 'contact_person', 'sort' => false],
                     ['label' => 'Location', 'column' => 'month', 'sort' => true],
@@ -64,19 +64,19 @@
             <x-table :columns="$columns" :data="$notices" :checkAll=false :bulk="route('admin.cms.labour')" :route="route('admin.cms.labour')">
                 @foreach ($notices as $key => $item)
                     <tr>
-                        <td>{{ $item->id }}</td>
+                        <td>{{ $key + 1 }}</td>
                         <td>{{ $item->client?->client_name }}</td>
                         <td>{{ $item->state?->state_name }}</td>
                         <td>{{ $item->location }}</td>
                         <td>{{ date('d-m-Y', strtotime($item->notice_received_date)) }}</td>
                         <td>
-                            <a href="{{ asset('storage/' . $item->notice_document) }}">
+                            <a href="{{ asset('public/' . $item->notice_document) }}">
                                 <i class="fa fa-file" target="_blank"></i> Notice Document
                             </a>
                         </td>
                         <td>{{ date('d-m-Y', strtotime($item->closure_date)) }}</td>
                         <td>
-                            <a href="{{ asset('storage/' . $item->closure_document) }}">
+                            <a href="{{ asset('public/' . $item->closure_document) }}">
                                 <i class="fa fa-file" target="_blank"></i> Closure Document
                             </a>
                         </td>

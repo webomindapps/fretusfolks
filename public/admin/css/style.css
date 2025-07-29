@@ -1082,6 +1082,9 @@ i.fas.fa-edit {
   margin-left: 10px;
   cursor: pointer;
 } */
+.dropdown {
+  position: relative;
+}
 
 .dropdown-toggle {
   cursor: pointer;
@@ -1097,9 +1100,11 @@ i.fas.fa-edit {
 
 .dropdown-menu.show {
   position: absolute;
-  right: 0;
   top: 100%;
+  left: 0;
+  z-index: 1000;
 }
+
 
 .badge.sactive {
   background-color: #27a027;

@@ -93,7 +93,7 @@ class CMSLabourNoticeController extends Controller
     public function edit($id)
     {
         $notice = $this->model()->find($id);
-        $clients = ClientManagement::where('status', true)->get();
+        $clients = ClientManagement::get();
         return view("admin.cms.labour.update", compact('clients', 'notice'));
     }
     public function update(Request $request, $id)

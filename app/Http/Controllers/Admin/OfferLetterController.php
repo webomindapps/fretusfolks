@@ -14,6 +14,7 @@ use App\Models\ClientManagement;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use App\Jobs\GenerateOfferLetterZip;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
 
@@ -26,7 +27,7 @@ class OfferLetterController extends Controller
 
     public function index()
     {
-        $searchColumns = ['id','employee_id', 'emp_name','entity_name', 'date', 'phone1', 'email', 'employee.client_emp_id'];
+        $searchColumns = ['id', 'employee_id', 'emp_name', 'entity_name', 'date', 'phone1', 'email', 'employee.client_emp_id'];
         $search = request()->search;
         $from_date = request()->from_date;
         $to_date = request()->to_date;
@@ -62,10 +63,10 @@ class OfferLetterController extends Controller
         } else {
             $query->orderBy($order, $orderBy);
         }
-
+        $clients = ClientManagement::get();
         $offer = $paginate ? $query->paginate($paginate)->appends(request()->query()) : $query->paginate(100)->appends(request()->query());
 
-        return view("admin.adms.offer_letter.index", compact("offer"));
+        return view("admin.adms.offer_letter.index", compact("offer", "clients"));
     }
     public function edit($id)
     {
@@ -237,4 +238,49 @@ class OfferLetterController extends Controller
             'alert' => $error
         ]);
     }
+
+    public function bulkDownload(Request $request)
+    {
+        $request->validate([
+            'from_date' => 'required|date',
+            'to_date' => 'required|date',
+            'client_id' => 'required',
+        ]);
+
+        $client = ClientManagement::findOrFail($request->client_id);
+        $clientName = $client->client_name;
+
+        $letters = OfferLetter::where('entity_name', $clientName)
+            ->whereBetween('date', [$request->from_date, $request->to_date])
+            ->whereIn('offer_letter_type', [1, 2, 3, 4, 5])
+            ->pluck('id')  // ✅ pass only IDs
+            ->toArray();
+
+        if (empty($letters)) {
+            return back()->with('error', 'No offer letters found.');
+        }
+
+        $zipFileName = 'OfferLetters_' . now()->format('Ymd_His') . '.zip';
+
+        // ✅ Dispatch Job
+        GenerateOfferLetterZip::dispatch($letters, $clientName, $zipFileName);
+
+        // ✅ Pass file name to session to trigger download link
+        return back()->with([
+            'success' => 'ZIP is being prepared. Please refresh and download shortly.',
+            'zip_file' => $zipFileName
+        ]);
+    }
+    public function offerZip($file)
+    {
+        $path = storage_path("app/temp/{$file}");
+
+        if (!file_exists($path)) {
+            return back()->with('error', 'File not ready or expired.');
+        }
+
+        return response()->download($path)->deleteFileAfterSend(true); // ✅ auto delete after download
+    }
+
+
 }

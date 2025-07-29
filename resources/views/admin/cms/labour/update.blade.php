@@ -44,7 +44,7 @@
                                         <input class="form-check-input client-radio" type="radio" name="client_radio"
                                             id="client_{{ $client->id }}" value="{{ $client->id }}"
                                             data-name="{{ $client->client_name }}" onchange="selectClient(this)"
-                                            {{ old('client_id') == $client->id ? 'checked' : '' }}>
+                                            {{ old('client_id', $notice->client_id) == $client->id ? 'checked' : '' }}>
                                         <label class="form-check-label" for="client_{{ $client->id }}">
                                             {{ $client->client_name }}
                                         </label>
@@ -55,8 +55,8 @@
                     </div>
 
                     {{-- Hidden field to store actual client_id --}}
-                    <input type="hidden" name="client_id" id="selected_client_id" value="{{ old('client_id') }}"
-                        required>
+                    <input type="hidden" name="client_id" id="selected_client_id"
+                        value="{{ old('client_id', $notice->client_id) }}" required>
                 </div>
 
                 <x-forms.select label="State" name="state_id" id="state" :required="true" size="col-lg-6 mt-4"
@@ -69,8 +69,8 @@
                     :required="false" size="col-lg-6 mt-2" :value="$notice->notice_file" />
                 <x-forms.input label="Closure Date: " type="date" name="closure_date" id="closure_date"
                     :required="true" size="col-lg-6 mt-2" :value="$notice->closure_date" />
-                <x-forms.input label="Closure Document: " type="file" name="closure_file" id="closure_file"
-                    :required="false" size="col-lg-6 mt-2" :value="$notice->closure_file" />
+                <x-forms.input label="Closure Document: " type="file" name="closure_document" id="closure_document"
+                    :required="false" size="col-lg-6 mt-2" :value="$notice->closure_document" />
             </div>
             <button type="submit" class="submit-btn submitBtn" id="submitButton">Update</button>
         </form>

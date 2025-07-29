@@ -25,19 +25,20 @@
         header {
             position: fixed;
             top: -200px;
-            left: 0;
+            left: -30px;
             right: 0;
             height: 170px;
         }
 
         footer {
             position: fixed;
-            bottom: -60px;
+            bottom: -120px;
+            left: -20px;
         }
 
         .table1 {
             border-collapse: collapse;
-            width: 80%;
+            width: 60%;
             margin-left: auto;
             margin-right: auto;
             font-size: 12px;
@@ -45,7 +46,7 @@
 
         .table1 th,
         .table1 td {
-            padding: 8px;
+            padding: 4px;
             border: 1px solid #000;
         }
 
@@ -57,7 +58,7 @@
         .table1 td:nth-child(3),
         .table1 th:nth-child(2),
         .table1 th:nth-child(3) {
-            text-align: right;
+            text-align: center;
         }
 
         h1 {
@@ -123,7 +124,7 @@
     <div style="margin:0 35px">
         <p style="line-height:1.8;font-size:13px;">
             <span><b>To,</b></span> <br>
-            <span><b>/Mrs. /Ms. : {{ $offerLetter->emp_name }}</b></span> <br>
+            <span><b>Mr. /Mrs. /Ms. : {{ $offerLetter->emp_name }}</b></span> <br>
             <span> <b>
                     {{ $offerLetter->gender_salutation }}
                     {{ $offerLetter->father_name }}
@@ -171,7 +172,7 @@
         <p style="font-size:12px;line-height:1.8;">
             <span>
                 <b style="text-decoration: underline;">REMUNERATION: </b> The details of your salary break up with
-                components are as per the enclosure attached herewith in annexture – A.
+                components are as per the enclosure attached herewith in Annexure – A.
             </span>
         </p>
         <p style="font-size:12px;line-height:1.8;">
@@ -290,9 +291,8 @@
                 for
                 the purpose of service of notice and other official communication to the company shall be the
                 registered
-                address of the company which is, <b>Fretus Folks India Pvt Ltd. No. M 20, 3rd Floor, UKS Heights,
-                    Sector
-                    XI, Jeevan Bhima Nagar,Bangalore-560075.</b> The address of communication and service of notice
+                address of the company which is, <b>Fretus Folks India Pvt Ltd. VBC Tower, #39, 1st Floor, CMH Road,
+                    Indiranagar, Bangalore-560038.</b> The address of communication and service of notice
                 and
                 other official communication is the address set out as above and your present residential address
                 namely. In the event there is a change in your address, you shall inform the same in writing to the
@@ -389,117 +389,166 @@
             </span>
         </p>
 
-        <p style="line-height:1.8; font-size:14px; text-align:left;">
+        {{-- <p style="line-height:1.8; font-size:14px; text-align:left;">
             <b>For: Fretus Folks India Pvt Ltd.</b><br><br>
             <img src="{{ public_path('admin/images/seal.png') }}" alt="Seal" style="margin: 10px 0;"
                 width="100"><br><br>
             <b>Authorized Signatory</b>
-        </p>
+        </p> --}}
+        <table style="border-collapse:collapse; width:100%; margin-top:20px;">
+            <tbody>
+                <tr>
+                    <!-- Company Signatory -->
+                    <td style="font-size:12px; text-align:left; padding:7px; width:60%;">
+                        <p style="font-size:14px; margin: 0 0 5px 0;">
+                            <b>For: Fretus Folks India Pvt Ltd.</b>
+                        </p>
+                        <img src="{{ public_path('admin/images/seal.png') }}" width="100" style="margin:5px 0;"
+                            alt="Seal" />
+                        <p style="font-size:14px; margin: 0;">
+                            <b>Authorized Signatory</b>
+                        </p>
+                    </td>
 
+                    {{-- <td style="font-size:12px; text-align:left; padding:7px; width:40%;">
+                            <p style="font-size:14px; margin: 0 0 5px 0;">
+                                Name: <b>{{ $offerLetter->emp_name }}</b>
+                            </p>
+                            <p style="font-size:14px; margin: 5px 0 0 0;">
+                                Signature:
+                            </p>
+                        </td>  <!-- Employee Acknowledgment --> --}}
+
+                </tr>
+            </tbody>
+        </table>
 
         <div style="page-break-after: always;"></div>
 
-        <div style="color: #000;font-family: Tahoma;font-size: 12px;text-align: justify;">
+        <div
+            style="color: #000;font-family: Tahoma;font-size: 12px;ltext-align: justify; ">
             <h1>Annexure - A</h1>
-            <p style="text-align: left;">
-                <span style="text-decoration:underline;"><b>Compensation Sheet</b></span><br>
-                Offer No: <b>{{ $offerLetter->ffi_emp_id }}</b><br>
-                Associate Name: <b>{{ $offerLetter->emp_name }}</b><br>
-                Designation: <b>{{ $offerLetter->designation }}</b><br>
-                Location: <b>{{ $offerLetter->location }}</b><br>
-            </p>
 
             <table class="table1">
                 <thead>
                     <tr>
                         <th>Components</th>
                         <th>Monthly Salary</th>
-                        <th>Annual Salary</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td>Basic</td>
+                        <td>Basic + DA</td>
                         <td>{{ $offerLetter->basic_salary }}</td>
-                        <td>{{ $offerLetter->basic_salary * 12 }}</td>
                     </tr>
                     <tr>
                         <td>HRA</td>
                         <td>{{ $offerLetter->hra }}</td>
-                        <td>{{ $offerLetter->hra * 12 }}</td>
+                    </tr>
+                    <tr>
+                        <td>Special Allowance</td>
+                        <td>{{ $offerLetter->special_allowance }}</td>
+                    </tr>
+                    <tr>
+                        <td>Other Allowance</td>
+                        <td>{{ $offerLetter->other_allowance }}</td>
                     </tr>
                     <tr>
                         <td>Conveyance</td>
                         <td>{{ $offerLetter->conveyance }}</td>
-                        <td>{{ $offerLetter->conveyance * 12 }}</td>
                     </tr>
                     <tr>
                         <td>St. Bonus</td>
                         <td>{{ $offerLetter->st_bonus }}</td>
-                        <td>{{ $offerLetter->st_bonus * 12 }}</td>
                     </tr>
-                    <tr style="background-color:#ecbfbf;">
+                    <tr style="background-color:#f9e93d;">
                         <td><b>Gross Salary</b></td>
                         <td><b>{{ $offerLetter->gross_salary }}</b></td>
-                        <td><b>{{ $offerLetter->gross_salary * 12 }}</b></td>
                     </tr>
                     <tr>
                         <td>Employee PF</td>
                         <td>{{ $offerLetter->emp_pf }}</td>
-                        <td>{{ $offerLetter->emp_pf * 12 }}</td>
                     </tr>
                     <tr>
                         <td>Employee ESIC</td>
                         <td>{{ $offerLetter->emp_esic }}</td>
-                        <td>{{ $offerLetter->emp_esic * 12 }}</td>
                     </tr>
                     <tr>
                         <td>Employee LWF</td>
                         <td>{{ $offerLetter->lwf }}</td>
-                        <td>{{ $offerLetter->lwf * 12 }}</td>
                     </tr>
                     <tr>
-                        <td>PT</td>
+                        <td>Professional Tax (PT)</td>
                         <td>{{ $offerLetter->pt }}</td>
-                        <td>{{ $offerLetter->pt * 12 }}</td>
                     </tr>
-                    <tr style="background-color:#ecbfbf;">
+                    <tr>
+                        <td>Other Deduction</td>
+                        <td>{{ $offerLetter->other_deduction }}</td>
+                    </tr>
+
+                    <tr style="background-color:#ffb4b4;">
                         <td><b>Total Deduction</b></td>
                         <td><b>{{ $offerLetter->total_deduction }}</b></td>
-                        <td><b>{{ $offerLetter->total_deduction * 12 }}</b></td>
                     </tr>
-                    <tr style="background-color:#ecbfbf;">
-                        <td><b>Take-home</b></td>
+                    <tr style="background-color:#7eb568;">
+                        <td><b>Net Take-home</b></td>
                         <td><b>{{ $offerLetter->take_home }}</b></td>
-                        <td><b>{{ $offerLetter->take_home * 12 }}</b></td>
                     </tr>
                     <tr>
                         <td>Employer PF</td>
                         <td>{{ $offerLetter->employer_pf }}</td>
-                        <td>{{ $offerLetter->employer_pf * 12 }}</td>
                     </tr>
                     <tr>
                         <td>Employer ESIC</td>
                         <td>{{ $offerLetter->employer_esic }}</td>
-                        <td>{{ $offerLetter->employer_esic * 12 }}</td>
                     </tr>
                     <tr>
                         <td>Employer LWF</td>
                         <td>{{ $offerLetter->employer_lwf }}</td>
-                        <td>{{ $offerLetter->employer_lwf * 12 }}</td>
                     </tr>
-                    <tr style="background-color:#ecbfbf;">
-                        <td><b>CTC</b></td>
+                    <tr>
+                        <td>Mediclaim</td>
+                        <td>{{ $offerLetter->mediclaim }}</td>
+                    </tr>
+                    <tr style="background-color:#6997c9;">
+                        <td><b>Cost To Company (CTC)</b></td>
                         <td><b>{{ $offerLetter->ctc }}</b></td>
+
+                    </tr>
+                    <tr style="background-color:#6997c9;">
+                        <td><b>Annual CTC</b></td>
                         <td><b>{{ $offerLetter->ctc * 12 }}</b></td>
                     </tr>
                 </tbody>
             </table>
 
+            <table style="border-collapse:collapse; width:100%; margin-top:20px;">
+                <tbody>
+                    <tr>
+                        <!-- Company Signatory -->
+                        <td style="font-size:12px; text-align:left; padding:7px; width:60%;">
+                            <p style="font-size:14px; margin: 0 0 5px 0;">
+                                <b>For: Fretus Folks India Pvt Ltd.</b>
+                            </p>
+                            <img src="{{ public_path('admin/images/seal.png') }}" width="100" style="margin:5px 0;"
+                                alt="Seal" />
+                            <p style="font-size:14px; margin: 0;">
+                                <b>Authorized Signatory</b>
+                            </p>
+                        </td>
 
-            <p style="margin-top:20px;"><b>Signature</b></p>
-            <p><b>Name:</b> {{ $offerLetter->emp_name }}</p>
-            <p><b>Designation:</b> {{ $offerLetter->designation }}</p>
+                        <!-- Employee Acknowledgment -->
+                        <td style="font-size:12px; text-align:left; padding:7px; width:40%;">
+                            <p style="font-size:14px; margin: 0 0 5px 0;">
+                                Name: <b>{{ $offerLetter->emp_name }}</b>
+                            </p>
+                            <p style="font-size:14px; margin: 5px 0 0 0;">
+                                Signature:
+                            </p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
 
         <div style="page-break-after: always;"></div>

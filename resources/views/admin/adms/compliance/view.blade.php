@@ -325,58 +325,71 @@
                                 aria-labelledby="headingsalary" data-bs-parent="#accordionExample">
                                 <div class="card-body">
                                     <div class="row">
-                                        <div class="col-md-4 mb-2"><b>UAN NO:</b>
-                                            <span>{{ $candidate->uan_no }}</span>
+                                        <div class="col-md-3 mb-2"><b>UAN NO:</b>
+                                            <span>{{ $candidate?->uan_no ?? 'N/A' }}</span>
                                         </div>
-                                        <div class="col-md-4 mb-2"><b>ESIC No:</b>
-                                            <span>{{ $candidate->esic_no }}</span>
+                                        <div class="col-md-3 mb-2"><b>ESIC No:</b>
+                                            <span>{{ $candidate?->esic_no ?? 'N/A' }}</span>
                                         </div>
-                                        <div class="col-md-4 mb-2"><b>Basic Salary:</b>
-                                            <span>{{ $candidate->basic_salary }}</span>
+                                        <div class="col-md-3 mb-2"><b>Basic Salary:</b>
+                                            <span>{{ $candidate?->basic_salary ?? 'N/A' }}</span>
                                         </div>
-                                        <div class="col-md-4 mb-2"><b>HRA:</b> <span>{{ $candidate->hra }}</span>
+                                        <div class="col-md-3 mb-2"><b>HRA:</b>
+                                            <span>{{ $candidate?->hra }}</span>
                                         </div>
-                                        <div class="col-md-4 mb-2"><b>Conveyance:</b>
-                                            <span>{{ $candidate->conveyance }}</span>
+                                        <div class="col-md-3 mb-2"><b>Conveyance:</b>
+                                            <span>{{ $candidate?->conveyance ?? 'N/A' }}</span>
                                         </div>
-                                        <div class="col-md-4 mb-2"><b>Medical Reimbursement:</b>
-                                            <span>{{ $candidate->medical_reimbursement }}</span>
+
+                                        <div class="col-md-3 mb-2"><b>Special Allowance:</b>
+                                            <span>{{ $candidate?->special_allowance ?? 'N/A' }}</span>
                                         </div>
-                                        <div class="col-md-4 mb-2"><b>Special Allowance:</b>
-                                            <span>{{ $candidate->special_allowance }}</span>
+                                        <div class="col-md-3 mb-2"><b>Other Allowance:</b>
+                                            <span>{{ $candidate?->other_allowance ?? 'N/A' }}</span>
                                         </div>
-                                        <div class="col-md-4 mb-2"><b>Other Allowance:</b>
-                                            <span>{{ $candidate->other_allowance }}</span>
+                                        <div class="col-md-3 mb-2"><b>ST Bonus:</b>
+                                            <span>{{ $candidate?->st_bonus ?? 'N/A' }}</span>
                                         </div>
-                                        <div class="col-md-4 mb-2"><b>ST Bonus:</b>
-                                            <span>{{ $candidate->st_bonus }}</span>
+                                        <div class="col-md-3 mb-2"><b>Gross Salary:</b>
+                                            <span>{{ $candidate?->gross_salary ?? 'N/A' }}</span>
                                         </div>
-                                        <div class="col-md-4 mb-2"><b>Gross Salary:</b>
-                                            <span>{{ $candidate->gross_salary }}</span>
+                                        <div class="col-md-3 mb-2"><b>Employee PF:</b>
+                                            <span>{{ $candidate?->emp_pf ?? 'N/A' }}</span>
                                         </div>
-                                        <div class="col-md-4 mb-2"><b>Employee PF:</b>
-                                            <span>{{ $candidate->emp_pf }}</span>
+                                        <div class="col-md-3 mb-2"><b>Employee ESIC:</b>
+                                            <span>{{ $candidate?->emp_esic ?? 'N/A' }}</span>
                                         </div>
-                                        <div class="col-md-4 mb-2"><b>Employee ESIC:</b>
-                                            <span>{{ $candidate->emp_esic }}</span>
+                                        <div class="col-md-3 mb-2"><b>Employee LWF:</b>
+                                            <span>{{ $candidate?->lwf ?? 'N/A' }}</span>
                                         </div>
-                                        <div class="col-md-4 mb-2"><b>PT:</b> <span>{{ $candidate->pt }}</span></div>
-                                        <div class="col-md-4 mb-2"><b>Total Deduction:</b>
-                                            <span>{{ $candidate->total_deduction }}</span>
+                                        <div class="col-md-3 mb-2"><b>PT:</b>
+                                            <span>{{ $candidate?->pt ?? 'N/A' }}</span>
                                         </div>
-                                        <div class="col-md-4 mb-2"><b>Take Home:</b>
-                                            <span>{{ $candidate->take_home }}</span>
+                                        <div class="col-md-3 mb-2"><b>Other Deduction:</b>
+                                            <span>{{ $candidate?->other_deduction ?? 'N/A' }}</span>
                                         </div>
-                                        <div class="col-md-4 mb-2"><b>Employer PF:</b>
-                                            <span>{{ $candidate->employer_pf }}</span>
+                                        <div class="col-md-3 mb-2"><b>Total Deduction:</b>
+                                            <span>{{ $candidate?->total_deduction ?? 'N/A' }}</span>
                                         </div>
-                                        <div class="col-md-4 mb-2"><b>Employer ESIC:</b>
-                                            <span>{{ $candidate->employer_esic }}</span>
+                                        <div class="col-md-12 mb-2"><b>Net Take Home Salary – NTH (Gross Salary – Total
+                                                Deduction):</b>
+                                            <span>{{ $candidate?->take_home ?? 'N/A' }}</span>
                                         </div>
-                                        <div class="col-md-4 mb-2"><b>Mediclaim:</b>
-                                            <span>{{ $candidate->mediclaim }}</span>
+                                        <div class="col-md-3 mb-2"><b>Employer PF:</b>
+                                            <span>{{ $candidate?->employer_pf ?? 'N/A' }}</span>
                                         </div>
-                                        <div class="col-md-4 mb-2"><b>CTC:</b> <span>{{ $candidate->ctc }}</span>
+                                        <div class="col-md-3 mb-2"><b>Employer ESIC:</b>
+                                            <span>{{ $candidate?->employer_esic ?? 'N/A' }}</span>
+                                        </div>
+                                        <div class="col-md-3 mb-2"><b>Employer LWF:</b>
+                                            <span>{{ $candidate?->employee_lwf ?? 'N/A' }}</span>
+                                        </div>
+                                        <div class="col-md-3 mb-2"><b>Mediclaim:</b>
+                                            <span>{{ $candidate?->mediclaim ?? 'N/A' }}</span>
+                                        </div>
+                                        <div class="col-md-12 mb-2"><b>Cost To Company - CTC (Gross_Salary +
+                                                Employer_Deduction):</b>
+                                            <span>{{ $candidate?->ctc ?? 'N/A' }}</span>
                                         </div>
                                     </div>
                                 </div>

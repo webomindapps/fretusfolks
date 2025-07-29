@@ -1,7 +1,7 @@
 <x-applayout>
-    <x-admin.breadcrumb title="CMS CLRA " :create="route('admin.cms.clra.create')" />
+    <x-admin.breadcrumb title="ADMS Other Payslips" :create="route('admin.other_payslips.create')" />
     <div class="form-card px-3 mt-4">
-        <form action="{{ route('admin.cms.clra') }}">
+        <form action="{{ route('admin.other_payslips') }}">
             <div class="row">
                 <div class="col-lg-4">
                     <label for="clientDropdown">Client Name</label>
@@ -43,6 +43,9 @@
                     <input type="hidden" name="client_id" id="selected_client_id" required>
                 </div>
 
+                <x-forms.input label="FFI Employee ID:" type="text" name="ffi_emp_id" id="ffi_emp_id"
+                    :required="false" size="col-lg-4" :value="old('ffi_emp_id')" />
+
                 <div class="col-lg-4">
                     <label for="month">Month</label>
                     <select name="month" id="month">
@@ -76,22 +79,24 @@
         <div class="col-lg-12">
             @php
                 $columns = [
-                    ['label' => 'Sl No', 'column' => 'id', 'sort' => false],
+                    ['label' => 'Id', 'column' => 'id', 'sort' => true],
                     ['label' => 'Client Name', 'column' => 'client_name', 'sort' => false],
                     ['label' => 'State name', 'column' => 'contact_person', 'sort' => false],
+                    ['label' => 'FFI Employee ID', 'column' => 'ffi_emp_id', 'sort' => true],
                     ['label' => 'Month', 'column' => 'month', 'sort' => true],
                     ['label' => 'year', 'column' => 'year', 'sort' => true],
                     ['label' => 'Actions', 'column' => 'action', 'sort' => false],
                 ];
             @endphp
-            <x-table :columns="$columns" :data="$challans" :checkAll=false :bulk="route('admin.cms.esic')" :route="route('admin.cms.clra')">
+            <x-table :columns="$columns" :data="$challans" :checkAll=false :bulk="route('admin.cms.esic')" :route="route('admin.other_payslips')">
                 @foreach ($challans as $key => $item)
                     <tr>
-                        <td>{{ $key + 1 }}</td>
+                        <td>{{ $item->id }}</td>
                         <td>
                             {{ $item->client?->client_name }}
                         </td>
                         <td> {{ $item->state?->state_name }}</td>
+                        <td> {{ $item->ffi_emp_id }}</td>
                         <td>{{ \DateTime::createFromFormat('!m', $item->month)->format('F') }}</td>
                         <td> {{ $item->year }}</td>
 
@@ -107,7 +112,7 @@
                                     <li>
                                         <a class="dropdown-item"
                                             onclick="return confirm('Are you sure to delete this ?')"
-                                            href="{{ route('admin.cms.clra.delete', $item) }}">
+                                            href="{{ route('admin.other_payslips.delete', $item) }}">
                                             <i class='bx bx-trash-alt'></i>
                                             Delete
                                         </a>

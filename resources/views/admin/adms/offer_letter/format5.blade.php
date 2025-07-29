@@ -7,7 +7,7 @@
     <title>Fretus Folks</title>
     <style>
         @page {
-            margin: 200px 0 120px 0;
+            margin: 200px 0 120px 20px;
         }
 
         .cash {
@@ -18,51 +18,82 @@
             line-height: 1.5;
         }
 
-        ol li {
-            font-size: 12px;
-            margin-top: -5px;
-        }
-
         b {
             font-weight: bold;
-        }
-
-        .page-break {
-            page-break-after: always;
         }
 
         header {
             position: fixed;
             top: -200px;
-            left: 0;
+            left: -30px;
             right: 0;
             height: 170px;
         }
 
         footer {
             position: fixed;
-            bottom: -60px;
+            bottom: -120px;
+            left: -20px;
         }
 
-        .salary-details-table {
+        .table1 {
             border-collapse: collapse;
             width: 60%;
-            font-size: 10px;
             margin-left: auto;
             margin-right: auto;
+            font-size: 12px;
         }
 
-        .salary-details-table tr th,
-        {
-        text-align: left;
-        padding: 5px 10px;
-        width: 50%;
+        .table1 th,
+        .table1 td {
+            padding: 4px;
+            border: 1px solid #000;
         }
 
-        .salary-details-table tr td {
-            text-align: right;
-            padding: 5px 10px;
-            width: 50%;
+        .table1 td:first-child {
+            text-align: left;
+        }
+
+        .table1 td:nth-child(2),
+        .table1 td:nth-child(3),
+        .table1 th:nth-child(2),
+        .table1 th:nth-child(3) {
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 15px;
+            text-align: center;
+            text-decoration: underline;
+            margin-bottom: 15px;
+        }
+
+        p,
+        li {
+            font-size: 12px;
+            line-height: 1.5;
+            text-align: justify;
+        }
+
+        .signature-table td {
+            vertical-align: top;
+            padding: 10px;
+        }
+
+        .seal {
+            width: 100px;
+            margin-top: 10px;
+        }
+
+        .header-row {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .header-row .left,
+        .header-row .right {
+            font-size: 14px;
         }
     </style>
 </head>
@@ -78,12 +109,14 @@
         </p>
 
         <p style="font-size:14px;line-height:1.5;text-align:justify;">
-            To, <br />
-            {{ $offerLetter->emp_name }} <br />
-            {{ $offerLetter->gender_salutation }}
-            {{ $offerLetter->father_name }}<br>
-            Emp : {{ $offerLetter->employee_id }} <br />
-            Address : {{ $offerLetter->location }}
+            <span>To,</span><br>
+            <span>Mr./Mrs./Ms.: <b>{{ $offerLetter->emp_name }}</b></span><br>
+            <span> <b>
+                    {{ $offerLetter->gender_salutation }}
+                    {{ $offerLetter->father_name }}
+                </b> </span><br>
+            <span>Emp ID: <b>{{ $offerLetter->employee_id }}</b></span><br>
+            <span>Address: <b>{{ $offerLetter->location }}</b></span><br>
         </p>
 
         <p style="margin:20px 0px;">Dear {{ $offerLetter->emp_name }},</p>
@@ -109,7 +142,7 @@
             </li>
             <li>
                 <p style="font-size:12px;line-height:1.5;text-align:justify;">
-                    Duration of your contract is {{ $offerLetter->tenure_month }} months
+                    Duration of your contract is {{ $offerLetter->tenure_month }} Months
                 </p>
             </li>
             <li>
@@ -130,7 +163,7 @@
             </li>
             <li>
                 <p style="font-size:12px;line-height:1.5;text-align:justify;">
-                    During the period of fixed contract of {{ $offerLetter->tenure_month }}, your services
+                    During the period of fixed contract of {{ $offerLetter->tenure_month }} Months, your services
                     could be deputed at the sole discretion of the management to any of our client’s company to do work
                     pertaining to or incidental to the client’s business. Your service can be transferred from one
                     location to another (within state) as per business requirement
@@ -223,92 +256,132 @@
                 </tr>
             </tbody>
         </table>
-        <div style="page-break-after: always;"></div>
-        <h3 style="text-align:center;font-weight:bold;">Annexure Salary Break Up</h3>
-        <table class="salary-details-table" border="1">
-            <tr>
-                <th>Basic + DA</th>
-                <td>{{ $offerLetter->basic_salary }}</td>
-            </tr>
-            <tr>
-                <th>HRA</th>
-                <td>{{ $offerLetter->hra }}</td>
-            </tr>
-            <tr>
-                <th>Other Allowance</th>
-                <td>{{ $offerLetter->other_allowance }}</td>
-            </tr>
-            <tr style="background-color:#FFC300;">
-                <th>Gross Salary</th>
-                <td>{{ $offerLetter->gross_salary }}</td>
-            </tr>
-            <tr>
-                <th>Employee PF </th>
-                <td>{{ $offerLetter->emp_pf }}</td>
-            </tr>
-            <tr>
-                <th>Employee ESIC </th>
-                <td>{{ $offerLetter->emp_esic }}</td>
-            </tr>
-            <tr>
-                <th>Employee LWF </th>
-                <td>{{ $offerLetter->lwf }}</td>
-            </tr>
-            <tr>
-                <th>PT</th>
-                <td>{{ $offerLetter->pt }}</td>
-            </tr>
-            <tr style="background-color:#B8E6FB;">
-                <th>Total Deduction</th>
-                <td>{{ $offerLetter->total_deduction }}</td>
-            </tr>
-            <tr style="background-color:#B8E6FB;">
-                <th>Take-home</th>
-                <td>{{ $offerLetter->take_home }}</td>
-            </tr>
-            <tr>
-                <th>Employer PF</th>
-                <td>{{ $offerLetter->employer_pf }}</td>
-            </tr>
-            <tr>
-                <th>Employer ESIC</th>
-                <td>{{ $offerLetter->employer_esic }}</td>
-            </tr>
-            <tr>
-                <th>Employer LWF</th>
-                <td>{{ $offerLetter->employer_lwf }}</td>
-            </tr>
-            <tr style="background-color:#FFC300;">
-                <th>CTC</th>
-                <td>{{ $offerLetter->ctc }}</td>
-            </tr>
-            <tr style="background-color:#FFC300;">
-                <th>Annual CTC</th>
-                <td>{{ $offerLetter->ctc * 12 }}</td>
-            </tr>
-        </table>
+    </div>
+    <div style="page-break-after: always;"></div>
+    <div style="color: #000;font-family: Tahoma;font-size: 12px;ltext-align: justify; ">
+        <h1>Annexure - A</h1>
 
-        <table width="100%" style="margin-top:75px;">
+        <table class="table1">
+            <thead>
+                <tr>
+                    <th>Components</th>
+                    <th>Monthly Salary</th>
+                </tr>
+            </thead>
             <tbody>
                 <tr>
-                    <td colspan="3" style="font-size:14px;text-align:left;">
-                        <p style="line-height:1.8;">
-                            <b>For Fretus Folks India Pvt Ltd.</b> <br>
+                    <td>Basic + DA</td>
+                    <td>{{ $offerLetter->basic_salary }}</td>
+                </tr>
+                <tr>
+                    <td>HRA</td>
+                    <td>{{ $offerLetter->hra }}</td>
+                </tr>
+                <tr>
+                    <td>Special Allowance</td>
+                    <td>{{ $offerLetter->special_allowance }}</td>
+                </tr>
+                <tr>
+                    <td>Other Allowance</td>
+                    <td>{{ $offerLetter->other_allowance }}</td>
+                </tr>
+                <tr>
+                    <td>Conveyance</td>
+                    <td>{{ $offerLetter->conveyance }}</td>
+                </tr>
+                <tr>
+                    <td>St. Bonus</td>
+                    <td>{{ $offerLetter->st_bonus }}</td>
+                </tr>
+                <tr style="background-color:#f9e93d;">
+                    <td><b>Gross Salary</b></td>
+                    <td><b>{{ $offerLetter->gross_salary }}</b></td>
+                </tr>
+                <tr>
+                    <td>Employee PF</td>
+                    <td>{{ $offerLetter->emp_pf }}</td>
+                </tr>
+                <tr>
+                    <td>Employee ESIC</td>
+                    <td>{{ $offerLetter->emp_esic }}</td>
+                </tr>
+                <tr>
+                    <td>Employee LWF</td>
+                    <td>{{ $offerLetter->lwf }}</td>
+                </tr>
+                <tr>
+                    <td>Professional Tax (PT)</td>
+                    <td>{{ $offerLetter->pt }}</td>
+                </tr>
+                <tr>
+                    <td>Other Deduction</td>
+                    <td>{{ $offerLetter->other_deduction }}</td>
+                </tr>
 
-                        </p><img src="{{ public_path('admin/images/seal.png') }}" style="" width="100"><br>
-                        <p><b>&nbsp;&nbsp;&nbsp;Authorized Signatory</b> <br>
+                <tr style="background-color:#ffb4b4;">
+                    <td><b>Total Deduction</b></td>
+                    <td><b>{{ $offerLetter->total_deduction }}</b></td>
+                </tr>
+                <tr style="background-color:#7eb568;">
+                    <td><b>Net Take-home</b></td>
+                    <td><b>{{ $offerLetter->take_home }}</b></td>
+                </tr>
+                <tr>
+                    <td>Employer PF</td>
+                    <td>{{ $offerLetter->employer_pf }}</td>
+                </tr>
+                <tr>
+                    <td>Employer ESIC</td>
+                    <td>{{ $offerLetter->employer_esic }}</td>
+                </tr>
+                <tr>
+                    <td>Employer LWF</td>
+                    <td>{{ $offerLetter->employer_lwf }}</td>
+                </tr>
+                <tr>
+                    <td>Mediclaim</td>
+                    <td>{{ $offerLetter->mediclaim }}</td>
+                </tr>
+                <tr style="background-color:#6997c9;">
+                    <td><b>Cost To Company (CTC)</b></td>
+                    <td><b>{{ $offerLetter->ctc }}</b></td>
+
+                </tr>
+                <tr style="background-color:#6997c9;">
+                    <td><b>Annual CTC</b></td>
+                    <td><b>{{ $offerLetter->ctc * 12 }}</b></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table style="border-collapse:collapse; width:100%; margin-top:20px; margin-left:80px !important;">
+            <tbody>
+                <tr>
+                    <!-- Company Signatory -->
+                    <td style="font-size:12px; text-align:left; width:60%;">
+                        <p style="font-size:14px; margin: 0 0 5px 0;">
+                            <b>For: Fretus Folks India Pvt Ltd.</b>
+                        </p>
+                        <img src="{{ public_path('admin/images/seal.png') }}" width="100" style="margin:5px 0;"
+                            alt="Seal" />
+                        <p style="font-size:14px; margin: 0;">
+                            <b>Authorized Signatory</b>
                         </p>
                     </td>
-                    <td colspan="3" style="font-size:14px;text-align:left;">
-                        <p style="line-height:1.8;">
-                            Name : <b style="font-weight:bold;">
-                                {{ $offerLetter->emp_name }}</b><br /><br />
+
+                    <!-- Employee Acknowledgment -->
+                    <td style="font-size:12px; text-align:left;  width:40%;">
+                        <p style="font-size:14px; margin: 0 0 5px 0;">
+                            Name: <b>{{ $offerLetter->emp_name }}</b>
+                        </p>
+                        <p style="font-size:14px; margin: 5px 0 0 0;">
                             Signature:
                         </p>
                     </td>
                 </tr>
             </tbody>
         </table>
+    </div>
 </body>
 
 </html>
