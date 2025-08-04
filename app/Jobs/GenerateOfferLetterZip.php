@@ -48,7 +48,7 @@ class GenerateOfferLetterZip implements ShouldQueue
 
                 if (isset($viewMap[$type])) {
                     $view = $viewMap[$type];
-                    $pdf = \PDF::loadView($view, compact('offerLetter'));
+                    $pdf = PDF::loadView($view, compact('offerLetter'));
 
                     $pdfPath = storage_path("app/temp/offer_letter_{$offerLetter->id}.pdf");
                     $pdf->save($pdfPath);

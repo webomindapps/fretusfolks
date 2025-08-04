@@ -1,43 +1,167 @@
-[2025-06-10 10:53:16] local.INFO: Imported employee [{"FFI_Emp_ID":"FFI0571","Emp_Name":"Manasa S R","Interview_Date":"27-01-2025","Joining_Date":"27-01-2025","Designation":"HR Ops Assistant","Department":"Foxconn","State":"CHATTISGARH","Location":"banglore","Date_of_Birth":"23-01-2000","Gender":"Female","Father_Name":"Ramesha","Blood_Group":"O+","Qualification":"MBA","Phone_No":8296221450,"Phone_No2":9900120466,"Email":"manumanasa4954@gmail.com","Permanent_Address":"Sundahalli, Shravanbelagala, C R Patna, Hassana -573135","Present_Address":"Sundahalli, Shravanbelagala, C R Patna, Hassana -573135","PAN_No":"FOSPM3917R","Aadhar_No":"202437516046","Driving_License_No":0,"Bank_Name":"SBI Bank","Bank_Account_No":"41393533922","Bank_IFSC_Code":"SBIN0007911","UAN_No":0,"Basic_Salary":1,"HRA":2,"Conveyance":3,"Medical_Reimbursement":4,"Special_Allowance":5,"ST_Bonus":6,"Other_Allowance":7,"Gross_Salary":8,"Emp_PF":9,"Emp_ESIC":10,"PT":11,"Total_Deduction":12,"Take_Home":13,"Employer_PF":14,"Employer_ESIC":15,"Mediclaim":16,"CTC":17,"Password":"ffemp@123"},{"FFI_Emp_ID":"FFI0572","Emp_Name":"Sinchana Ashok Nayak","Interview_Date":"27-01-2025","Joining_Date":"27-01-2025","Designation":"HR Ops Executive","Department":"Foxconn","State":"ARUNACHAL PRADESH","Location":"banglore","Date_of_Birth":"04-04-2001","Gender":"Female","Father_Name":"Ashok","Blood_Group":"B+","Qualification":"BSC","Phone_No":9980820776,"Phone_No2":0,"Email":"sinchanaanayak2001@gmail.com","Permanent_Address":"Agsur, Uttara Kanada","Present_Address":"Michal Palya, Indiranagar","PAN_No":"CRVPN2692F","Aadhar_No":"920307988601","Driving_License_No":0,"Bank_Name":"Induslnd Bank","Bank_Account_No":"159980820776","Bank_IFSC_Code":"INDB0000223","UAN_No":0,"Basic_Salary":1,"HRA":2,"Conveyance":3,"Medical_Reimbursement":4,"Special_Allowance":5,"ST_Bonus":6,"Other_Allowance":7,"Gross_Salary":8,"Emp_PF":9,"Emp_ESIC":10,"PT":11,"Total_Deduction":12,"Take_Home":13,"Employer_PF":14,"Employer_ESIC":15,"Mediclaim":16,"CTC":17,"Password":"ffemp@123"},{"FFI_Emp_ID":"FFI0573","Emp_Name":"Keerthana S","Interview_Date":"27-01-2025","Joining_Date":"27-01-2025","Designation":"HR Implant","Department":"Foxconn","State":"ASSAM","Location":"banglore","Date_of_Birth":"25-12-2000","Gender":"Female","Father_Name":"K Sridhar","Blood_Group":"O+","Qualification":"MBA","Phone_No":7892088839,"Phone_No2":0,"Email":"keerthanakeerthi3742@gmail.com","Permanent_Address":"#549, Behind Dc Road, Chickaballapur-562101","Present_Address":"#549, Behind Dc Road, Chickaballapur-562101","PAN_No":"MQJPK5013N","Aadhar_No":"858800514705","Driving_License_No":0,"Bank_Name":"Canara Bank","Bank_Account_No":"0487101209498","Bank_IFSC_Code":"CNRB0000487","UAN_No":0,"Basic_Salary":1,"HRA":2,"Conveyance":3,"Medical_Reimbursement":4,"Special_Allowance":5,"ST_Bonus":6,"Other_Allowance":7,"Gross_Salary":8,"Emp_PF":9,"Emp_ESIC":10,"PT":11,"Total_Deduction":12,"Take_Home":13,"Employer_PF":14,"Employer_ESIC":15,"Mediclaim":16,"CTC":17,"Password":"ffemp@123"},{"FFI_Emp_ID":"FFI0575","Emp_Name":"Suman Peter M","Interview_Date":"27-01-2025","Joining_Date":"27-01-2025","Designation":"Sr Executive-HR Ops","Department":"HR Ops","State":"CHATTISGARH","Location":"banglore","Date_of_Birth":"18-07-1986","Gender":"Male","Father_Name":"Moses A","Blood_Group":"O+","Qualification":"PUC","Phone_No":8105284696,"Phone_No2":9844791278,"Email":"sumanpeter51@gmail.com","Permanent_Address":"# 100 Anthony Raod, Kammanahalli, St Thomas Town Post-Bangalore-560084","Present_Address":"# 100 Anthony Raod, Kammanahalli, St Thomas Town Post-Bangalore-560084","PAN_No":"AQFPM2197R","Aadhar_No":"619626778490","Driving_License_No":0,"Bank_Name":"HDFC Bank","Bank_Account_No":"50100774524715","Bank_IFSC_Code":"HDFC0000371","UAN_No":0,"Basic_Salary":1,"HRA":2,"Conveyance":3,"Medical_Reimbursement":4,"Special_Allowance":5,"ST_Bonus":6,"Other_Allowance":7,"Gross_Salary":8,"Emp_PF":9,"Emp_ESIC":10,"PT":11,"Total_Deduction":12,"Take_Home":13,"Employer_PF":14,"Employer_ESIC":15,"Mediclaim":16,"CTC":17,"Password":"ffemp@123"},{"FFI_Emp_ID":"FFI0580","Emp_Name":"Victor Y","Interview_Date":"27-01-2025","Joining_Date":"27-01-2025","Designation":"Sr HR Recruiter","Department":"LM","State":"BIHAR","Location":"banglore","Date_of_Birth":"10-06-1988","Gender":"Male","Father_Name":"YOVAN","Blood_Group":"B+","Qualification":"B.A (PHILOSOPHY)","Phone_No":8220187143,"Phone_No2":0,"Email":"yvictor1006@gmail.com","Permanent_Address":"NO:PERUMAL KOIL STREET,THAMARAIPAKKAM COLONY,TIRUVALLUR,TAMILNADU-601103","Present_Address":"NO:PERUMAL KOIL STREET,THAMARAIPAKKAM COLONY,TIRUVALLUR,TAMILNADU-601103","PAN_No":"AQLPY7242F","Aadhar_No":"204826322397","Driving_License_No":0,"Bank_Name":"KARUR VYSYA BANK","Bank_Account_No":"1213192000015008","Bank_IFSC_Code":"KVBL0001213","UAN_No":0,"Basic_Salary":1,"HRA":2,"Conveyance":3,"Medical_Reimbursement":4,"Special_Allowance":5,"ST_Bonus":6,"Other_Allowance":7,"Gross_Salary":8,"Emp_PF":9,"Emp_ESIC":10,"PT":11,"Total_Deduction":12,"Take_Home":13,"Employer_PF":14,"Employer_ESIC":15,"Mediclaim":16,"CTC":17,"Password":"ffemp@123"},{"FFI_Emp_ID":"FFI0582","Emp_Name":"Arpitha J S","Interview_Date":"27-01-2025","Joining_Date":"27-01-2025","Designation":"Sr. Executive-Sourcing","Department":"Foxconn","State":"CHANDIGARH","Location":"banglore","Date_of_Birth":"25-07-2000","Gender":"Female","Father_Name":"Shankarappa","Blood_Group":"O+","Qualification":"PUC","Phone_No":9740905327,"Phone_No2":0,"Email":"arpithareddy86604@gmail.com","Permanent_Address":"C/o Somashekara N, Peelavara, Srinivasandra, Bangarapet, Kolar-563121","Present_Address":"C/o Somashekara N, Peelavara, Srinivasandra, Bangarapet, Kolar-563121","PAN_No":"DVKPA2331G","Aadhar_No":"425995343796","Driving_License_No":0,"Bank_Name":"Yes Bank","Bank_Account_No":"094694200000241","Bank_IFSC_Code":"YESB0000946","UAN_No":0,"Basic_Salary":1,"HRA":2,"Conveyance":3,"Medical_Reimbursement":4,"Special_Allowance":5,"ST_Bonus":6,"Other_Allowance":7,"Gross_Salary":8,"Emp_PF":9,"Emp_ESIC":10,"PT":11,"Total_Deduction":12,"Take_Home":13,"Employer_PF":14,"Employer_ESIC":15,"Mediclaim":16,"CTC":17,"Password":"ffemp@123"},{"FFI_Emp_ID":"FFI0583","Emp_Name":"Dayananda G S","Interview_Date":"27-01-2025","Joining_Date":"27-01-2025","Designation":"Team Leader-Staffing","Department":"Foxconn","State":"CHATTISGARH","Location":"banglore","Date_of_Birth":"01-07-1983","Gender":"Male","Father_Name":"Singari","Blood_Group":"O+","Qualification":"BA","Phone_No":9880005533,"Phone_No2":0,"Email":"dayananada.gs@gmail.com","Permanent_Address":"No 263, 1st Main, 1st Block, Jakkasandra, Bangalore -560034","Present_Address":"No 263, 1st Main, 1st Block, Jakkasandra, Bangalore -560034","PAN_No":"AHUPD1248E","Aadhar_No":"350833554298","Driving_License_No":0,"Bank_Name":"HDFC Bank","Bank_Account_No":"17491050012042","Bank_IFSC_Code":"HDFC0000877","UAN_No":0,"Basic_Salary":1,"HRA":2,"Conveyance":3,"Medical_Reimbursement":4,"Special_Allowance":5,"ST_Bonus":6,"Other_Allowance":7,"Gross_Salary":8,"Emp_PF":9,"Emp_ESIC":10,"PT":11,"Total_Deduction":12,"Take_Home":13,"Employer_PF":14,"Employer_ESIC":15,"Mediclaim":16,"CTC":17,"Password":"ffemp@123"},{"FFI_Emp_ID":"FFI0584","Emp_Name":"Praveen Nagappa Kuntoji","Interview_Date":"21-04-2025","Joining_Date":"21-04-2025","Designation":"TTP Implant","Department":"TTP","State":"DADRA & NAGAR","Location":"banglore","Date_of_Birth":"06-04-2001","Gender":"Male","Father_Name":"Nagappa","Blood_Group":0,"Qualification":"MSW(HR)","Phone_No":9307196088,"Phone_No2":0,"Email":"kuntojipraveen84@gmail.com","Permanent_Address":"S/o Nagappa, Hunakunti Muddebihal TQ, Vijayapur-586129","Present_Address":"S/o Nagappa, Hunakunti Muddebihal TQ, Vijayapur-586129","PAN_No":"LZCPK5326D","Aadhar_No":"648543739549","Driving_License_No":0,"Bank_Name":"Karnataka Vikas Grameena Bank","Bank_Account_No":"89060130153","Bank_IFSC_Code":"KVGB0003306","UAN_No":0,"Basic_Salary":1,"HRA":2,"Conveyance":3,"Medical_Reimbursement":4,"Special_Allowance":5,"ST_Bonus":6,"Other_Allowance":7,"Gross_Salary":8,"Emp_PF":9,"Emp_ESIC":10,"PT":11,"Total_Deduction":12,"Take_Home":13,"Employer_PF":14,"Employer_ESIC":15,"Mediclaim":16,"CTC":17,"Password":"ffemp@123"},{"FFI_Emp_ID":"FFI0585","Emp_Name":"Koheda Sagar","Interview_Date":"21-04-2025","Joining_Date":"21-04-2025","Designation":"Sourcing Executive","Department":"LM","State":"KARNATAKA","Location":"banglore","Date_of_Birth":"02-07-1998","Gender":"Male","Father_Name":"Koheda Mallesham","Blood_Group":0,"Qualification":"Degree-Bcom","Phone_No":9705482804,"Phone_No2":0,"Email":"sagargoud010@gmail.com","Permanent_Address":"4-74, Thoguta Mandal, Venkatraopet, Medak, TS-502278","Present_Address":"4-74, Thoguta Mandal, Venkatraopet, Medak, TS-502278","PAN_No":"HMYPK7066K","Aadhar_No":"964978055092","Driving_License_No":"TS03620180009567","Bank_Name":"IDFC FIRST Bank Ltd.","Bank_Account_No":"10184219370","Bank_IFSC_Code":"IDFB0080243","UAN_No":0,"Basic_Salary":1,"HRA":2,"Conveyance":3,"Medical_Reimbursement":4,"Special_Allowance":5,"ST_Bonus":6,"Other_Allowance":7,"Gross_Salary":8,"Emp_PF":9,"Emp_ESIC":10,"PT":11,"Total_Deduction":12,"Take_Home":13,"Employer_PF":14,"Employer_ESIC":15,"Mediclaim":16,"CTC":17,"Password":"ffemp@123"},{"FFI_Emp_ID":"FFI0590","Emp_Name":"Harshitha G","Interview_Date":"21-04-2025","Joining_Date":"21-04-2025","Designation":"Executive-HR Ops","Department":"Foxconn","State":"ANDAMAN & NICOBAR","Location":"banglore","Date_of_Birth":"19-04-2002","Gender":"Female","Father_Name":"Ganesh Singh D","Blood_Group":"O+","Qualification":"BSC","Phone_No":6363818509,"Phone_No2":0,"Email":"harshithag1904@gmail.com","Permanent_Address":"81, 5th Main, 2nd Cross, Naraspura Layout, Vidyaranyapura, Bangalore 560097","Present_Address":"81, 5th Main, 2nd Cross, Naraspura Layout, Vidyaranyapura, Bangalore 560097","PAN_No":"DHAPG6393E","Aadhar_No":"851467748686","Driving_License_No":0,"Bank_Name":"SBI Bank","Bank_Account_No":"41205329211","Bank_IFSC_Code":"SBIN0060338","UAN_No":0,"Basic_Salary":1,"HRA":2,"Conveyance":3,"Medical_Reimbursement":4,"Special_Allowance":5,"ST_Bonus":6,"Other_Allowance":7,"Gross_Salary":8,"Emp_PF":9,"Emp_ESIC":10,"PT":11,"Total_Deduction":12,"Take_Home":13,"Employer_PF":14,"Employer_ESIC":15,"Mediclaim":16,"CTC":17,"Password":"ffemp@123"},{"FFI_Emp_ID":"FFI0592","Emp_Name":"Manoj Mahto","Interview_Date":"21-04-2025","Joining_Date":"21-04-2025","Designation":"Sourcing Executive","Department":"WH","State":"GUJRAT","Location":"banglore","Date_of_Birth":"03-05-1995","Gender":"Male","Father_Name":"BHAGIRATH  MAHTO","Blood_Group":0,"Qualification":"11TH","Phone_No":7858094697,"Phone_No2":0,"Email":"rjmanoj109@gmail.com","Permanent_Address":"NO:118A, VII-GORTOPA, POST-GORTOPA,DHANBAD,JHARKAND-828109","Present_Address":"NO:118A, VII-GORTOPA, POST-GORTOPA,DHANBAD,JHARKAND-828109","PAN_No":"JSRPM89544K","Aadhar_No":"517590710924","Driving_License_No":0,"Bank_Name":"AXIS BANK","Bank_Account_No":"924010044045968","Bank_IFSC_Code":"UTIB0004534","UAN_No":0,"Basic_Salary":1,"HRA":2,"Conveyance":3,"Medical_Reimbursement":4,"Special_Allowance":5,"ST_Bonus":6,"Other_Allowance":7,"Gross_Salary":8,"Emp_PF":9,"Emp_ESIC":10,"PT":11,"Total_Deduction":12,"Take_Home":13,"Employer_PF":14,"Employer_ESIC":15,"Mediclaim":16,"CTC":17,"Password":"ffemp@123"},{"FFI_Emp_ID":"FFI0593","Emp_Name":"Shrijith K M","Interview_Date":"20-05-2025","Joining_Date":"20-05-2025","Designation":"HR Ops Assistant","Department":"Foxconn","State":"HIMACHAL PRADESH","Location":"banglore","Date_of_Birth":"28-09-1998","Gender":"Male","Father_Name":"Mathai K M","Blood_Group":"O+","Qualification":"PG","Phone_No":7349634753,"Phone_No2":0,"Email":"shrijithmathew4@gmail.com","Permanent_Address":"2/101, Karkala house, Kadaba Taluk, Kutrupadi, Dakshina Kannada-574221","Present_Address":0,"PAN_No":"DYBPM0752B","Aadhar_No":"424113178126","Driving_License_No":0,"Bank_Name":"Federal Bank","Bank_Account_No":"99980124522348","Bank_IFSC_Code":"FDRL0001387","UAN_No":0,"Basic_Salary":1,"HRA":2,"Conveyance":3,"Medical_Reimbursement":4,"Special_Allowance":5,"ST_Bonus":6,"Other_Allowance":7,"Gross_Salary":8,"Emp_PF":9,"Emp_ESIC":10,"PT":11,"Total_Deduction":12,"Take_Home":13,"Employer_PF":14,"Employer_ESIC":15,"Mediclaim":16,"CTC":17,"Password":"ffemp@123"},{"FFI_Emp_ID":"FFI0595","Emp_Name":"Narayanamurthy V","Interview_Date":"22-05-2025","Joining_Date":"22-05-2025","Designation":"Sourcing Executive","Department":"Foxconn","State":"DADRA & NAGAR","Location":"banglore","Date_of_Birth":"24-07-2001","Gender":"Male","Father_Name":"Venkateshappa","Blood_Group":"O-","Qualification":"Bcom","Phone_No":6280478268,"Phone_No2":0,"Email":"narayanamurthyv769@gmail.com","Permanent_Address":"Beedaganahalli, Doddamarali, Chikkaballapura","Present_Address":"Beedaganahalli, Doddamarali, Chikkaballapura","PAN_No":"CGTPN3413K","Aadhar_No":"662869866398","Driving_License_No":0,"Bank_Name":"Canara Bank","Bank_Account_No":"15812210021160","Bank_IFSC_Code":"CNRB0000487","UAN_No":0,"Basic_Salary":1,"HRA":2,"Conveyance":3,"Medical_Reimbursement":4,"Special_Allowance":5,"ST_Bonus":6,"Other_Allowance":7,"Gross_Salary":8,"Emp_PF":9,"Emp_ESIC":10,"PT":11,"Total_Deduction":12,"Take_Home":13,"Employer_PF":14,"Employer_ESIC":15,"Mediclaim":16,"CTC":17,"Password":"ffemp@123"},{"FFI_Emp_ID":"FFI0602","Emp_Name":"Pavan Kumar K","Interview_Date":"22-05-2025","Joining_Date":"22-05-2025","Designation":"Sourcing Executive","Department":"Foxconn","State":"DAMAN & DIU","Location":"banglore","Date_of_Birth":"08-07-1999","Gender":"Male","Father_Name":"Kadirappa","Blood_Group":"A+","Qualification":"SSLC","Phone_No":7619401507,"Phone_No2":0,"Email":"pavankumark5677@gmail.com","Permanent_Address":"Kamaganahalli Village, Gowadagere, Gouribidanaur, Chikkaballapur -561211","Present_Address":"Kamaganahalli Village, Gowadagere, Gouribidanaur, Chikkaballapur -561211","PAN_No":"FNLPP1232G","Aadhar_No":"991362220082","Driving_License_No":0,"Bank_Name":"Uco Bank","Bank_Account_No":"00240110054802","Bank_IFSC_Code":"UCBA0000024","UAN_No":0,"Basic_Salary":1,"HRA":2,"Conveyance":3,"Medical_Reimbursement":4,"Special_Allowance":5,"ST_Bonus":6,"Other_Allowance":7,"Gross_Salary":8,"Emp_PF":9,"Emp_ESIC":10,"PT":11,"Total_Deduction":12,"Take_Home":13,"Employer_PF":14,"Employer_ESIC":15,"Mediclaim":16,"CTC":17,"Password":"ffemp@123"}] 
-[2025-06-10 10:53:19] local.INFO: Imported employee last {"ffi_emp_id":"FFI0602","emp_name":"Pavan Kumar K","interview_date":"2025-05-22","joining_date":"2025-05-22","contract_date":null,"designation":"Sourcing Executive","department":"Foxconn","state":28,"location":"banglore","dob":"1999-07-08","gender":"Male","father_name":"Kadirappa","blood_group":"A+","qualification":"SSLC","phone1":7619401507,"phone2":0,"email":"pavankumark5677@gmail.com","permanent_address":"Kamaganahalli Village, Gowadagere, Gouribidanaur, Chikkaballapur -561211","present_address":"Kamaganahalli Village, Gowadagere, Gouribidanaur, Chikkaballapur -561211","pan_no":"FNLPP1232G","pan_path":null,"aadhar_no":"991362220082","aadhar_path":null,"driving_license_no":0,"driving_license_path":null,"photo":null,"resume":null,"bank_document":null,"bank_name":"Uco Bank","bank_account_no":"00240110054802","bank_ifsc_code":"UCBA0000024","uan_generatted":null,"uan_type":null,"uan_no":0,"basic_salary":1,"hra":2,"conveyance":3,"medical_reimbursement":4,"special_allowance":5,"other_allowance":7,"st_bonus":6,"gross_salary":8,"emp_pf":9,"emp_esic":10,"pt":11,"total_deduction":12,"take_home":13,"employer_pf":14,"employer_esic":15,"mediclaim":16,"ctc":17,"status":0,"psd":"ffemp@123","password":"$2y$12$HLDFx9SMYtUoQmUG3YobCeOKjw6K6AdFDPvfTYcGr07Gh0EI62bQe","voter_id":null,"emp_form":null,"pf_esic_form":null,"payslip":null,"exp_letter":null,"updated_at":"2025-06-10T10:53:19.000000Z","created_at":"2025-06-10T10:53:19.000000Z","id":305} 
-[2025-06-11 04:41:56] local.INFO: Imported employee [{"Client_Name":"BISLERI INTERNATIONAL PVT LTD","FFI_EMP_ID":"FFIBIPL0203","Client_ID":"TN002","Grade":"B","Emp_Name":"Praveen","Email":"sunil@webomindapps.com","Interview_Date":45662,"Joining_Date":"15-5-2025","Contract_End_Date":"25-5-2025","Designation":"HR","Department":"REcuritement","State":"KARNATAKA","Location":"Bnaglore","Branch":"Kormangala","Gender":"Male","Date_of_Birth":"15-6-2001","Qualification":"5th","Father_Name":"DK","Father_DOB":"15-5-1958","Father_Aadhar":"123456789123","Mother_Name":"Lela","Mother_DOB":27554,"Mother_Aadhar":"102365894785","Religion":"Hindu","Maritial_Status":"Married","Spouse_Name":"N/A","Spouse_DOB":"N/A","Spouse_Aadhar":"N/A","No_of_Childrens":"N/A","Child_1_Name":"N/A","Child_1_DOB":"N/A","Child_1_Gender":"N/A","Child_2_Name":"N/A","Child_2_DOB":"N/A","Child_2_Gender":"N/A","Child_3_Name":"N/A","Child_3_DOB":"N/A","Child_3_Gender":"N/A","Child_4_Name":"N/A","Child_4_DOB":"N/A","Child_4_Gender":"N/A","Languages":"English,Kannada,hindi","Mother_Tongue":"Kannada","Emer_Contact_No":159874632,"Emer_Name":"ravi","Emer_Relation":"friend","Blood_Group":"A-","Phone_No":89574632000,"Official_Mail_ID":"N/A","Permanent_Address":"KR Market","Present_Address":"Kormangla","PAN_No":2316548,"Aadhar_No":"896523147888","Driving_License_No":"N JGVG589156","UAN_No":"N/A","ESIC_No":"N/A","Bank_Name":"Hdfc","Bank_Account_No":"3215466263235","Bank_IFSC_Code":"2sd4vmf","Basic_Salary":7850,"HRA":34,"Special_Allowance":38,"Other_Allowance":39,"ST_Bonus":40,"Gross_Salary":41,"Emp_PF":42,"Emp_ESIC":43,"PT":44,"Emp_LWF":null,"Total_Deduction":45,"Take_Home":46,"Employer_PF":47,"Employer_ESIC":48,"Employer_LWF":null,"Mediclaim":49,"CTC":50,"dcs_approval":"Pending","Password":"ffemp@123"}] 
-[2025-06-11 04:41:56] local.ERROR: Undefined array key "Dcs_Approval" {"exception":"[object] (ErrorException(code: 0): Undefined array key \"Dcs_Approval\" at /home/u688545118/domains/webominddev.co.in/public_html/fretusfolks/app/Jobs/ImportApprovedCandidatesJob.php:113)
-[stacktrace]
-#0 /home/u688545118/domains/webominddev.co.in/public_html/fretusfolks/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/HandleExceptions.php(256): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleError()
-#1 /home/u688545118/domains/webominddev.co.in/public_html/fretusfolks/app/Jobs/ImportApprovedCandidatesJob.php(113): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->Illuminate\\Foundation\\Bootstrap\\{closure}()
-#2 /home/u688545118/domains/webominddev.co.in/public_html/fretusfolks/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): App\\Jobs\\ImportApprovedCandidatesJob->handle()
-#3 /home/u688545118/domains/webominddev.co.in/public_html/fretusfolks/vendor/laravel/framework/src/Illuminate/Container/Util.php(43): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
-#4 /home/u688545118/domains/webominddev.co.in/public_html/fretusfolks/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(95): Illuminate\\Container\\Util::unwrapIfClosure()
-#5 /home/u688545118/domains/webominddev.co.in/public_html/fretusfolks/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod()
-#6 /home/u688545118/domains/webominddev.co.in/public_html/fretusfolks/vendor/laravel/framework/src/Illuminate/Container/Container.php(690): Illuminate\\Container\\BoundMethod::call()
-#7 /home/u688545118/domains/webominddev.co.in/public_html/fretusfolks/vendor/laravel/framework/src/Illuminate/Bus/Dispatcher.php(128): Illuminate\\Container\\Container->call()
-#8 /home/u688545118/domains/webominddev.co.in/public_html/fretusfolks/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(144): Illuminate\\Bus\\Dispatcher->Illuminate\\Bus\\{closure}()
-#9 /home/u688545118/domains/webominddev.co.in/public_html/fretusfolks/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
-#10 /home/u688545118/domains/webominddev.co.in/public_html/fretusfolks/vendor/laravel/framework/src/Illuminate/Bus/Dispatcher.php(132): Illuminate\\Pipeline\\Pipeline->then()
-#11 /home/u688545118/domains/webominddev.co.in/public_html/fretusfolks/vendor/laravel/framework/src/Illuminate/Queue/CallQueuedHandler.php(124): Illuminate\\Bus\\Dispatcher->dispatchNow()
-#12 /home/u688545118/domains/webominddev.co.in/public_html/fretusfolks/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(144): Illuminate\\Queue\\CallQueuedHandler->Illuminate\\Queue\\{closure}()
-#13 /home/u688545118/domains/webominddev.co.in/public_html/fretusfolks/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(119): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
-#14 /home/u688545118/domains/webominddev.co.in/public_html/fretusfolks/vendor/laravel/framework/src/Illuminate/Queue/CallQueuedHandler.php(123): Illuminate\\Pipeline\\Pipeline->then()
-#15 /home/u688545118/domains/webominddev.co.in/public_html/fretusfolks/vendor/laravel/framework/src/Illuminate/Queue/CallQueuedHandler.php(71): Illuminate\\Queue\\CallQueuedHandler->dispatchThroughMiddleware()
-#16 /home/u688545118/domains/webominddev.co.in/public_html/fretusfolks/vendor/laravel/framework/src/Illuminate/Queue/Jobs/Job.php(102): Illuminate\\Queue\\CallQueuedHandler->call()
-#17 /home/u688545118/domains/webominddev.co.in/public_html/fretusfolks/vendor/laravel/framework/src/Illuminate/Queue/Worker.php(440): Illuminate\\Queue\\Jobs\\Job->fire()
-#18 /home/u688545118/domains/webominddev.co.in/public_html/fretusfolks/vendor/laravel/framework/src/Illuminate/Queue/Worker.php(390): Illuminate\\Queue\\Worker->process()
-#19 /home/u688545118/domains/webominddev.co.in/public_html/fretusfolks/vendor/laravel/framework/src/Illuminate/Queue/Worker.php(177): Illuminate\\Queue\\Worker->runJob()
-#20 /home/u688545118/domains/webominddev.co.in/public_html/fretusfolks/vendor/laravel/framework/src/Illuminate/Queue/Console/WorkCommand.php(148): Illuminate\\Queue\\Worker->daemon()
-#21 /home/u688545118/domains/webominddev.co.in/public_html/fretusfolks/vendor/laravel/framework/src/Illuminate/Queue/Console/WorkCommand.php(131): Illuminate\\Queue\\Console\\WorkCommand->runWorker()
-#22 /home/u688545118/domains/webominddev.co.in/public_html/fretusfolks/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Illuminate\\Queue\\Console\\WorkCommand->handle()
-#23 /home/u688545118/domains/webominddev.co.in/public_html/fretusfolks/vendor/laravel/framework/src/Illuminate/Container/Util.php(43): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
-#24 /home/u688545118/domains/webominddev.co.in/public_html/fretusfolks/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(95): Illuminate\\Container\\Util::unwrapIfClosure()
-#25 /home/u688545118/domains/webominddev.co.in/public_html/fretusfolks/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod()
-#26 /home/u688545118/domains/webominddev.co.in/public_html/fretusfolks/vendor/laravel/framework/src/Illuminate/Container/Container.php(690): Illuminate\\Container\\BoundMethod::call()
-#27 /home/u688545118/domains/webominddev.co.in/public_html/fretusfolks/vendor/laravel/framework/src/Illuminate/Console/Command.php(213): Illuminate\\Container\\Container->call()
-#28 /home/u688545118/domains/webominddev.co.in/public_html/fretusfolks/vendor/symfony/console/Command/Command.php(279): Illuminate\\Console\\Command->execute()
-#29 /home/u688545118/domains/webominddev.co.in/public_html/fretusfolks/vendor/laravel/framework/src/Illuminate/Console/Command.php(182): Symfony\\Component\\Console\\Command\\Command->run()
-#30 /home/u688545118/domains/webominddev.co.in/public_html/fretusfolks/vendor/symfony/console/Application.php(1047): Illuminate\\Console\\Command->run()
-#31 /home/u688545118/domains/webominddev.co.in/public_html/fretusfolks/vendor/symfony/console/Application.php(316): Symfony\\Component\\Console\\Application->doRunCommand()
-#32 /home/u688545118/domains/webominddev.co.in/public_html/fretusfolks/vendor/symfony/console/Application.php(167): Symfony\\Component\\Console\\Application->doRun()
-#33 /home/u688545118/domains/webominddev.co.in/public_html/fretusfolks/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(197): Symfony\\Component\\Console\\Application->run()
-#34 /home/u688545118/domains/webominddev.co.in/public_html/fretusfolks/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1203): Illuminate\\Foundation\\Console\\Kernel->handle()
-#35 /home/u688545118/domains/webominddev.co.in/public_html/fretusfolks/artisan(13): Illuminate\\Foundation\\Application->handleCommand()
-#36 {main}
-"} 
+[2025-08-02 10:46:00] local.INFO: Generated data:  
+[2025-08-02 10:46:00] local.INFO: Generated data:  
+[2025-08-02 10:46:00] local.INFO: Generated data:  
+[2025-08-02 10:46:00] local.INFO: Generated data:  
+[2025-08-02 10:46:00] local.INFO: Generated data:  
+[2025-08-02 10:46:00] local.INFO: Generated data:  
+[2025-08-02 10:46:00] local.INFO: Generated data:  
+[2025-08-02 10:46:00] local.INFO: Generated data:  
+[2025-08-02 10:46:00] local.INFO: Generated data:  
+[2025-08-02 10:46:00] local.INFO: Generated data:  
+[2025-08-02 10:46:00] local.INFO: Generated data:  
+[2025-08-02 10:46:00] local.INFO: Generated data:  
+[2025-08-02 10:46:00] local.INFO: Generated data:  
+[2025-08-02 10:46:00] local.INFO: Generated data:  
+[2025-08-02 10:46:01] local.INFO: Generated data:  
+[2025-08-02 10:46:01] local.INFO: Generated data:  
+[2025-08-02 10:46:01] local.INFO: Generated data:  
+[2025-08-02 10:46:01] local.INFO: Generated data:  
+[2025-08-02 10:46:01] local.INFO: Generated data:  
+[2025-08-02 10:46:01] local.INFO: Generated data:  
+[2025-08-02 10:46:01] local.INFO: Generated data:  
+[2025-08-02 10:46:01] local.INFO: Generated data:  
+[2025-08-02 10:46:01] local.INFO: Generated data:  
+[2025-08-02 10:46:01] local.INFO: Generated data:  
+[2025-08-02 10:46:01] local.INFO: Generated data:  
+[2025-08-02 10:46:01] local.INFO: Generated data:  
+[2025-08-02 10:46:01] local.INFO: Generated data:  
+[2025-08-02 10:46:01] local.INFO: Generated data:  
+[2025-08-02 10:46:01] local.INFO: Generated data:  
+[2025-08-02 10:46:01] local.INFO: Generated data:  
+[2025-08-02 10:46:01] local.INFO: Generated data:  
+[2025-08-02 10:46:02] local.INFO: Generated data:  
+[2025-08-02 10:46:02] local.INFO: Generated data:  
+[2025-08-02 10:46:02] local.INFO: Generated data:  
+[2025-08-02 10:46:02] local.INFO: Generated data:  
+[2025-08-02 10:46:02] local.INFO: Generated data:  
+[2025-08-02 10:46:02] local.INFO: Generated data:  
+[2025-08-02 10:46:02] local.INFO: Generated data:  
+[2025-08-02 10:46:02] local.INFO: Generated data:  
+[2025-08-02 10:46:02] local.INFO: Generated data:  
+[2025-08-02 10:46:02] local.INFO: Generated data:  
+[2025-08-02 10:46:02] local.INFO: Generated data:  
+[2025-08-02 10:46:02] local.INFO: Generated data:  
+[2025-08-02 10:46:02] local.INFO: Generated data:  
+[2025-08-02 10:46:02] local.INFO: Generated data:  
+[2025-08-02 10:46:02] local.INFO: Generated data:  
+[2025-08-02 10:46:02] local.INFO: Generated data:  
+[2025-08-02 10:46:02] local.INFO: Generated data:  
+[2025-08-02 10:46:02] local.INFO: Generated data:  
+[2025-08-02 10:46:02] local.INFO: Generated data:  
+[2025-08-02 10:46:03] local.INFO: Generated data:  
+[2025-08-02 10:46:03] local.INFO: Generated data:  
+[2025-08-02 10:46:03] local.INFO: Generated data:  
+[2025-08-02 10:46:03] local.INFO: Generated data:  
+[2025-08-02 10:46:03] local.INFO: Generated data:  
+[2025-08-02 10:46:03] local.INFO: Generated data:  
+[2025-08-02 10:46:03] local.INFO: Generated data:  
+[2025-08-02 10:46:03] local.INFO: Generated data:  
+[2025-08-02 10:46:03] local.INFO: Generated data:  
+[2025-08-02 10:46:03] local.INFO: Generated data:  
+[2025-08-02 10:46:03] local.INFO: Generated data:  
+[2025-08-02 10:46:03] local.INFO: Generated data:  
+[2025-08-02 10:46:03] local.INFO: Generated data:  
+[2025-08-02 10:46:03] local.INFO: Generated data:  
+[2025-08-02 10:46:03] local.INFO: Generated data:  
+[2025-08-02 10:46:03] local.INFO: Generated data:  
+[2025-08-02 10:46:03] local.INFO: Generated data:  
+[2025-08-02 10:46:03] local.INFO: Generated data:  
+[2025-08-02 10:46:03] local.INFO: Generated data:  
+[2025-08-02 10:46:04] local.INFO: Generated data:  
+[2025-08-02 10:46:04] local.INFO: Generated data:  
+[2025-08-02 10:46:04] local.INFO: Generated data:  
+[2025-08-02 10:46:04] local.INFO: Generated data:  
+[2025-08-02 10:46:04] local.INFO: Generated data:  
+[2025-08-02 10:46:04] local.INFO: Generated data:  
+[2025-08-02 10:46:04] local.INFO: Generated data:  
+[2025-08-02 10:46:04] local.INFO: Generated data:  
+[2025-08-02 10:46:04] local.INFO: Generated data:  
+[2025-08-02 10:46:04] local.INFO: Generated data:  
+[2025-08-02 10:46:04] local.INFO: Generated data:  
+[2025-08-02 10:46:04] local.INFO: Generated data:  
+[2025-08-02 10:46:04] local.INFO: Generated data:  
+[2025-08-02 10:46:04] local.INFO: Generated data:  
+[2025-08-02 10:46:04] local.INFO: Generated data:  
+[2025-08-02 10:46:04] local.INFO: Generated data:  
+[2025-08-02 10:46:04] local.INFO: Generated data:  
+[2025-08-02 10:46:04] local.INFO: Generated data:  
+[2025-08-02 10:46:04] local.INFO: Generated data:  
+[2025-08-02 10:46:04] local.INFO: Generated data:  
+[2025-08-02 10:46:04] local.INFO: Generated data:  
+[2025-08-02 10:46:05] local.INFO: Generated data:  
+[2025-08-02 10:46:05] local.INFO: Generated data:  
+[2025-08-02 10:46:05] local.INFO: Generated data:  
+[2025-08-02 10:46:05] local.INFO: Generated data:  
+[2025-08-02 10:46:05] local.INFO: Generated data:  
+[2025-08-02 10:46:05] local.INFO: Generated data:  
+[2025-08-02 10:46:05] local.INFO: Generated data:  
+[2025-08-02 10:46:05] local.INFO: Generated data:  
+[2025-08-02 10:46:05] local.INFO: Generated data:  
+[2025-08-02 10:46:05] local.INFO: Generated data:  
+[2025-08-02 10:46:05] local.INFO: Generated data:  
+[2025-08-02 10:46:05] local.INFO: Generated data:  
+[2025-08-02 10:46:05] local.INFO: Generated data:  
+[2025-08-02 10:46:05] local.INFO: Generated data:  
+[2025-08-02 10:46:05] local.INFO: Generated data:  
+[2025-08-02 10:46:05] local.INFO: Generated data:  
+[2025-08-02 10:46:05] local.INFO: Generated data:  
+[2025-08-02 10:46:05] local.INFO: Generated data:  
+[2025-08-02 10:46:05] local.INFO: Generated data:  
+[2025-08-02 10:46:05] local.INFO: Generated data:  
+[2025-08-02 10:46:06] local.INFO: Generated data:  
+[2025-08-02 10:46:06] local.INFO: Generated data:  
+[2025-08-02 10:46:06] local.INFO: Generated data:  
+[2025-08-02 10:46:06] local.INFO: Generated data:  
+[2025-08-02 10:46:06] local.INFO: Generated data:  
+[2025-08-02 10:46:06] local.INFO: Generated data:  
+[2025-08-02 10:46:06] local.INFO: Generated data:  
+[2025-08-02 10:46:06] local.INFO: Generated data:  
+[2025-08-02 10:46:06] local.INFO: Generated data:  
+[2025-08-02 10:46:06] local.INFO: Generated data:  
+[2025-08-02 10:46:06] local.INFO: Generated data:  
+[2025-08-02 10:46:06] local.INFO: Generated data:  
+[2025-08-02 10:46:06] local.INFO: Generated data:  
+[2025-08-02 10:46:06] local.INFO: Generated data:  
+[2025-08-02 10:46:06] local.INFO: Generated data:  
+[2025-08-02 10:46:06] local.INFO: Generated data:  
+[2025-08-02 10:46:06] local.INFO: Generated data:  
+[2025-08-02 10:46:06] local.INFO: Generated data:  
+[2025-08-02 10:46:06] local.INFO: Generated data:  
+[2025-08-02 10:46:06] local.INFO: Generated data:  
+[2025-08-02 10:46:06] local.INFO: Generated data:  
+[2025-08-02 10:46:07] local.INFO: Generated data:  
+[2025-08-02 10:46:07] local.INFO: Generated data:  
+[2025-08-02 10:46:07] local.INFO: Generated data:  
+[2025-08-02 10:46:07] local.INFO: Generated data:  
+[2025-08-02 10:46:07] local.INFO: Generated data:  
+[2025-08-02 10:46:07] local.INFO: Generated data:  
+[2025-08-02 10:46:07] local.INFO: Generated data:  
+[2025-08-02 10:46:07] local.INFO: Generated data:  
+[2025-08-02 11:15:09] local.INFO: Generated data:  
+[2025-08-02 11:15:09] local.INFO: Generated data:  
+[2025-08-02 11:15:09] local.INFO: Generated data:  
+[2025-08-02 11:15:09] local.INFO: Generated data:  
+[2025-08-02 11:15:09] local.INFO: Generated data:  
+[2025-08-02 11:15:10] local.INFO: Generated data:  
+[2025-08-02 11:15:10] local.INFO: Generated data:  
+[2025-08-02 11:15:10] local.INFO: Generated data:  
+[2025-08-02 11:15:10] local.INFO: Generated data:  
+[2025-08-02 11:15:10] local.INFO: Generated data:  
+[2025-08-02 11:15:10] local.INFO: Generated data:  
+[2025-08-02 11:15:10] local.INFO: Generated data:  
+[2025-08-02 11:15:10] local.INFO: Generated data:  
+[2025-08-02 11:15:10] local.INFO: Generated data:  
+[2025-08-02 11:15:10] local.INFO: Generated data:  
+[2025-08-02 11:15:10] local.INFO: Generated data:  
+[2025-08-02 11:15:10] local.INFO: Generated data:  
+[2025-08-02 11:15:10] local.INFO: Generated data:  
+[2025-08-02 11:30:06] local.INFO: Generated data:  
+[2025-08-02 11:30:06] local.INFO: Generated data:  
+[2025-08-02 11:30:06] local.INFO: Generated data:  
+[2025-08-02 11:30:06] local.INFO: Generated data:  
+[2025-08-02 11:30:06] local.INFO: Generated data:  
+[2025-08-02 11:30:07] local.INFO: Generated data:  
+[2025-08-02 11:30:07] local.INFO: Generated data:  
+[2025-08-02 11:30:07] local.INFO: Generated data:  
+[2025-08-02 11:30:07] local.INFO: Generated data:  
+[2025-08-02 11:45:02] local.INFO: Generated data:  

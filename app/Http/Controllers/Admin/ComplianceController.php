@@ -32,7 +32,7 @@ class ComplianceController extends Controller
     }
     public function index()
     {
-        $searchColumns = ['id', 'entity_name', 'emp_name', 'phone1','ffi_emp_id','client_emp_id'];
+        $searchColumns = ['id', 'entity_name', 'emp_name', 'phone1', 'ffi_emp_id', 'client_emp_id'];
         $search = request()->search;
         $from_date = request()->from_date;
         $to_date = request()->to_date;
@@ -44,8 +44,8 @@ class ComplianceController extends Controller
 
 
         $query = $this->model()->query()
-            ->where('hr_approval', 1)
-            ->where('comp_status', 0);
+            ->where('hr_approval', 1);
+        // ->where('comp_status', 0);
 
         if ($from_date && $to_date) {
             $query->whereBetween('created_at', [$from_date, $to_date]);
@@ -247,7 +247,7 @@ class ComplianceController extends Controller
 
         $candidates = $query->get();
 
-        return Excel::download(new CadidateDownload($candidates), 'candidates.xlsx');
+        return Excel::download(new CadidateDownload($candidates), 'Candidates_UAN_ESIC.xlsx');
     }
 
     public function create()
@@ -381,6 +381,6 @@ class ComplianceController extends Controller
 
         $candidates = $query->get();
 
-        return Excel::download(new BankDownload($candidates), 'Bankform.xlsx');
+        return Excel::download(new BankDownload($candidates), 'Bank_Details.xlsx');
     }
 }

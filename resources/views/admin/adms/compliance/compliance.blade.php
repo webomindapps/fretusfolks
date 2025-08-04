@@ -30,6 +30,7 @@
                     ['label' => 'Client Name', 'column' => 'entity_name', 'sort' => true],
                     ['label' => 'Employee Name', 'column' => 'emp_name', 'sort' => true],
                     ['label' => 'Phone', 'column' => 'phone1', 'sort' => true],
+                    ['label' => 'UAN ESIC Status', 'column' => 'comp_status', 'sort' => true],
                     ['label' => 'Actions', 'column' => 'action', 'sort' => false],
                 ];
             @endphp
@@ -70,7 +71,13 @@
                         </td>
                         <td> {{ $item->emp_name }}</td>
                         <td> {{ $item->phone1 }}</td>
-
+                        <td>
+                            @if ($item->comp_status == 0)
+                                <span class="badge rounded-pill deactive">Pending</span>
+                            @else
+                                <span class="badge rounded-pill sactive">Updated</span>
+                            @endif
+                        </td>
                         <td>
                             <div class="dropdown pop_Up dropdown_bg">
                                 <div class="dropdown-toggle" id="dropdownMenuButton-{{ $item->id }}"

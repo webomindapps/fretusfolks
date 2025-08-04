@@ -1461,6 +1461,7 @@ class DCSApprovalController extends Controller
     public function forceDelete($id)
     {
         $candidate = $this->model()->onlyTrashed()->findOrFail($id);
+        BankDetails::where('emp_id', $candidate->id)->delete();
         $candidate->forceDelete();
         return redirect()->back()->with('success', 'Candidate  permanently deleted.');
     }

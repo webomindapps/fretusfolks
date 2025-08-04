@@ -429,6 +429,7 @@ Route::prefix('admin')->group(function () {
         Route::get('pip_letter/{id}/edit', [AdmsPipLetterController::class, 'edit'])->name('pip_letter.edit');
         Route::post('pip_letter/{id}/edit', [AdmsPipLetterController::class, 'update']);
         Route::get('pip_letter/{id}/delete', [AdmsPipLetterController::class, 'delete'])->name('pip_letter.delete');
+        Route::post('/pip_letter/bulkimport', [AdmsPipLetterController::class, 'bulkUpload'])->name('pip_letter.bulkimport');
 
         //compliance 
         Route::get('candidatemaster', [ComplianceController::class, 'index'])->name('candidatemaster');

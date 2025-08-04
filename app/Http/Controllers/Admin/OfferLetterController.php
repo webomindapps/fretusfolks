@@ -279,7 +279,7 @@ class OfferLetterController extends Controller
             return back()->with('error', 'File not ready or expired.');
         }
 
-        return response()->download($path)->deleteFileAfterSend(true); // ✅ auto delete after download
+        return response()->download($path)->deleteFileAfterSend(true); //  auto delete after download
     }
 
 

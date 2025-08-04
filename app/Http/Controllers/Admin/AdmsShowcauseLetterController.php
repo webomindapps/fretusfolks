@@ -84,7 +84,7 @@ class AdmsShowcauseLetterController extends Controller
                 'emp_id' => $request->emp_id,
                 'status' => '1',
                 'date' => $request->date,
-                'content' => $request->content,
+                // 'content' => $request->content,
                 'date_of_update' => now(),
             ]);
             $pdf = Pdf::loadView('admin.adms.showcause_letter.format', ['showLetter' => $showLetter]);
@@ -152,7 +152,7 @@ class AdmsShowcauseLetterController extends Controller
                 'emp_id' => $request->emp_id,
                 'status' => '1',
                 'date' => $request->date,
-                'content' => $request->content,
+                // 'content' => $request->content,
                 'date_of_update' => now(),
             ]);
             $pdf = Pdf::loadView('admin.adms.showcause_letter.format', ['showLetter' => $showLetter]);

@@ -39,33 +39,33 @@
                                     :required="true" size="col-lg-6 mt-2" readonly />
                                 <x-forms.input label="Date: " type="date" name="date" id="date"
                                     :required="false" size="col-lg-6 mt-2" :value="old('date')" />
-                                <x-forms.textarea label="Content: " name="content" id="content" :required="true"
+                                {{-- <x-forms.textarea label="Content: " name="content" id="content" :required="true"
                                     size="col-lg-12 mt-2"
                                     value=" The purpose of this Performance Improvement Plan (PIP) is to define serious areas ofconcern, gaps in your work performance, reiterate at Hiveloop Technology Pvt Ltd.
-                                    expectations, and allow you the opportunity to demonstrate improvement and commitment." />
+                                    expectations, and allow you the opportunity to demonstrate improvement and commitment." /> --}}
 
                                 <x-forms.textarea label="Observations, Previous Discussions or Counseling : "
                                     type="text" name="observation" id="observation" :required="true"
                                     size="col-lg-12 mt-2"
                                     value="In spite of constant follow-up, motivation and warnings, since last 6 weeks, the performance is observed below mark. So intend to put you on pip." />
 
-                                <div class="row">
+                                {{-- <div class="row">
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <label>Improvement Goals: <span class="text-danger">*</span></label>
                                             <textarea id="goals" name="goals" class="form-control form-input-styled editor" data-fouc>{{ old('goals', '<p>&nbsp;</p><table style="border-collapse: collapse; width: 100%; height: 72px; margin-left: auto; margin-right: auto;" border="1"><tbody><tr style="height: 36px;"><td style="width: 17.8899%; height: 36px; text-align: center;">1</td><td style="width: 82.1101%; height: 36px; text-align: center;">No of Listings created &ndash; 1000</td></tr><tr style="height: 36px; text-align: center;"><td style="width: 17.8899%; height: 36px; text-align: center;">2</td><td style="width: 82.1101%; height: 36px; text-align: center;">New sellers added &ndash; 10</td></tr></tbody></table>') }}</textarea>
                                         </div>
                                     </div>
-                                </div>
+                                </div> --}}
 
-                                <div class="row">
+                                {{-- <div class="row">
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <label>Follow-up Updates: <span class="text-danger">*</span></label>
                                             <textarea id="updates" name="updates" class="form-control form-input-styled editor" data-fouc>{{ old('updates','<table style="border-collapse: collapse; width: 98.2671%; height: 146px;" border="1"><tbody><tr style="height: 41px;"><td style="width: 20%; height: 41px; text-align: center;"><span style="font-size: 10pt;">Date Scheduled</span></td><td style="width: 20%; height: 41px; text-align: center;"><span style="font-size: 10pt;">Activity</span></td><td style="width: 20%; height: 41px; text-align: center;"><span style="font-size: 10pt;">Conducted By</span></td><td style="width: 20%; height: 41px; text-align: center;"><span style="font-size: 10pt;">Completion Date</span></td><td style="width: 20%; height: 41px; text-align: center;"><span style="font-size: 10pt;">Remarks</span></td></tr><tr style="height: 37px;"><td style="width: 20%; height: 37px; text-align: center;"><span style="font-size: 10pt;">10th August&rsquo;2018</span></td><td style="width: 20%; height: 37px; text-align: center;"><span style="font-size: 10pt;">1st review</span></td><td style="width: 20%; height: 37px; text-align: center;"><span style="font-size: 10pt;">[Supervisor/Manager]</span></td><td style="width: 20%; height: 37px; text-align: center;"><span style="font-size: 10pt;">10th August&rsquo;2018</span></td><td style="width: 20%; height: 37px; text-align: justify;"><span style="font-size: 10pt;">Review report needs to share with the employee.</span></td></tr></tbody></table>') }}</textarea>
                                         </div>
                                     </div>
-                                </div>
+                                </div> --}}
 
                                 <x-forms.textarea label="Timeline for Improvement, Consequences & Expectations: "
                                     name="timeline" id="timeline" :required="true" size="col-lg-12 mt-2"
