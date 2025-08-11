@@ -1,5 +1,5 @@
 <x-applayout>
-    <x-admin.breadcrumb title="ADMS Other Payslips" :create="route('admin.other_payslips.create')" />
+    <x-admin.breadcrumb title="ADMS Manual Payslips" :create="route('admin.other_payslips.create')" />
     <div class="form-card px-3 mt-4">
         <form action="{{ route('admin.other_payslips') }}">
             <div class="row">
@@ -43,8 +43,8 @@
                     <input type="hidden" name="client_id" id="selected_client_id" required>
                 </div>
 
-                <x-forms.input label="FFI Employee ID:" type="text" name="ffi_emp_id" id="ffi_emp_id"
-                    :required="false" size="col-lg-4" :value="old('ffi_emp_id')" />
+                {{-- <x-forms.input label="FFI Employee ID:" type="text" name="ffi_emp_id" id="ffi_emp_id"
+                    :required="false" size="col-lg-4" :value="old('ffi_emp_id')" /> --}}
 
                 <div class="col-lg-4">
                     <label for="month">Month</label>
@@ -81,7 +81,7 @@
                 $columns = [
                     ['label' => 'Id', 'column' => 'id', 'sort' => true],
                     ['label' => 'Client Name', 'column' => 'client_name', 'sort' => false],
-                    ['label' => 'State name', 'column' => 'contact_person', 'sort' => false],
+                    // ['label' => 'State name', 'column' => 'contact_person', 'sort' => false],
                     ['label' => 'FFI Employee ID', 'column' => 'ffi_emp_id', 'sort' => true],
                     ['label' => 'Month', 'column' => 'month', 'sort' => true],
                     ['label' => 'year', 'column' => 'year', 'sort' => true],
@@ -95,7 +95,7 @@
                         <td>
                             {{ $item->client?->client_name }}
                         </td>
-                        <td> {{ $item->state?->state_name }}</td>
+                        {{-- <td> {{ $item->state?->state_name }}</td> --}}
                         <td> {{ $item->ffi_emp_id }}</td>
                         <td>{{ \DateTime::createFromFormat('!m', $item->month)->format('F') }}</td>
                         <td> {{ $item->year }}</td>

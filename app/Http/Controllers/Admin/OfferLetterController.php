@@ -231,56 +231,62 @@ class OfferLetterController extends Controller
             }
         } catch (Exception $e) {
             dd($e);
+            return redirect()->back()->with('error', 'An error occurred while processing Offer Letter.');
+
         }
         $error = '';
         return redirect()->route('admin.offer_letter')->with([
             'success' => 'Offer Letter added successfully',
-            'alert' => $error
+            'error' => $error
         ]);
     }
 
     public function bulkDownload(Request $request)
     {
+
         $request->validate([
-            'from_date' => 'required|date',
-            'to_date' => 'required|date',
+            'fromdate' => 'required|date',
+            'todate' => 'required|date',
             'client_id' => 'required',
         ]);
-
+        // dd($request);
         $client = ClientManagement::findOrFail($request->client_id);
+        // dd($client);
         $clientName = $client->client_name;
-
+        // dd($clientName);
         $letters = OfferLetter::where('entity_name', $clientName)
-            ->whereBetween('date', [$request->from_date, $request->to_date])
+            ->whereBetween('date', [$request->fromdate, $request->todate])
             ->whereIn('offer_letter_type', [1, 2, 3, 4, 5])
-            ->pluck('id')  // ✅ pass only IDs
+            ->pluck('id')
             ->toArray();
 
         if (empty($letters)) {
             return back()->with('error', 'No offer letters found.');
         }
 
-        $zipFileName = 'OfferLetters_' . now()->format('Ymd_His') . '.zip';
+        $zipFileName = 'OfferLetters_' . $clientName . '.zip';
 
-        // ✅ Dispatch Job
+        // dd($letters);
         GenerateOfferLetterZip::dispatch($letters, $clientName, $zipFileName);
 
-        // ✅ Pass file name to session to trigger download link
         return back()->with([
-            'success' => 'ZIP is being prepared. Please refresh and download shortly.',
+            'complete' => 'ZIP is being prepared. Please refresh and download shortly.',
             'zip_file' => $zipFileName
         ]);
     }
     public function offerZip($file)
     {
-        $path = storage_path("app/temp/{$file}");
+        $file = basename($file); 
+        $path = storage_path("app/public/{$file}");
+        
 
         if (!file_exists($path)) {
             return back()->with('error', 'File not ready or expired.');
         }
 
-        return response()->download($path)->deleteFileAfterSend(true); //  auto delete after download
+        return response()->download($path)->deleteFileAfterSend(true); 
     }
+
 
 
 }

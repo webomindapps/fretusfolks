@@ -48,12 +48,12 @@ class OtherPayslipController extends Controller
 
             $challans = $query->paginate();
         }
-        $clients = ClientManagement::where('status', 0)->latest()->get();
+        $clients = ClientManagement::where('active_status', 0)->latest()->get();
         return view("admin.adms.other_payslip.index", compact("challans", "clients"));
     }
     public function create()
     {
-        $clients = ClientManagement::where('status', 0)->latest()->get();
+        $clients = ClientManagement::where('active_status', 0)->latest()->get();
         return view("admin.adms.other_payslip.create", compact('clients'));
     }
     public function store(Request $request)

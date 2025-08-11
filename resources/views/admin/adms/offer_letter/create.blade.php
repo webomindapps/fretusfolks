@@ -69,6 +69,7 @@
                                         <option value="">-- Select --</option>
                                         <option value="S/O">S/O</option>
                                         <option value="D/O">D/O</option>
+                                        <option value="W/O">W/O</option>
 
                                     </select>
                                 </div>

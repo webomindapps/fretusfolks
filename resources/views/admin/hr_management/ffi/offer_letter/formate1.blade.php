@@ -9,91 +9,99 @@
 
 <style>
     @page {
-        size: A4;
-        margin: 150px 55px 120px 55px;
-        /* leave top and bottom space for header/footer */
+        margin: 200px 0 120px 20px;
+    }
+
+    .cash {
+        text-align: right;
+    }
+
+    li {
+        line-height: 1.5;
+    }
+
+    b {
+        font-weight: bold;
     }
 
     header {
         position: fixed;
-        top: -150px;
+        top: -200px;
+        left: -30px;
+        right: 0;
+        height: 170px;
     }
 
     footer {
         position: fixed;
-        bottom: -60px;
-    }
-
-    body {
-        font-family: 'Times New Roman', serif;
-        font-size: 13px;
-        margin-top: 10px;
-        padding: 0;
-        line-height: 1.5;
-    }
-
-    h1 {
-        font-size: 18px;
-        text-align: center;
-        text-decoration: underline;
-        margin-bottom: 10px;
-    }
-
-    p {
-        margin: 0;
-    }
-
-    ol {
-        padding-left: 20px;
-    }
-
-    ol li {
-        margin-bottom: 8px;
+        bottom: -120px;
+        left: -20px;
     }
 
     .table1 {
-        width: 80%;
-        margin: 20px auto;
         border-collapse: collapse;
+        width: 60%;
+        margin-left: auto;
+        margin-right: auto;
         font-size: 12px;
     }
 
     .table1 th,
     .table1 td {
+        padding: 4px;
         border: 1px solid #000;
-        padding: 6px 10px;
+    }
+
+    .table1 td:first-child {
         text-align: left;
     }
 
-    .table1 .gross {
-        background-color: #ecbfbf;
+    .table1 td:nth-child(2),
+    .table1 td:nth-child(3),
+    .table1 th:nth-child(2),
+    .table1 th:nth-child(3) {
+        text-align: center;
     }
 
-    .info-table {
-        width: 100%;
-        border-collapse: collapse;
+    h1 {
+        font-size: 15px;
+        text-align: center;
+        text-decoration: underline;
         margin-bottom: 15px;
     }
 
-    .info-table td {
-        font-size: 14px;
-        padding: 5px;
-    }
-
-    .signature-table {
-        width: 100%;
-        margin-top: 30px;
-        border-collapse: collapse;
+    p,
+    li {
+        font-size: 12px;
+        line-height: 1.5;
+        text-align: justify;
+        margin-bottom: 1px;
     }
 
     .signature-table td {
-        font-size: 14px;
-        padding: 10px;
         vertical-align: top;
+        padding: 10px;
     }
 
-    .signature-table img {
+    .seal {
+        width: 100px;
         margin-top: 10px;
+    }
+
+    .header-row {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+    }
+
+    .header-row .left,
+    .header-row .right {
+        font-size: 14px;
+    }
+
+    .body {
+        margin-left: 20px;
+        margin-right: 50px;
     }
 </style>
 </head>
@@ -369,7 +377,7 @@
     <div style="page-break-after: always;"></div>
 
     <div
-        style="color: #000;font-family: Tahoma;font-size: 13px;line-height: 1.5;text-align: justify;padding-left: 0%; margin-top:100px;">
+        style="color: #000;font-family: Tahoma;font-size: 13px;line-height: 1.5;text-align: justify;padding-left: 0%; margin-top:0px;">
         <h1 style="font-size:17px;text-align:center;text-decoration: underline;"> Annexure - 1</h1>
         <center>
             <table class="table table1 annexure_table" border="1"

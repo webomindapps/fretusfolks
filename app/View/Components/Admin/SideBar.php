@@ -236,7 +236,7 @@ class SideBar extends Component
             'roles' => ['Admin', 'HR Operations'],
         ],
         [
-            'title' => 'ADMS Other Payslip',
+            'title' => 'ADMS Manual Payslip',
             'icon' => 'bx bx-grid-alt',
             'route' => 'admin.other_payslips',
             'name' => 'admsotherpayslips',

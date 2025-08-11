@@ -1,7 +1,9 @@
 <x-applayout>
-    {{-- @if (session('success'))
+    @if (session('complete'))
         <div class="alert alert-success">
-            {{ session('success') }}
+
+            {{ session('complete') }}
+            
 
             @if (session('zip_file'))
                 <br>
@@ -10,7 +12,7 @@
                 </a>
             @endif
         </div>
-    @endif --}}
+    @endif
 
     <x-admin.breadcrumb title="Offer cum Appointment Letter" :create="route('admin.offer_letter.create')">
         <div class="d-flex justify-content-end">

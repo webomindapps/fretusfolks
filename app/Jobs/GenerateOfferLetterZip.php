@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use PDF;
 use ZipArchive;
+// use Barryvdh\DomPDF\PDF;
 use App\Models\OfferLetter;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
@@ -56,8 +57,7 @@ class GenerateOfferLetterZip implements ShouldQueue
 
                     $zip->addFile($pdfPath, "OfferLetter_{$offerLetter->id}.pdf");
 
-                    // ✅ Clean up temp PDFs after adding
-                    unlink($pdfPath);
+                    // unlink($pdfPath);
                 }
             }
             \Log::info("Bulk offer letter zip generated", [
@@ -66,6 +66,7 @@ class GenerateOfferLetterZip implements ShouldQueue
                 'letter_count' => $letters->count()
             ]);
             $zip->close();
+            
         }
     }
 

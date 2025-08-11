@@ -1,5 +1,5 @@
 <x-applayout>
-    <x-admin.breadcrumb title="Other Payslip" isBack="{{ true }}" />
+    <x-admin.breadcrumb title="Manual Payslip" isBack="{{ true }}" />
     @if ($errors->any())
         <div class="col-lg-12 pb-4 px-2">
             <div class="alert alert-danger">
@@ -58,13 +58,13 @@
                     <input type="hidden" name="client_id" id="selected_client_id" value="{{ old('client_id') }}"
                         required>
                 </div>
-                <x-forms.input label="FFI Employee ID:" type="text" name="ffi_emp_id" id="ffi_emp_id"
+                {{-- <x-forms.input label="FFI Employee ID:" type="text" name="ffi_emp_id" id="ffi_emp_id"
                     :required="true" size="col-lg-4 mt-4" :value="old('ffi_emp_id')" />
                 <div class="mb-4">
                     <x-forms.select label="State" name="state_id" id="state" :required="true" size="col-lg-6 mt-4"
                         :options="FretusFolks::getStates()" :value="old('state_id')" />
-                </div>
-                <div class="col-12">
+                </div> --}}
+                <div class="col-12 mt-4">
                     <table class="w-100 table-bordered" id="dynamicTable">
                         <thead>
                             <tr>

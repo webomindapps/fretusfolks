@@ -407,80 +407,80 @@
             <tbody>
                 <tr>
                     <td>Basic + DA</td>
-                    <td>{{ $offerLetter->basic_salary }}</td>
+                    <td>{{ $offerLetter->basic_salary ?? 0 }}</td>
                 </tr>
                 <tr>
                     <td>HRA</td>
-                    <td>{{ $offerLetter->hra }}</td>
+                    <td>{{ $offerLetter->hra ?? 0 }}</td>
                 </tr>
                 <tr>
                     <td>Special Allowance</td>
-                    <td>{{ $offerLetter->special_allowance }}</td>
+                    <td>{{ $offerLetter->special_allowance ?? 0 }}</td>
                 </tr>
                 <tr>
                     <td>Other Allowance</td>
-                    <td>{{ $offerLetter->other_allowance }}</td>
+                    <td>{{ $offerLetter->other_allowance ?? 0 }}</td>
                 </tr>
                 <tr>
                     <td>Conveyance</td>
-                    <td>{{ $offerLetter->conveyance }}</td>
+                    <td>{{ $offerLetter->conveyance ?? 0 }}</td>
                 </tr>
                 <tr>
                     <td>St. Bonus</td>
-                    <td>{{ $offerLetter->st_bonus }}</td>
+                    <td>{{ $offerLetter->st_bonus ?? 0 }}</td>
                 </tr>
                 <tr style="background-color:#f9e93d;">
                     <td><b>Gross Salary</b></td>
-                    <td><b>{{ $offerLetter->gross_salary }}</b></td>
+                    <td><b>{{ $offerLetter->gross_salary ?? 0 }}</b></td>
                 </tr>
                 <tr>
                     <td>Employee PF</td>
-                    <td>{{ $offerLetter->emp_pf }}</td>
+                    <td>{{ $offerLetter->emp_pf ?? 0 }}</td>
                 </tr>
                 <tr>
                     <td>Employee ESIC</td>
-                    <td>{{ $offerLetter->emp_esic }}</td>
+                    <td>{{ $offerLetter->emp_esic ?? 0 }}</td>
                 </tr>
                 <tr>
                     <td>Employee LWF</td>
-                    <td>{{ $offerLetter->lwf }}</td>
+                    <td>{{ $offerLetter->lwf ?? 0 }}</td>
                 </tr>
                 <tr>
                     <td>Professional Tax (PT)</td>
-                    <td>{{ $offerLetter->pt }}</td>
+                    <td>{{ $offerLetter->pt ?? 0 }}</td>
                 </tr>
                 <tr>
                     <td>Other Deduction</td>
-                    <td>{{ $offerLetter->other_deduction }}</td>
+                    <td>{{ $offerLetter->other_deduction ?? 0 }}</td>
                 </tr>
 
                 <tr style="background-color:#ffb4b4;">
                     <td><b>Total Deduction</b></td>
-                    <td><b>{{ $offerLetter->total_deduction }}</b></td>
+                    <td><b>{{ $offerLetter->total_deduction ?? 0 }}</b></td>
                 </tr>
                 <tr style="background-color:#7eb568;">
                     <td><b>Net Take-home</b></td>
-                    <td><b>{{ $offerLetter->take_home }}</b></td>
+                    <td><b>{{ $offerLetter->take_home ?? 0 }}</b></td>
                 </tr>
                 <tr>
                     <td>Employer PF</td>
-                    <td>{{ $offerLetter->employer_pf }}</td>
+                    <td>{{ $offerLetter->employer_pf ?? 0 }}</td>
                 </tr>
                 <tr>
                     <td>Employer ESIC</td>
-                    <td>{{ $offerLetter->employer_esic }}</td>
+                    <td>{{ $offerLetter->employer_esic ?? 0 }}</td>
                 </tr>
                 <tr>
                     <td>Employer LWF</td>
-                    <td>{{ $offerLetter->employer_lwf }}</td>
+                    <td>{{ $offerLetter->employer_lwf ?? 0 }}</td>
                 </tr>
                 <tr>
                     <td>Mediclaim</td>
-                    <td>{{ $offerLetter->mediclaim }}</td>
+                    <td>{{ $offerLetter->mediclaim ?? 0 }}</td>
                 </tr>
                 <tr style="background-color:#6997c9;">
                     <td><b>Cost To Company (CTC)</b></td>
-                    <td><b>{{ $offerLetter->ctc }}</b></td>
+                    <td><b>{{ $offerLetter->ctc ?? 0 }}</b></td>
 
                 </tr>
                 <tr style="background-color:#6997c9;">
