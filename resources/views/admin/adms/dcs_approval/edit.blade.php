@@ -305,10 +305,9 @@
                                         value="{{ old('aadhar_no', $candidate->aadhar_no) }}" required>
                                 </div>
                                 <div class="form-group col-lg-6 mt-2">
-                                    <label for="aadhar_path">Attach Aadhar Card: <span
-                                            style="color: red">*</span></label>
+                                    <label for="aadhar_path">Attach Aadhar Card: </label>
                                     <input type="file" name="aadhar_path" id="aadhar_path" class="form-control"
-                                        value="{{ old('aadhar_path', $candidate->aadhar_path) }}" required>
+                                        value="{{ old('aadhar_path', $candidate->aadhar_path) }}">
                                 </div>
 
                                 <x-forms.input label="Enter Driving License No:" type="text"
@@ -382,11 +381,22 @@
                                     id="bank_name" :required="true" size="col-lg-6 mt-2" :value="old('bank_name', $bankdetails->bank_name ?? '')" />
 
                                 <div class="form-group col-lg-6 mt-2">
-                                    <label for="bank_document">Attach Bank Document: <span
-                                            style="color: red;">*</span></label>
+                                    <label for="bank_document">Attach Bank Document: </label>
                                     <input type="file" name="bank_document" id="bank_document"
-                                        class="form-control" value="{{ old('bank_document') }}" required>
+                                        class="form-control">
+
+                                    @if (!empty($bankdetails->bank_document))
+                                        {{-- Adjust 'path' to your actual column --}}
+                                        <div id="image-preview-container" class="d-flex mt-2">
+                                            <a href="{{ asset($bankdetails->bank_document) }}" target="_blank"
+                                                class="btn btn-custom mt-2">
+                                                View
+                                            </a>
+
+                                        </div>
+                                    @endif
                                 </div>
+
                                 <x-forms.input label="Enter Bank Account No::" type="text" name="bank_account_no"
                                     id="bank_account_no" :required="true" size="col-lg-6 mt-2" :value="old('bank_account_no', $bankdetails->bank_account_no ?? '')" />
                                 <x-forms.input label="Repeat Bank Account No:" type="text" name="bank_account_no"
@@ -586,11 +596,11 @@
                                             class="text-danger">*</span></label>
                                     <select name="status" id="status" class="form-select" required>
                                         <option value="">-- Select Status --</option>
-                                        <option value="1"
-                                            {{ old('status', $candidate->status) == '1' ? 'selected' : '' }}>Active
-                                        </option>
                                         <option value="0"
-                                            {{ old('status', $candidate->status) == '0' ? 'selected' : '' }}>In-Active
+                                            {{ old('status', $candidate->status) == '0' ? 'selected' : '' }}>Active
+                                        </option>
+                                        <option value="1"
+                                            {{ old('status', $candidate->status) == '1' ? 'selected' : '' }}>In-Active
                                         </option>
                                     </select>
                                 </div>
@@ -790,39 +800,37 @@
                             const childRow = document.createElement('div');
                             childRow.className = 'row align-items child-row';
                             childRow.innerHTML = `
-        <div class="form-group col-lg-3">
-            <label for="child_name_${i}">Child ${i} Name:</label>
-            <input type="text" name="child_names[]" id="child_name_${i}" class="form-control" 
-                   value="${childData.name || ''}"  >
-        </div>
-        <div class="form-group col-lg-3">
-            <label for="child_dob_${i}">Child ${i} DOB:</label>
-            <input type="date" name="child_dobs[]" id="child_dob_${i}" class="form-control"
-                   value="${childData.dob || ''}"  >
-        </div>
-        <div class="form-group col-lg-3 child-aadhar" id="child_aadhar_field_${i}" style="display: none;">
-            <label for="child_aadhar_${i}">Child ${i} Aadhar No:</label>
-            <input type="text" name="child_aadhar[]" id="child_aadhar_${i}" class="form-control" 
-                   value="${childData.aadhar_no || ''}" maxlength="12" inputmode="numeric">
-        </div>
-           <div class="form-group col-lg-3">
-            <label for="child_gender_${i}">Child ${i} Gender:</label>
-            <input type="text" name="child_gender[]" id="child_gender_${i}" class="form-control"
-                   value="${childData.gender || ''}" >
-        </div>
-        <div class="form-group col-lg-3">
-            <label for="child_photo_${i}">Child ${i} Photo:</label>
-            <input type="file" name="child_photo[]" id="child_photo_${i}"
-                   class="form-control">
-
-            ${childData.photo ? `
-                                                                                                                                                                                                                            <div id="image-preview-container-${i}" class="d-flex mt-2">
-                                                                                                                                                                                                                                <img src="{{ url('/') }}/${childData.photo}" 
-                                                                                                                                                                                                                                     class="img-thumbnail" width="100" height="100" 
-                                                                                                                                                                                                                                     alt="Child ${i} Uploaded Photo">
-                                                                                                                                                                                                                            </div>` : ''}
-        </div>
-    `;
+                    <div class="form-group col-lg-3">
+                        <label for="child_name_${i}">Child ${i} Name:</label>
+                        <input type="text" name="child_names[]" id="child_name_${i}" class="form-control" 
+                               value="${childData.name || ''}">
+                    </div>
+                    <div class="form-group col-lg-3">
+                        <label for="child_dob_${i}">Child ${i} DOB:</label>
+                        <input type="date" name="child_dobs[]" id="child_dob_${i}" class="form-control"
+                               value="${childData.dob || ''}">
+                    </div>
+                    <div class="form-group col-lg-3 child-aadhar" id="child_aadhar_field_${i}" style="display: none;">
+                        <label for="child_aadhar_${i}">Child ${i} Aadhar No:</label>
+                        <input type="text" name="child_aadhar[]" id="child_aadhar_${i}" class="form-control" 
+                               value="${childData.aadhar_no || ''}" maxlength="12" inputmode="numeric">
+                    </div>
+                    <div class="form-group col-lg-3">
+                        <label for="child_gender_${i}">Child ${i} Gender:</label>
+                        <input type="text" name="child_gender[]" id="child_gender_${i}" class="form-control"
+                               value="${childData.gender || ''}">
+                    </div>
+                    <div class="form-group col-lg-3">
+                        <label for="child_photo_${i}">Child ${i} Photo:</label>
+                        <input type="file" name="child_photo[]" id="child_photo_${i}" class="form-control">
+                        ${childData.photo ? `
+                                    <div id="image-preview-container-${i}" class="d-flex mt-2">
+                                        <img src="{{ url('/') }}/${childData.photo}" 
+                                             class="img-thumbnail" width="100" height="100" 
+                                             alt="Child ${i} Uploaded Photo">
+                                    </div>` : ''}
+                    </div>
+                `;
                             childrenDetails.appendChild(childRow);
 
                             let dobField = document.getElementById(`child_dob_${i}`);
@@ -846,17 +854,16 @@
                 function checkChildAge(index) {
                     const dobField = document.getElementById(`child_dob_${index}`);
                     const aadharField = document.getElementById(`child_aadhar_field_${index}`);
-                    const aadharInput = document.getElementById(`child_aadhar_${index}`);
 
                     if (dobField.value) {
                         const ageInMonths = calculateAge(dobField.value);
                         if (ageInMonths > 6) {
                             aadharField.style.display = 'block';
-                            aadharInput.setAttribute('required', 'required');
                         } else {
                             aadharField.style.display = 'none';
-                            aadharInput.removeAttribute('required');
                         }
+                    } else {
+                        aadharField.style.display = 'none';
                     }
                 }
 

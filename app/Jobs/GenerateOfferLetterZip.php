@@ -3,10 +3,12 @@
 namespace App\Jobs;
 
 use PDF;
-use ZipArchive;
+use Mail;
 // use Barryvdh\DomPDF\PDF;
+use ZipArchive;
 use App\Models\OfferLetter;
 use Illuminate\Bus\Queueable;
+use App\Mail\OfferLetterZipReady;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Container\Attributes\Log;
@@ -19,18 +21,21 @@ class GenerateOfferLetterZip implements ShouldQueue
 
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public $letterIds, $clientName, $zipFileName;
+    public $letterIds, $clientName, $zipFileName, $emails;
 
-    public function __construct(array $letterIds, $clientName, $zipFileName)
+    public function __construct(array $letterIds, $clientName, $zipFileName, array $emails)
     {
         $this->letterIds = $letterIds;
         $this->clientName = $clientName;
         $this->zipFileName = $zipFileName;
+        $this->emails = $emails;
+
     }
 
     public function handle()
     {
-        $zipPath = storage_path("app/temp/{$this->zipFileName}");
+        $zipPath = storage_path("app/public/{$this->zipFileName}");
+        \Log::info("created: {  $zipPath}");
 
         $viewMap = [
             1 => 'admin.adms.offer_letter.format1',
@@ -41,32 +46,30 @@ class GenerateOfferLetterZip implements ShouldQueue
         ];
 
         $letters = OfferLetter::whereIn('id', $this->letterIds)->get();
-        $zip = new ZipArchive;
+        $zip = new \ZipArchive;
 
-        if ($zip->open($zipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE) === TRUE) {
+        if ($zip->open($zipPath, \ZipArchive::CREATE | \ZipArchive::OVERWRITE) === TRUE) {
             foreach ($letters as $offerLetter) {
-                $type = $offerLetter->offerletter_type;
-
+                $type = $offerLetter->offer_letter_type; // ✅ fixed typo
                 if (isset($viewMap[$type])) {
-                    $view = $viewMap[$type];
-                    $pdf = PDF::loadView($view, compact('offerLetter'));
-
-                    $pdfPath = storage_path("app/temp/offer_letter_{$offerLetter->id}.pdf");
+                    $pdf = \PDF::loadView($viewMap[$type], compact('offerLetter'));
+                    $pdfPath = storage_path("app/temp/offer_letter_{$offerLetter->emp_name}.pdf");
                     $pdf->save($pdfPath);
-                    \Log::info('Generated PDF for offer letter', ['id' => $offerLetter->id]);
-
-                    $zip->addFile($pdfPath, "OfferLetter_{$offerLetter->id}.pdf");
-
-                    // unlink($pdfPath);
+                    $zip->addFile($pdfPath, "OfferLetter_{$offerLetter->emp_name}.pdf");
                 }
             }
-            \Log::info("Bulk offer letter zip generated", [
-                'zip_file' => $this->zipFileName,
-                'client' => $this->clientName,
-                'letter_count' => $letters->count()
-            ]);
             $zip->close();
-            
+            \Log::info("offer : {{$this->zipFileName}");
+
+            // Public download link
+            $downloadUrl = asset("storage/{$this->zipFileName}");
+            \Log::info("offer created: {$downloadUrl}");
+
+
+            // Send emails
+            foreach ($this->emails as $email) {
+                Mail::to($email)->send(new OfferLetterZipReady($this->clientName, $downloadUrl));
+            }
         }
     }
 

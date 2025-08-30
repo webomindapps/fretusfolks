@@ -13,7 +13,10 @@ return new class extends Migration {
     {
         Schema::table('show_cause', function (Blueprint $table) {
             // DB::statement('ALTER TABLE show_cause ADD PRIMARY KEY (`id`);');
-            $table->bigInteger('id')->unsigned()->autoIncrement()->change();
+            // $table->bigInteger('id')->unsigned()->autoIncrement()->change();
+            // DB::statement("UPDATE show_cause SET date = NULL WHERE date = '0000-00-00'");
+            // DB::statement("UPDATE show_cause SET date_of_update = NULL WHERE date_of_update = '0000-00-00'");
+
             $table->string('showcause_letter_path')->after('date_of_update')->nullable();
             $table->timestamps();
         });

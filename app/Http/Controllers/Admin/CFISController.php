@@ -42,11 +42,11 @@ class CFISController extends Controller
 
         // $query = $this->model()->query()->where('data_status', 0)->where('created_by', auth()->id());
         if (auth()->user()->hasRole('Admin')) {
-            $query = $this->model()->query()->where('dcs_approval', 1)->where('data_status', 0);
+            $query = $this->model()->query()->where('dcs_approval', 0)->where('data_status', 1);
         } elseif (auth()->user()->hasRole(['HR Operations', 'Recruitment'])) {
-            $query = $this->model()->query()->where('dcs_approval', 1)
+            $query = $this->model()->query()->where('dcs_approval', 0)
                 ->where('created_by', auth()->id())
-                ->where('data_status', 0);
+                ->where('data_status', 1);
         }
 
         if ($from_date && $to_date) {
@@ -110,9 +110,9 @@ class CFISController extends Controller
         $validatedData = $request->all();
         $validatedData['created_at'] = $request->input('created_at', now());
         $validatedData['created_by'] = auth()->id();
-        $validatedData['status'] = $request->input('status', 1);
-        $validatedData['dcs_approval'] = $request->input('dcs_approval', 1);
-        $validatedData['data_status'] = $request->input('data_status', 0);
+        $validatedData['status'] = $request->input('status', 0);
+        $validatedData['dcs_approval'] = $request->input('dcs_approval', 0);
+        $validatedData['data_status'] = $request->input('data_status', 1);
 
 
 
@@ -173,8 +173,8 @@ class CFISController extends Controller
         $validatedData = $request->all();
 
         // $validatedData['created_by'] = auth()->id();
-        $validatedData['dcs_approval'] = $request->input('dcs_approval', 1);
-        $validatedData['data_status'] = $request->input('data_status', 0);
+        $validatedData['dcs_approval'] = $request->input('dcs_approval', 0);
+        $validatedData['data_status'] = $request->input('data_status', 1);
 
         DB::beginTransaction();
         try {

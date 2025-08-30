@@ -475,7 +475,7 @@ body {
   transition: all 0.5s;
 }
 
-.sidebar.active~.home_content {
+.sidebar.active ~ .home_content {
   left: 15rem;
   padding: 0px;
   width: calc(100% - 15rem);
@@ -610,7 +610,8 @@ body {
 .main {
   border-radius: 10px;
   margin: 15px;
-  padding-bottom: 15px;
+  padding: 15px;
+  /* padding-bottom: 15px; */
   background-color: #fff;
 }
 
@@ -713,7 +714,7 @@ textarea:focus {
   width: 1400px;
 }
 
-.table> :not(:last-child)> :last-child>* {
+.table > :not(:last-child) > :last-child > * {
   border-bottom-color: #e0e0e0 !important;
 }
 
@@ -783,7 +784,7 @@ i.fas.fa-edit {
   margin-bottom: 0 !important;
 }
 
-.table tbody tr td .table> :not(caption)>*>* {
+.table tbody tr td .table > :not(caption) > * > * {
   border: none !important;
 }
 
@@ -1082,9 +1083,6 @@ i.fas.fa-edit {
   margin-left: 10px;
   cursor: pointer;
 } */
-.dropdown {
-  position: relative;
-}
 
 .dropdown-toggle {
   cursor: pointer;
@@ -1100,11 +1098,9 @@ i.fas.fa-edit {
 
 .dropdown-menu.show {
   position: absolute;
+  right: 0;
   top: 100%;
-  left: 0;
-  z-index: 1000;
 }
-
 
 .badge.sactive {
   background-color: #27a027;
@@ -1397,11 +1393,11 @@ i.fas.fa-edit {
   margin-top: 5px;
 }
 
-.table>tbody>tr:nth-of-type(even) {
+.table > tbody > tr:nth-of-type(even) {
   --bs-table-accent-bg: rgb(0 0 0 / 2%) !important;
 }
 
-.view-detail .table>tbody>tr:nth-of-type(even) {
+.view-detail .table > tbody > tr:nth-of-type(even) {
   --bs-table-accent-bg: rgb(255, 255, 255) !important;
 }
 
@@ -1684,7 +1680,7 @@ custom-dropdown {
   color: #fff;
 }
 
-.custom_table .table>tbody>tr:nth-of-type(even) {
+.custom_table .table > tbody > tr:nth-of-type(even) {
   --bs-table-accent-bg: #ececec !important;
 }
 
@@ -1730,7 +1726,7 @@ custom-dropdown {
   padding-top: 20px;
 }
 
-.table-bordered> :not(caption)>*>* {
+.table-bordered > :not(caption) > * > * {
   border-width: 0 0px;
 }
 
@@ -1878,24 +1874,21 @@ custom-dropdown {
 .dropdown-divider {
   margin: 5px 0;
 }
-
 .modal-content p {
   font-size: 13px !important;
   margin-bottom: 5px;
   color: #333;
 }
-
 .modal-content a {
   text-decoration: none;
 }
-
 .modal-title,
 .modal-title p {
   color: aliceblue;
 }
 
 .modal-title h5 {
-  font-size: 1.1875rem;
+  font-size: 15px;
 }
 
 .close {
@@ -1910,56 +1903,72 @@ custom-dropdown {
 /* ------------Recruiter responsive--------------------- */
 
 @media all and (max-width: 600px) and (min-width: 320px) {
+  .right-area {
+      position: relative;
+      top: -15px;
+  }
   .sidebar.active {
     width: 80%;
     z-index: 99;
     height: 100%;
   }
-
   .top_bar {
     position: fixed;
     width: 100%;
     z-index: 999;
   }
-
   .sidebar .nav_list {
     padding: 15px 0 0 5px;
     height: 0px;
     display: none;
     overflow-y: scroll;
   }
-
   .sidebar.active .nav_list {
     height: calc(100vh - 13vh);
     display: block;
   }
-
   .home_content {
     position: absolute;
     left: 0rem;
-    padding: 0px 0 0 7px;
+    padding: 0px 0 0 0px;
     width: calc(100% - 0rem);
     transition: all 0.5s;
     z-index: 9;
   }
-
   .sidebar {
     z-index: 999;
     height: 81px;
     padding: 8px 0;
   }
-
-  .sidebar ul .nav-item.active .nav-link::before {
+  .sidebar ul .nav-item.active .nav-link::before{
     display: none;
   }
-
-  .sidebar.active ul .nav-item.active .nav-link::before {
+  .sidebar.active ul .nav-item.active .nav-link::before{
     display: block;
   }
-
-  .main {
-    margin-top: 90px;
-    padding: 15px 15px;
+  .main{
+    margin: 10px;
+    margin-top: 110px;
   }
 
+  .page-header h3 {
+    margin-bottom: 20px;
+    /* text-align: center; */
+    padding: 0px;
+    font-size: 18px;  
+  }
+  .page-header a {
+      width: 50%;
+      margin: auto;
+  }
+  .form-group {
+    margin-bottom: .5rem;
+  }
+  .sidebar.active ~ .home_content {
+    left: 0;
+    width: 100%;
+  }
+}
+.form-card .header.text-white {
+    padding: 10px 20px;
 }

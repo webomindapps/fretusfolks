@@ -144,7 +144,7 @@ class SideBar extends Component
                     'icon' => 'bx bx-chevron-right',
                     'route' => 'admin.dcs_approval.trashed',
                     'name' => 'adms trashed',
-                    'roles' => ['Admin'],
+                    'roles' => ['Admin','HR Operations'],
                 ],
 
             ],

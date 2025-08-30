@@ -7,7 +7,7 @@
     <title>Fretus Folks</title>
     <style>
         @page {
-            margin: 200px 0 120px 20px;
+            margin: 200px 0 50px 0;
         }
 
         .cash {
@@ -16,6 +16,7 @@
 
         li {
             line-height: 1.5;
+            margin-top: 0px !important;
         }
 
         b {
@@ -32,8 +33,12 @@
 
         footer {
             position: fixed;
-            bottom: -120px;
+            bottom: -50px;
             left: -20px;
+        }
+
+        body {
+            margin-bottom: -19px !important;
         }
 
         .table1 {
@@ -41,7 +46,7 @@
             width: 60%;
             margin-left: auto;
             margin-right: auto;
-            font-size: 12px;
+            font-size: 14.5px;
         }
 
         .table1 th,
@@ -70,9 +75,10 @@
 
         p,
         li {
-            font-size: 12px;
+            font-size: 14.5px;
             line-height: 1.5;
             text-align: justify;
+            margin-top: -1px !important;
         }
 
         .signature-table td {
@@ -93,22 +99,22 @@
 
         .header-row .left,
         .header-row .right {
-            font-size: 14px;
+            font-size: 14.5px;
         }
     </style>
 </head>
 
 <body>
     <x-letter-head />
-    <div style="margin:0px 35;">
+    <div style="margin:0px 35 0;">
         <h1 style="font-size:18px;text-align:center;text-decoration:underline;margin-top:20px">Offer cum Appointment
             letter</h1>
 
-        <p style="text-align:right;">Date : <b
+        <p style="font-size:14.5px;text-align:right;">Date : <b
                 style="font-weight:bold;">{{ \Carbon\Carbon::parse($offerLetter->joining_date)->format('d-m-Y') }}</b>
         </p>
 
-        <p style="font-size:14px;line-height:1.5;text-align:justify;">
+        <p style="font-size:14.5px;line-height:1.5;text-align:justify;">
             <span>To,</span><br>
             <span>Mr./Mrs./Ms.: <b>{{ $offerLetter->emp_name }}</b></span><br>
             <span> <b>
@@ -119,9 +125,9 @@
             <span>Address: <b>{{ $offerLetter->location }}</b></span><br>
         </p>
 
-        <p style="margin:20px 0px;">Dear {{ $offerLetter->emp_name }},</p>
+        <p style="font-size:14.5px;margin:20px 0px;">Dear {{ $offerLetter->emp_name }},</p>
 
-        <p style="font-size:12.7px;line-height:1.5;text-align:justify;">
+        <p style="font-size:14.5px;line-height:1.5;text-align:justify;">
             We are pleased to offer you employment to work as {{ $offerLetter->designation }} as on
             {{ \Carbon\Carbon::parse($offerLetter->joining_date)->format('d-m-Y') }} on deputation with our
             client/s, <b style="font-weight:bold;">{{ $offerLetter->entity_name }}</b>. for a fixed
@@ -131,7 +137,7 @@
 
         <ol>
             <li>
-                <p style="font-size:12px;line-height:1.5;text-align:justify;">
+                <p style="font-size:14.5px;line-height:1.5;text-align:justify;">
                     You will be working at the site assigned from our client Blue Dart Express Ltd, under this probation
                     if you are found guilty of activities such <b style="font-weight:bold;">as Cash mismanagement,
                         Theft, Bike Meter tampering, Fake delivery, Disrespect to
@@ -141,12 +147,12 @@
                 </p>
             </li>
             <li>
-                <p style="font-size:12px;line-height:1.5;text-align:justify;">
+                <p style="font-size:14.5px;line-height:1.5;text-align:justify;">
                     Duration of your contract is {{ $offerLetter->tenure_month }} Months
                 </p>
             </li>
             <li>
-                <p style="font-size:12px;line-height:1.5;text-align:justify;">
+                <p style="font-size:14.5px;line-height:1.5;text-align:justify;">
                     Notwithstanding anything above, depending upon the afore mentioned project/work, the company
                     reserves its right to extend your temporary appointment for such a period or periods as may be
                     necessary depending upon the exigencies relatable to the work for which you are hereby engaged. The
@@ -156,13 +162,13 @@
                 </p>
             </li>
             <li>
-                <p style="font-size:12px;line-height:1.5;text-align:justify;">
+                <p style="font-size:14.5px;line-height:1.5;text-align:justify;">
                     You will be entitled for leaves as per shops and establishment act and other applicable laws in
                     India.
                 </p>
             </li>
             <li>
-                <p style="font-size:12px;line-height:1.5;text-align:justify;">
+                <p style="font-size:14.5px;line-height:1.5;text-align:justify;">
                     During the period of fixed contract of {{ $offerLetter->tenure_month }} Months, your services
                     could be deputed at the sole discretion of the management to any of our client’s company to do work
                     pertaining to or incidental to the client’s business. Your service can be transferred from one
@@ -170,81 +176,81 @@
                 </p>
             </li>
             <li>
-                <p style="font-size:12px;line-height:1.5;text-align:justify;">
+                <p style="font-size:14.5px;line-height:1.5;text-align:justify;">
                     In case of any adverse remarks found from the reference given by you, the documents submitted by
                     you/outcome of the police verification report then this appointment will stand withdrawn
                     immediately.
                 </p>
             </li>
-        </ol>
-        <ol start="7">
+
             <li>
-                <p style="font-size:12px;line-height:1.5;text-align:justify;">
+                <p style="font-size:14.5px;line-height:1.5;text-align:justify;">
                     You will not be absent from your duty without sufficient reasons, you will obtain prior written
                     permission / sanction from the supervisor about your absence giving reasons thereof and probable
                     duration immediately, failing which, the same will be treated as loss of Pay.
                 </p>
             </li>
-
+        </ol>
+        <ol start="8">
             <li>
-                <p style="font-size:12px;line-height:1.5;text-align:justify;">
+                <p style="font-size:14.5px;line-height:1.5;text-align:justify;">
                     If you did not report to work for continuous 3 days without proper notification of absenteeism,
                     company is liable to end your contract on immediate basis, on request from client.
                 </p>
             </li>
             <li>
-                <p style="font-size:12px;line-height:1.5;text-align:justify;">
+                <p style="font-size:14.5px;line-height:1.5;text-align:justify;">
                     Client holds the discretion to do a thorough background verification of your candidature as seems
                     fit and can initiate police verification, background check, court cases verification,
                 </p>
             </li>
             <li>
-                <p style="font-size:12px;line-height:1.5;text-align:justify;">
+                <p style="font-size:14.5px;line-height:1.5;text-align:justify;">
                     If you found guilty in any one of them, Client have the full authority to end your contract
                     immediately and report the findings to nearest police station
                 </p>
             </li>
             <li>
-                <p style="font-size:12px;line-height:1.5;text-align:justify;">
+                <p style="font-size:14.5px;line-height:1.5;text-align:justify;">
                     You will be governed by the conduct, discipline, rules and regulations as laid down by the
                     management.
                 </p>
             </li>
             <li>
-                <p style="font-size:12px;line-height:1.5;text-align:justify;">
+                <p style="font-size:14.5px;line-height:1.5;text-align:justify;">
                     The salary will be paid to you, subject to the receipt of payment from
                     {{ $offerLetter->entity_name }}. (to which you have been deputed).
                 </p>
             </li>
             <li>
-                <p style="font-size:12px;line-height:1.5;text-align:justify;">
+                <p style="font-size:14.5px;line-height:1.5;text-align:justify;">
                     This contract shall be terminable by either party giving {{ $offerLetter->notice_period }}
                     days’ notice in writing or salary on lieu of notice, to the other.
                 </p>
             </li>
             <li>
-                <p style="font-size:12px;line-height:1.5;text-align:justify;">
+                <p style="font-size:14.5px;line-height:1.5;text-align:justify;">
                     We are consciously endeavoring to build an atmosphere of trust, openness, responsiveness, autonomy
                     and growth among all members to the Fretus Folks India Pvt Ltd. As a new entrant, we would like you
                     to whole-heartedly contribute in this process.
                 </p>
             </li>
             <li>
-                <p style="font-size:12px;line-height:1.5;text-align:justify;">
+                <p style="font-size:14.5px;line-height:1.5;text-align:justify;">
                     As a token of acceptance of the above terms and conditions, you are requested to sign the duplicate
                     copy of this letter and return to us.
                 </p>
             </li>
         </ol>
 
-        <p style="font-size:12px;line-height:1.5;text-align:justify;">
+        <p style="font-size:14.5px;line-height:1.5;text-align:justify;">
             With warm regards,
         </p>
 
         <table width="100%">
             <tbody>
                 <tr>
-                    <td colspan="3" style="font-size:14px;text-align:left;">
+                    <td colspan="3" style="font-size:14.5px;text-align:left;">
                         <p style="line-height:1.8;">
                             <b>For Fretus Folks India Pvt Ltd.</b> <br>
                         </p>
@@ -258,7 +264,7 @@
         </table>
     </div>
     <div style="page-break-after: always;"></div>
-    <div style="color: #000;font-family: Tahoma;font-size: 12px;ltext-align: justify; ">
+    <div style="color: #000;font-family: Tahoma;font-size: 14.5px;ltext-align: justify; ">
         <h1>Annexure - A</h1>
 
         <table class="table1">
@@ -358,23 +364,23 @@
             <tbody>
                 <tr>
                     <!-- Company Signatory -->
-                    <td style="font-size:12px; text-align:left; width:60%;">
-                        <p style="font-size:14px; margin: 0 0 5px 0;">
+                    <td style="font-size:14.5px; text-align:left; width:60%;">
+                        <p style="font-size:14.5px; margin: 0 0 5px 0;">
                             <b>For: Fretus Folks India Pvt Ltd.</b>
                         </p>
                         <img src="{{ public_path('admin/images/seal.png') }}" width="100" style="margin:5px 0;"
                             alt="Seal" />
-                        <p style="font-size:14px; margin: 0;">
+                        <p style="font-size:14.5px; margin: 0;">
                             <b>Authorized Signatory</b>
                         </p>
                     </td>
 
                     <!-- Employee Acknowledgment -->
-                    <td style="font-size:12px; text-align:left;  width:40%;">
-                        <p style="font-size:14px; margin: 0 0 5px 0;">
+                    <td style="font-size:14.5px; text-align:left;  width:40%;">
+                        <p style="font-size:14.5px; margin: 0 0 5px 0;">
                             Name: <b>{{ $offerLetter->emp_name }}</b>
                         </p>
-                        <p style="font-size:14px; margin: 5px 0 0 0;">
+                        <p style="font-size:14.5px; margin: 5px 0 0 0;">
                             Signature:
                         </p>
                     </td>

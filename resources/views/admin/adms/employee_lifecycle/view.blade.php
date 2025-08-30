@@ -35,7 +35,7 @@
                             </div>
                             <div class="col-lg-2">
                                 <h5>Status:
-                                    @if ($candidate?->status == 1)
+                                    @if ($candidate?->status == 0)
                                         <span class="badge rounded-pill sactive">Active</span>
                                     @else
                                         <span class="badge rounded-pill deactive">In-Active</span>
@@ -263,13 +263,20 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    @if ($bankdetails->isNotEmpty())
-                                                        @foreach ($bankdetails as $index => $bank)
+                                                    @php
+                                                        $validBanks = $bankdetails->filter(function ($bank) {
+                                                            return !empty($bank->bank_name) &&
+                                                                strtolower($bank->bank_name) !== 'n/a';
+                                                        });
+                                                    @endphp
+
+                                                    @if ($validBanks->isNotEmpty())
+                                                        @foreach ($validBanks as $index => $bank)
                                                             <tr>
                                                                 <td>{{ $index + 1 }}</td>
-                                                                <td>{{ $bank?->bank_name ?? 'N/A' }}</td>
-                                                                <td>{{ $bank?->bank_account_no ?? 'N/A' }}</td>
-                                                                <td>{{ $bank?->bank_ifsc_code ?? 'N/A' }}</td>
+                                                                <td>{{ $bank?->bank_name }}</td>
+                                                                <td>{{ $bank?->bank_account_no }}</td>
+                                                                <td>{{ $bank?->bank_ifsc_code }}</td>
                                                                 <td>
                                                                     @if ($bank?->bank_document)
                                                                         <a href="{{ asset($bank->bank_document) }}"
@@ -291,6 +298,7 @@
                                                         @endforeach
                                                     @else
                                                         <tr>
+                                                            {{-- {{dd( $candidate)}} --}}
                                                             <td>1</td>
                                                             <td>{{ $candidate?->bank_name ?? 'N/A' }}</td>
                                                             <td>{{ $candidate?->bank_account_no ?? 'N/A' }}</td>
@@ -311,6 +319,7 @@
                                                             </td>
                                                         </tr>
                                                     @endif
+
                                                 </tbody>
                                             </table>
                                         </div>
@@ -432,7 +441,7 @@
                                                         'driving_license_path' => 'Driving License',
                                                         'photo' => 'Photo',
                                                         'resume' => 'Resume',
-                                                        'bank_document' => 'Bank Document',
+                                                        // 'bank_document' => 'Bank Document',
                                                         'voter_id' => 'Voter ID/ PVC/ UL',
                                                         'emp_form' => 'Employee Form',
                                                         'pf_esic_form' => 'PF Form / ESIC',

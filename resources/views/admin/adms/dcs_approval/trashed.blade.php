@@ -35,7 +35,7 @@
                         </td>
                         <td> {{ $item->phone1 }}</td>
                         <td>
-                            @if ($item->status == 0)
+                            @if ($item->status == 1)
                                 <span class="badge rounded-pill deactive">In-Active</span>
                             @else
                                 <span class="badge rounded-pill sactive">Active</span>

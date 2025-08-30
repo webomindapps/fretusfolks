@@ -52,7 +52,7 @@
                     <x-forms.input label="Confirm Password" type="password" name="enc_pass" id="enc_pass"
                         :required="true" size="col-lg-6 mt-4" :value="old('enc_pass')" />
                 </div>
-                <div id="assign_clients" class="col-lg-12 mt-4" style="display: none;">
+                <!-- <div id="assign_clients" class="col-lg-12 mt-4" style="display: none;">
                     <label>Assign Clients:</label>
                     <div class="row">
                         @foreach ($clients as $index => $client)
@@ -70,7 +70,7 @@
                         @endif
                         @endforeach
                     </div>
-                </div>
+                </div> -->
 
                 <button type="submit" class="submit-btn submitBtn" id="submitButton">Submit</button>
 

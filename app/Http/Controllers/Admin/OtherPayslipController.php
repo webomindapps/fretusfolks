@@ -22,12 +22,12 @@ class OtherPayslipController extends Controller
         $client_id = request()->client_id;
         $month = request()->month;
         $year = request()->year;
-        $ffi_emp_id = request()->ffi_emp_id;
+        // $ffi_emp_id = request()->ffi_emp_id;
         $order = request()->orderedColumn;
         $orderBy = request()->orderBy;
         $paginate = request()->paginate;
 
-        if (!$client_id && !$month && !$year && !$ffi_emp_id) {
+        if (!$client_id && !$month && !$year) {
             $challans = new LengthAwarePaginator([], 0, 10);
 
         } else {
@@ -36,9 +36,7 @@ class OtherPayslipController extends Controller
             if ($client_id) {
                 $query->where('client_id', $client_id);
             }
-            if ($ffi_emp_id) {
-                $query->where('ffi_emp_id', $ffi_emp_id);
-            }
+           
             if ($month) {
                 $query->where('month', $month);
             }
@@ -60,7 +58,7 @@ class OtherPayslipController extends Controller
     {
         $request->validate([
             'client_id' => 'required',
-            'state_id' => 'required',
+            // 'state_id' => 'required',
         ]);
         DB::beginTransaction();
         try {
@@ -75,8 +73,8 @@ class OtherPayslipController extends Controller
                 if ($year != "" && $year) {
                     $this->model()->create([
                         'client_id' => $request->client_id,
-                        'state_id' => $request->state_id,
-                        'ffi_emp_id' => $request->ffi_emp_id,
+                        'state_id' => 9,
+                        'ffi_emp_id' => null,
                         'year' => $year,
                         'status' => 0,
                         'month' => $request->months[$key],

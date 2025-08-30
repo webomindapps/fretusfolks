@@ -82,9 +82,9 @@
                     ['label' => 'Id', 'column' => 'id', 'sort' => true],
                     ['label' => 'Client Name', 'column' => 'client_name', 'sort' => false],
                     // ['label' => 'State name', 'column' => 'contact_person', 'sort' => false],
-                    ['label' => 'FFI Employee ID', 'column' => 'ffi_emp_id', 'sort' => true],
+                    // ['label' => 'FFI Employee ID', 'column' => 'ffi_emp_id', 'sort' => true],
                     ['label' => 'Month', 'column' => 'month', 'sort' => true],
-                    ['label' => 'year', 'column' => 'year', 'sort' => true],
+                    ['label' => 'Year', 'column' => 'year', 'sort' => true],
                     ['label' => 'Actions', 'column' => 'action', 'sort' => false],
                 ];
             @endphp
@@ -96,7 +96,7 @@
                             {{ $item->client?->client_name }}
                         </td>
                         {{-- <td> {{ $item->state?->state_name }}</td> --}}
-                        <td> {{ $item->ffi_emp_id }}</td>
+                        {{-- <td> {{ $item->ffi_emp_id }}</td> --}}
                         <td>{{ \DateTime::createFromFormat('!m', $item->month)->format('F') }}</td>
                         <td> {{ $item->year }}</td>
 
@@ -118,7 +118,7 @@
                                         </a>
                                     </li>
                                     <li>
-                                        <a class="dropdown-item" href="{{ asset('pubic/' . $item->path) }}"
+                                        <a class="dropdown-item" href="{{ asset('public/' . $item->path) }}"
                                             target="_blank">
                                             <i class='bx bx-show'></i> View
                                         </a>

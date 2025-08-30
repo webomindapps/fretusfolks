@@ -1,5 +1,5 @@
 <x-applayout>
-    <x-admin.breadcrumb title="Rejected Candidates "  />
+    <x-admin.breadcrumb title="Rejected Candidates " />
     <div class="row">
         <div class="col-lg-12">
             @php
@@ -58,14 +58,14 @@
                                 <button class="btn btn-secondary dropdown-toggle" type="button"
                                     id="statusDropdown{{ $item->id }}" data-bs-toggle="dropdown"
                                     aria-expanded="false">
-                                    {{ $item->dcs_approval == 0 ? 'Approved' : ($item->dcs_approval == 1 ? 'Pending' : 'Rejected') }}
+                                    {{ $item->dcs_approval == 1 ? 'Approved' : ($item->dcs_approval == 0 ? 'Pending' : 'Rejected') }}
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="statusDropdown{{ $item->id }}">
                                     <li><a class="dropdown-item"
-                                            href="{{ route('admin.cfis.data_status', ['id' => $item->id, 'newStatus' => 0]) }}">Approved</a>
+                                            href="{{ route('admin.cfis.data_status', ['id' => $item->id, 'newStatus' => 1]) }}">Approved</a>
                                     </li>
                                     <li><a class="dropdown-item"
-                                            href="{{ route('admin.cfis.data_status', ['id' => $item->id, 'newStatus' => 1]) }}">Pending</a>
+                                            href="{{ route('admin.cfis.data_status', ['id' => $item->id, 'newStatus' => 0]) }}">Pending</a>
                                     </li>
                                     <li><a class="dropdown-item"
                                             href="{{ route('admin.cfis.data_status', ['id' => $item->id, 'newStatus' => 2]) }}">Rejected</a>

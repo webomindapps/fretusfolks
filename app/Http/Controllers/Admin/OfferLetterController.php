@@ -63,7 +63,7 @@ class OfferLetterController extends Controller
         } else {
             $query->orderBy($order, $orderBy);
         }
-        $clients = ClientManagement::get();
+        $clients = ClientManagement::where('active_status', 0)->latest()->get();
         $offer = $paginate ? $query->paginate($paginate)->appends(request()->query()) : $query->paginate(100)->appends(request()->query());
 
         return view("admin.adms.offer_letter.index", compact("offer", "clients"));
@@ -162,6 +162,9 @@ class OfferLetterController extends Controller
         $client = ClientManagement::find($validatedData['company_id']);
         if ($client) {
             $validatedData['entity_name'] = $client->client_name;
+            $validatedData['medical_reimbursement'] = 0;
+            $validatedData['leave_wage'] = 0;
+
         }
 
         DB::beginTransaction();
@@ -248,6 +251,8 @@ class OfferLetterController extends Controller
             'fromdate' => 'required|date',
             'todate' => 'required|date',
             'client_id' => 'required',
+            'emails' => ['required', 'regex:/^([^\s@]+@[^\s@]+\.[^\s@]+)(,\s*[^\s@]+@[^\s@]+\.[^\s@]+)*$/']
+
         ]);
         // dd($request);
         $client = ClientManagement::findOrFail($request->client_id);
@@ -263,29 +268,30 @@ class OfferLetterController extends Controller
         if (empty($letters)) {
             return back()->with('error', 'No offer letters found.');
         }
-
+        $emails = array_map('trim', explode(',', $request->emails));
         $zipFileName = 'OfferLetters_' . $clientName . '.zip';
 
-        // dd($letters);
-        GenerateOfferLetterZip::dispatch($letters, $clientName, $zipFileName);
+        // dd($letters, $clientName, $zipFileName, $emails);
+        GenerateOfferLetterZip::dispatch($letters, $clientName, $zipFileName, $emails);
+        $error = '';
 
         return back()->with([
-            'complete' => 'ZIP is being prepared. Please refresh and download shortly.',
-            'zip_file' => $zipFileName
+            'success' => 'ZIP is being prepared.You Will Recive Mail Shortly.',
+            'error' => $error
         ]);
     }
-    public function offerZip($file)
-    {
-        $file = basename($file); 
-        $path = storage_path("app/public/{$file}");
-        
+    // public function offerZip($file)
+    // {
+    //     $file = basename($file);
+    //     $path = storage_path("app/public/{$file}");
 
-        if (!file_exists($path)) {
-            return back()->with('error', 'File not ready or expired.');
-        }
 
-        return response()->download($path)->deleteFileAfterSend(true); 
-    }
+    //     if (!file_exists($path)) {
+    //         return back()->with('error', 'File not ready or expired.');
+    //     }
+
+    //     return response()->download($path)->deleteFileAfterSend(true);
+    // }
 
 
 

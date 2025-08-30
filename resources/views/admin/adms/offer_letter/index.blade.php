@@ -1,18 +1,5 @@
 <x-applayout>
-    @if (session('complete'))
-        <div class="alert alert-success">
 
-            {{ session('complete') }}
-            
-
-            @if (session('zip_file'))
-                <br>
-                <a class="btn btn-sm btn-primary mt-2" href="{{ route('admin.download.zip', session('zip_file')) }}">
-                    Click here to download
-                </a>
-            @endif
-        </div>
-    @endif
 
     <x-admin.breadcrumb title="Offer cum Appointment Letter" :create="route('admin.offer_letter.create')">
         <div class="d-flex justify-content-end">
@@ -103,7 +90,8 @@
                 <form method="POST" action="{{ route('admin.offer_letter.bulk_download') }}">
                     @csrf
                     <div class="modal-header">
-                        <h5 class="modal-title" id="bulkDownloadModalLabel">Bulk Download Filters</h5>
+                        <h5 class="modal-title" style="color: #071b2c !important;" id="bulkDownloadModalLabel">Bulk
+                            Download Filters</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
 
@@ -168,7 +156,12 @@
                                     value="{{ old('client_id') }}" required>
                             </div>
 
-
+                            <div class="col-lg-12 mb-3">
+                                <label for="emails">Email(s) <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="emails" id="emails"
+                                    placeholder="Enter emails separated by commas" required>
+                                <small class="text-muted">Example: email1@example.com, email2@example.com</small>
+                            </div>
                         </div>
                     </div>
 

@@ -13,6 +13,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('pip_letter', function (Blueprint $table) {
+            // DB::statement('ALTER TABLE pip_letter ADD PRIMARY KEY (`id`);');
             // $table->bigInteger('id')->unsigned()->autoIncrement()->change();
             $table->string('pip_letter_path')->nullable()->after('date_of_update');
             $table->timestamps();

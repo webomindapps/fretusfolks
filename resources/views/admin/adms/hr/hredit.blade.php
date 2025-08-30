@@ -639,11 +639,11 @@
                                             class="text-danger">*</span></label>
                                     <select name="status" id="status" class="form-select" required>
                                         <option value="">-- Select Status --</option>
-                                        <option value="1"
-                                            {{ old('status', $candidate->status) == '1' ? 'selected' : '' }}>Active
-                                        </option>
                                         <option value="0"
-                                            {{ old('status', $candidate->status) == '0' ? 'selected' : '' }}>In-Active
+                                            {{ old('status', $candidate->status) == '0' ? 'selected' : '' }}>Active
+                                        </option>
+                                        <option value="1"
+                                            {{ old('status', $candidate->status) == '1' ? 'selected' : '' }}>In-Active
                                         </option>
                                     </select>
                                 </div>
@@ -1119,11 +1119,11 @@
                    class="form-control">
 
             ${childData.photo ? `
-                                                                                                                                                                                                                                                                    <div id="image-preview-container-${i}" class="d-flex mt-2">
-                                                                                                                                                                                                                                                                        <img src="{{ url('/') }}/${childData.photo}" 
-                                                                                                                                                                                                                                                                             class="img-thumbnail" width="100" height="100" 
-                                                                                                                                                                                                                                                                             alt="Child ${i} Uploaded Photo">
-                                                                                                                                                                                                                                                                    </div>` : ''}
+                                                                                                                                                                                                                                                                            <div id="image-preview-container-${i}" class="d-flex mt-2">
+                                                                                                                                                                                                                                                                                <img src="{{ url('/') }}/${childData.photo}" 
+                                                                                                                                                                                                                                                                                     class="img-thumbnail" width="100" height="100" 
+                                                                                                                                                                                                                                                                                     alt="Child ${i} Uploaded Photo">
+                                                                                                                                                                                                                                                                            </div>` : ''}
         </div>
     `;
                             childrenDetails.appendChild(childRow);

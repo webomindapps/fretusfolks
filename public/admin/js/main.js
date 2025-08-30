@@ -1,51 +1,25 @@
-// document.addEventListener("DOMContentLoaded", function () {
-//     let btn = document.querySelector("#btn");
-//     let sidebar = document.querySelector(".sidebar");
-//     let dropdownLinks = document.querySelectorAll(".dropdown");
-
-//     btn.onclick = function () {
-//         sidebar.classList.toggle("active");
-//     }
-
-//     dropdownLinks.forEach(link => {
-//         link.addEventListener("click", function (e) {
-//             let dropdownMenu = this.querySelector(".dropdown_menu");
-//             $(dropdownMenu).toggle('open');
-//             // dropdownMenu.classList.toggle("open");
-//         });
-//     });
-
-// });
 document.addEventListener("DOMContentLoaded", function () {
     let btn = document.querySelector("#btn");
     let sidebar = document.querySelector(".sidebar");
     let dropdownLinks = document.querySelectorAll(".dropdown");
 
-    // Toggle sidebar when button is clicked
-    // btn.onclick = function () {
-    //     sidebar.classList.toggle("active");
-    // }
 
-    // Automatically collapse sidebar on smaller screens
     function handleSidebarResize() {
         if (window.innerWidth <= 600 && window.innerWidth >= 320) {
-            sidebar.classList.remove("active"); // Collapse sidebar
+            sidebar.classList.remove("active");
         } else {
-            sidebar.classList.add("active"); // Expand sidebar
+            sidebar.classList.add("active");
         }
     }
 
-    // Check on page load
     handleSidebarResize();
 
-    // Check on window resize
     window.addEventListener("resize", handleSidebarResize);
 
-    // Dropdown toggle functionality
     dropdownLinks.forEach(link => {
         link.addEventListener("click", function (e) {
             let dropdownMenu = this.querySelector(".dropdown_menu");
-            $(dropdownMenu).toggle(); // jQuery toggle
+            $(dropdownMenu).toggle();
         });
     });
 });

@@ -12,11 +12,11 @@ $(document).ready(function () {
             $('#interview_date').after(
                 "<span class='error' style='color:red; font-size: 13px;'>Please select an interview date.</span>"
             );
-            // } else if (new Date(interviewDate) < new Date(currentDate)) {
-            //     isValid = false;
-            //     $('#interview_date').after(
-            //         "<span class='error' style='color:red; font-size: 13px;'>Interview date cannot be in the past.</span>"
-            //     );
+        // } else if (new Date(interviewDate) < new Date(currentDate)) {
+        //     isValid = false;
+        //     $('#interview_date').after(
+        //         "<span class='error' style='color:red; font-size: 13px;'>Interview date cannot be in the past.</span>"
+        //     );
         }
 
         // Validate Joining Date
@@ -27,16 +27,16 @@ $(document).ready(function () {
             $('#joining_date').after(
                 "<span class='error' style='color:red; font-size: 13px;'>Please select a joining date.</span>"
             );
-            // } else if (new Date(joiningDate) < new Date(currentDate)) {
-            //     isValid = false;
-            //     $('#joining_date').after(
-            //         "<span class='error' style='color:red; font-size: 13px;'>Joining date cannot be in the past.</span>"
-            //     );
+        // } else if (new Date(joiningDate) < new Date(currentDate)) {
+        //     isValid = false;
+        //     $('#joining_date').after(
+        //         "<span class='error' style='color:red; font-size: 13px;'>Joining date cannot be in the past.</span>"
+        //     );
         }
 
         // Validate Aadhar Number
         var aadharPattern = /^\d{12}$/;
-        $(' #aadhar_no').each(function () {
+        $('#aadhar_no').each(function () {
             var aadharNumber = $(this).val();
             if (!aadharNumber) {
                 isValid = false;
@@ -82,26 +82,28 @@ $(document).ready(function () {
             }
         }
 
-        var bankaccno = $('#bank_account_no').val();
-        var retypebankaccno = $('#repeat_bank_account_no').val();
-        if (bankaccno != retypebankaccno) {
-            isValid = false;
-            $('#bank_account_no').after(
-                "<span class='error' style='color:red; font-size: 13px;'>Bank account not matched .</span>"
-            );
-        }
-
         return isValid;
     }
 
 
 
 
-    $('#pan_path').on('change', function () {
+    // $('#interview_date, #joining_date').on('blur input', function () {
+    //     $(this).next('.error').remove();
+    //     validateForm();
+    // });
+
+    $(' #aadhar_no').on('blur input', function () {
         $(this).next('.error').remove();
         validateForm();
     });
-    $('#bank_account_no,#repeat_bank_account_no').on('blur input', function () {
+
+    // $('#document_type').on('change', function () {
+    //     $(this).next('.error').remove();
+    //     validateForm();
+    // });
+
+    $('#pan_path').on('change', function () {
         $(this).next('.error').remove();
         validateForm();
     });

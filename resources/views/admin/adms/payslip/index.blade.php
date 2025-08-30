@@ -26,7 +26,7 @@
 
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="card-title mb-0">Upload Payslips</h5>
-                    <a class="btn btn-info text-white" id="downloadFilteredCSV" download="payslip_format.xlsx">
+                    <a class="btn btn-info text-white" id="downloadFilteredCSV" download="Payslip_Format.xlsx">
                         Download Sample
                     </a>
                 </div>

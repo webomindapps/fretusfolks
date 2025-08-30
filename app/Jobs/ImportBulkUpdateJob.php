@@ -35,7 +35,7 @@ class ImportBulkUpdateJob implements ShouldQueue
                 'ffi_emp_id' => $row['FFI_EMP_ID'],
                 'emp_name' => $row['Employee_Name'],
                 'employee_last_date' => date('Y-m-d', strtotime($row['Employee_Last_date'])),
-                'status' => 0,
+                'status' => 1,
             ];
 
 

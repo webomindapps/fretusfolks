@@ -171,7 +171,7 @@ class ADMSPayslipCreate implements ShouldQueue
         }
         // dd($data);
         Payslips::insert($data);
-        \Log::info('payslip:', $data);
+        // \Log::info('payslip:', $data);
 
     }
 }
