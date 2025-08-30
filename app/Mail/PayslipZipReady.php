@@ -6,6 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Support\Facades\Storage;
 
 class PayslipZipReady extends Mailable
 {
@@ -24,13 +25,12 @@ class PayslipZipReady extends Mailable
      */
     public function build()
     {
-        $zipUrl = url("storage/temp/{$this->zipFileName}");
+        // $zipUrl = url("storage/temp/{$this->zipFileName}");
+        Storage::move('temp/' . $this->zipFileName, 'public/payslips/' . $this->zipFileName);
+        $zipUrl = asset("storage/temp/{$this->zipFileName}");
 
         return $this->subject('Your Payslips ZIP is Ready')
             ->view('mail.payslip_zip_ready')
-            ->attach($this->zipPath, [
-                'as' => $this->zipFileName,
-                'mime' => 'application/zip',
-            ]);
+            ->with(compact('zipUrl'));
     }
 }

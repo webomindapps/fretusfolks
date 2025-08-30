@@ -2,13 +2,16 @@
 
 namespace App\Imports;
 
-use App\Models\Payslips;
 use App\Jobs\ADMSPayslipCreate;
-use Illuminate\Support\Collection;
-use Maatwebsite\Excel\Concerns\ToCollection;
+use App\Models\Payslips;
+use Illuminate\Validation\Rule;
+use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Maatwebsite\Excel\Concerns\WithBatchInserts;
+use Maatwebsite\Excel\Concerns\WithChunkReading;
+use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
 
-class PayslipImport implements ToCollection
+class PayslipImport implements ToModel, WithHeadingRow, WithBatchInserts, WithChunkReading, SkipsEmptyRows
 {
     protected $month;
     protected $year;
@@ -19,54 +22,29 @@ class PayslipImport implements ToCollection
         $this->year = $year;
     }
 
-    public function collection(Collection $rows)
+    public function model(array $row)
     {
-        $header = $rows->first()->toArray();
-        $data = $rows->slice(1);
-        // dd($header);
-        $chunked = $data->chunk(1000);
-        // dd($chunked);
-        foreach ($chunked as $chunk) {
-            $processedData = [];
-
-            foreach ($chunk as $row) {
-                $rowArray = $row->toArray();
-
-                if (count($rowArray) !== count($header)) {
-                    continue;
-                }
-
-                $hasNewline = false;
-                foreach ($rowArray as $cell) {
-                    if (is_string($cell) && preg_match("/\r|\n/", $cell)) {
-                        $hasNewline = true;
-                        break;
-                    }
-                }
-
-                if ($hasNewline) {
-                    continue; 
-                }
-
-                $combined = array_combine($header, $rowArray);
-
-                if (!empty($combined['Employee_ID'])) {
-                    Payslips::where('emp_id', $combined['Employee_ID'])
-                        ->where('month', $this->month)
-                        ->where('year', $this->year)
-                        ->delete();
-
-                    $processedData[] = $combined;
-                }
-            }
-
-            if (!empty($processedData)) {
-                ADMSPayslipCreate::dispatch($processedData, $this->month, $this->year);
-            }
+        // Skip row if employee_id is empty
+        if (!isset($row['employee_id']) || empty($row['employee_id'])) {
+            return null;
         }
 
+        // Remove existing payslip if needed (optional, but be cautious about duplicates)
+        Payslips::where('emp_id', $row['employee_id'])
+            ->where('month', $this->month)
+            ->where('year', $this->year)
+            ->delete();
 
+        ADMSPayslipCreate::dispatch([$row], $this->month, $this->year);
     }
 
+    public function batchSize(): int
+    {
+        return 100; // Number of rows inserted per query
+    }
 
+    public function chunkSize(): int
+    {
+        return 100; // Number of rows read into memory at once
+    }
 }
