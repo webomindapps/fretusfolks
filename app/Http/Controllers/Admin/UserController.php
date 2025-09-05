@@ -85,7 +85,7 @@ class UserController extends Controller
                 'emp_id' => $request->emp_id,
                 'name' => $request->name,
                 'username' => $request->username,
-                'password' => Hash::make($request->password),
+                'password' => $request->password,
                 'enc_pass' => Hash::make($request->enc_pass),
                 'email' => $request->email,
                 'date' => now(),
@@ -155,7 +155,16 @@ class UserController extends Controller
             ],
         );
         $user = MuserMaster::findOrFail($id);
-        $user->update($request->all());
+        $data = $request->all();
+
+        if (!empty($request->password)) {
+            $data['password'] = $request->password;
+            $data['enc_pass'] = Hash::make($request->password);
+        } else {
+            unset($data['password'], $data['enc_pass']);
+        }
+
+        $user->update($data);
         $user->syncRoles($request->role);
         if ($request->role === 'HR Operations') {
             HRMasters::where('user_id', $user->id)->delete();
@@ -165,6 +174,7 @@ class UserController extends Controller
                 HRMasters::create([
                     'user_id' => $user->id,
                     'client_id' => $clientId,
+
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);

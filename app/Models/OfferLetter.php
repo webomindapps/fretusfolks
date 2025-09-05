@@ -9,7 +9,7 @@ class OfferLetter extends Model
 {
     public $table = 'offer_letter';
     protected $fillable = [
-       'company_id',
+        'company_id',
         'employee_id',
         'emp_name',
         'phone1',
@@ -35,10 +35,12 @@ class OfferLetter extends Model
         'emp_esic',
         'pt',
         'lwf',
+        'other_deduction',
         'total_deduction',
         'take_home',
         'employer_pf',
         'employer_esic',
+        'employer_lwf',
         'mediclaim',
         'ctc',
         'leave_wage',
@@ -47,6 +49,7 @@ class OfferLetter extends Model
         'salary_date',
         'designation',
         'offer_letter_path',
+        'gender_salutation',
     ];
     public function employee()
     {

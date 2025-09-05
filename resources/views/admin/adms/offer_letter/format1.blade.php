@@ -51,7 +51,7 @@
                   top: 120px;
                   right: 20px;
                   font-size: 18px;margin:0 35px">
-        <p style="line-height:1.8;font-size:14px;font-family:times;">
+        <p style="line-height:1.8;font-size:14px;font-family:times;margin-top:300px; ">
             <span>Date
                 :{{ \Carbon\Carbon::parse($offerLetter->joining_date)->format('d-m-Y') }}</span> <br>
         </p>

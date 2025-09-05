@@ -158,7 +158,7 @@ class FFIOfferLetterController extends Controller
         // ->setOptions(['margin-top' => 10, 'margin-bottom' => 10, 'margin-left' => 15, 'margin-right' => 15]);
 
 
-        return $pdf->stream('offer_letter_' . $offerLetter->id . '.pdf');
+        return $pdf->stream('offer_letter_' . $offerLetter->employee_id . '.pdf');
     }
     public function bulk(Request $request)
     {

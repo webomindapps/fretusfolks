@@ -23,7 +23,7 @@
         <div class="col-lg-12">
             @php
                 $columns = [
-                    ['label' => 'Id', 'column' => 'id', 'sort' => true],
+                    ['label' => 'SL No', 'column' => 'id', 'sort' => true],
                     ['label' => 'Employee ID', 'column' => 'employee_id', 'sort' => true],
                     ['label' => 'Client ID', 'column' => 'employee_id', 'sort' => true],
                     ['label' => 'Client Name', 'column' => 'entity_name', 'sort' => true],
@@ -42,7 +42,7 @@
                                 value="{{ $item->id }}">
                         </td> --}}
                         {{-- {{ dd($item->incrementdata );}} --}}
-                        <td>{{ $item->id }}</td>
+                        <td>{{ $increment->firstItem() + $key }}</td>
                         <td>{{ $item->employee_id ?? 'N/A' }}</td>
                         <td>{{ $item->incrementdata->client_emp_id ?? 'N/A' }}</td>
                         <td>{{ $item->client->client_name ?? 'N/A' }}</td>

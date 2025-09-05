@@ -27,40 +27,49 @@ class ImportBankJob implements ShouldQueue
      */
     public function handle(): void
     {
-        \Log::info('Bank Details:', ['data' => $this->data]);
+        \Log::info('Bank Details Job Started', ['data_count' => count($this->data)]);
 
         foreach ($this->data as $row) {
-
-            $ffiEmpId = $row['FFI_Emp_ID'];
-            $clientid = $row['Client_ID'];
-            $aadhar = $row['Aadhar_No'];
-
-            $existing = CFISModel::where('ffi_emp_id', $ffiEmpId)
-                ->where('aadhar_no', $aadhar)
-                ->where('client_emp_id', $clientid)
-                ->first();
-
-
-            if ($existing) {
-                // Only update UAN and ESIC
-                $details = BankDetails::updateOrCreate(['emp_id' => $row['Row_ID']], [
-                    'emp_id' => $row['Row_ID'],
-                    'bank_name' => $row['Bank_Name'] ?? null,
-                    'bank_account_no' => $row['Bank_Account_No'] ?? null,
-                    'bank_ifsc_code' => $row['Bank_IFSC_Code'] ?? null,
-                    'bank_status' => 1,
-
-                    // 'bank_status' => strtolower(trim($row['Bank_Status'])) == 'Active' ? 1 : 0,
-                ]);
-
-                \Log::info('Updated Bank Details:', ['details' => $details->toArray()]);
+            if (empty($row['FFI_Emp_ID'])) {
+                \Log::error('Missing FFI_Emp_ID:', $row);
+                continue;
             }
 
+            $ffiEmpId = trim($row['FFI_Emp_ID']);
+            $clientid = trim($row['Client_ID']);
+            $aadhar = trim($row['Aadhar_No']);
 
+            // Match using only FFI_Emp_ID (you can add more fields as needed)
+            $matches = CFISModel::where(function ($query) use ($ffiEmpId) {
+                $query->where('ffi_emp_id', $ffiEmpId);
+                // You can enable these if needed
+                // ->orWhere('client_emp_id', $clientid)
+                // ->orWhere('aadhar_no', $aadhar);
+            })->get();
+
+            foreach ($matches as $existing) {
+                // Create or update bank details for each matched candidate
+                $details = BankDetails::updateOrCreate(
+                    ['emp_id' => $existing->id],  // Assuming emp_id should match CFISModel ID
+                    [
+                        'bank_name' => $row['Bank_Name'] ?? null,
+                        'bank_account_no' => $row['Bank_Account_No'] ?? null,
+                        'bank_ifsc_code' => $row['Bank_IFSC_Code'] ?? null,
+                        'remark' => $row['Remark'] ?? null,
+                        'bank_status' => 1,
+                    ]
+                );
+
+                \Log::info("Bank details updated for EMP_ID {$existing->id} (FFI_Emp_ID: {$existing->ffi_emp_id})", $details->toArray());
+            }
+
+            if ($matches->isEmpty()) {
+                \Log::warning("No match found for FFI_Emp_ID: $ffiEmpId");
+            }
         }
 
-        \Log::info('Job completed successfully');
-
-
+        \Log::info('Bank Details Job Completed');
     }
+
+
 }

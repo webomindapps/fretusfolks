@@ -1,5 +1,5 @@
 <x-applayout>
-    <x-admin.breadcrumb title="Candidate Master">
+    <x-admin.breadcrumb title="Candidate Master (UAN and ESIC)">
 
         <div class="d-flex justify-content-end align-items-center">
             <div class="d-flex gap-3">
@@ -24,12 +24,13 @@
         <div class="col-lg-12">
             @php
                 $columns = [
-                    ['label' => 'Id', 'column' => 'id', 'sort' => true],
+                    ['label' => 'SL No', 'column' => 'id', 'sort' => true],
                     ['label' => 'Employee ID', 'column' => 'ffi_emp_id', 'sort' => true],
                     ['label' => 'Client ID', 'column' => 'client_emp_id', 'sort' => true],
                     ['label' => 'Client Name', 'column' => 'entity_name', 'sort' => true],
                     ['label' => 'Employee Name', 'column' => 'emp_name', 'sort' => true],
                     ['label' => 'Phone', 'column' => 'phone1', 'sort' => true],
+                    ['label' => 'UAN ESIC Status', 'column' => 'comp_status', 'sort' => true],
                     ['label' => 'Actions', 'column' => 'action', 'sort' => false],
                 ];
             @endphp
@@ -59,7 +60,7 @@
                 @foreach ($candidate as $key => $item)
                     <tr>
 
-                        <td>{{ $item->id }}</td>
+                        <td>{{ $candidate->firstItem() + $key }}</td>
                         <td>{{ $item->ffi_emp_id === null || $item->ffi_emp_id === '' ? 'N/A' : $item->ffi_emp_id }}
                         </td>
                         <td>{{ $item->client_emp_id === null || $item->client_emp_id === '' ? 'N/A' : $item->client_emp_id }}
@@ -70,7 +71,13 @@
                         </td>
                         <td> {{ $item->emp_name }}</td>
                         <td> {{ $item->phone1 }}</td>
-
+                        <td>
+                            @if ($item->comp_status == 0)
+                                <span class="badge rounded-pill deactive">Pending</span>
+                            @else
+                                <span class="badge rounded-pill sactive">Updated</span>
+                            @endif
+                        </td>
                         <td>
                             <div class="dropdown pop_Up dropdown_bg">
                                 <div class="dropdown-toggle" id="dropdownMenuButton-{{ $item->id }}"
@@ -91,11 +98,11 @@
                                             class="dropdown-item">
                                             <i class='bx bx-link-alt'></i> View
                                         </a>
-                                        <a class="dropdown-item"
+                                        {{-- <a class="dropdown-item"
                                             href="{{ route('admin.candidatemaster.download', $item->id) }}">
                                             <i class='bx bxs-download'></i>
                                             Download pdf
-                                        </a>
+                                        </a> --}}
                                     </li>
                                 </ul>
                             </div>

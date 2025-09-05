@@ -33,25 +33,25 @@ class ImportCandidatesJob implements ShouldQueue
                 continue;
             }
 
-            $ffiEmpId = $row['FFI_Emp_ID'];
-            $clientid = $row['Client_ID'];
-            $phone = $row['Phone_No'];
+            $ffiEmpId = trim($row['FFI_Emp_ID']);
+            // $clientid = trim($row['Client_ID']);
+            // $phone = trim($row['Phone_No']);
 
-            $existing = CFISModel::where('ffi_emp_id', $ffiEmpId)
-                ->whereIn('phone1', $phone)
-                ->whereIn('client_emp_id', $clientid)->first();
+            $matches = CFISModel::where(function ($query) use ($ffiEmpId) {
+                $query->where('ffi_emp_id', $ffiEmpId);
+                // ->orWhere('client_emp_id', $clientid)
+                // ->orWhere('phone1', $phone);
+            })->get();
 
-            if ($existing) {
-                // Only update UAN and ESIC
+            foreach ($matches as $existing) {
                 $existing->update([
                     'uan_no' => $row['UAN_No'] ?? null,
                     'esic_no' => $row['ESIC_No'] ?? null,
                     'comp_status' => 1,
-
                 ]);
-
-                \Log::info("Updated UAN/ESIC for ffi_emp_id: $ffiEmpId");
+                \Log::info("Updated record for ID: {$existing->id}{$existing->ffiEmpId}");
             }
+
         }
 
         \Log::info('Job completed successfully');

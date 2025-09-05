@@ -1,5 +1,5 @@
 <x-applayout>
-    <x-admin.breadcrumb title="Candidate First Information System" />
+    <x-admin.breadcrumb title="Candidate First Information System" isBack="{{ true }}" />
     <style>
         .btn-custom {
             background-color: #067e1a;

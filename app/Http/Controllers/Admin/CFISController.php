@@ -42,11 +42,11 @@ class CFISController extends Controller
 
         // $query = $this->model()->query()->where('data_status', 0)->where('created_by', auth()->id());
         if (auth()->user()->hasRole('Admin')) {
-            $query = $this->model()->query()->where('dcs_approval', 1)->where('data_status', 0);
+            $query = $this->model()->query()->where('dcs_approval', 0)->where('data_status', 1);
         } elseif (auth()->user()->hasRole(['HR Operations', 'Recruitment'])) {
-            $query = $this->model()->query()->where('dcs_approval', 1)
+            $query = $this->model()->query()->where('dcs_approval', 0)
                 ->where('created_by', auth()->id())
-                ->where('data_status', 0);
+                ->where('data_status', 1);
         }
 
         if ($from_date && $to_date) {
@@ -110,9 +110,9 @@ class CFISController extends Controller
         $validatedData = $request->all();
         $validatedData['created_at'] = $request->input('created_at', now());
         $validatedData['created_by'] = auth()->id();
-        $validatedData['status'] = $request->input('status', 1);
-        $validatedData['dcs_approval'] = $request->input('dcs_approval', 1);
-        $validatedData['data_status'] = $request->input('data_status', 0);
+        $validatedData['status'] = $request->input('status', 0);
+        $validatedData['dcs_approval'] = $request->input('dcs_approval', 0);
+        $validatedData['data_status'] = $request->input('data_status', 1);
 
 
 
@@ -173,8 +173,8 @@ class CFISController extends Controller
         $validatedData = $request->all();
 
         // $validatedData['created_by'] = auth()->id();
-        $validatedData['dcs_approval'] = $request->input('dcs_approval', 1);
-        $validatedData['data_status'] = $request->input('data_status', 0);
+        $validatedData['dcs_approval'] = $request->input('dcs_approval', 0);
+        $validatedData['data_status'] = $request->input('data_status', 1);
 
         DB::beginTransaction();
         try {
@@ -212,9 +212,11 @@ class CFISController extends Controller
 
     public function destroy($id)
     {
-        $this->model()->destroy($id);
-        return redirect()->route('admin.cfis')->with('success', 'Candidate data has been successfully deleted!');
+        $employee = $this->model()->findOrFail($id);
+        $employee->delete();
+        return redirect()->route('admin.cfis')->with('success', 'Candidate moved to trash.');
     }
+
     public function bulk(Request $request)
     {
         $type = $request->type;
@@ -310,7 +312,7 @@ class CFISController extends Controller
 
     public function bulkindex()
     {
-        $searchColumns = ['id', 'client_id', 'ffi_emp_id', 'employee_last_date', 'phone1'];
+        $searchColumns = ['id', 'client_id', 'ffi_emp_id', 'employee_last_date', 'phone1', 'client.client_name'];
         $search = request()->search;
         $from_date = request()->from_date;
         $to_date = request()->to_date;
@@ -331,11 +333,22 @@ class CFISController extends Controller
         if ($from_date && $to_date) {
             $query->whereBetween('created_at', [$from_date, $to_date]);
         }
-        if ($search != '')
+        if ($search != '') {
             $query->where(function ($q) use ($search, $searchColumns) {
-                foreach ($searchColumns as $key => $value)
-                    ($key == 0) ? $q->where($value, 'LIKE', '%' . $search . '%') : $q->orWhere($value, 'LIKE', '%' . $search . '%');
+                foreach ($searchColumns as $key => $value) {
+                    if ($value === 'client.client_name') {
+                        // Search in related `client` table
+                        $q->orWhereHas('client', function ($relQuery) use ($search) {
+                            $relQuery->where('client_name', 'LIKE', '%' . $search . '%');
+                        });
+                    } else {
+                        // Search in main table
+                        $q->{$key == 0 ? 'where' : 'orWhere'}($value, 'LIKE', '%' . $search . '%');
+                    }
+                }
             });
+        }
+
 
         ($order == '') ? $query->orderByDesc('id') : $query->orderBy($order, $orderBy);
 
@@ -401,7 +414,7 @@ class CFISController extends Controller
             File::makeDirectory($empFolder, 0755, true);
 
 
-            $fileName = "employee_details_{$employee->id}.xlsx";
+            $fileName = "Employee_Details_{$employee->id}.xlsx";
             $publicPath = "public/employee_exports/{$fileName}";
             Excel::store(new EmployeeExport($employee), $publicPath);
 

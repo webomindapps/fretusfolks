@@ -27,10 +27,12 @@ class CandidatesImport implements ToCollection
                 // Skip rows that don't match header count
                 if (count($row) === count($header)) {
                     $processedData[] = array_combine($header->toArray(), $row->toArray());
+
                 }
             }
 
             if (!empty($processedData)) {
+                // dd($processedData);
                 ImportCandidatesJob::dispatch($processedData);
             }
         }

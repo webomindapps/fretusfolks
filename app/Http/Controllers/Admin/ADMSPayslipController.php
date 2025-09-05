@@ -83,20 +83,31 @@ class ADMSPayslipController extends Controller
 
     // public function bulkUpload(Request $request)
     // {
-    //     ini_set('max_execution_time', 0); // Disable timeout
-    //     ini_set('memory_limit', '2G');
     //     $request->validate([
     //         'month' => 'required',
     //         'year' => 'required',
     //         'file' => 'required|file|mimes:xlsx,csv,txt',
     //     ]);
     //     // dd($request->all());
+    //     ini_set('memory_limit', '2G'); // increase memory limit
+    //     ini_set('max_execution_time', '0'); //
     //     $file = $request->file('file');
     //     $month = $request->input('month');
     //     $year = $request->input('year');
     //     try {
     //         if ($request->has('file')) {
+    //             // dd($request->file);
+    //             // $fileName = $request->file->getClientOriginalName();
+    //             // $fileWithPath = public_path('uploads') . '/' . $fileName;
+    //             // // dd($fileWithPath);
+    //             // if (!file_exists($fileWithPath)) {
+    //             //     $request->file->move(public_path('uploads'), $fileName);
+    //             // }
+    //             // dd($fileWithPath);
     //             Excel::import(new PayslipImport($month, $year), $file);
+    //             // if (file_exists($fileWithPath)) {
+    //             //     unlink($fileWithPath);
+    //             // }
     //         }
     //     } catch (Exception $e) {
     //         dd($e);
@@ -263,6 +274,7 @@ class ADMSPayslipController extends Controller
                 ->catch(function (Batch $batch, Throwable $e) {
                     Cache::put("batch_status_{$batch->id}", 'failed', 3600);
                 })
+                ->allowFailures()
                 ->dispatch();
 
             session(['batch_id' => $batch->id]);
@@ -579,5 +591,27 @@ class ADMSPayslipController extends Controller
 
         // Return response as download
         return response()->download($tempFile, $fileName)->deleteFileAfterSend(true);
+    }
+
+    public function bulkdelete(Request $request)
+    {
+        $query = $this->model()->query();
+
+        if ($request->client_name) {
+            $query->where('client_name', $request->client_name);
+        }
+        if ($request->emp_id) {
+            $query->where('ffi_emp_id', $request->emp_id);
+        }
+        if ($request->month) {
+            $query->where('month', $request->month);
+        }
+        if ($request->year) {
+            $query->where('year', $request->year);
+        }
+
+        $deletedCount = $query->delete();
+
+        return redirect()->back()->with('success', "$deletedCount payslip(s) deleted successfully.");
     }
 }

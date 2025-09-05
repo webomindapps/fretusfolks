@@ -14,6 +14,7 @@ return new class extends Migration
     {
         Schema::table('termination_letter', function (Blueprint $table) {
             // $table->bigInteger('id')->unsigned()->autoIncrement()->change();
+
             $table->string('termination_letter_path')->nullable()->after('date_of_update');
             $table->text('content')->nullable()->change();
             $table->timestamps();

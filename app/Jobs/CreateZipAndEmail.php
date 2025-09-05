@@ -26,7 +26,8 @@ class CreateZipAndEmail implements ShouldQueue
 
     public function handle()
     {
-        $zipFileName = "Payslips_{$this->payslips->first()->client_name}_{$this->payslips->first()->month}_{$this->payslips->first()->year}.zip";
+        $clientName = str_replace(' ', '_', $this->payslips->first()->client_name);
+        $zipFileName = "Payslips_{$clientName}_{$this->payslips->first()->month}_{$this->payslips->first()->year}.zip";
         $zipPath = storage_path("app/temp/{$zipFileName}");
 
         $zip = new ZipArchive();
@@ -49,9 +50,9 @@ class CreateZipAndEmail implements ShouldQueue
         // Send ZIP file via email
         Mail::to($this->email)->send(new PayslipZipReady($zipPath, $zipFileName));
         // Delete ZIP file after sending email
-        if (file_exists($zipPath)) {
-            unlink($zipPath);
-        }
+        // if (file_exists($zipPath)) {
+        //     unlink($zipPath);
+        // }
         foreach ($pdfFiles as $pdfPath) {
             if (file_exists($pdfPath)) {
                 unlink($pdfPath);

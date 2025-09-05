@@ -23,10 +23,10 @@
                         @csrf
                         <div class="row">
                             <x-forms.input label="From Date" type="date" name="from_date" id="from-date"
-                                :required="false" size="col-lg-3 mt-2" :value="request()->from_date" />
+                                :required="false" size="col-lg-2 mt-2" :value="request()->from_date" />
                             <x-forms.input label="To Date" type="date" name="to_date" id="to-date"
-                                :required="false" size="col-lg-3 mt-2" :value="request()->to_date" />
-                            <div class="col-lg-3 mt-2">
+                                :required="false" size="col-lg-2 mt-2" :value="request()->to_date" />
+                            <div class="col-lg-4 mt-2">
                                 <label for="data">Client Name</label>
                                 <div class="dropdown">
                                     <input type="text" class="btn dropdown-toggle text-start" id="dropdownMenuButton"
@@ -88,50 +88,71 @@
                 </div>
             </div>
         </div>
-        <div class="datatable-scroll">
-            <div class="table-responsive">
-                <table class="table datatable-basic table-bordered table-striped table-hover dataTable no-footer"
-                    id="get_details">
-                    <thead>
+        <div class="table-responsive">
+            <table class="table datatable-basic table-bordered table-striped table-hover dataTable no-footer"
+                id="get_details">
+                <thead>
+                    <tr>
+                        <th>Sl NO</th>
+                        <th>Client Name</th>
+                        <th>Client ID</th>
+                        <th>Employee ID</th>
+                        <th>Name</th>
+                        <th>Phone</th>
+                        <th>Email</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @forelse ($results as $key=>$result)
                         <tr>
-                            <th>Sl NO</th>
-                            <th>Client Name</th>
-                            <th>Employee ID</th>
-                            <th>Name</th>
-                            <th>Phone</th>
-                            <th>Email</th>
-                            <th>Action</th>
+                            {{-- {{ dd($result) }} --}}
+                            <td>{{ $results->firstItem() + $key }}</td>
+                            <td>{{ $result->entity_name }}</td>
+                            <td>{{ $result->client_emp_id }}</td>
+                            <td>{{ $result->ffi_emp_id }}</td>
+                            <td>
+                                {{ trim("{$result->emp_name} {$result->middle_name} {$result->last_name}") ?: 'N/A' }}
+                            </td>
+                            <td>{{ $result->phone1 }}</td>
+                            <td>{{ $result->email }}</td>
+
+                            <td>
+                                <div class="dropdown pop_Up dropdown_bg">
+                                    <div class="dropdown-toggle" id="dropdownMenuButton-{{ $result->id }}"
+                                        data-bs-toggle="dropdown" aria-expanded="true">
+                                        Action
+                                    </div>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1"
+                                        style=" inset: auto auto 0px 0px; margin: 0px; transform: translate(-95px, -25.4219px);"
+                                        data-popper-placement="top-end">
+                                        <li>
+                                            <a href="{{ route('admin.candidatelifecycle.view', $result->id) }}"
+                                                class="dropdown-item">
+                                                <i class='bx bx-link-alt'></i> View
+                                            </a>
+                                            <a class="dropdown-item"
+                                                href="{{ route('admin.candidatemaster.download', $result->id) }}">
+                                                <i class='bx bxs-download'></i>
+                                                Download pdf
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        @forelse ($results as $result)
-                            <tr>
-                                <td>{{ $loop->iteration }}</td>
-                                <td>{{ $result->entity_name }}</td>
-                                <td>{{ $result->ffi_emp_id }}</td>
-                                <td>
-                                    {{ trim("{$result->emp_name} {$result->middle_name} {$result->last_name}") ?: 'N/A' }}
-                                </td>
-                                <td>{{ $result->phone1 }}</td>
-                                <td>{{ $result->email }}</td>
-                                <td>
-                                    <a href="{{ route('admin.candidatelifecycle.view', $result->id) }}"
-                                        class="btn btn-info">
-                                        <i class='bx bx-link-alt'></i> View
-                                    </a>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="7" class="text-center">No records found.</td>
-                            </tr>
-                        @endforelse
-                    </tbody>
+                    @empty
+                        <tr>
+                            <td colspan="7" class="text-center">No records found.</td>
+                        </tr>
+                    @endforelse
+                </tbody>
 
 
-                </table>
-            </div>
+            </table>
         </div>
+
         <div class="mt-3">
             {{ $results->withQueryString()->links() }}
         </div>
@@ -207,4 +228,18 @@
             });
         </script>
     @endpush
+    <style>
+        .table-responsive {
+            max-height: 500px;
+            /* Adjust height as needed */
+        }
+
+        .table-responsive thead th {
+            position: sticky;
+            top: 0;
+            background-color: #fff;
+            /* Ensure background covers content below */
+            z-index: 10;
+        }
+    </style>
 </x-applayout>

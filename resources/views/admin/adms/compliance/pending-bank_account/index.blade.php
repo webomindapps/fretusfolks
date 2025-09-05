@@ -21,11 +21,11 @@
         <div class="col-lg-12">
             @php
                 $columns = [
-                    ['label' => 'Id', 'column' => 'id', 'sort' => true],
+                    ['label' => 'SL No', 'column' => 'id', 'sort' => true],
                     ['label' => 'Employee ID', 'column' => 'emp_id', 'sort' => true],
-                    ['label' => 'Client ID', 'column' => 'client_emp_id', 'sort' => true],
-                    ['label' => 'Client Name', 'column' => 'entity_name', 'sort' => true],
-                    ['label' => 'Employee Name', 'column' => 'emp_name', 'sort' => true],
+                    ['label' => 'Client ID', 'column' => 'client_emp_id', 'sort' => false],
+                    ['label' => 'Client Name', 'column' => 'entity_name', 'sort' => false],
+                    ['label' => 'Employee Name', 'column' => 'emp_name', 'sort' => false],
                     ['label' => 'Bank Name', 'column' => 'bank_name', 'sort' => true],
                     ['label' => 'Bank Account Number', 'column' => 'bank_account_no', 'sort' => true],
                     ['label' => 'Bank IFSC Code', 'column' => 'bank_ifsc_code', 'sort' => true],
@@ -56,7 +56,7 @@
                 @foreach ($pendingbank as $key => $item)
                     <tr>
 
-                        <td>{{ $item->id }}</td>
+                        <td>{{ $pendingbank->firstItem() + $key }}</td>
                         <td>{{ $item->clients?->ffi_emp_id }}</td>
                         <td>{{ $item->clients?->client_emp_id }}</td>
                         <td>{{ $item->clients?->entity_name }}</td>

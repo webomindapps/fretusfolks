@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\OtherPayslipController;
 use Illuminate\Bus\Batch;
 use Illuminate\Http\Request;
 use App\Jobs\ADMSPayslipCreate;
@@ -215,6 +216,9 @@ Route::prefix('admin')->group(function () {
         Route::post('dcs_approval/{id}/docedit', [DCSApprovalController::class, 'docupdate']);
         // Route::post('/offer_letter/generate/{id}',  [DCSApprovalController::class, 'generateOfferLetter'])->name('offer_letter.generate');
         Route::post('/dcs_approval/import', [DCSApprovalController::class, 'import'])->name('dcs_approval.import');
+        Route::get('dcs_approval/trashed', [DCSApprovalController::class, 'trashed'])->name('dcs_approval.trashed');
+        Route::get('dcs_approval/{id}/restore', [DCSApprovalController::class, 'restore'])->name('dcs_approval.restore');
+        Route::get('dcs_approval/{id}/force-delete', [DCSApprovalController::class, 'forceDelete'])->name('dcs_approval.forceDelete');
 
 
         //fhrms
@@ -371,6 +375,8 @@ Route::prefix('admin')->group(function () {
         Route::get('/offer_letter/create', [OfferLetterController::class, 'create'])->name('offer_letter.create');
         Route::post('/offer_letter/create', [OfferLetterController::class, 'store'])->name('offer_letter.store');
         Route::post('/offer_letter/bulkimport', [OfferLetterController::class, 'bulkUpload'])->name('offer_letter.bulkimport');
+        Route::post('/offer_letter/bulk_download', [OfferLetterController::class, 'bulkDownload'])->name('offer_letter.bulk_download');
+        Route::get('/download/offer-zip/{file}', [OfferLetterController::class, 'offerZip'])->name('download.zip');
 
         //increment_letter
         Route::get('/increment_letter', [AdmsIncrementLetterController::class, 'index'])->name('increment_letter');
@@ -423,6 +429,7 @@ Route::prefix('admin')->group(function () {
         Route::get('pip_letter/{id}/edit', [AdmsPipLetterController::class, 'edit'])->name('pip_letter.edit');
         Route::post('pip_letter/{id}/edit', [AdmsPipLetterController::class, 'update']);
         Route::get('pip_letter/{id}/delete', [AdmsPipLetterController::class, 'delete'])->name('pip_letter.delete');
+        Route::post('/pip_letter/bulkimport', [AdmsPipLetterController::class, 'bulkUpload'])->name('pip_letter.bulkimport');
 
         //compliance 
         Route::get('candidatemaster', [ComplianceController::class, 'index'])->name('candidatemaster');
@@ -453,12 +460,19 @@ Route::prefix('admin')->group(function () {
         Route::get('payslips/search-payslip', [ADMSPayslipController::class, 'searchPayslip'])->name('search.payslips');
         Route::get('/generate-payslips/{id}', [ADMSPayslipController::class, 'generatePayslipsPdf'])->name('generate.payslips');
         Route::get('/payslips/{id}/delete', [ADMSPayslipController::class, 'destroy'])->name('payslips.delete');
+        Route::delete('/payslips/delete-payslips', [ADMSPayslipController::class, 'bulkdelete'])->name('bulkdelete.payslips');
 
         //Pending Bank Approvals
         Route::get('/pending-bank-approval', [ComplainceBankAccountController::class, 'index'])->name('pendingbankapprovals');
         Route::get('/pending-bank-approval/edit/{id}', [ComplainceBankAccountController::class, 'edit'])->name('pendingbankapprovals.edit');
         Route::post('/pending-bank-approval/edit/{id}', [ComplainceBankAccountController::class, 'update']);
         Route::get('/pending-bank-approval/{id}/delete', [ComplainceBankAccountController::class, 'destroy'])->name('pendingbankapprovals.delete');
+
+        // Other Payslips
+        Route::get('/other_payslips', [OtherPayslipController::class, 'index'])->name('other_payslips');
+        Route::get('/other_payslips/create', [OtherPayslipController::class, 'create'])->name('other_payslips.create');
+        Route::post('/other_payslips/create', [OtherPayslipController::class, 'store']);
+        Route::get('/other_payslips/{id}/delete', [OtherPayslipController::class, 'destroy'])->name('other_payslips.delete');
 
     });
 });

@@ -263,7 +263,7 @@ class CDMSController extends Controller
             $query->whereBetween('modify_date', [$from_date, $to_date]);
         }
         $clients = $query->get();
-        return Excel::download(new CDMSExport($clients), 'cdms.xlsx');
+        return Excel::download(new CDMSExport($clients), 'CDMS.xlsx');
     }
     public function exportReport(Request $request)
     {
@@ -294,7 +294,7 @@ class CDMSController extends Controller
         }
         $data = $query->select($fields)->get();
 
-        return Excel::download(new ClientExport($data, $fields), 'cdmsreport.xlsx');
+        return Excel::download(new ClientExport($data, $fields), 'CDMS_Report.xlsx');
     }
     public function showCodeReport(Request $request)
     {

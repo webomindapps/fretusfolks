@@ -25,11 +25,10 @@
 
 
     </div>
-    <div class="row custom_table">
+    <div class="row custom-table-scroll">
         <div class="col-lg-12">
-
             <table class="table">
-                <thead style="position: sticky;top:0; z-index: 3;">
+                <thead>
                     <tr>
                         @if (isset($checkAll) && $checkAll)
                             <th>
@@ -67,7 +66,6 @@
                     {{ $slot }}
                 </tbody>
             </table>
-
         </div>
     </div>
     <div class="row text-center">
@@ -77,3 +75,31 @@
     </div>
 
 </div>
+<style>
+    .custom-table-scroll {
+        height: 500px;
+        overflow: auto;
+        position: relative;
+        /* Needed for absolute-positioned children */
+        z-index: 1;
+        /* Add z-index if needed */
+    }
+
+    .dropdown-menu {
+        z-index: 1000;
+        /* Bootstrap usually does this already */
+    }
+
+    .custom-table-scroll thead th {
+        position: sticky;
+        top: 0;
+        background-color: #fff;
+        z-index: 5;
+    }
+
+    /* Optional: If you want the checkbox/bulk row to stay fixed too */
+    .custom-table-scroll thead th[colspan] {
+        background-color: #f9f9f9;
+        z-index: 6;
+    }
+</style>

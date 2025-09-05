@@ -2,16 +2,16 @@
 
 namespace App\Imports;
 
-use App\Jobs\ADMSPayslipCreate;
 use App\Models\Payslips;
-use Illuminate\Validation\Rule;
-use Maatwebsite\Excel\Concerns\ToModel;
-use Maatwebsite\Excel\Concerns\WithHeadingRow;
-use Maatwebsite\Excel\Concerns\WithBatchInserts;
-use Maatwebsite\Excel\Concerns\WithChunkReading;
+use App\Jobs\ADMSPayslipCreate;
+use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
+use Maatwebsite\Excel\Concerns\ToCollection;
+use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Maatwebsite\Excel\Concerns\WithChunkReading;
+use Maatwebsite\Excel\Concerns\WithColumnLimit;
 
-class PayslipImport implements ToModel, WithHeadingRow, WithBatchInserts, WithChunkReading, SkipsEmptyRows
+class PayslipImport implements ToCollection, WithHeadingRow, WithChunkReading ,SkipsEmptyRows,WithColumnLimit
 {
     protected $month;
     protected $year;
@@ -22,29 +22,43 @@ class PayslipImport implements ToModel, WithHeadingRow, WithBatchInserts, WithCh
         $this->year = $year;
     }
 
-    public function model(array $row)
+    public function collection(Collection $rows)
     {
-        // Skip row if employee_id is empty
-        if (!isset($row['employee_id']) || empty($row['employee_id'])) {
-            return null;
+        foreach ($rows as $row) {
+            $row = $row->toArray();
+
+            if (!isset($row['employee_id']) || empty($row['employee_id'])) {
+                continue;
+            }
+            // dd($row);
+
+            // Optional: check for newline characters
+            $hasNewline = false;
+            foreach ($row as $cell) {
+                if (is_string($cell) && preg_match("/\r|\n/", $cell)) {
+                    $hasNewline = true;
+                    break;
+                }
+            }
+
+            if ($hasNewline) {
+                continue;
+            }
+
+            Payslips::where('emp_id', $row['employee_id'])
+                ->where('month', $this->month)
+                ->where('year', $this->year)
+                ->delete();
+
+            ADMSPayslipCreate::dispatch([$row], $this->month, $this->year);
         }
-
-        // Remove existing payslip if needed (optional, but be cautious about duplicates)
-        Payslips::where('emp_id', $row['employee_id'])
-            ->where('month', $this->month)
-            ->where('year', $this->year)
-            ->delete();
-
-        ADMSPayslipCreate::dispatch([$row], $this->month, $this->year);
     }
-
-    public function batchSize(): int
+    public function endColumn(): string
     {
-        return 100; // Number of rows inserted per query
+        return 'BH';
     }
-
     public function chunkSize(): int
     {
-        return 100; // Number of rows read into memory at once
+        return 100;
     }
 }

@@ -1,5 +1,5 @@
 <x-applayout>
-    <x-admin.breadcrumb title="Back End Management" />
+    <x-admin.breadcrumb title="Back End Management" isBack="{{ true }}" />
     <style>
         .btn-custom {
             background-color: #007bff;
@@ -118,8 +118,7 @@
                                         <div class="form-group col-lg-3 mt-2">
                                             <label for="spouse_photo">Spouse Photo: </label>
                                             <input type="file" name="spouse_photo" id="spouse_photo"
-                                                class="form-control"
-                                                value="{{ old('spouse_photo') }}">
+                                                class="form-control" value="{{ old('spouse_photo') }}">
                                             @if ($candidate->candidateDocuments->where('name', 'spouse_photo')->isNotEmpty())
                                                 @php
                                                     $spouse_photo = $candidate->candidateDocuments
@@ -159,8 +158,7 @@
                                 </div>
                                 <div class="form-group col-lg-3 mt-2">
                                     <label for="father_photo">Father Photo: </label>
-                                    <input type="file" name="father_photo" id="father_photo"
-                                       class="form-control"
+                                    <input type="file" name="father_photo" id="father_photo" class="form-control"
                                         value="{{ old('father_photo') }}">
                                     @if ($candidate->candidateDocuments->where('name', 'father_photo')->isNotEmpty())
                                         @php
@@ -186,8 +184,7 @@
                                 </div>
                                 <div class="form-group col-lg-3 mt-2">
                                     <label for="mother_photo">Mother Photo: </label>
-                                    <input type="file" name="mother_photo" id="mother_photo"
-                                       class="form-control"
+                                    <input type="file" name="mother_photo" id="mother_photo" class="form-control"
                                         value="{{ old('mother_photo') }}">
                                     @if ($candidate->candidateDocuments->where('name', 'mother_photo')->isNotEmpty())
                                         @php
@@ -291,7 +288,7 @@
                                         <div class="form-group col-lg-6 mt-2">
                                             <label for="pan_declaration">Upload Signed Document: </label>
                                             <input type="file" name="pan_declaration" id="pan_declaration"
-                                               class="form-control">
+                                                class="form-control">
                                         </div>
                                     </div>
 
@@ -308,11 +305,9 @@
                                         value="{{ old('aadhar_no', $candidate->aadhar_no) }}" required>
                                 </div>
                                 <div class="form-group col-lg-6 mt-2">
-                                    <label for="aadhar_path">Attach Aadhar Card: <span
-                                            style="color: red">*</span></label>
-                                    <input type="file" name="aadhar_path" id="aadhar_path"
-                                        class="form-control"
-                                        value="{{ old('aadhar_path', $candidate->aadhar_path) }}" required>
+                                    <label for="aadhar_path">Attach Aadhar Card: </label>
+                                    <input type="file" name="aadhar_path" id="aadhar_path" class="form-control"
+                                        value="{{ old('aadhar_path', $candidate->aadhar_path) }}">
                                 </div>
 
                                 <x-forms.input label="Enter Driving License No:" type="text"
@@ -347,8 +342,7 @@
 
                                 <div class="form-group col-lg-4 mt-2">
                                     <label for="resume">Resume: </label>
-                                    <input type="file" name="resume" id="resume"
-                                        class="form-control">
+                                    <input type="file" name="resume" id="resume" class="form-control">
 
                                     @if ($candidate->candidateDocuments->where('name', 'resume')->isNotEmpty())
                                         @php
@@ -363,8 +357,7 @@
 
                                 <div class="form-group col-lg-4 mt-2">
                                     <label for="family_photo">Family Photo: </label>
-                                    <input type="file" name="family_photo" id="family_photo"
-                                      class="form-control"
+                                    <input type="file" name="family_photo" id="family_photo" class="form-control"
                                         value="{{ old('family_photo') }}">
                                     @if ($candidate->candidateDocuments->where('name', 'family_photo')->isNotEmpty())
                                         @php
@@ -388,11 +381,22 @@
                                     id="bank_name" :required="true" size="col-lg-6 mt-2" :value="old('bank_name', $bankdetails->bank_name ?? '')" />
 
                                 <div class="form-group col-lg-6 mt-2">
-                                    <label for="bank_document">Attach Bank Document: <span
-                                            style="color: red;">*</span></label>
+                                    <label for="bank_document">Attach Bank Document: </label>
                                     <input type="file" name="bank_document" id="bank_document"
-                                        class="form-control" value="{{ old('bank_document') }}" required>
+                                        class="form-control">
+
+                                    @if (!empty($bankdetails->bank_document))
+                                        {{-- Adjust 'path' to your actual column --}}
+                                        <div id="image-preview-container" class="d-flex mt-2">
+                                            <a href="{{ asset($bankdetails->bank_document) }}" target="_blank"
+                                                class="btn btn-custom mt-2">
+                                                View
+                                            </a>
+
+                                        </div>
+                                    @endif
                                 </div>
+
                                 <x-forms.input label="Enter Bank Account No::" type="text" name="bank_account_no"
                                     id="bank_account_no" :required="true" size="col-lg-6 mt-2" :value="old('bank_account_no', $bankdetails->bank_account_no ?? '')" />
                                 <x-forms.input label="Repeat Bank Account No:" type="text" name="bank_account_no"
@@ -400,23 +404,11 @@
                                     :value="old('bank_account_no', $bankdetails->bank_account_no ?? '')" />
                                 <x-forms.input label="Enter Bank IFSC CODE:" type="text" name="bank_ifsc_code"
                                     id="bank_ifsc_code" :required="true" size="col-lg-6 mt-2" :value="old('bank_ifsc_code', $bankdetails->bank_ifsc_code ?? '')" />
-                                <x-forms.select label="Do you Have UAN No? " :options="[['value' => '0', 'label' => 'No'], ['value' => '1', 'label' => 'Yes']]" id="uan_status"
-                                    name="uan_status" :required="true" size="col-lg-6 mt-2 mr-2"
-                                    :value="old('uan_status', $candidate->uan_status)" />
-                                <div id="uan-number-field" style="display: none;" class="mt-2">
-                                    <x-forms.input label="Enter UAN No:" type="text" name="uan_no"
-                                        id="uan_no" :required="true" size="col-lg-6" :value="old('uan_no', $candidate->uan_no)" />
-                                </div>
-                                <x-forms.select label="Do you Have Esic No? " :options="[['value' => '0', 'label' => 'No'], ['value' => '1', 'label' => 'Yes']]" id="esic_status"
-                                    name="esic_status" :required="true" size="col-lg-6 mt-2 mr-2"
-                                    :value="old('esic_status', $candidate->esic_status)" />
-                                <div id="esic-number-field" style="display: none;" class="mt-2">
-                                    <x-forms.input label="Enter Esic No:" type="text" name="esic_no"
-                                        id="esic_no" :required="true" size="col-lg-6" :value="old('esic_no', $candidate->esic_no)" />
-                                </div>
-                                {{-- <x-forms.input label="ESIC No:" type="text" name="esic_no" id="esic_no"
-                                    :required="false" size="col-lg-6 mt-2"
-                                    :value="old('esic_no', $candidate->esic_no)" /> --}}
+
+                                <x-forms.input label="UAN No:" type="text" name="uan_no" id="uan_no"
+                                    :required="false" size="col-lg-6 mt-2" :value="old('uan_no', $candidate->uan_no)" />
+                                <x-forms.input label="ESIC No:" type="text" name="esic_no" id="esic_no"
+                                    :required="false" size="col-lg-6 mt-2" :value="old('esic_no', $candidate->esic_no)" />
                                 {{-- <x-forms.select label="Status:" name="status" id="status" :required="false"
                                     size="col-lg-6 mt-2" :options="FretusFolks::getStatus()"
                                     :value="old('status', $candidate->status)" /> --}}
@@ -497,8 +489,7 @@
 
                                                 </select>
 
-                                                <input type="file"
-                                                    name="document_file[]" class=" col-lg-5 me-3">
+                                                <input type="file" name="document_file[]" class=" col-lg-5 me-3">
 
                                                 <button type="button" class="btn btn-success me-2 add-row">+</button>
                                             </div>
@@ -600,9 +591,22 @@
                                 <x-forms.input label="Password:" type="text" name="psd" id="psd"
                                     :required="true" size="col-lg-6 mt-2" :value="old('psd') ?? ($candidate->psd ?? 'ffemp@123')" />
 
-                                {{-- <x-forms.select label="Active Status:" name="active_status" id="active_status"
-                                    :required="true" size="col-lg-6 mt-2" :options="FretusFolks::getStatus()"
-                                    :value="old('active_status', $candidate->active_status)" /> --}}
+                                <div class="col-lg-6 mt-2">
+                                    <label for="status" class="form-label">Status: <span
+                                            class="text-danger">*</span></label>
+                                    <select name="status" id="status" class="form-select" required>
+                                        <option value="">-- Select Status --</option>
+                                        <option value="0"
+                                            {{ old('status', $candidate->status) == '0' ? 'selected' : '' }}>Active
+                                        </option>
+                                        <option value="1"
+                                            {{ old('status', $candidate->status) == '1' ? 'selected' : '' }}>In-Active
+                                        </option>
+                                    </select>
+                                </div>
+
+                                {{-- <x-forms.select label="Active Status:" name="status" id="status"
+                                    :required="true" size="col-lg-6 mt-2" :options="FretusFolks::getStatus()" :value="old('status', $candidate->status)" /> --}}
                             </div>
                             <div class="row">
                                 <div class="col-lg-12 mt-4">
@@ -796,39 +800,37 @@
                             const childRow = document.createElement('div');
                             childRow.className = 'row align-items child-row';
                             childRow.innerHTML = `
-        <div class="form-group col-lg-3">
-            <label for="child_name_${i}">Child ${i} Name:</label>
-            <input type="text" name="child_names[]" id="child_name_${i}" class="form-control" 
-                   value="${childData.name || ''}"  >
-        </div>
-        <div class="form-group col-lg-3">
-            <label for="child_dob_${i}">Child ${i} DOB:</label>
-            <input type="date" name="child_dobs[]" id="child_dob_${i}" class="form-control"
-                   value="${childData.dob || ''}"  >
-        </div>
-        <div class="form-group col-lg-3 child-aadhar" id="child_aadhar_field_${i}" style="display: none;">
-            <label for="child_aadhar_${i}">Child ${i} Aadhar No:</label>
-            <input type="text" name="child_aadhar[]" id="child_aadhar_${i}" class="form-control" 
-                   value="${childData.aadhar_no || ''}" maxlength="12" inputmode="numeric">
-        </div>
-           <div class="form-group col-lg-3">
-            <label for="child_gender_${i}">Child ${i} Gender:</label>
-            <input type="text" name="child_gender[]" id="child_gender_${i}" class="form-control"
-                   value="${childData.gender || ''}" >
-        </div>
-        <div class="form-group col-lg-3">
-            <label for="child_photo_${i}">Child ${i} Photo:</label>
-            <input type="file" name="child_photo[]" id="child_photo_${i}"
-                   class="form-control">
-
-            ${childData.photo ? `
-                                                                                                                                                                    <div id="image-preview-container-${i}" class="d-flex mt-2">
-                                                                                                                                                                        <img src="{{ url('/') }}/${childData.photo}" 
-                                                                                                                                                                             class="img-thumbnail" width="100" height="100" 
-                                                                                                                                                                             alt="Child ${i} Uploaded Photo">
-                                                                                                                                                                    </div>` : ''}
-        </div>
-    `;
+                    <div class="form-group col-lg-3">
+                        <label for="child_name_${i}">Child ${i} Name:</label>
+                        <input type="text" name="child_names[]" id="child_name_${i}" class="form-control" 
+                               value="${childData.name || ''}">
+                    </div>
+                    <div class="form-group col-lg-3">
+                        <label for="child_dob_${i}">Child ${i} DOB:</label>
+                        <input type="date" name="child_dobs[]" id="child_dob_${i}" class="form-control"
+                               value="${childData.dob || ''}">
+                    </div>
+                    <div class="form-group col-lg-3 child-aadhar" id="child_aadhar_field_${i}" style="display: none;">
+                        <label for="child_aadhar_${i}">Child ${i} Aadhar No:</label>
+                        <input type="text" name="child_aadhar[]" id="child_aadhar_${i}" class="form-control" 
+                               value="${childData.aadhar_no || ''}" maxlength="12" inputmode="numeric">
+                    </div>
+                    <div class="form-group col-lg-3">
+                        <label for="child_gender_${i}">Child ${i} Gender:</label>
+                        <input type="text" name="child_gender[]" id="child_gender_${i}" class="form-control"
+                               value="${childData.gender || ''}">
+                    </div>
+                    <div class="form-group col-lg-3">
+                        <label for="child_photo_${i}">Child ${i} Photo:</label>
+                        <input type="file" name="child_photo[]" id="child_photo_${i}" class="form-control">
+                        ${childData.photo ? `
+                                    <div id="image-preview-container-${i}" class="d-flex mt-2">
+                                        <img src="{{ url('/') }}/${childData.photo}" 
+                                             class="img-thumbnail" width="100" height="100" 
+                                             alt="Child ${i} Uploaded Photo">
+                                    </div>` : ''}
+                    </div>
+                `;
                             childrenDetails.appendChild(childRow);
 
                             let dobField = document.getElementById(`child_dob_${i}`);
@@ -852,17 +854,16 @@
                 function checkChildAge(index) {
                     const dobField = document.getElementById(`child_dob_${index}`);
                     const aadharField = document.getElementById(`child_aadhar_field_${index}`);
-                    const aadharInput = document.getElementById(`child_aadhar_${index}`);
 
                     if (dobField.value) {
                         const ageInMonths = calculateAge(dobField.value);
                         if (ageInMonths > 6) {
                             aadharField.style.display = 'block';
-                            aadharInput.setAttribute('required', 'required');
                         } else {
                             aadharField.style.display = 'none';
-                            aadharInput.removeAttribute('required');
                         }
+                    } else {
+                        aadharField.style.display = 'none';
                     }
                 }
 

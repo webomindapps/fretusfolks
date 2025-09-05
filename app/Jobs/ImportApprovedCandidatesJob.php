@@ -38,6 +38,16 @@ class ImportApprovedCandidatesJob implements ShouldQueue
 
         // dd($this->data);
         foreach ($this->data as $row) {
+            $ffiEmpId = $row['FFI_EMP_ID'] ?? null;
+
+            if (!empty($ffiEmpId)) {
+                $exists = CFISModel::where('ffi_emp_id', $ffiEmpId)->exists();
+
+                if ($exists) {
+                    \Log::warning("Duplicate FFI_EMP_ID skipped: {$ffiEmpId}");
+                    continue;
+                }
+            }
 
             $state = States::where('state_name', $row['State'])->first();
             $client = ClientManagement::where('client_name', $row['Client_Name'])->first();
@@ -84,42 +94,45 @@ class ImportApprovedCandidatesJob implements ShouldQueue
                 'official_mail_id' => $row['Official_Mail_ID'] ?? null,
                 'permanent_address' => $row['Permanent_Address'] ?? null,
                 'present_address' => $row['Present_Address'] ?? null,
-                'pan_no' => $row['Pan_No'] ?? null,
+                'pan_no' => $row['PAN_No'] ?? null,
                 'aadhar_no' => $row['Aadhar_No'] ?? null,
                 'driving_license_no' => $row['Driving_License_No'] ?? null,
                 'uan_no' => $row['UAN_No'] ?? null,
                 'esic_no' => $row['ESIC_No'] ?? null,
+
                 'basic_salary' => $row['Basic_Salary'] ?? null,
                 'hra' => $row['HRA'] ?? null,
-                'conveyance' => $row['conveyance'] ?? null,
+                'conveyance' => $row['Conveyance'] ?? null,
                 'medical_reimbursement' => $row['medical_reimbursement'] ?? null,
                 'special_allowance' => $row['Special_Allowance'] ?? null,
                 'other_allowance' => $row['Other_Allowance'] ?? null,
                 'st_bonus' => $row['ST_Bonus'] ?? null,
                 'gross_salary' => $row['Gross_Salary'] ?? null,
-                'emp_pf' => $row['Emp_PF'] ?? null,
-                'emp_esic' => $row['Emp_ESIC'] ?? null,
+                'emp_pf' => $row['Employee_PF'] ?? null,
+                'emp_esic' => $row['Employee_ESIC'] ?? null,
                 'pt' => $row['PT'] ?? null,
-                'lwf' => $row['Emp_LWF'] ?? null,
+                'lwf' => $row['Employee_LWF'] ?? null,
+                'other_deduction' => $row['Other_Deduction'] ?? null,
                 'total_deduction' => $row['Total_Deduction'] ?? null,
-                'take_home' => $row['Take_Home'] ?? null,
+                'take_home' => $row['Net_Take_Home_Salary - NTH (Gross_Salary - Total_Deduction)'] ?? null,
                 'employer_pf' => $row['Employer_PF'] ?? null,
                 'employer_esic' => $row['Employer_ESIC'] ?? null,
                 'employee_lwf' => $row['Employer_LWF'] ?? null,
                 'mediclaim' => $row['Mediclaim'] ?? null,
-                'ctc' => $row['CTC'] ?? null,
+                'ctc' => $row['Cost_To_Company - CTC (Gross_Salary + Employer_Deduction)'] ?? null,
+
                 'psd' => $row['Password'] ?? null,
                 'password' => isset($row['Password']) ? bcrypt($row['Password']) : null,
-                'dcs_approval' => match (strtolower(trim($row['Dcs_Approval']))) {
-                    'Approved' => 0,
-                    'Pending' => 1,
-                    'Rejected' => 2,
+                'dcs_approval' => match (strtolower(trim((string) $row['Dcs_Approval'] ?? ''))) {
+                    'approved' => 1,
+                    'pending' => 0,
+                    'rejected' => 2,
                     default => null,
                 },
                 'hr_approval' => 0,
-                'status' => 1,
+                'status' => 0,
                 // 'dcs_approval' => 0,
-                'data_status' => 0,
+                'data_status' => 1,
                 'created_by' => $this->created_by,
                 'client_id' => $client?->id,
                 'state' => $state?->id,

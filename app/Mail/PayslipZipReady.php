@@ -6,7 +6,6 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Support\Facades\Storage;
 
 class PayslipZipReady extends Mailable
 {
@@ -25,12 +24,36 @@ class PayslipZipReady extends Mailable
      */
     public function build()
     {
-        // $zipUrl = url("storage/temp/{$this->zipFileName}");
-        Storage::move('temp/' . $this->zipFileName, 'public/payslips/' . $this->zipFileName);
-        $zipUrl = asset("storage/temp/{$this->zipFileName}");
+        $publicPath = public_path('payslips_zip'); // /public/payslips
 
+        // Ensure the public/payslips folder exists
+        if (!file_exists($publicPath)) {
+            mkdir($publicPath, 0755, true);
+        }
+    
+        // Actual file move (from storage/app/temp/ to public/payslips/)
+        $sourcePath = storage_path("app/temp/{$this->zipFileName}");
+        $destinationPath = public_path("payslips_zip/{$this->zipFileName}");
+    
+        // Move the file
+        if (file_exists($sourcePath)) {
+            rename($sourcePath, $destinationPath);
+        }
+    
+        // Public URL (this will now work)
+        $zipUrl ="https://newapp.fretusfolks.com/payslips_zip/".$this->zipFileName;
+    
         return $this->subject('Your Payslips ZIP is Ready')
             ->view('mail.payslip_zip_ready')
             ->with(compact('zipUrl'));
+        // $zipUrl = asset("storage/temp/{$this->zipFileName}");
+
+        // return $this->subject('Your Payslips ZIP is Ready')
+        //     ->view('mail.payslip_zip_ready')
+        //     ->with(compact('zipUrl'));
+            // ->attach($this->zipPath, [
+            //     'as' => $this->zipFileName,
+            //     'mime' => 'application/zip',
+            // ]);
     }
 }

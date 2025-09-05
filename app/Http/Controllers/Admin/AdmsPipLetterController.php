@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
+use Exception;
 use App\Models\CFISModel;
 use App\Models\PipLetter;
-use Barryvdh\DomPDF\Facade\Pdf;
-use Exception;
 use Illuminate\Http\Request;
+use App\Imports\ADMSPIPImport;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 
 class AdmsPipLetterController extends Controller
@@ -79,8 +80,8 @@ class AdmsPipLetterController extends Controller
             'emp_id' => 'nullable',
             'date' => 'required|date',
             'observation' => 'required|string',
-            'goals' => 'required|string',
-            'updates' => 'required|string',
+            // 'goals' => 'required|string',
+            // 'updates' => 'required|string',
             'timeline' => 'required|string',
 
         ]);
@@ -91,11 +92,11 @@ class AdmsPipLetterController extends Controller
                 'emp_id' => $request->emp_id,
                 'status' => '1',
                 'date' => $request->date,
-                'content' => $request->content,
+                // 'content' => $request->content,
                 'date_of_update' => now(),
                 'observation' => $request->observation,
-                'goals' => $request->goals,
-                'updates' => $request->updates,
+                // 'goals' => $request->goals,
+                // 'updates' => $request->updates,
                 'timeline' => $request->timeline,
 
             ]);
@@ -164,11 +165,11 @@ class AdmsPipLetterController extends Controller
                 'emp_id' => $request->emp_id,
                 'status' => '1',
                 'date' => $request->date,
-                'content' => $request->content,
+                // 'content' => $request->content,
                 'date_of_update' => now(),
                 'observation' => $request->observation,
-                'goals' => $request->goals,
-                'updates' => $request->updates,
+                // 'goals' => $request->goals,
+                // 'updates' => $request->updates,
                 'timeline' => $request->timeline,
             ]);
             $pdf = Pdf::loadView('admin.adms.pip_letter.format', ['pipLetter' => $pipLetter]);
@@ -197,5 +198,38 @@ class AdmsPipLetterController extends Controller
         }
         $pip->delete();
         return redirect()->route('admin.pip_letter')->with('success', 'Pip Letter has been deleted');
+    }
+
+    public function bulkUpload(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|file|mimes:xlsx,csv,txt',
+        ]);
+        // dd($request->all());
+        $file = $request->file('file');
+
+        try {
+            if ($request->has('file')) {
+                // dd($request->file);
+                $fileName = $request->file->getClientOriginalName();
+                $fileWithPath = public_path('uploads') . '/' . $fileName;
+                // dd($fileWithPath);
+                if (!file_exists($fileWithPath)) {
+                    $request->file->move(public_path('uploads'), $fileName);
+                }
+                // dd($fileWithPath);
+                Excel::import(new ADMSPIPImport(), $fileWithPath);
+                if (file_exists($fileWithPath)) {
+                    unlink($fileWithPath);
+                }
+            }
+        } catch (Exception $e) {
+            dd($e);
+        }
+        $error = '';
+        return redirect()->route('admin.pip_letter')->with([
+            'success' => 'PIP Letter added successfully',
+            'alert' => $error
+        ]);
     }
 }

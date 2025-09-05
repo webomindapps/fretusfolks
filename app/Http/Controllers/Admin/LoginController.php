@@ -19,6 +19,7 @@ class LoginController extends Controller
 {
     public function index()
     {
+        Auth::logout();
         $roles = Role::all();
         return view('admin.auth.login', compact('roles'));
     }
@@ -47,6 +48,7 @@ class LoginController extends Controller
         $userRole = $user->getRoleNames()->first();
         $today = Carbon::today();
 
+        // dd($userRole);
         $from_date = $request->from_date;
         $to_date = $request->to_date;
         $dateFilter = $from_date && $to_date;
@@ -200,6 +202,12 @@ class LoginController extends Controller
                 'esicNumbers',
                 'uanNumbers'
             ));
+        } elseif ($userRole == 'Finance') {
+
+            return view('admin.dashboard', compact(
+                'userRole'
+
+            ));
         } else {
             // Default return if no role matches
             return view('admin.dashboard');
@@ -209,9 +217,11 @@ class LoginController extends Controller
 
 
     }
-    public function logout()
+    public function logout(Request $request)
     {
         Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
         return to_route('admin.login');
     }
 }

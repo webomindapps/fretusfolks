@@ -21,7 +21,7 @@
                             <input type="checkbox" name="selected_items[]" class="single-item-check"
                                 value="{{ $item->id }}">
                         </td> --}}
-                        <td>{{ $item->id }}</td>
+                        <td>{{ $warning->firstItem() + $key }}</td>
                         <td>{{ $item->emp_id }}</td>
                         <td>{{ $item->warning_letter ? $item->warning_letter->emp_name : 'N/A' }}</td>
                         <td>{{ \Carbon\Carbon::parse($item->date)->format('d-m-Y') }}</td>

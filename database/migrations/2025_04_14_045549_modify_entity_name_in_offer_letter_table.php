@@ -10,18 +10,18 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        DB::table('offer_letter')
-            ->where('joining_date', '0000-00-00')
-            ->update(['joining_date' => null]);
+        // DB::table('offer_letter')
+        //     ->where('joining_date', '0000-00-00')
+        //     ->update(['joining_date' => null]);
 
-        DB::table('offer_letter')
-            ->where('tenure_date', '0000-00-00')
-            ->update(['tenure_date' => null]);
+        // DB::table('offer_letter')
+        //     ->where('tenure_date', '0000-00-00')
+        //     ->update(['tenure_date' => null]);
 
         // Modify entity_name column
-        Schema::table('offer_letter', function (Blueprint $table) {
-            $table->text('entity_name')->change()->nullable();
-        });
+        // Schema::table('offer_letter', function (Blueprint $table) {
+        //     $table->text('entity_name')->change()->nullable();
+        // });
     }
 
     /**

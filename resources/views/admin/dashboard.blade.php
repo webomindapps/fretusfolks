@@ -629,6 +629,10 @@
                 </div>
             </div>
         </div>
+    @elseif ($userRole === 'Finance')
+        <div class="col-lg-4">
+            <h3> Dashboard</h3>
+        </div>
     @else
         <div class="col-lg-4">
             <h3> Dashboard</h3>

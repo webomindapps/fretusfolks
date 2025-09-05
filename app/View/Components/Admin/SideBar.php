@@ -121,7 +121,7 @@ class SideBar extends Component
                     'icon' => 'bx bx-chevron-right',
                     'route' => 'admin.pendingbankapprovals',
                     'name' => 'pending-bank-approval',
-                    'roles' => ['Admin', 'Compliance', 'HR Operations'],
+                    'roles' => ['Admin', 'Compliance'],
                 ],
                 [
                     'title' => 'Candidates Lifecycle',
@@ -137,6 +137,14 @@ class SideBar extends Component
                     'route' => 'admin.cfisbulk',
                     'name' => 'cfisbulk',
                     'roles' => ['Admin', 'HR Operations'],
+                ],
+
+                [
+                    'title' => 'ADMS Trashed',
+                    'icon' => 'bx bx-chevron-right',
+                    'route' => 'admin.dcs_approval.trashed',
+                    'name' => 'adms trashed',
+                    'roles' => ['Admin','HR Operations'],
                 ],
 
             ],
@@ -164,7 +172,6 @@ class SideBar extends Component
                     'name' => 'doc_rejected',
                     'roles' => ['Admin', 'Recruitment', 'HR Operations'],
                 ],
-
             ]
         ],
         [
@@ -176,7 +183,7 @@ class SideBar extends Component
             'roles' => ['Admin', 'HR Operations'],
             'subMenus' => [
                 [
-                    'title' => 'Offer Letter  ',
+                    'title' => 'Offer/Appointment Letter  ',
                     'icon' => 'bx bx-chevron-right',
                     'route' => 'admin.offer_letter',
                     'name' => 'offer_letter',
@@ -225,6 +232,14 @@ class SideBar extends Component
             'icon' => 'bx bx-grid-alt',
             'route' => 'admin.payslips',
             'name' => 'admspayslips',
+            'isSubMenu' => false,
+            'roles' => ['Admin', 'HR Operations'],
+        ],
+        [
+            'title' => 'ADMS Manual Payslip',
+            'icon' => 'bx bx-grid-alt',
+            'route' => 'admin.other_payslips',
+            'name' => 'admsotherpayslips',
             'isSubMenu' => false,
             'roles' => ['Admin', 'HR Operations'],
         ],
@@ -393,63 +408,63 @@ class SideBar extends Component
             'icon' => 'bx bxl-slack',
             'route' => '',
             'isSubMenu' => true,
-            'roles' => ['Admin'],
+            'roles' => ['Admin', 'Finance'],
             'subMenus' => [
                 [
                     'title' => 'CIMS',
                     'icon' => 'bx bx-chevron-right',
                     'route' => 'admin.fcms.cims',
                     'name' => 'cims',
-                    'roles' => ['Admin'],
+                    'roles' => ['Admin', 'Finance'],
                 ],
                 [
                     'title' => 'CIMS Reports',
                     'icon' => 'bx bx-chevron-right',
                     'route' => 'admin.fcms.cims.reports',
                     'name' => 'cimsreport',
-                    'roles' => ['Admin'],
+                    'roles' => ['Admin', 'Finance'],
                 ],
                 [
                     'title' => 'Receivables',
                     'icon' => 'bx bx-chevron-right',
                     'route' => 'admin.fcms.receivables',
                     'name' => 'receivables',
-                    'roles' => ['Admin'],
+                    'roles' => ['Admin', 'Finance'],
                 ],
                 [
                     'title' => 'Receivables Reports',
                     'icon' => 'bx bx-chevron-right',
                     'route' => 'admin.fcms.receivable.reports',
                     'name' => 'receivables_reports',
-                    'roles' => ['Admin'],
+                    'roles' => ['Admin', 'Finance'],
                 ],
                 [
                     'title' => 'TDS Reports',
                     'icon' => 'bx bx-chevron-right',
                     'route' => 'admin.fcms.tds_report',
                     'name' => 'tds_report',
-                    'roles' => ['Admin'],
+                    'roles' => ['Admin', 'Finance'],
                 ],
                 [
                     'title' => 'FFCM',
                     'icon' => 'bx bx-chevron-right',
                     'route' => 'admin.fcms.ffcm',
                     'name' => 'ffcm',
-                    'roles' => ['Admin'],
+                    'roles' => ['Admin', 'Finance'],
                 ],
                 [
                     'title' => 'FFCM Reports',
                     'icon' => 'bx bx-chevron-right',
                     'route' => 'admin.fcms.ffcm_report',
                     'name' => 'ffcm_report',
-                    'roles' => ['Admin'],
+                    'roles' => ['Admin', 'Finance'],
                 ],
                 [
                     'title' => 'FFI Assets',
                     'icon' => 'bx bx-chevron-right',
                     'route' => 'admin.fcms.ffi_assets',
                     'name' => 'ffi_assets',
-                    'roles' => ['Admin'],
+                    'roles' => ['Admin', 'Finance'],
                 ],
             ]
         ],

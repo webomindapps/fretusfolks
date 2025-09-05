@@ -1,5 +1,5 @@
 <x-applayout>
-    <x-admin.breadcrumb title=" New FFI Warning Letter" />
+    <x-admin.breadcrumb title=" New FFI Warning Letter" isBack="{{ true }}" />
 
     @if ($errors->any())
         <div class="col-lg-12 pb-4 px-2">

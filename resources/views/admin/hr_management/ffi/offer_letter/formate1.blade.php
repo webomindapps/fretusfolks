@@ -9,70 +9,99 @@
 
 <style>
     @page {
-        margin: 100px 55px 120px 55px;
+        margin: 200px 0 120px 20px;
+    }
+
+    .cash {
+        text-align: right;
+    }
+
+    li {
+        line-height: 1.5;
+    }
+
+    b {
+        font-weight: bold;
     }
 
     header {
         position: fixed;
-        top: -100px;
+        top: -200px;
+        left: -30px;
+        right: 0;
+        height: 170px;
     }
 
     footer {
         position: fixed;
-        bottom: -40px;
+        bottom: -120px;
+        left: -20px;
     }
 
-    .page-break {
-        page-break-after: always;
+    .table1 {
+        border-collapse: collapse;
+        width: 60%;
+        margin-left: auto;
+        margin-right: auto;
+        font-size: 12px;
     }
 
-    body {
-        padding: 0 !important;
-        margin: 0 !important;
-        display: block !important;
-        /* background: red; */
-        -webkit-text-size-adjust: none;
-        font-family: times;
-        font-size: 13px;
+    .table1 th,
+    .table1 td {
+        padding: 4px;
+        border: 1px solid #000;
     }
 
-    a {
-        color: #00b8e4;
+    .table1 td:first-child {
+        text-align: left;
+    }
+
+    .table1 td:nth-child(2),
+    .table1 td:nth-child(3),
+    .table1 th:nth-child(2),
+    .table1 th:nth-child(3) {
+        text-align: center;
+    }
+
+    h1 {
+        font-size: 15px;
+        text-align: center;
         text-decoration: underline;
-        font-family: times;
+        margin-bottom: 15px;
     }
 
-    h3 a {
-        color: #1f1f1f;
-        text-decoration: none;
-        font-family: times;
+    p,
+    li {
+        font-size: 12px;
+        line-height: 1.5;
+        text-align: justify;
+        margin-bottom: 1px;
     }
 
-    .text2 a {
-        color: #ea4261;
-        text-decoration: none;
-        font-family: times;
+    .signature-table td {
+        vertical-align: top;
+        padding: 10px;
     }
 
-    p {
-        padding: 0 !important;
-        margin: 0 !important;
-        font-family: times;
+    .seal {
+        width: 100px;
+        margin-top: 10px;
     }
 
-    ol {
-        font-family: times;
+    .header-row {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
     }
 
-    ol li {
-        margin-top: 1%;
-        line-height: 1.7;
+    .header-row .left,
+    .header-row .right {
+        font-size: 14px;
     }
 
-    .table1 td,
-    .table1 th {
-        border: 1px solid black;
-        padding: 5px 8px;
+    .body {
+        margin-left: 20px;
+        margin-right: 50px;
     }
 </style>
 </head>
@@ -88,6 +117,7 @@
                         <tr>
                             <td colspan="3" style="font-size:12px;text-align:left;padding:7px">
                                 <p style="line-height:1.8;font-size:14px">
+
                                     <b>Mr. /Mrs. /Ms. : {{ $offerLetter->employee?->emp_name }}</b> <br>
                                     <b>Employee ID : {{ $offerLetter->employee?->ffi_emp_id }}</b> <br>
                                     <b>Place : {{ $offerLetter->employee?->location }}</b> <br>
@@ -175,6 +205,8 @@
                     Any contravention of this condition will entail termination of your services from
                     the Company.
                 </li>
+                <div style="page-break-after: always;"></div>
+
                 <li>
                     <ol type="i">
                         <li>Your services are liable to be transferred or loaned or assigned
@@ -251,6 +283,8 @@
                     fully recovered from your salary and any other legal dues including
                     Gratuity, at the time of you’re leaving the services of the Company.
                 </li>
+                <div style="page-break-after: always;"></div>
+
                 <li>
                     You shall faithfully and to the best of your ability perform your duties
                     that may be entrusted to you from time to time by the management. You
@@ -340,8 +374,10 @@
             </div>
         </div>
     </div>
+    <div style="page-break-after: always;"></div>
+
     <div
-        style="color: #000;font-family: Tahoma;font-size: 13px;line-height: 1.5;text-align: justify;padding-left: 0%; margin-top:100px;">
+        style="color: #000;font-family: Tahoma;font-size: 13px;line-height: 1.5;text-align: justify;padding-left: 0%; margin-top:0px;">
         <h1 style="font-size:17px;text-align:center;text-decoration: underline;"> Annexure - 1</h1>
         <center>
             <table class="table table1 annexure_table" border="1"

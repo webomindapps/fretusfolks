@@ -26,7 +26,7 @@
 
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="card-title mb-0">Upload Payslips</h5>
-                    <a class="btn btn-info text-white" id="downloadFilteredCSV" download="payslip_format.xlsx">
+                    <a class="btn btn-info text-white" id="downloadFilteredCSV" download="Payslip_Format.xlsx">
                         Download Sample
                     </a>
                 </div>
@@ -88,6 +88,7 @@
                     @csrf
                     <div class="card-body">
                         <div class="row align-items-end">
+                            <!-- Multi-Select Client Dropdown -->
                             <div class="col-lg-4">
                                 <label for="client">Client Name <span class="text-danger">*</span></label>
                                 <div class="dropdown">
@@ -106,17 +107,20 @@
                                             <hr class="dropdown-divider">
                                         </li>
 
-                                        @foreach (FretusFolks::getClientname() as $option)
+                                        @foreach (FretusFolks::getClientname() as $index => $option)
                                             <li>
-                                                <a href="#" class="dropdown-item"
-                                                    onclick="selectClient('{{ $option['label'] }}')">
+                                                <label class="dropdown-item m-0">
+                                                    <input type="checkbox" name="client_checkbox"
+                                                        class="form-check-input me-2"
+                                                        onclick="selectClientWithCheckbox(this, '{{ $option['label'] }}')">
                                                     {{ $option['label'] }}
-                                                </a>
+                                                </label>
                                             </li>
                                         @endforeach
                                     </ul>
                                 </div>
                             </div>
+
 
 
 
@@ -204,7 +208,7 @@
                     </div>
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-lg-4">
+                            <div class="col-lg-3">
                                 <div class="dropdown">
                                     <input type="text" class="btn dropdown-toggle text-start"
                                         id="dropdownSearchclient" data-bs-toggle="dropdown" aria-expanded="false"
@@ -224,21 +228,20 @@
                                         </li>
 
                                         @foreach (FretusFolks::getClientname() as $index => $option)
-                                            <li>
-                                                <a href="#"
-                                                    class="dropdown-sitem d-flex align-items-center gap-2"
-                                                    onclick="selectClientsearch('{{ $option['label'] }}')">
-                                                    <input type="checkbox" class="form-check-input" />
-                                                    <span>{{ $option['label'] }}</span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <hr class="dropdown-divider">
+                                            <li class="client-option-search">
+                                                <label class="dropdown-item d-flex align-items-center m-0"
+                                                    style="cursor:pointer;">
+                                                    <input type="radio" name="client_search_radio"
+                                                        class="form-check-input me-2" value="{{ $option['label'] }}"
+                                                        onchange="selectClientsearch(this)">
+                                                    {{ $option['label'] }}
+                                                </label>
                                             </li>
                                         @endforeach
                                     </ul>
                                 </div>
                             </div>
+
                             <div class="col-md-2">
                                 <input type="text" name="emp_id" id="emp_id" class="form-control"
                                     placeholder="Employee ID" value="{{ request()->emp_id }}">
@@ -263,12 +266,22 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-md-3">
                                 <button type="submit" class="btn btn-primary">Search</button>
+                                <button type="button" class="btn btn-danger" onclick="confirmDelete()">Bulk
+                                    Delete</button>
                             </div>
                         </div>
                     </div>
                 </div>
+            </form>
+            <form id="delete_form" method="POST" action="{{ route('admin.bulkdelete.payslips') }}">
+                @csrf
+                @method('DELETE')
+                <input type="hidden" name="client_name" value="{{ request('client_name') }}">
+                <input type="hidden" name="emp_id" value="{{ request('emp_id') }}">
+                <input type="hidden" name="month" value="{{ request('month') }}">
+                <input type="hidden" name="year" value="{{ request('year') }}">
             </form>
         </div>
     </div>
@@ -282,7 +295,7 @@
                 <div class="col-lg-12">
                     @php
                         $columns = [
-                            ['label' => 'Id', 'column' => 'id', 'sort' => true],
+                            ['label' => 'SL No', 'column' => 'id', 'sort' => true],
                             ['label' => 'EMP ID', 'column' => 'emp_id', 'sort' => false],
                             ['label' => 'Client Name', 'column' => 'client_name', 'sort' => false],
                             ['label' => 'EMP Name', 'column' => 'emp_name', 'sort' => false],
@@ -296,7 +309,7 @@
                     <x-table :columns="$columns" :data="$payslips" :checkAll=false :bulk="route('admin.cms.esic')" :route="route('admin.search.payslips')">
                         @foreach ($payslips as $key => $item)
                             <tr>
-                                <td>{{ $item->id }}</td>
+                                <td>{{ $payslips->firstItem() + $key }}</td>
                                 <td>{{ $item->emp_id }}</td>
                                 <td>{{ $item->client_name }}</td>
                                 <td>{{ $item->emp_name }}</td>
@@ -368,26 +381,46 @@
                 });
             }
 
-            function selectClient(name) {
-                document.getElementById('dropdownMenuclient').value = name;
-                document.getElementById('selected_client_input').value = name;
-                bootstrap.Dropdown.getOrCreateInstance(document.getElementById('dropdownMenuclient')).hide();
+            function selectClientWithCheckbox(checkbox, name) {
+                // Uncheck all other checkboxes (single-select behavior)
+                document.querySelectorAll('input[name="client_checkbox"]').forEach(cb => {
+                    if (cb !== checkbox) cb.checked = false;
+                });
+
+                if (checkbox.checked) {
+                    document.getElementById('dropdownMenuclient').value = name;
+                    document.getElementById('selected_client_input').value = name;
+                    bootstrap.Dropdown.getOrCreateInstance(document.getElementById('dropdownMenuclient')).hide();
+                } else {
+                    document.getElementById('dropdownMenuclient').value = 'Select Client';
+                    document.getElementById('selected_client_input').value = '';
+                }
             }
         </script>
+
+
+
         <script>
             function filterClientsearch(input) {
                 const filter = input.value.toLowerCase();
-                document.querySelectorAll('.dropdown-menu .dropdown-sitem').forEach(item => {
-                    item.style.display = item.textContent.toLowerCase().includes(filter) ? '' : 'none';
+                document.querySelectorAll('.client-option-search').forEach(item => {
+                    const label = item.textContent.toLowerCase();
+                    item.style.display = label.includes(filter) ? '' : 'none';
                 });
             }
 
-            function selectClientsearch(name) {
-                document.getElementById('dropdownSearchclient').value = name;
-                document.getElementById('selected_client_search').value = name;
+            function selectClientsearch(radio) {
+                const selectedName = radio.value;
+
+                // Update visible and hidden input values
+                document.getElementById('dropdownSearchclient').value = selectedName;
+                document.getElementById('selected_client_search').value = selectedName;
+
+                // Close dropdown
                 bootstrap.Dropdown.getOrCreateInstance(document.getElementById('dropdownSearchclient')).hide();
             }
         </script>
+
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 const tabs = document.querySelectorAll('#myTab .nav-link');
@@ -408,6 +441,13 @@
                     });
                 });
             });
+        </script>
+        <script>
+            function confirmDelete() {
+                if (confirm('Are you sure you want to delete the selected payslips?')) {
+                    document.getElementById('delete_form').submit();
+                }
+            }
         </script>
         <script>
             function updateSelectedNames(checkboxClass, dropdownInputId, defaultText) {

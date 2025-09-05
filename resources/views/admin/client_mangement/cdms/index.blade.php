@@ -44,7 +44,7 @@
                             <input type="checkbox" name="selected_items[]" class="single-item-check"
                                 value="{{ $item->id }}">
                         </td> --}}
-                        <td>{{ $item->id }}</td>
+                        <td>{{ $client->firstItem() + $key }}</td>
                         <td>{{ $item->client_code }}</td>
                         <td>
                             {{ $item->client_name }}

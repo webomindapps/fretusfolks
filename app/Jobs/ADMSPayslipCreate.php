@@ -21,7 +21,7 @@ class ADMSPayslipCreate implements ShouldQueue
     protected $month;
     protected $year;
     public $tries = 2;
-    public $backoff = 10;
+    public $backoff = 30;
     public function __construct($payslips, $month, $year)
     {
         $this->payslips = $payslips;
@@ -42,7 +42,7 @@ class ADMSPayslipCreate implements ShouldQueue
         // \Log::info('Generated data:', $this->payslips);
 
         foreach ($this->payslips as $key => $row) {
-            \Log::info($row);
+            // \Log::info($row);
             $uniqueId = time() . '_' . uniqid(); // Generates a unique identifier
             $fileName = 'payslip_' . $row['employee_name'] . '_' . $row['employee_id'] . '_' . $this->month . '_' . $this->year . '_' . $uniqueId . '.pdf';
 
@@ -86,13 +86,13 @@ class ADMSPayslipCreate implements ShouldQueue
                 'fixed_st_bonus' => isset($row['fixed_st_bonus']) ? $row['fixed_st_bonus'] : 0,
                 'fixed_holiday_wages' => isset($row['fixed_holiday_wages']) ? $row['fixed_holiday_wages'] : 0,
                 'fixed_other_wages' => isset($row['fixed_other_wages']) ? $row['fixed_other_wages'] : 0,
-                'fixed_total_earnings' => isset($row['fixed_total_earnings']) ? $row['fixed_total_earnings'] : 0,
+                'fixed_total_earnings' => isset($row['fixed_total_gross']) ? $row['fixed_total_gross'] : 0,
                 'fix_education_allowance' => isset($row['fix_education_allowance']) ? $row['fix_education_allowance'] : 0,
                 'fix_leave_wages' => isset($row['fixed_leave_wages']) ? $row['fixed_leave_wages'] : 0,
                 'fix_incentive_wages' => isset($row['fixed_incentive_wages']) ? $row['fixed_incentive_wages'] : 0,
                 'fix_arrear_wages' => isset($row['fixed_arrear_wages']) ? $row['fixed_arrear_wages'] : 0,
 
-                'earn_basic' => isset($row['earned_basic']) ? $row['earned_basic'] : 0,
+                'earn_basic' => isset($row['earned_basic_da']) ? $row['earned_basic_da'] : 0,
                 'earn_hr' => isset($row['earned_hra']) ? $row['earned_hra'] : 0,
                 'earn_conveyance' => isset($row['earned_conveyance']) ? $row['earned_conveyance'] : 0,
                 'earn_medical_allowance' => isset($row['earn_medical_allowance']) ? $row['earn_medical_allowance'] : 0,
@@ -160,7 +160,7 @@ class ADMSPayslipCreate implements ShouldQueue
                 'payslips_letter_path' => $filePath
             ];
         }
-        // \Log::info('Generated data:', $data);
+        \Log::info('Generated data:');
 
         // Perform bulk insert
         foreach ($paypdf as $pdfData) {
@@ -171,6 +171,7 @@ class ADMSPayslipCreate implements ShouldQueue
         }
         // dd($data);
         Payslips::insert($data);
+        // \Log::info('payslip:', $data);
 
     }
 }

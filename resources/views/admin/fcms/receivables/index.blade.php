@@ -19,7 +19,7 @@
                 :route="route('admin.fcms.receivables')">
                 @foreach ($recipts as $key => $item)
                 <tr>
-                    <td>{{ $loop->iteration }}</td>
+                    <td>{{ $recipts->firstItem() + $key }}</td>
                     <td>
                         {{ $item->client?->client_name }}
                     </td>

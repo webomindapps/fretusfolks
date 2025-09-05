@@ -14,6 +14,7 @@ use App\Models\ClientManagement;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use App\Jobs\GenerateOfferLetterZip;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
 
@@ -26,7 +27,7 @@ class OfferLetterController extends Controller
 
     public function index()
     {
-        $searchColumns = ['id', 'emp_name', 'date', 'phone1', 'email'];
+        $searchColumns = ['id', 'employee_id', 'emp_name', 'entity_name', 'date', 'phone1', 'email', 'employee.client_emp_id'];
         $search = request()->search;
         $from_date = request()->from_date;
         $to_date = request()->to_date;
@@ -43,20 +44,29 @@ class OfferLetterController extends Controller
         if ($search != '') {
             $query->where(function ($q) use ($search, $searchColumns) {
                 foreach ($searchColumns as $key => $value) {
-                    $key == 0 ? $q->where($value, 'LIKE', '%' . $search . '%') : $q->orWhere($value, 'LIKE', '%' . $search . '%');
+                    if ($value === 'employee.client_emp_id') {
+                        $q->orWhereHas('employee', function ($subQuery) use ($search) {
+                            $subQuery->where('client_emp_id', 'LIKE', '%' . $search . '%');
+                        });
+                    } else {
+                        $key == 0
+                            ? $q->where($value, 'LIKE', '%' . $search . '%')
+                            : $q->orWhere($value, 'LIKE', '%' . $search . '%');
+                    }
                 }
             });
         }
+
 
         if ($order == '') {
             $query->orderByDesc('id');
         } else {
             $query->orderBy($order, $orderBy);
         }
-
+        $clients = ClientManagement::where('active_status', 0)->latest()->get();
         $offer = $paginate ? $query->paginate($paginate)->appends(request()->query()) : $query->paginate(100)->appends(request()->query());
 
-        return view("admin.adms.offer_letter.index", compact("offer"));
+        return view("admin.adms.offer_letter.index", compact("offer", "clients"));
     }
     public function edit($id)
     {
@@ -68,13 +78,13 @@ class OfferLetterController extends Controller
         $offerLetter = $this->model()->with('employee')->findOrFail($id);
 
         // Return existing file if already generated
-        // if (!empty($offerLetter->offer_letter_path)) {
-        //     $filePath = storage_path('app/public/' . str_replace('storage/', '', $offerLetter->offer_letter_path));
+        if (!empty($offerLetter->offer_letter_path)) {
+            $filePath = storage_path('app/public/' . str_replace('storage/', '', $offerLetter->offer_letter_path));
 
-        //     if (file_exists($filePath)) {
-        //         return response()->file($filePath);
-        //     }
-        // }
+            if (file_exists($filePath)) {
+                return response()->file($filePath);
+            }
+        }
 
         // View mapping based on offer_letter_type
         $viewMap = [
@@ -138,6 +148,7 @@ class OfferLetterController extends Controller
             'take_home' => 'nullable|numeric',
             'employer_pf' => 'nullable|numeric',
             'employer_esic' => 'nullable|numeric',
+            'employer_lwf' => 'nullable|numeric',
             'mediclaim' => 'nullable|numeric',
             'ctc' => 'nullable|numeric',
             'leave_wage' => 'nullable|numeric',
@@ -145,11 +156,15 @@ class OfferLetterController extends Controller
             'notice_period' => 'nullable|string|max:255',
             'salary_date' => 'nullable|date',
             'designation' => 'nullable|string|max:255',
+            'gender_salutation' => 'nullable|string',
         ]);
 
         $client = ClientManagement::find($validatedData['company_id']);
         if ($client) {
             $validatedData['entity_name'] = $client->client_name;
+            $validatedData['medical_reimbursement'] = 0;
+            $validatedData['leave_wage'] = 0;
+
         }
 
         DB::beginTransaction();
@@ -219,11 +234,65 @@ class OfferLetterController extends Controller
             }
         } catch (Exception $e) {
             dd($e);
+            return redirect()->back()->with('error', 'An error occurred while processing Offer Letter.');
+
         }
         $error = '';
         return redirect()->route('admin.offer_letter')->with([
             'success' => 'Offer Letter added successfully',
-            'alert' => $error
+            'error' => $error
         ]);
     }
+
+    public function bulkDownload(Request $request)
+    {
+
+        $request->validate([
+            'fromdate' => 'required|date',
+            'todate' => 'required|date',
+            'client_id' => 'required',
+            'emails' => ['required', 'regex:/^([^\s@]+@[^\s@]+\.[^\s@]+)(,\s*[^\s@]+@[^\s@]+\.[^\s@]+)*$/']
+
+        ]);
+        // dd($request);
+        $client = ClientManagement::findOrFail($request->client_id);
+        // dd($client);
+        $clientName = $client->client_name;
+        // dd($clientName);
+        $letters = OfferLetter::where('entity_name', $clientName)
+            ->whereBetween('date', [$request->fromdate, $request->todate])
+            ->whereIn('offer_letter_type', [1, 2, 3, 4, 5])
+            ->pluck('id')
+            ->toArray();
+
+        if (empty($letters)) {
+            return back()->with('error', 'No offer letters found.');
+        }
+        $emails = array_map('trim', explode(',', $request->emails));
+        $zipFileName = 'OfferLetters_' . $clientName . '.zip';
+
+        // dd($letters, $clientName, $zipFileName, $emails);
+        GenerateOfferLetterZip::dispatch($letters, $clientName, $zipFileName, $emails);
+        $error = '';
+
+        return back()->with([
+            'success' => 'ZIP is being prepared.You Will Recive Mail Shortly.',
+            'error' => $error
+        ]);
+    }
+    // public function offerZip($file)
+    // {
+    //     $file = basename($file);
+    //     $path = storage_path("app/public/{$file}");
+
+
+    //     if (!file_exists($path)) {
+    //         return back()->with('error', 'File not ready or expired.');
+    //     }
+
+    //     return response()->download($path)->deleteFileAfterSend(true);
+    // }
+
+
+
 }

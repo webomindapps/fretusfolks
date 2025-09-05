@@ -42,7 +42,7 @@
                             <input type="checkbox" name="selected_items[]" class="single-item-check"
                                 value="{{ $item->id }}">
                         </td> --}}
-                        <td>{{ $item->id }}</td>
+                        <td>{{ $tds_code->firstItem() + $key }}</td>
                         <td>
                             <input type="text" onblur="updateCode(this, {{ $item->id }})"
                                 id="{{ $item->id }}" value="{{ $item->code }}">

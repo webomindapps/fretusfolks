@@ -18,7 +18,7 @@
                 :route="route('admin.fcms.cims')">
                 @foreach ($invoices as $key => $item)
                 <tr>
-                    <td>{{ $item->id }}</td>
+                    <td>{{ $invoices->firstItem() + $key }}</td>
                     <td>
                         {{ $item->client?->client_name }}
                     </td>
