@@ -28,26 +28,12 @@ class ImportBulkUpdateJob implements ShouldQueue
      */
     public function handle(): void
     {
-        $info = [];
-        // dd($this->data);
-        foreach ($this->data as $row) {
-            $info[] = [
-                'ffi_emp_id' => $row['FFI_EMP_ID'],
-                'emp_name' => $row['Employee_Name'],
-                'employee_last_date' => date('Y-m-d', strtotime($row['Employee_Last_date'])),
+        $employee = CFISModel::where('ffi_emp_id', $this->data['ffi_emp_id'])->first();
+        if ($employee) {
+            $employee->update([
+                'employee_last_date' => date('Y-m-d', strtotime($this->data['Employee_Last_date'])),
                 'status' => 1,
-            ];
-
-
-        }
-
-        if (!empty($info)) {
-            foreach ($info as $data) {
-                CFISModel::updateOrCreate(
-                    ['ffi_emp_id' => $data['ffi_emp_id']],
-                    $data
-                );
-            }
+            ]);
         }
     }
 }

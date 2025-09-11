@@ -46,6 +46,7 @@ class EmployeeLifecycleController extends Controller
                     ->orWhere('entity_name', 'like', "%{$search_query}%")
                     ->orWhere('email', 'like', "%{$search_query}%")
                     ->orWhere('ffi_emp_id', 'like', "%{$search_query}%")
+                    ->orWhere('aadhar_no', 'like', "%{$search_query}%")
                     ->orWhere('client_emp_id', 'like', "%{$search_query}%");
 
             });
